@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Build-Jdk-Spec: 21
 Implementation-Title: codex
-Implementation-Version: 2.6.5
+Implementation-Version: 2.7.17
 Created-By: Maven Integration for Eclipse
 
