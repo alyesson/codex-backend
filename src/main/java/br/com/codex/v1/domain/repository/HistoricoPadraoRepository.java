@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface HistoricoPadraoRepository extends JpaRepository<HistoricoPadrao, Integer> {
 
     Optional<HistoricoPadrao> findByCodigo(String codigo);
+
+    HistoricoPadrao findByDescricaoContaining(String vendaDeMercadorias);
 }

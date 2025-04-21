@@ -26,8 +26,8 @@ public class ContasService {
         contasDto.setId(null);
         contasDto.setInclusao(java.sql.Date.valueOf(dataAtual));
         validaContas(contasDto);
-        Contas grupo = new Contas(contasDto);
-        return contasRepository.save(grupo);
+        Contas contas = new Contas(contasDto);
+        return contasRepository.save(contas);
     }
     public Contas update(Integer id, ContasDto contasDto) {
         contasDto.setId(id);
@@ -60,5 +60,10 @@ public class ContasService {
         if(objReduz.isPresent() && objReduz.get().getReduzido().equals(contasDto.getReduzido())){
             throw new DataIntegrityViolationException("Esta conta reduzida já existe");
         }
+    }
+
+    public Contas findByNome(String clientes) {
+        Optional<Contas> objNome = contasRepository.findByNomeIgnoreCaseContaining(clientes);
+        return objNome.orElseGet(() -> objNome.orElseThrow(() -> new ObjectNotFoundException("Não foi encontrada uma conta débito ou crédito com o nome " + objNome)));
     }
 }
