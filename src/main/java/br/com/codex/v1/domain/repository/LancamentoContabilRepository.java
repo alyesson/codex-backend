@@ -2,7 +2,17 @@ package br.com.codex.v1.domain.repository;
 
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.sql.Date;
+import java.util.List;
 
 public interface LancamentoContabilRepository extends JpaRepository<LancamentoContabil, Integer> {
 
+    @Query("SELECT l FROM LancamentoContabil l WHERE YEAR(l.dataLancamento) = :ano AND MONTH(l.dataLancamento) = :mes")
+    List<LancamentoContabil> findAllByYearAndMonth(@Param("ano") Integer ano, @Param("mes") Integer mes);
+
+    @Query("SELECT l FROM LancamentoContabil l WHERE YEAR(l.dataLancamento) BETWEEN :anoInicio AND :anoFim")
+    List<LancamentoContabil> findAllByYearRange(@Param("anoInicio") Date anoInicio, @Param("anoFim") Date anoFim);
 }

@@ -20,8 +20,8 @@ public class ProdutoService {
     public Produto create(ProdutoDto produtoDto) {
         produtoDto.setId(null);
         validaProduto(produtoDto);
-        Produto grupo = new Produto(produtoDto);
-        return produtoRepository.save(grupo);
+        Produto objProduto = new Produto(produtoDto);
+        return produtoRepository.save(objProduto);
     }
 
     public Produto update(Integer id, ProdutoDto produtoDto) {
