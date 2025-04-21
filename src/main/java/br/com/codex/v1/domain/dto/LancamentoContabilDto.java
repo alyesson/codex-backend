@@ -1,6 +1,8 @@
-package br.com.codex.v1.domain.contabilidade;
+package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.dto.LancamentoContabilDto;
+import br.com.codex.v1.domain.contabilidade.Contas;
+import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
+import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.estoque.NotasFiscais;
 
 import javax.persistence.*;
@@ -10,54 +12,25 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Objects;
 
-@Entity
-public class LancamentoContabil implements Serializable {
+
+public class LancamentoContabilDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dataLancamento;
-
-    @Column(precision = 20, scale = 2)
     private BigDecimal valor;
-
-    @ManyToOne
-    @JoinColumn(name = "conta_debito_id")
     private Contas contaDebito;
-
-    @ManyToOne
-    @JoinColumn(name = "conta_credito_id")
     private Contas contaCredito;
-
-    @ManyToOne
-    @JoinColumn(name = "historico_id")
     private HistoricoPadrao historicoPadrao;
-
-    @ManyToOne
-    @JoinColumn(name = "nota_fiscal_id")
     private NotasFiscais notaFiscalOrigem;
 
     private String complementoHistorico; // opcional, se quiser adicionar infos extras
 
-    public LancamentoContabil() {
+    public LancamentoContabilDto() {
     }
 
-    public LancamentoContabil(Integer id, Date dataLancamento, BigDecimal valor, Contas contaDebito, Contas contaCredito, HistoricoPadrao historicoPadrao, NotasFiscais notaFiscalOrigem, String complementoHistorico) {
-        this.id = id;
-        this.dataLancamento = dataLancamento;
-        this.valor = valor;
-        this.contaDebito = contaDebito;
-        this.contaCredito = contaCredito;
-        this.historicoPadrao = historicoPadrao;
-        this.notaFiscalOrigem = notaFiscalOrigem;
-        this.complementoHistorico = complementoHistorico;
-    }
-
-    public LancamentoContabil(LancamentoContabilDto obj) {
+    public LancamentoContabilDto(LancamentoContabil obj) {
         this.id = obj.getId();
         this.dataLancamento = obj.getDataLancamento();
         this.valor = obj.getValor();
@@ -130,17 +103,5 @@ public class LancamentoContabil implements Serializable {
 
     public void setComplementoHistorico(String complementoHistorico) {
         this.complementoHistorico = complementoHistorico;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        LancamentoContabil that = (LancamentoContabil) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

@@ -29,6 +29,7 @@ public class ContasService {
         Contas contas = new Contas(contasDto);
         return contasRepository.save(contas);
     }
+
     public Contas update(Integer id, ContasDto contasDto) {
         contasDto.setId(id);
         Contas obj = findById(id);
