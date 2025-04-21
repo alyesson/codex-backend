@@ -19,7 +19,6 @@ public class LancamentoContabil implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date dataLancamento;
 
     @Column(precision = 20, scale = 2)

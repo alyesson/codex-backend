@@ -24,7 +24,7 @@ public class LancamentoContabilResource {
     @Autowired
     private LancamentoContabilService lancamentoContabilService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PostMapping
     public ResponseEntity<LancamentoContabilDto> create(@Valid @RequestBody LancamentoContabilDto lancamentoContabilDto){
         LancamentoContabil obj = lancamentoContabilService.create(lancamentoContabilDto);
