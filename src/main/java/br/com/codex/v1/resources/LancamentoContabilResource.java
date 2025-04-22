@@ -1,9 +1,7 @@
 package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
-import br.com.codex.v1.domain.dto.GrupoDto;
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
-import br.com.codex.v1.domain.estoque.Grupo;
 import br.com.codex.v1.service.LancamentoContabilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
