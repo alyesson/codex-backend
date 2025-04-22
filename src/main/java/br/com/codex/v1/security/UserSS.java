@@ -1,6 +1,6 @@
-package br.com.codex.v1.security;
+package br.com.decamptech.v1.security;
 
-import br.com.codex.v1.domain.enums.Perfil;
+import br.com.decamptech.v1.domain.enums.Perfil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +16,13 @@ public class UserSS implements UserDetails {
     private static final long serialVersionUID=1L;
 
     private final Integer id;
-    private final String cpf;
+    private final String email;
     private final String senha;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserSS(Integer id, String cpf, String senha, Set<Perfil> perfis) {
+    public UserSS(Integer id, String email, String senha, Set<Perfil> perfis) {
         this.id = id;
-        this.cpf = cpf;
+        this.email = email;
         this.senha = senha;
         this.authorities = perfis.stream().map(a -> new SimpleGrantedAuthority(a.getDescricao())).collect(Collectors.toSet());
     }
@@ -47,7 +47,7 @@ public class UserSS implements UserDetails {
 
     @Override
     public String getUsername() {
-        return cpf;
+        return email;
     }
 
     @Override

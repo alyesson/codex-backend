@@ -1,4 +1,4 @@
-package br.com.codex.v1.security;
+package br.com.decamptech.v1.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,8 +1,8 @@
-package br.com.codex.v1.resources;
+package br.com.decamptech.v1.resources;
 
-import br.com.codex.v1.domain.cadastros.Usuario;
-import br.com.codex.v1.domain.dto.UsuarioDto;
-import br.com.codex.v1.service.UsuarioService;
+import br.com.decamptech.v1.domain.cadastros.Usuario;
+import br.com.decamptech.v1.domain.dto.UsuarioDto;
+import br.com.decamptech.v1.service.UsuarioService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class UsuarioResource {
         return ResponseEntity.ok().body(new UsuarioDto(objUser));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<UsuarioDto>delete(@PathVariable Integer id){
         usuarioService.delete(id);
@@ -96,11 +96,12 @@ public class UsuarioResource {
         return ResponseEntity.ok().body(listaUser);
     }
 
-    //Conta o número de clientes cadastrados
+    //Conta o número de profissionais cadastrados
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @GetMapping(value = "/total_clientes")
     public ResponseEntity<Integer> countByPerfis(@RequestParam(value = "perfis") String perfis){
         int totalDeClientes = usuarioService.countByPerfis(perfis);
         return ResponseEntity.ok(totalDeClientes);
     }
+
 }

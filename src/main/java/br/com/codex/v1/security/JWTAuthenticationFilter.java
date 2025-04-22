@@ -1,6 +1,6 @@
-package br.com.codex.v1.security;
+package br.com.decamptech.v1.security;
 
-import br.com.codex.v1.domain.dto.CredenciaisDto;
+import br.com.decamptech.v1.domain.dto.CredenciaisDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +35,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             try{
                 CredenciaisDto creds = new ObjectMapper().readValue(request.getInputStream(),CredenciaisDto.class);
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(creds.getCpf(), creds.getSenha(), new ArrayList<>());
+                        new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha(), new ArrayList<>());
                 Authentication authentication = authenticationManager.authenticate(authenticationToken);
                 return authentication;
 

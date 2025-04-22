@@ -1,4 +1,4 @@
-package br.com.codex.v1.security;
+package br.com.decamptech.v1.security;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

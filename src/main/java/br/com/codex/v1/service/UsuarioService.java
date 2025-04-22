@@ -1,11 +1,11 @@
-package br.com.codex.v1.service;
+package br.com.decamptech.v1.service;
 
-import br.com.codex.v1.domain.cadastros.Usuario;
-import br.com.codex.v1.domain.dto.UsuarioDto;
-import br.com.codex.v1.domain.repository.UsuarioRepository;
-import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
-import br.com.codex.v1.utilitario.Base64Util;
-import br.com.codex.v1.utilitario.RecoverUserPassword;
+import br.com.decamptech.v1.domain.cadastros.Usuario;
+import br.com.decamptech.v1.domain.dto.UsuarioDto;
+import br.com.decamptech.v1.domain.repository.UsuarioRepository;
+import br.com.decamptech.v1.service.exceptions.ObjectNotFoundException;
+import br.com.decamptech.v1.utilitario.Base64Util;
+import br.com.decamptech.v1.utilitario.RecoverUserPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,12 +25,12 @@ public class UsuarioService {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
-    //Base64Util decoder = new Base64Util();
+    Base64Util encode = new Base64Util();
 
     @Autowired
    private EmailRecuperaSenhaService emailRecuperaSenhaService;
 
-    String senhaCriptografada, senhaDescriptografada;
+    String senhaCriptografada;
 
     public Usuario create(UsuarioDto usuariodto) {
         usuariodto.setId(null);
@@ -43,8 +43,12 @@ public class UsuarioService {
 
     public Usuario update(Integer id, UsuarioDto usuariodto) {
         usuariodto.setId(id);
-        Usuario objUsuario = findById(id);
-        usuariodto.setSenha(objUsuario.getSenha()); //faz com que a senha não seja alterada
+        Usuario objUsuario = findById(id); // Recupera o usuário atual do banco de dados
+
+        // Ignora a senha enviada do front-end e mantém a senha existente no banco de dados
+        usuariodto.setSenha(objUsuario.getSenha());
+
+        // Atualiza o objeto usuário com os novos dados, exceto a senha
         objUsuario = new Usuario(usuariodto);
         return usuarioRepository.save(objUsuario);
     }

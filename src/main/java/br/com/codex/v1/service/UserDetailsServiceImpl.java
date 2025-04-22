@@ -1,8 +1,8 @@
-package br.com.codex.v1.service;
+package br.com.decamptech.v1.service;
 
-import br.com.codex.v1.domain.cadastros.Pessoa;
-import br.com.codex.v1.domain.repository.PessoaRepository;
-import br.com.codex.v1.security.UserSS;
+import br.com.decamptech.v1.domain.cadastros.Pessoa;
+import br.com.decamptech.v1.domain.repository.PessoaRepository;
+import br.com.decamptech.v1.security.UserSS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,11 +18,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private PessoaRepository pessoaRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String cpf) throws UsernameNotFoundException{
-        Optional<Pessoa> user = pessoaRepository.findByCpf(cpf);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+        Optional<Pessoa> user = pessoaRepository.findByEmail(email);
         if(user.isPresent()){
-            return new UserSS(user.get().getId(),user.get().getCpf(),user.get().getSenha(), user.get().getPerfis());
+            return new UserSS(user.get().getId(),user.get().getEmail(),user.get().getSenha(), user.get().getPerfis());
         }
-        throw new UsernameNotFoundException(cpf);
+        throw new UsernameNotFoundException(email);
     }
 }
