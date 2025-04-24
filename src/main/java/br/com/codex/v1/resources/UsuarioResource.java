@@ -1,8 +1,8 @@
-package br.com.decamptech.v1.resources;
+package br.com.codex.v1.resources;
 
-import br.com.decamptech.v1.domain.cadastros.Usuario;
-import br.com.decamptech.v1.domain.dto.UsuarioDto;
-import br.com.decamptech.v1.service.UsuarioService;
+import br.com.codex.v1.domain.cadastros.Usuario;
+import br.com.codex.v1.domain.dto.UsuarioDto;
+import br.com.codex.v1.service.UsuarioService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

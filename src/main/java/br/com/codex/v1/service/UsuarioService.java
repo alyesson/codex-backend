@@ -1,11 +1,11 @@
-package br.com.decamptech.v1.service;
+package br.com.codex.v1.service;
 
-import br.com.decamptech.v1.domain.cadastros.Usuario;
-import br.com.decamptech.v1.domain.dto.UsuarioDto;
-import br.com.decamptech.v1.domain.repository.UsuarioRepository;
-import br.com.decamptech.v1.service.exceptions.ObjectNotFoundException;
-import br.com.decamptech.v1.utilitario.Base64Util;
-import br.com.decamptech.v1.utilitario.RecoverUserPassword;
+import br.com.codex.v1.domain.cadastros.Usuario;
+import br.com.codex.v1.domain.dto.UsuarioDto;
+import br.com.codex.v1.domain.repository.UsuarioRepository;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
+import br.com.codex.v1.utilitario.Base64Util;
+import br.com.codex.v1.utilitario.RecoverUserPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

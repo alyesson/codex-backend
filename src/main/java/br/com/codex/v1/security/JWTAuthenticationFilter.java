@@ -1,6 +1,6 @@
-package br.com.decamptech.v1.security;
+package br.com.codex.v1.security;
 
-import br.com.decamptech.v1.domain.dto.CredenciaisDto;
+import br.com.codex.v1.domain.dto.CredenciaisDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

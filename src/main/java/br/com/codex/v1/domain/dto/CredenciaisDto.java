@@ -2,15 +2,15 @@ package br.com.codex.v1.domain.dto;
 
 public class CredenciaisDto {
 
-    private String cpf;
+    private String email;
     private String senha;
 
-    public String getCpf() {
-        return cpf;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getSenha() {

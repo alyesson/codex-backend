@@ -1,8 +1,8 @@
-package br.com.decamptech.v1.service;
+package br.com.codex.v1.service;
 
-import br.com.decamptech.v1.domain.cadastros.Pessoa;
-import br.com.decamptech.v1.domain.repository.PessoaRepository;
-import br.com.decamptech.v1.security.UserSS;
+import br.com.codex.v1.domain.cadastros.Pessoa;
+import br.com.codex.v1.domain.repository.PessoaRepository;
+import br.com.codex.v1.security.UserSS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

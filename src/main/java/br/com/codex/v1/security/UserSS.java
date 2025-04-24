@@ -1,6 +1,6 @@
-package br.com.decamptech.v1.security;
+package br.com.codex.v1.security;
 
-import br.com.decamptech.v1.domain.enums.Perfil;
+import br.com.codex.v1.domain.enums.Perfil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
