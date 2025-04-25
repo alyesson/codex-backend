@@ -37,12 +37,13 @@ public class CotacaoCompra implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "cotacaoCompra")
     protected List<CotacaoItensCompra> cotacaoItensCompras = new ArrayList<>();
+    protected String link;
 
     public CotacaoCompra() {
         super();
     }
 
-    public CotacaoCompra(Integer id, Integer numeroSolicitacao, String solicitante, Date dataSolicitacao, Date dataAbertura, Date validade, String situacao, String comprador, String fornecedor, String cnpj, String ie, String endereco, String cep, String contato, BigDecimal valorCotado) {
+    public CotacaoCompra(Integer id, Integer numeroSolicitacao, String solicitante, Date dataSolicitacao, Date dataAbertura, Date validade, String situacao, String comprador, String fornecedor, String cnpj, String ie, String endereco, String cep, String contato, BigDecimal valorCotado, String link) {
         this.id = id;
         this.numeroSolicitacao = numeroSolicitacao;
         this.solicitante = solicitante;
@@ -58,6 +59,7 @@ public class CotacaoCompra implements Serializable {
         this.cep = cep;
         this.contato = contato;
         this.valorCotado = valorCotado;
+        this.link = link;
     }
 
     public CotacaoCompra(CotacaoCompraDto obj) {
@@ -76,6 +78,7 @@ public class CotacaoCompra implements Serializable {
         this.cep = obj.getCep();
         this.contato = obj.getContato();
         this.valorCotado = obj.getValorCotado();
+        this.link = obj.getLink();
     }
 
     public Integer getId() {
@@ -204,6 +207,14 @@ public class CotacaoCompra implements Serializable {
 
     public void setCotacaoItensCompras(List<CotacaoItensCompra> cotacaoItensCompras) {
         this.cotacaoItensCompras = cotacaoItensCompras;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     @Override

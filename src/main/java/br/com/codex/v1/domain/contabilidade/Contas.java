@@ -2,10 +2,7 @@ package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.ContasDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
@@ -21,6 +18,8 @@ public class Contas implements Serializable {
     protected Integer id;
     protected String conta;
     protected String nome;
+
+    @Column(unique = true)
     protected String reduzido;
     protected String utilidade;
     protected String saldo;

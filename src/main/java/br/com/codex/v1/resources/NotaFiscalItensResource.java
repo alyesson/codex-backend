@@ -21,7 +21,7 @@ public class NotaFiscalItensResource {
     @Autowired
     private NotaFiscalItensService notaFiscalItensService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/id_nota")
     public ResponseEntity<List<NotaFiscalItensDto>> findByNumeroNotaFiscal(@RequestParam(value = "numeroNotaFiscal") String numeroNotaFiscal){
         List<NotaFiscalItens> list = notaFiscalItensService.findByNumero(numeroNotaFiscal);

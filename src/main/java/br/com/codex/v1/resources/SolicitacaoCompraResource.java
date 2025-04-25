@@ -13,6 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,5 +72,14 @@ public class SolicitacaoCompraResource {
     public ResponseEntity<SolicitacaoCompra> findById(@PathVariable Integer id){
         SolicitacaoCompra obj = solicitacaoCompraService.findById(id);
         return ResponseEntity.ok().body(obj);
+    }
+
+    //ASolicitações de Compra Por Período
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI', 'GERENTE_ADMINISTRATIVO', 'ADMINISTRATIVO')")
+    @GetMapping(value = "/solicitacoes_periodo")
+    public ResponseEntity<List<SolicitacaoCompraDto>> findAllSolicitacoesPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+        List<SolicitacaoCompra> list = solicitacaoCompraService.findAllSolicitacoesPeriodo(dataInicial, dataFinal);
+        List<SolicitacaoCompraDto> listDto = list.stream().map(SolicitacaoCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class CotacaoCompraResource {
     @Autowired
     private CotacaoCompraService cotacaoCompraService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'ADMINISTRATIVO', 'GERENTE_TI', 'TI')")
     @PostMapping
     public ResponseEntity<CotacaoCompraDto> create(@Valid @RequestBody CotacaoCompraDto cotacaoCompraDto) {
         CotacaoCompra obj = cotacaoCompraService.create(cotacaoCompraDto);
@@ -31,14 +32,14 @@ public class CotacaoCompraResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<CotacaoCompraDto> update(@PathVariable Integer id, @RequestParam String situacao){
         cotacaoCompraService.update(id, situacao);
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping("/{id}/itens")
     public ResponseEntity<List<CotacaoItensCompraDto>> findAllItens(@PathVariable Integer id) {
         List<CotacaoItensCompra> itens = cotacaoCompraService.findAllItensByCotacaoId(id);
@@ -46,7 +47,7 @@ public class CotacaoCompraResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping
     public ResponseEntity <List<CotacaoCompraDto>> findAll(){
         List<CotacaoCompra> objCotacao = cotacaoCompraService.findAll();
@@ -54,10 +55,19 @@ public class CotacaoCompraResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping("/{id}")
     public ResponseEntity <CotacaoCompraDto> findById(@PathVariable Integer id){
         CotacaoCompra objCotacao = cotacaoCompraService.findById(id);
         return ResponseEntity.ok().body(new CotacaoCompraDto(objCotacao));
+    }
+
+    //ASolicitações de Compra Por Período
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI', 'GERENTE_ADMINISTRATIVO', 'ADMINISTRATIVO')")
+    @GetMapping(value = "/cotacoes_periodo")
+    public ResponseEntity<List<CotacaoCompraDto>> findAllCotacaoPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+        List<CotacaoCompra> list = cotacaoCompraService.findAllCotacoesPeriodo(dataInicial, dataFinal);
+        List<CotacaoCompraDto> listDto = list.stream().map(CotacaoCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
     }
 }

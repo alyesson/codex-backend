@@ -10,6 +10,7 @@ import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +63,9 @@ public class CotacaoCompraService {
     public CotacaoCompra findById(Integer id) {
         Optional<CotacaoCompra> objCotacaoCompra = cotacaoCompraRepository.findById(id);
         return objCotacaoCompra.orElseThrow(() -> new ObjectNotFoundException("Cotação não encontrada"));
+    }
+
+    public List<CotacaoCompra> findAllCotacoesPeriodo(Date dataInicial, Date dataFinal) {
+        return cotacaoCompraRepository.findAllCotacoesPeriodo(dataInicial, dataFinal);
     }
 }

@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EntradaMaterialRepository extends JpaRepository<EntradaMaterial, Integer> {
-
     boolean existsByNotaFiscalAndCodigoProduto(Integer notaFiscal,String codigoProduto);
-
     Optional<EntradaMaterial> findByLote(String lote);
 
     @Query(value = "SELECT p FROM EntradaMaterial p WHERE p.codigoProduto=:codigoProduto and p.lote=:lote")

@@ -2,7 +2,6 @@ package br.com.codex.v1.utilitario;
 
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Component
@@ -14,7 +13,7 @@ public class Base64Util {
 
     public String decode(String valor){
         byte[] decodeBytes = Base64.getDecoder().decode(valor);
-        String decoded = new String(decodeBytes, StandardCharsets.UTF_8);
+        String decoded = new String(decodeBytes);
         return decoded;
     }
 }

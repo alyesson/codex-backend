@@ -26,12 +26,13 @@ public class SaidaMaterial implements Serializable {
     protected Integer quantidade;
     protected String autor;
     protected String motivoAcerto;
+    protected String solicitante;
 
     public SaidaMaterial() {
         super();
     }
 
-    public SaidaMaterial(Integer id, String codigoProduto, String produto, String motivoAcerto, String lote, Date dataSaida, Integer quantidade, String autor) {
+    public SaidaMaterial(Integer id, String codigoProduto, String produto, String motivoAcerto, String lote, Date dataSaida, Integer quantidade, String autor, String solicitante) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.motivoAcerto = motivoAcerto;
@@ -40,6 +41,7 @@ public class SaidaMaterial implements Serializable {
         this.dataSaida = dataSaida;
         this.quantidade = quantidade;
         this.autor = autor;
+        this.solicitante = solicitante;
     }
 
     public SaidaMaterial(SaidaMaterialDto obj) {
@@ -51,6 +53,7 @@ public class SaidaMaterial implements Serializable {
         this.dataSaida = obj.getDataSaida();
         this.quantidade = obj.getQuantidade();
         this.autor = obj.getAutor();
+        this.solicitante = obj.getSolicitante();
     }
 
     public Integer getId() {
@@ -116,7 +119,15 @@ public class SaidaMaterial implements Serializable {
     public String getAutor() {
         return autor;
     }
+    
+    public String getSolicitante() {
+        return solicitante;
+    }
 
+    public void setSolicitante(String solicitante) {
+        this.solicitante = solicitante;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,4 +140,5 @@ public class SaidaMaterial implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

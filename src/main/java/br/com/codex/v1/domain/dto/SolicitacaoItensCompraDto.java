@@ -64,6 +64,7 @@ public class SolicitacaoItensCompraDto implements Serializable {
         this.quantidade = quantidade;
     }
 
+
     public SolicitacaoCompraDto getSolicitacaoCompra() {
         return solicitacaoCompra;
     }

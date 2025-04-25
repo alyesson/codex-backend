@@ -29,6 +29,7 @@ public class CotacaoCompraDto implements Serializable {
     protected String contato;
     protected BigDecimal valorCotado;
     protected List<CotacaoItensCompraDto> itens;
+    protected String link;
 
     public CotacaoCompraDto() {
         super();
@@ -50,6 +51,7 @@ public class CotacaoCompraDto implements Serializable {
         this.cep = obj.getCep();
         this.contato = obj.getContato();
         this.valorCotado = obj.getValorCotado();
+        this.link = obj.getLink();
     }
 
     public Integer getId() {
@@ -178,5 +180,13 @@ public class CotacaoCompraDto implements Serializable {
 
     public void setItens(List<CotacaoItensCompraDto> itens) {
         this.itens = itens;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

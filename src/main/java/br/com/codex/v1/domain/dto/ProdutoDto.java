@@ -24,6 +24,7 @@ public class ProdutoDto implements Serializable {
     protected Integer minimo;
     @NotNull(message = "Quantidade máxima não pode ficar em branco")
     protected Integer maximo;
+    @NotNull(message = "A unidade comercial não pode ficar em branco")
     protected String unidadeComercial;
     protected String local;
 

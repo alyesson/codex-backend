@@ -19,7 +19,6 @@ public class UsuarioDto implements Serializable {
     protected Integer id;
     @NotNull(message = "O campo nome não pode ficar em branco")
     protected String nome;
-    @NotNull(message = "O campo cpf não pode ficar em branco")
     @CPF
     protected String cpf;
     @NotNull(message = "O data de nascimento nome não pode ficar em branco")

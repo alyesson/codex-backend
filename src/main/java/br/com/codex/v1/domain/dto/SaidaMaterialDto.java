@@ -18,6 +18,7 @@ public class SaidaMaterialDto implements Serializable {
     protected Integer quantidade;
     protected String autor;
     protected String motivoAcerto;
+    protected String solicitante;
 
     public SaidaMaterialDto() {
         super();
@@ -32,6 +33,7 @@ public class SaidaMaterialDto implements Serializable {
         this.dataSaida = obj.getDataSaida();
         this.quantidade = obj.getQuantidade();
         this.autor = obj.getAutor();
+        this.solicitante = obj.getSolicitante();
     }
 
     public Integer getId() {
@@ -98,4 +100,11 @@ public class SaidaMaterialDto implements Serializable {
         this.autor = autor;
     }
 
+    public String getSolicitante() {
+        return solicitante;
+    }
+
+    public void setSolicitante(String solicitante) {
+        this.solicitante = solicitante;
+    }
 }

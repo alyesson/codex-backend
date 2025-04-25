@@ -24,7 +24,6 @@ public class LancamentoContabilDto implements Serializable {
     private Contas contaCredito;
     private HistoricoPadrao historicoPadrao;
     private NotasFiscais notaFiscalOrigem;
-
     private String complementoHistorico; // opcional, se quiser adicionar infos extras
 
     public LancamentoContabilDto() {

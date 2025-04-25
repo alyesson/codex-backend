@@ -21,7 +21,7 @@ public class GrupoResource {
     @Autowired
     private GrupoService grupoService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PostMapping
     public ResponseEntity<GrupoDto> create(@Valid @RequestBody GrupoDto grupoDto){
         Grupo objGrupo = grupoService.create(grupoDto);
@@ -29,28 +29,28 @@ public class GrupoResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<GrupoDto> update(@PathVariable Integer id, @Valid @RequestBody GrupoDto grupoDto){
         Grupo objGrupo = grupoService.update(id, grupoDto);
         return ResponseEntity.ok().body(new GrupoDto((objGrupo)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<GrupoDto> delete(@PathVariable Integer id){
         grupoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<GrupoDto> findById(@PathVariable Integer id){
         Grupo objGrupo = grupoService.findById(id);
         return ResponseEntity.ok().body(new GrupoDto(objGrupo));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping
     public ResponseEntity<List<GrupoDto>> findAll(){
         List<Grupo> list = grupoService.findAll();

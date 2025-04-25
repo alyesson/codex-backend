@@ -27,14 +27,14 @@ public class ContratosResource {
     @Autowired
     private ContratosService contratosService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<ContratosDto> findById(@PathVariable Integer id) {
         Contratos obj = contratosService.findById(id);
         return ResponseEntity.ok().body(new ContratosDto(obj));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping
     public ResponseEntity<List<ContratosDto>> findAll() {
         List<Contratos> list = contratosService.findAll();
@@ -42,7 +42,7 @@ public class ContratosResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestParam("nomeContrato") String nomeContrato,
                                          @RequestParam("inicioContrato") Date inicioContrato,
@@ -53,15 +53,15 @@ public class ContratosResource {
                                          @RequestParam("razaoSocial") String razaoSocial,
                                          @RequestParam("diaVenceParcela") String diaVenceParcela,
                                          @RequestParam("tipoContrato") String tipoContrato,
-                                         @RequestParam("valorContrato") BigDecimal valorContrato,
-                                         @RequestParam("pis") BigDecimal pis,
-                                         @RequestParam("ipi") BigDecimal ipi,
-                                         @RequestParam("icms") BigDecimal icms,
-                                         @RequestParam("cofins") BigDecimal cofins,
-                                         @RequestParam("iss") BigDecimal iss,
-                                         @RequestParam("frete") BigDecimal frete,
-                                         @RequestParam("valorDesconto") BigDecimal valorDesconto,
-                                         @RequestParam("valorLiquido") BigDecimal valorLiquido,
+                                         @RequestParam("valorContrato") String valorContrato,
+                                         @RequestParam("pis") String pis,
+                                         @RequestParam("ipi") String ipi,
+                                         @RequestParam("icms") String icms,
+                                         @RequestParam("cofins") String cofins,
+                                         @RequestParam("iss") String iss,
+                                         @RequestParam("frete") String frete,
+                                         @RequestParam("valorDesconto") String valorDesconto,
+                                         @RequestParam("valorLiquido") String valorLiquido,
                                          @RequestParam("renegociado") String renegociado,
                                          @RequestParam("dataRenegociacao") String dataRenegociacao,
                                          @RequestParam("observacao") String observacao,
@@ -79,15 +79,15 @@ public class ContratosResource {
             documento.setRazaoSocial(razaoSocial);
             documento.setDiaVenceParcela(diaVenceParcela);
             documento.setTipoContrato(tipoContrato);
-            documento.setValorContrato(valorContrato);
-            documento.setPis(pis);
-            documento.setIpi(ipi);
-            documento.setIcms(icms);
-            documento.setCofins(cofins);
-            documento.setIss(iss);
-            documento.setFrete(frete);
-            documento.setValorDesconto(valorDesconto);
-            documento.setValorLiquido(valorLiquido);
+            documento.setValorContrato(new BigDecimal(valorContrato.replace(",", ".")));
+            documento.setPis(new BigDecimal(pis.replace(",", ".")));
+            documento.setIpi(new BigDecimal(ipi.replace(",", ".")));
+            documento.setIcms(new BigDecimal(icms.replace(",", ".")));
+            documento.setCofins(new BigDecimal(cofins.replace(",", ".")));
+            documento.setIss(new BigDecimal(iss.replace(",", ".")));
+            documento.setFrete(new BigDecimal(frete.replace(",", ".")));
+            documento.setValorDesconto(new BigDecimal(valorDesconto.replace(",", ".")));
+            documento.setValorLiquido(new BigDecimal(valorLiquido.replace(",", ".")));
             documento.setRenegociado(renegociado);
             documento.setDataRenegociacao(dataRenegociacao);
             documento.setObservacao(observacao);
@@ -106,7 +106,7 @@ public class ContratosResource {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> update(@Valid @PathVariable Integer id,
                                          @RequestParam("nomeContrato") String nomeContrato,
@@ -178,7 +178,7 @@ public class ContratosResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/downloads/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) {
         Contratos objDoc = contratosService.findById(id);
@@ -186,7 +186,7 @@ public class ContratosResource {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", objDoc.getNomeContrato());
+        headers.setContentDispositionFormData("attachment", "currículo_"+objDoc.getNomeContrato());
         headers.setContentLength(fileBytes.length);
 
         return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);

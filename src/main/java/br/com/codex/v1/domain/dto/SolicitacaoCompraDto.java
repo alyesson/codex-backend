@@ -23,7 +23,7 @@ public class SolicitacaoCompraDto implements Serializable {
     protected String eUrgente;
     protected String opcaoMarca;
     protected String eItemEstoque;
-    protected List<SolicitacaoItensCompraDto> itens;
+    private List<SolicitacaoItensCompraDto> itens;
     protected String situacao;
 
     public SolicitacaoCompraDto() {

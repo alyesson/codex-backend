@@ -49,4 +49,8 @@ public class SubGrupoService {
             throw new DataIntegrityViolationException("Este subgrupo já existe");
         }
     }
+
+    public List<SubGrupo> findByNomeGrupo(String codigoGrupo) {
+        return subgrupoRepository.findByNomeGrupo(codigoGrupo);
+    }
 }

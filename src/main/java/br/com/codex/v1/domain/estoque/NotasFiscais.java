@@ -32,7 +32,7 @@ public class NotasFiscais {
     @Column(length = 5)
     private String serie;
 
-    @Column(length = 9)
+    @Column(length = 15)
     private String numero;
 
     @Column(length = 45)

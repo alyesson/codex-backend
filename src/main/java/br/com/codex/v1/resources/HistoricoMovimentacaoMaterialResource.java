@@ -23,7 +23,7 @@ public class HistoricoMovimentacaoMaterialResource {
     @Autowired
     HistoricoMovimentacaoMaterialService historicoMovimentacaoMaterialService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @PostMapping
     public ResponseEntity<HistoricoMovimentacaoMaterialDto> create(@Valid @RequestBody HistoricoMovimentacaoMaterialDto historicoMovimentacaoMaterialDto){
         HistoricoMovimentacaoMaterial objEntrada = historicoMovimentacaoMaterialService.create(historicoMovimentacaoMaterialDto);
@@ -37,14 +37,14 @@ public class HistoricoMovimentacaoMaterialResource {
         historicoMovimentacaoMaterialService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<HistoricoMovimentacaoMaterialDto> findById(@PathVariable Integer id){
         HistoricoMovimentacaoMaterial objHistoricoEntrada = historicoMovimentacaoMaterialService.findById(id);
         return ResponseEntity.ok().body(new HistoricoMovimentacaoMaterialDto(objHistoricoEntrada));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping
     public ResponseEntity<List<HistoricoMovimentacaoMaterialDto>> findAll(){
         List<HistoricoMovimentacaoMaterial> list = historicoMovimentacaoMaterialService.findAll();
@@ -52,7 +52,7 @@ public class HistoricoMovimentacaoMaterialResource {
         return ResponseEntity.ok().body(listObj);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/movimentacao_nota_fiscal")
     public ResponseEntity<List<HistoricoMovimentacaoMaterialDto>> findAllByNotaFiscal(@RequestParam(value = "ano") Integer ano){
         List<HistoricoMovimentacaoMaterial> list = historicoMovimentacaoMaterialService.findAllByNota(ano);
@@ -60,7 +60,7 @@ public class HistoricoMovimentacaoMaterialResource {
         return ResponseEntity.ok().body(listObj);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/despesa_mensal")
     public ResponseEntity<List<HistoricoMovimentacaoMaterialDto>> findAllMonth(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "mes") Integer mes){
         List<HistoricoMovimentacaoMaterial> list = historicoMovimentacaoMaterialService.findAllByYearAndMonth(ano, mes);
@@ -69,7 +69,7 @@ public class HistoricoMovimentacaoMaterialResource {
     }
 
     //Método para gerar gráfico de despesa com material no ano
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/despesa_anual")
     public ResponseEntity<List<BigDecimal>> findAllYear(@RequestParam(value = "ano") Integer ano){
         List<BigDecimal> values = historicoMovimentacaoMaterialService.findAllByYear(ano);

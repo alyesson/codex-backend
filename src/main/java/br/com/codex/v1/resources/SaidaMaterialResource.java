@@ -26,7 +26,7 @@ public class SaidaMaterialResource {
     @Autowired
     private SaidaMaterialService saidaMaterialService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @PostMapping
     public ResponseEntity<SaidaMaterialDto> create(@Valid @RequestBody SaidaMaterialDto saidaMaterialDto){
         SaidaMaterial saiObj = saidaMaterialService.create(saidaMaterialDto);
@@ -34,14 +34,14 @@ public class SaidaMaterialResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'VENDAS', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'CAIXA', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @PutMapping(value = "/debitar_saldo/{codigoProduto}/{lote}/{quantidade}")
     public ResponseEntity<EntradaMaterialDto> debitarSaldo(@PathVariable String codigoProduto, @PathVariable String lote, @PathVariable int quantidade){
         EntradaMaterial entradaMaterial = saidaMaterialService.removeSaldo(codigoProduto, lote, quantidade);
         return ResponseEntity.ok().body(new EntradaMaterialDto(entradaMaterial));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE', 'VENDAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'CAIXA')")
     @GetMapping(value = "/codigo/{codigoProduto}")
     public ResponseEntity<ProdutoDto> findByCodigoProduto(@PathVariable String codigoProduto){
         Produto produtoObj = saidaMaterialService.findByCodigoProduto(codigoProduto);

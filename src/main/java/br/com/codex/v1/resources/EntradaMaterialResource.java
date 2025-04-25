@@ -22,7 +22,7 @@ public class EntradaMaterialResource {
     @Autowired
     EntradaMaterialService entradaMaterialService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @PostMapping
     public ResponseEntity<EntradaMaterialDto> create(@Valid @RequestBody EntradaMaterialDto entradaMaterialDto){
         EntradaMaterial objEntrada = entradaMaterialService.create(entradaMaterialDto);
@@ -30,7 +30,7 @@ public class EntradaMaterialResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @PutMapping(value = "/ajusta_estoque/{codigoProduto}/{lote}/{quantidade}")
     public ResponseEntity<EntradaMaterialDto> incluiSaldo(@PathVariable String codigoProduto, @PathVariable String lote, @PathVariable int quantidade) {
         EntradaMaterial materialObj = entradaMaterialService.ajustaSaldo(codigoProduto, lote, quantidade);
@@ -44,7 +44,7 @@ public class EntradaMaterialResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<EntradaMaterialDto> findById(@PathVariable Integer id){
         EntradaMaterial objEntrada = entradaMaterialService.findById(id);
@@ -52,7 +52,7 @@ public class EntradaMaterialResource {
     }
 
     //Lista todos os produtos, incluindo os zerados
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE', 'GERENTE_VENDAS', 'GERENTE_COMPRAS', 'GERENTE_VENDAS', 'VENDEDOR', 'CAIXA', 'COMPRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_VENDAS', 'GERENTE_COMPRAS', 'GERENTE_VENDAS', 'VENDEDOR', 'COMPRADOR')")
     @GetMapping
     public ResponseEntity<List<EntradaMaterialDto>> findAll(){
         List<EntradaMaterial> list = entradaMaterialService.findAll();
@@ -61,7 +61,7 @@ public class EntradaMaterialResource {
     }
 
     //Lista todos os produtos do estoque onde a quantidade é diferente de 0
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE', 'GERENTE_VENDAS', 'VENDEDOR', 'CAIXA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_VENDAS', 'VENDEDOR')")
     @GetMapping(value = "/produtos_estoque")
     public ResponseEntity<List<EntradaMaterialDto>> findAllByProdutoEstoque(){
         List<EntradaMaterial> lista = entradaMaterialService.findAllByProdutoEstoque();
@@ -70,7 +70,7 @@ public class EntradaMaterialResource {
     }
 
     //Entradas de Material Por Período
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/entrada_estoque_periodo")
     public ResponseEntity<List<EntradaMaterialDto>> findAllEntradaPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
         List<EntradaMaterial> list = entradaMaterialService.findAllEntradaPeriodo(dataInicial, dataFinal);

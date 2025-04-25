@@ -50,7 +50,6 @@ public class DepartamentoResource {
         return ResponseEntity.ok().body(new DepartamentoDto(objGrupo));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @GetMapping
     public ResponseEntity<List<DepartamentoDto>> findAll(){
         List<Departamento> list = departamentoService.findAll();

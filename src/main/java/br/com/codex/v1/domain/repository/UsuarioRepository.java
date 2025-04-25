@@ -22,6 +22,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByEmail(String email);
 
+    Optional<Usuario> findByNome(String nome);
+
     List<Usuario> findByPerfis(Integer perfil);
 
     @Query("SELECT COUNT(c) FROM Usuario c WHERE 3 MEMBER OF c.perfis")

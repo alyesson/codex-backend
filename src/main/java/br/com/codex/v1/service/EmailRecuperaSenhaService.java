@@ -21,9 +21,9 @@ public class EmailRecuperaSenhaService {
         Date dataAtual = new Date();
         SimpleDateFormat dataFormato = new SimpleDateFormat("dd/MM/yyyy");
 
-        String from = "suporte@codexsolucoes.com.br";
+        String from = "suporteti@decampaluminio.com.br";
         String to = usuario.getEmail();
-        String qmEnvia = "suporte@codexsolucoes.com.br";
+        String qmEnvia = "suporteti@decampaluminio.com.br";
         String subject = "Recuperação De Senha";
         String message = "E-mail com solicitação de recuperação de senha";
         message += "<p>Obrigado por entrar em contato, você está recebendo este e-mail porque você solicitou uma recuperação de senha</p>";

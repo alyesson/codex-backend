@@ -26,6 +26,9 @@ public class SolicitacaoCompraService {
     @Autowired
     private SolicitacaoItensCompraRepository solicitacaoItensCompraRepository;
 
+    @Autowired
+    private EnviaEmailService enviaEmailService;
+
     public SolicitacaoCompra create(SolicitacaoCompraDto solicitacaoCompradto) {
         solicitacaoCompradto.setId(null);
         SolicitacaoCompra objSolicitacaoCompra = new SolicitacaoCompra(solicitacaoCompradto);
@@ -42,6 +45,13 @@ public class SolicitacaoCompraService {
             item.setSolicitacaoCompra(objSolicitacaoCompra);
             solicitacaoItensCompraRepository.save(item);
         }
+
+        // Enviar e-mail e capturar o retorno
+        String resultadoEnvioEmail = enviaEmailService.sendSimpleMail(solicitacaoCompradto);
+
+        // Retornar o resultado do envio de e-mail
+        System.out.println(resultadoEnvioEmail); // Para log ou monitoramento
+
         return objSolicitacaoCompra;
     }
 
@@ -68,5 +78,9 @@ public class SolicitacaoCompraService {
     public SolicitacaoCompra findById(Integer id){
         Optional<SolicitacaoCompra> objSolicitacaoCompra = solicitacaoCompraRepository.findById(id);
         return objSolicitacaoCompra.orElseThrow(() -> new ObjectNotFoundException("Solicitação não encontrada"));
+    }
+
+    public List<SolicitacaoCompra> findAllSolicitacoesPeriodo(Date dataInicial, Date dataFinal) {
+        return solicitacaoCompraRepository.findAllSolicitacoesPeriodo(dataInicial, dataFinal);
     }
 }

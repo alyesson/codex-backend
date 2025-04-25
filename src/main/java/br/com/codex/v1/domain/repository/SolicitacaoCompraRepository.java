@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 public interface SolicitacaoCompraRepository extends JpaRepository<SolicitacaoCompra, Integer> {
@@ -24,4 +25,7 @@ public interface SolicitacaoCompraRepository extends JpaRepository<SolicitacaoCo
 
     @Query("SELECT s FROM SolicitacaoCompra s WHERE s.situacao = 'Aprovado' AND YEAR(s.dataSolicitacao) = :anoAtual ORDER BY s.dataSolicitacao DESC")
     List<SolicitacaoCompra> findAllBysituacao(@Param("anoAtual") int anoAtual);
+
+    @Query("SELECT s FROM SolicitacaoCompra s WHERE s.dataSolicitacao BETWEEN :dataInicial AND :dataFinal")
+    List<SolicitacaoCompra> findAllSolicitacoesPeriodo(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
 }
