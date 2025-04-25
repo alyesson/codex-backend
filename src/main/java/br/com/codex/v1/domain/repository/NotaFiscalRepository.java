@@ -21,5 +21,5 @@ public interface NotaFiscalRepository extends JpaRepository<NotasFiscais, Intege
     @Query("SELECT a FROM NotasFiscais a WHERE a.dataImportacao BETWEEN :dataInicial AND :dataFinal")
     List<NotasFiscais> findAllEntradaPeriodo(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
 
-    Optional<NotasFiscais> findByNumero(Integer notaFiscalOrigem);
+    Optional<NotasFiscais> findByNumero(String notaFiscalOrigem);
 }

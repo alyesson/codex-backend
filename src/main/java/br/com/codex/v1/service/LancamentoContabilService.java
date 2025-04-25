@@ -67,7 +67,7 @@ public class LancamentoContabilService {
 
         NotasFiscais nota = null;
         if (lancamentoContabilDto.getNotaFiscalOrigem() != null) {
-            nota = notaFiscalRepository.findByNumero(lancamentoContabilDto.getNotaFiscalOrigem())
+            nota = notaFiscalRepository.findByNumero(lancamentoContabilDto.getNotaFiscalOrigem().toString())
                     .orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
         }
 
