@@ -51,12 +51,12 @@ public class ContasService {
     }
 
     private void validaContas(ContasDto contasDto){
-        Optional<Contas> objConta = contasRepository.findByConta(contasDto.getConta());
+        //Optional<Contas> objConta = contasRepository.findByConta(contasDto.getConta());
         Optional<Contas> objReduz = contasRepository.findByReduzido(contasDto.getReduzido());
 
-        if(objConta.isPresent() && objConta.get().getConta().equals(contasDto.getConta())){
-            throw new DataIntegrityViolationException("Esta conta contábil já existe");
-        }
+        //if(objConta.isPresent() && objConta.get().getConta().equals(contasDto.getConta())){
+         //   throw new DataIntegrityViolationException("Esta conta contábil já existe");
+        //}
 
         if(objReduz.isPresent() && objReduz.get().getReduzido().equals(contasDto.getReduzido())){
             throw new DataIntegrityViolationException("Esta conta reduzida já existe");
