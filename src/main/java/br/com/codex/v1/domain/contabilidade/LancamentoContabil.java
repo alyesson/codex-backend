@@ -60,10 +60,6 @@ public class LancamentoContabil implements Serializable {
         this.id = obj.getId();
         this.dataLancamento = obj.getDataLancamento();
         this.valor = obj.getValor();
-        this.contaDebito = obj.getContaDebito();
-        this.contaCredito = obj.getContaCredito();
-        this.historicoPadrao = obj.getHistoricoPadrao();
-        this.notaFiscalOrigem = obj.getNotaFiscalOrigem();
         this.complementoHistorico = obj.getComplementoHistorico();
     }
 

@@ -20,10 +20,10 @@ public class LancamentoContabilDto implements Serializable {
     private Integer id;
     private Date dataLancamento;
     private BigDecimal valor;
-    private Contas contaDebito;
-    private Contas contaCredito;
-    private HistoricoPadrao historicoPadrao;
-    private NotasFiscais notaFiscalOrigem;
+    private Integer contaDebito;
+    private Integer contaCredito;
+    private Integer historicoPadrao;
+    private Integer notaFiscalOrigem;
     private String complementoHistorico; // opcional, se quiser adicionar infos extras
 
     public LancamentoContabilDto() {
@@ -33,10 +33,10 @@ public class LancamentoContabilDto implements Serializable {
         this.id = obj.getId();
         this.dataLancamento = obj.getDataLancamento();
         this.valor = obj.getValor();
-        this.contaDebito = obj.getContaDebito();
-        this.contaCredito = obj.getContaCredito();
-        this.historicoPadrao = obj.getHistoricoPadrao();
-        this.notaFiscalOrigem = obj.getNotaFiscalOrigem();
+        this.contaDebito = obj.getContaDebito() != null ? obj.getContaDebito().getId() : null;
+        this.contaCredito = obj.getContaCredito() != null ? obj.getContaCredito().getId() : null;
+        this.historicoPadrao = obj.getHistoricoPadrao() != null ? obj.getHistoricoPadrao().getId() : null;
+        this.notaFiscalOrigem = obj.getNotaFiscalOrigem() != null ? obj.getNotaFiscalOrigem().getId() : null;
         this.complementoHistorico = obj.getComplementoHistorico();
     }
 
@@ -64,35 +64,35 @@ public class LancamentoContabilDto implements Serializable {
         this.valor = valor;
     }
 
-    public Contas getContaDebito() {
+    public Integer getContaDebito() {
         return contaDebito;
     }
 
-    public void setContaDebito(Contas contaDebito) {
+    public void setContaDebito(Integer contaDebito) {
         this.contaDebito = contaDebito;
     }
 
-    public Contas getContaCredito() {
+    public Integer getContaCredito() {
         return contaCredito;
     }
 
-    public void setContaCredito(Contas contaCredito) {
+    public void setContaCredito(Integer contaCredito) {
         this.contaCredito = contaCredito;
     }
 
-    public HistoricoPadrao getHistoricoPadrao() {
+    public Integer getHistoricoPadrao() {
         return historicoPadrao;
     }
 
-    public void setHistoricoPadrao(HistoricoPadrao historicoPadrao) {
+    public void setHistoricoPadrao(Integer historicoPadrao) {
         this.historicoPadrao = historicoPadrao;
     }
 
-    public NotasFiscais getNotaFiscalOrigem() {
+    public Integer getNotaFiscalOrigem() {
         return notaFiscalOrigem;
     }
 
-    public void setNotaFiscalOrigem(NotasFiscais notaFiscalOrigem) {
+    public void setNotaFiscalOrigem(Integer notaFiscalOrigem) {
         this.notaFiscalOrigem = notaFiscalOrigem;
     }
 
