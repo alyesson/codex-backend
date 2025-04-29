@@ -20,10 +20,14 @@ public class LancamentoContabilDto implements Serializable {
     private Integer id;
     private Date dataLancamento;
     private BigDecimal valor;
-    private Integer contaDebito;
-    private Integer contaCredito;
-    private Integer historicoPadrao;
-    private Integer notaFiscalOrigem;
+    private Integer contaDebitoId;
+    private String contaDebitoNome;
+    private Integer contaCreditoId;
+    private String contaCreditoNome;
+    private Integer historicoPadraoId;
+    private String historicoPadraoDescricao;
+    private Integer notaFiscalOrigemId;
+    private String notaFiscalNumero;
     private String complementoHistorico; // opcional, se quiser adicionar infos extras
 
     public LancamentoContabilDto() {
@@ -33,10 +37,14 @@ public class LancamentoContabilDto implements Serializable {
         this.id = obj.getId();
         this.dataLancamento = obj.getDataLancamento();
         this.valor = obj.getValor();
-        this.contaDebito = obj.getContaDebito() != null ? obj.getContaDebito().getId() : null;
-        this.contaCredito = obj.getContaCredito() != null ? obj.getContaCredito().getId() : null;
-        this.historicoPadrao = obj.getHistoricoPadrao() != null ? obj.getHistoricoPadrao().getId() : null;
-        this.notaFiscalOrigem = obj.getNotaFiscalOrigem() != null ? obj.getNotaFiscalOrigem().getId() : null;
+        this.contaDebitoId = obj.getContaDebito() != null ? obj.getContaDebito().getId() : null;
+        this.contaDebitoNome = obj.getContaDebito() != null ? obj.getContaDebito().getNome() : null;
+        this.contaCreditoId = obj.getContaCredito() != null ? obj.getContaCredito().getId() : null;
+        this.contaCreditoNome = obj.getContaCredito() != null ? obj.getContaCredito().getNome() : null;
+        this.historicoPadraoId = obj.getHistoricoPadrao() != null ? obj.getHistoricoPadrao().getId() : null;
+        this.historicoPadraoDescricao = obj.getHistoricoPadrao() != null ? obj.getHistoricoPadrao().getDescricao() : null;
+        this.notaFiscalOrigemId = obj.getNotaFiscalOrigem() != null ? obj.getNotaFiscalOrigem().getId() : null;
+        this.notaFiscalNumero = obj.getNotaFiscalOrigem() != null ? obj.getNotaFiscalOrigem().getNumero() : null;
         this.complementoHistorico = obj.getComplementoHistorico();
     }
 
@@ -64,36 +72,52 @@ public class LancamentoContabilDto implements Serializable {
         this.valor = valor;
     }
 
-    public Integer getContaDebito() {
-        return contaDebito;
+    public Integer getContaDebitoId() {
+        return contaDebitoId;
     }
 
-    public void setContaDebito(Integer contaDebito) {
-        this.contaDebito = contaDebito;
+    public void setContaDebitoId(Integer contaDebitoId) {
+        this.contaDebitoId = contaDebitoId;
     }
 
-    public Integer getContaCredito() {
-        return contaCredito;
+    public Integer getContaCreditoId() {
+        return contaCreditoId;
     }
 
-    public void setContaCredito(Integer contaCredito) {
-        this.contaCredito = contaCredito;
+    public void setContaCreditoId(Integer contaCreditoId) {
+        this.contaCreditoId = contaCreditoId;
     }
 
-    public Integer getHistoricoPadrao() {
-        return historicoPadrao;
+    public Integer getHistoricoPadraoId() {
+        return historicoPadraoId;
     }
 
-    public void setHistoricoPadrao(Integer historicoPadrao) {
-        this.historicoPadrao = historicoPadrao;
+    public void setHistoricoPadraoId(Integer historicoPadraoId) {
+        this.historicoPadraoId = historicoPadraoId;
     }
 
-    public Integer getNotaFiscalOrigem() {
-        return notaFiscalOrigem;
+    public String getHistoricoPadraoDescricao() {
+        return historicoPadraoDescricao;
     }
 
-    public void setNotaFiscalOrigem(Integer notaFiscalOrigem) {
-        this.notaFiscalOrigem = notaFiscalOrigem;
+    public void setHistoricoPadraoDescricao(String historicoPadraoDescricao) {
+        this.historicoPadraoDescricao = historicoPadraoDescricao;
+    }
+
+    public Integer getNotaFiscalOrigemId() {
+        return notaFiscalOrigemId;
+    }
+
+    public void setNotaFiscalOrigemId(Integer notaFiscalOrigemId) {
+        this.notaFiscalOrigemId = notaFiscalOrigemId;
+    }
+
+    public String getNotaFiscalNumero() {
+        return notaFiscalNumero;
+    }
+
+    public void setNotaFiscalNumero(String notaFiscalNumero) {
+        this.notaFiscalNumero = notaFiscalNumero;
     }
 
     public String getComplementoHistorico() {
@@ -102,5 +126,21 @@ public class LancamentoContabilDto implements Serializable {
 
     public void setComplementoHistorico(String complementoHistorico) {
         this.complementoHistorico = complementoHistorico;
+    }
+
+    public String getContaDebitoNome() {
+        return contaDebitoNome;
+    }
+
+    public void setContaDebitoNome(String contaDebitoNome) {
+        this.contaDebitoNome = contaDebitoNome;
+    }
+
+    public String getContaCreditoNome() {
+        return contaCreditoNome;
+    }
+
+    public void setContaCreditoNome(String contaCreditoNome) {
+        this.contaCreditoNome = contaCreditoNome;
     }
 }

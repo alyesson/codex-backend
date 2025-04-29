@@ -58,16 +58,16 @@ public class LancamentoContabilService {
         lancamento.setValor(lancamentoContabilDto.getValor());
 
         // Busca entidades relacionadas pelo ID
-        Contas contaDebito = contasRepository.findById(lancamentoContabilDto.getContaDebito())
+        Contas contaDebito = contasRepository.findById(lancamentoContabilDto.getContaDebitoId())
                 .orElseThrow(() -> new ObjectNotFoundException("Conta débito não encontrada"));
-        Contas contaCredito = contasRepository.findById(lancamentoContabilDto.getContaCredito())
+        Contas contaCredito = contasRepository.findById(lancamentoContabilDto.getContaCreditoId())
                 .orElseThrow(() -> new ObjectNotFoundException("Conta crédito não encontrada"));
-        HistoricoPadrao historico = historicoPadraoRepository.findById(lancamentoContabilDto.getHistoricoPadrao())
+        HistoricoPadrao historico = historicoPadraoRepository.findById(lancamentoContabilDto.getHistoricoPadraoId())
                 .orElseThrow(() -> new ObjectNotFoundException("Histórico padrão não encontrado"));
 
         NotasFiscais nota = null;
-        if (lancamentoContabilDto.getNotaFiscalOrigem() != null) {
-            nota = notaFiscalRepository.findByNumero(lancamentoContabilDto.getNotaFiscalOrigem().toString())
+        if (lancamentoContabilDto.getNotaFiscalOrigemId() != null) {
+            nota = notaFiscalRepository.findByNumero(lancamentoContabilDto.getNotaFiscalOrigemId().toString())
                     .orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
         }
 
