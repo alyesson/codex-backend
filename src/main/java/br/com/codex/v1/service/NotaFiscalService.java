@@ -691,45 +691,39 @@ public class NotaFiscalService {
         return notaFiscalRepository.findAllEntradaPeriodo(dataInicial, dataFinal);
     }
 
-    private LancamentoContabil lancamentoContabil (NotasFiscais notasFiscais) {
-        Contas contaDebito;
-        Contas contaCredito;
+    private LancamentoContabil lancamentoContabil(NotasFiscais notasFiscais) {
 
         LancamentoContabil lancamento = new LancamentoContabil();
 
         lancamento.setDataLancamento(notasFiscais.getDataImportacao());
         lancamento.setValor(notasFiscais.getValorTotal());
 
-        String tipoNota = notasFiscais.getNaturezaOperacao(); // "0" = entrada, "1" = saída
+        // Verifica o tipo da nota: 0 = entrada (compra), 1 = saída (venda)
+        boolean isNotaEntrada = "0".equals(notasFiscais.getTipo())
 
-        if ("0".equals(tipoNota)) {
-            // Nota de compra/entrada
+        Contas contaDebito;
+        Contas contaCredito;
+        HistoricoPadrao historico;
+
+        if (isNotaEntrada) {
+            // Lançamento de COMPRA
             contaDebito = contasService.findByNome("Estoque de Mercadorias");
             contaCredito = contasService.findByNome("Fornecedores a Pagar");
+            historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
+            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialEmitente());
         } else {
-            // Nota de venda/saída
-            contaCredito = contasService.findByNome("Clientes");
-            contaDebito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente());
+            // Lançamento de VENDA
+            contaDebito = contasService.findByNome("Duplicatas a Receber");
+            contaCredito = contasService.findByNome("Receita de Vendas");
+            historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
+            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialDestinatario());
         }
 
         lancamento.setContaDebito(contaDebito);
         lancamento.setContaCredito(contaCredito);
-
-        HistoricoPadrao historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
-        if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
-            historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
-        }
-
         lancamento.setHistoricoPadrao(historico);
         lancamento.setNotaFiscalOrigem(notasFiscais);
 
-        if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
-            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialEmitente());
-        } else {
-            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialDestinatario());
-        }
-
         return lancamentoContabilRepository.save(lancamento);
     }
-
 }
