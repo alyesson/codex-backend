@@ -41,7 +41,8 @@ public class LancamentoContabilResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping("/periodo_ano")
-    public ResponseEntity<List<LancamentoContabilDto>> findAllByYearRange(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+    public ResponseEntity<List<LancamentoContabilDto>> findAllByYearRange(@RequestParam("dataInicial") Date dataInicial,
+                                                                          @RequestParam("dataFinal") Date dataFinal){
         List<LancamentoContabil> list = lancamentoContabilService.findAllByYearRange(dataInicial, dataFinal);
         List<LancamentoContabilDto> listDto = list.stream().map(LancamentoContabilDto::new).collect(Collectors.toList());
 
