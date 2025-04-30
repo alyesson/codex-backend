@@ -691,48 +691,41 @@ public class NotaFiscalService {
         return notaFiscalRepository.findAllEntradaPeriodo(dataInicial, dataFinal);
     }
 
-    private LancamentoContabil lancamentoContabil (NotasFiscais notasFiscais){
+    private LancamentoContabil lancamentoContabil (NotasFiscais notasFiscais) {
+        Contas contaDebito;
+        Contas contaCredito;
 
         LancamentoContabil lancamento = new LancamentoContabil();
 
-        // Define a data do lançamento como a data de emissão da nota
         lancamento.setDataLancamento(notasFiscais.getDataImportacao());
-
-        // Define o valor (por padrão usando o valor total da nota)
         lancamento.setValor(notasFiscais.getValorTotal());
 
-        // Buscar Conta Débito e Conta Crédito
-        Contas contaCredito = contasService.findByNome("Clientes"); // Ex: "Clientes a Receber"
-        Contas contaDebito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente()); // Ex: "Receita de Vendas"
-
         if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
-            // Se for compra, troca
             contaDebito = contasService.findByNome("Estoque de Mercadorias");
             contaCredito = contasService.findByNome("Fornecedores a Pagar");
+        } else {
+            contaDebito = contasService.findByNome("Clientes");// A empresa irá receber do cliente
+            contaCredito = contasService.findByNome("Duplicatas A Receber");// Receita da empresa
         }
 
         lancamento.setContaDebito(contaDebito);
         lancamento.setContaCredito(contaCredito);
 
-        // Buscar Histórico Padrão
         HistoricoPadrao historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
         if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
             historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
         }
 
         lancamento.setHistoricoPadrao(historico);
-
-        // Vincular a nota fiscal origem
         lancamento.setNotaFiscalOrigem(notasFiscais);
 
-        // Complemento do Histórico
         if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
             lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialEmitente());
         } else {
             lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialDestinatario());
         }
 
-        // Finalmente salva o lançamento no banco
         return lancamentoContabilRepository.save(lancamento);
     }
+
 }
