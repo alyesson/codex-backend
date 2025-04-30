@@ -1,14 +1,15 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
+import br.com.codex.v1.domain.contabilidade.Contas;
+import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
+import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
+import br.com.codex.v1.domain.repository.*;
 import br.com.swconsultoria.nfe.schema_4.consReciNFe.TIpi;
 import br.com.swconsultoria.nfe.schema_4.consReciNFe.TNFe;
 import br.com.swconsultoria.nfe.schema_4.consReciNFe.TNfeProc;
 import br.com.swconsultoria.nfe.util.XmlNfeUtil;
 import br.com.codex.v1.domain.estoque.NotaFiscalItens;
 import br.com.codex.v1.domain.estoque.NotasFiscais;
-import br.com.codex.v1.domain.repository.NotaFiscalItensRepository;
-import br.com.codex.v1.domain.repository.NotaFiscalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -34,10 +35,18 @@ public class NotaFiscalService {
     @Autowired
     private NotaFiscalItensRepository itensNotaFiscalRepository;
 
+    @Autowired
+    ContasService contasService;
+
+    @Autowired
+    HistoricoPadraoService historicoPadraoService;
+
+    @Autowired
+    LancamentoContabilRepository lancamentoContabilRepository;
+
     String numeroDaNota;
 
     public NotasFiscais findByChave(String chave) {
-
         Optional<NotasFiscais> nota = notaFiscalRepository.findByChave(chave);
 
         if(!nota.isPresent()){
@@ -246,6 +255,7 @@ public class NotaFiscalService {
 
         salvarNotaFiscal(nota);
         salvarNotaFiscalItens(itens);
+        lancamentoContabil(nota);
 
         return nota;
     }
@@ -289,12 +299,8 @@ public class NotaFiscalService {
             if (i.getProd().getRastro() != null && i.getProd().getRastro().size() > 0) {
 
                 item.setFabricacaoLote(i.getProd().getRastro().get(0).getDFab() != null ? i.getProd().getRastro().get(0).getDFab() : null);
-
                 item.setValidadeLote(i.getProd().getRastro().get(0).getDVal() != null ? i.getProd().getRastro().get(0).getDVal() : null);
-
-                item.setNumeroLote(i.getProd().getRastro().get(0).getNLote() != null ?
-                        i.getProd().getRastro().get(0).getNLote() : "");
-
+                item.setNumeroLote(i.getProd().getRastro().get(0).getNLote() != null ? i.getProd().getRastro().get(0).getNLote() : "");
             }
 
             for (JAXBElement element : i.getImposto().getContent()) {
@@ -683,5 +689,50 @@ public class NotaFiscalService {
 
     public List<NotasFiscais> findAllEntradaPeriodo(Date dataInicial, Date dataFinal) {
         return notaFiscalRepository.findAllEntradaPeriodo(dataInicial, dataFinal);
+    }
+
+    private LancamentoContabil lancamentoContabil (NotasFiscais notasFiscais){
+
+        LancamentoContabil lancamento = new LancamentoContabil();
+
+        // Define a data do lançamento como a data de emissão da nota
+        lancamento.setDataLancamento(notasFiscais.getDataImportacao());
+
+        // Define o valor (por padrão usando o valor total da nota)
+        lancamento.setValor(notasFiscais.getValorTotal());
+
+        // Buscar Conta Débito e Conta Crédito
+        Contas contaCredito = contasService.findByNome("Clientes"); // Ex: "Clientes a Receber"
+        Contas contaDebito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente()); // Ex: "Receita de Vendas"
+
+        if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
+            // Se for compra, troca
+            contaDebito = contasService.findByNome("Estoque de Mercadorias");
+            contaCredito = contasService.findByNome("Fornecedores a Pagar");
+        }
+
+        lancamento.setContaDebito(contaDebito);
+        lancamento.setContaCredito(contaCredito);
+
+        // Buscar Histórico Padrão
+        HistoricoPadrao historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
+        if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
+            historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
+        }
+
+        lancamento.setHistoricoPadrao(historico);
+
+        // Vincular a nota fiscal origem
+        lancamento.setNotaFiscalOrigem(notasFiscais);
+
+        // Complemento do Histórico
+        if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
+            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialEmitente());
+        } else {
+            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialDestinatario());
+        }
+
+        // Finalmente salva o lançamento no banco
+        return lancamentoContabilRepository.save(lancamento);
     }
 }

@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface ContasRepository extends JpaRepository<Contas, Integer> {
 
-    Optional<Contas> findByConta(String conta);
-
+    //Optional<Contas> findByConta(String conta);
     Optional<Contas> findByReduzido(String reduzido);
 
     Optional<Contas> findByNomeIgnoreCaseContaining(String nome);
+    Optional<Contas> findByNome(String nome);
 }

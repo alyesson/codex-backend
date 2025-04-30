@@ -50,4 +50,10 @@ public class HistoricoPadraoService {
             throw new DataIntegrityViolationException("Este histórico padrão já existe");
         }
     }
+
+    public HistoricoPadrao findByDescricao(String descricao) {
+        return historicoPadraoRepository.findByDescricao(descricao)
+                .or(() -> historicoPadraoRepository.findByDescricaoIgnoreCaseContaining(descricao))
+                .orElseThrow(() -> new ObjectNotFoundException("Não foi encontrado um histórico padrão com a descrição: " + descricao));
+    }
 }

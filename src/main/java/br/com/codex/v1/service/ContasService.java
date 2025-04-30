@@ -63,8 +63,9 @@ public class ContasService {
         }
     }
 
-    public Contas findByNome(String clientes) {
-        Optional<Contas> objNome = contasRepository.findByNomeIgnoreCaseContaining(clientes);
-        return objNome.orElseGet(() -> objNome.orElseThrow(() -> new ObjectNotFoundException("Não foi encontrada uma conta débito ou crédito com o nome " + objNome)));
+    public Contas findByNome(String nome) {
+        return contasRepository.findByNome(nome)
+                .or(() -> contasRepository.findByNomeIgnoreCaseContaining(nome))
+                .orElseThrow(() -> new ObjectNotFoundException("Não foi encontrada uma conta com o nome: " + nome));
     }
 }
