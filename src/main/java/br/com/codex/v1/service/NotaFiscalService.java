@@ -700,12 +700,16 @@ public class NotaFiscalService {
         lancamento.setDataLancamento(notasFiscais.getDataImportacao());
         lancamento.setValor(notasFiscais.getValorTotal());
 
-        if (notasFiscais.getNaturezaOperacao().toLowerCase().contains("compra")) {
+        String tipoNota = notasFiscais.getNaturezaOperacao(); // "0" = entrada, "1" = saída
+
+        if ("0".equals(tipoNota)) {
+            // Nota de compra/entrada
             contaDebito = contasService.findByNome("Estoque de Mercadorias");
             contaCredito = contasService.findByNome("Fornecedores a Pagar");
         } else {
-            contaDebito = contasService.findByNome("Clientes");// A empresa irá receber do cliente
-            contaCredito = contasService.findByNome("Duplicatas A Receber");// Receita da empresa
+            // Nota de venda/saída
+            contaCredito = contasService.findByNome("Clientes");
+            contaDebito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente());
         }
 
         lancamento.setContaDebito(contaDebito);
