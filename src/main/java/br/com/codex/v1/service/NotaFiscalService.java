@@ -699,7 +699,7 @@ public class NotaFiscalService {
         lancamento.setValor(notasFiscais.getValorTotal());
 
         // Verifica o tipo da nota: 0 = entrada (compra), 1 = saída (venda)
-        boolean isNotaEntrada = "0".equals(notasFiscais.getTipo())
+        boolean isNotaEntrada = "0".equals(notasFiscais.getTipo());
 
         Contas contaDebito;
         Contas contaCredito;
