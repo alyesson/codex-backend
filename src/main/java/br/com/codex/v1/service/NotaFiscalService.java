@@ -693,30 +693,38 @@ public class NotaFiscalService {
 
     private LancamentoContabil lancamentoContabil(NotasFiscais notasFiscais) {
 
-        LancamentoContabil lancamento = new LancamentoContabil();
-
-        lancamento.setDataLancamento(notasFiscais.getDataImportacao());
-        lancamento.setValor(notasFiscais.getValorTotal());
-
-        // Verifica o tipo da nota: 0 = entrada (compra), 1 = saída (venda)
-        boolean isCompra = "0".equals(notasFiscais.getTipo());
-
         Contas contaDebito;
         Contas contaCredito;
         HistoricoPadrao historico;
 
-        if (isCompra) {
-            // Lançamento de COMPRA
-            contaDebito = contasService.findByNome("Estoque de Mercadorias");
+        LancamentoContabil lancamento = new LancamentoContabil();
+        lancamento.setDataLancamento(notasFiscais.getDataImportacao());
+        lancamento.setValor(notasFiscais.getValorTotal());
+
+        // Verifica se a nota é de entrada (compra): tpNF = 1 significa saída do fornecedor, entrada para a empresa
+        boolean isNotaEntrada = "1".equals(notasFiscais.getTipo());
+
+        if (isNotaEntrada) {
+            // Nota de ENTRADA (compra feita pela empresa)
+            contaDebito = contasService.findByNome("Estoque");
             contaCredito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente());
             historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
-            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialEmitente());
+
+            String complemento = "NF " + notasFiscais.getNumero()
+                    + " - Fornecedor: " + (notasFiscais.getRazaoSocialEmitente() != null ? notasFiscais.getRazaoSocialEmitente() : "Desconhecido")
+                    + " - Chave: " + notasFiscais.getChave();
+            lancamento.setComplementoHistorico(complemento);
+
         } else {
-            // Lançamento de VENDA
-            contaDebito = contasService.findByNome(notasFiscais.getRazaoSocialDestinatario());
-            contaCredito = contasService.findByNome("Duplicatas a Receber");
+            // Nota de SAÍDA (venda feita pela empresa)
+            contaDebito = contasService.findByNome("Clientes");
+            contaCredito = contasService.findByNome("Receita Bruta De Vendas E Mercadorias");
             historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
-            lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialDestinatario());
+
+            String complemento = "NF " + notasFiscais.getNumero()
+                    + " - Cliente: " + (notasFiscais.getRazaoSocialDestinatario() != null ? notasFiscais.getRazaoSocialDestinatario() : "Desconhecido")
+                    + " - Chave: " + notasFiscais.getChave();
+            lancamento.setComplementoHistorico(complemento);
         }
 
         lancamento.setContaDebito(contaDebito);

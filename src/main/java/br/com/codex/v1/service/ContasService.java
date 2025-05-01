@@ -65,7 +65,12 @@ public class ContasService {
 
     public Contas findByNome(String nome) {
         return contasRepository.findByNome(nome)
-                .or(() -> contasRepository.findByNomeIgnoreCaseContaining(nome))
-                .orElseThrow(() -> new ObjectNotFoundException("Não foi encontrada uma conta com o nome: " + nome));
+                .orElseGet(() -> {
+                    List<Contas> similares = contasRepository.findByNomeIgnoreCaseContaining(nome);
+                    if (!similares.isEmpty()) {
+                        return similares.get(0); // retorna o primeiro parecido encontrado
+                    }
+                    throw new ObjectNotFoundException("Não foi encontrada uma conta com o nome ou semelhante a: " + nome);
+                });
     }
 }

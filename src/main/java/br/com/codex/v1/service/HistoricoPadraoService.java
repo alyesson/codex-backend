@@ -53,7 +53,12 @@ public class HistoricoPadraoService {
 
     public HistoricoPadrao findByDescricao(String descricao) {
         return historicoPadraoRepository.findByDescricao(descricao)
-                .or(() -> historicoPadraoRepository.findByDescricaoIgnoreCaseContaining(descricao))
-                .orElseThrow(() -> new ObjectNotFoundException("Não foi encontrado um histórico padrão com a descrição: " + descricao));
+                .orElseGet(() -> {
+                    List<HistoricoPadrao> similares = historicoPadraoRepository.findByDescricaoIgnoreCaseContaining(descricao);
+                    if (!similares.isEmpty()) {
+                        return similares.get(0); // usa o primeiro histórico similar encontrado
+                    }
+                    throw new ObjectNotFoundException("Não foi encontrado um histórico padrão com a descrição ou semelhante a: " + descricao);
+                });
     }
 }
