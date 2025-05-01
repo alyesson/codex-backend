@@ -699,22 +699,22 @@ public class NotaFiscalService {
         lancamento.setValor(notasFiscais.getValorTotal());
 
         // Verifica o tipo da nota: 0 = entrada (compra), 1 = saída (venda)
-        boolean isNotaEntrada = "0".equals(notasFiscais.getTipo());
+        boolean isCompra = "0".equals(notasFiscais.getTipo());
 
         Contas contaDebito;
         Contas contaCredito;
         HistoricoPadrao historico;
 
-        if (isNotaEntrada) {
+        if (isCompra) {
             // Lançamento de COMPRA
             contaDebito = contasService.findByNome("Estoque de Mercadorias");
-            contaCredito = contasService.findByNome("Fornecedores a Pagar");
+            contaCredito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente());
             historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
             lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialEmitente());
         } else {
             // Lançamento de VENDA
-            contaDebito = contasService.findByNome("Duplicatas a Receber");
-            contaCredito = contasService.findByNome("Receita de Vendas");
+            contaDebito = contasService.findByNome(notasFiscais.getRazaoSocialDestinatario());
+            contaCredito = contasService.findByNome("Duplicatas a Receber");
             historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
             lancamento.setComplementoHistorico("NF " + notasFiscais.getNumero() + " - " + notasFiscais.getRazaoSocialDestinatario());
         }
