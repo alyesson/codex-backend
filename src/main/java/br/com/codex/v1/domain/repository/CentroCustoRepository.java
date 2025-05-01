@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.cadastros.CentroCusto;
+import br.com.codex.v1.domain.financeiro.CentroCusto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

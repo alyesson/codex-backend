@@ -1,4 +1,4 @@
-package br.com.codex.v1.domain.cadastros;
+package br.com.codex.v1.domain.financeiro;
 
 import br.com.codex.v1.domain.dto.CentroCustoDto;
 

@@ -1,7 +1,7 @@
 package br.com.codex.v1.service;
 
 
-import br.com.codex.v1.domain.cadastros.CentroCusto;
+import br.com.codex.v1.domain.financeiro.CentroCusto;
 import br.com.codex.v1.domain.dto.CentroCustoDto;
 import br.com.codex.v1.domain.repository.CentroCustoRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;

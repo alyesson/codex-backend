@@ -1,6 +1,6 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.cadastros.CentroCusto;
+import br.com.codex.v1.domain.financeiro.CentroCusto;
 import br.com.codex.v1.domain.dto.CentroCustoDto;
 import br.com.codex.v1.service.CentroCustoService;
 import org.springframework.beans.factory.annotation.Autowired;

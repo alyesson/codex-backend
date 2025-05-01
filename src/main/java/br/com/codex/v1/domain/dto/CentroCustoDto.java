@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.cadastros.CentroCusto;
+import br.com.codex.v1.domain.financeiro.CentroCusto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
