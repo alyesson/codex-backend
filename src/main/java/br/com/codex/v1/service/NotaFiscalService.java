@@ -739,7 +739,7 @@ public class NotaFiscalService {
     }
 
     public NotasFiscais findNotaFiscalByIdAndEmissor(String numero, String razaoSocialEmitente) {
-        Optional<NotasFiscais> objNota = lancamentoContabilRepository.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+        Optional<NotasFiscais> objNota = notaFiscalRepository.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
         return objNota.orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
     }
 }
