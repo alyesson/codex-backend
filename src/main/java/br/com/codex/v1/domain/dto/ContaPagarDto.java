@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+import static br.com.codex.v1.utilitario.MinimizarPalavras.minimizarPalavras;
 
 public class ContaPagarDto implements Serializable {
     @Serial
@@ -160,7 +161,7 @@ public class ContaPagarDto implements Serializable {
     }
 
     public void setObservacao(String observacao) {
-        this.observacao = observacao;
+        this.observacao = minimizarPalavras(observacao);
     }
 
     public String getOrigemDocumento() {
