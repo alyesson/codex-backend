@@ -3,7 +3,9 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.domain.contabilidade.Contas;
 import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
+import br.com.codex.v1.domain.estoque.Produto;
 import br.com.codex.v1.domain.repository.*;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.swconsultoria.nfe.schema_4.consReciNFe.TIpi;
 import br.com.swconsultoria.nfe.schema_4.consReciNFe.TNFe;
 import br.com.swconsultoria.nfe.schema_4.consReciNFe.TNfeProc;
@@ -15,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -654,7 +657,7 @@ public class NotaFiscalService {
                     }
                 }
             }
-            //item.setNumeroNotaFiscal(notasFiscais);
+
             item.setNumeroNotaFiscal(numeroDaNota);
             itens.add(item);
         });
@@ -733,5 +736,10 @@ public class NotaFiscalService {
         lancamento.setNotaFiscalOrigem(notasFiscais);
 
         return lancamentoContabilRepository.save(lancamento);
+    }
+
+    public NotasFiscais findNotaFiscalByIdAndEmissor(String numero, String razaoSocialEmitente) {
+        Optional<NotasFiscais> objNota = lancamentoContabilRepository.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+        return objNota.orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
     }
 }

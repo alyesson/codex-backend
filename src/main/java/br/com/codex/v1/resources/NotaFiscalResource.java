@@ -1,5 +1,6 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.dto.ProdutoDto;
 import br.com.codex.v1.domain.estoque.NotasFiscais;
 import br.com.codex.v1.domain.dto.NotasFiscaisDto;
 import br.com.codex.v1.domain.repository.NotaFiscalRepository;
@@ -65,5 +66,13 @@ public class NotaFiscalResource {
         List<NotasFiscais> list = notaFiscalService.findAllEntradaPeriodo(dataInicial, dataFinal);
         List<NotasFiscaisDto> listDto = list.stream().map(NotasFiscaisDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
+    }
+
+    //Pesquisa Nota Fiscal Por Meio do Número e Do Emitente (razão Social)
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
+    @GetMapping(value = "/id_nota_emissor")
+    public ResponseEntity<NotasFiscaisDto> findNotaFiscalByIdAndEmissor(@RequestParam("numero") String numero,@RequestParam("razaoSocialEmitente") String razaoSocialEmitente) {
+        NotasFiscais objNotas = notaFiscalService.findNotaFiscalByIdAndEmissor(numero, razaoSocialEmitente);
+        return ResponseEntity.ok().body(new NotasFiscaisDto(objNotas));
     }
 }
