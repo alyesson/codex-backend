@@ -17,8 +17,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Pessoa u set u.senha=:senha WHERE u.cpf=:cpf")
-    int updatePassword(@Param("cpf") String cpf, @Param("senha") String senha);
+    @Query("UPDATE Pessoa u set u.senha=:senha WHERE u.email=:email")
+    int updatePassword(@Param("email") String email, @Param("senha") String senha);
 
     Optional<Usuario> findByEmail(String email);
 

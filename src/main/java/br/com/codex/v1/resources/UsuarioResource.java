@@ -65,8 +65,8 @@ public class UsuarioResource {
     }
 
     @PutMapping(value = "/troca_senha/{cpf}/{senha}")
-    public ResponseEntity<String> changePassword(@PathVariable String cpf, @PathVariable String senha) {
-        usuarioService.changePassword(cpf, senha);
+    public ResponseEntity<String> changePassword(@PathVariable String email, @PathVariable String senha) {
+        usuarioService.changePassword(email, senha);
         return ResponseEntity.ok().body("");
     }
 
@@ -81,13 +81,6 @@ public class UsuarioResource {
         Usuario objUser = usuarioService.findByEmail(email);
         return ResponseEntity.ok().body(new UsuarioDto(objUser));
     }
-
-    /*@PostMapping("/primeiro_acesso")
-    public ResponseEntity<UsuarioDto> first_access (@Valid @RequestBody UsuarioDto usuariodto){
-        Usuario objUser = usuarioService.create(usuariodto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/id").buildAndExpand(objUser.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }*/
 
     @GetMapping(value = "/profissional/{perfis}")
     public ResponseEntity<List<UsuarioDto>> findByProfissional(@PathVariable Integer perfis){

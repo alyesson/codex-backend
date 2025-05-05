@@ -2,6 +2,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.dto.UsuarioDto;
+import br.com.codex.v1.domain.enums.Perfil;
 import br.com.codex.v1.domain.repository.UsuarioRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.codex.v1.utilitario.Base64Util;
@@ -79,15 +80,19 @@ public class UsuarioService {
         }
     }
 
-    public void changePassword(String cpf, String senha) {
+    public void changePassword(String email, String senha) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String novaSenha = encoder.encode(senha);
-        Optional<Usuario> usuario = usuarioRepository.findByCpf(cpf);
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+
+        if (usuario.get().getPerfis().contains(Perfil.ADMINISTRADOR)) {
+            throw new RuntimeException("A senha do administrador não pode ser alterada por este método.");
+        }
 
         if (!usuario.isPresent()) {
-            throw new ObjectNotFoundException("Cpf: " + cpf + " não encontrado");
+            throw new ObjectNotFoundException("E-mail: " + email + " não encontrado");
         }
-        usuarioRepository.updatePassword(cpf, novaSenha);
+        usuarioRepository.updatePassword(email, novaSenha);
     }
 
     public void recoverPassword(String email, String baseUrl) {
