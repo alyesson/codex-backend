@@ -5,6 +5,8 @@ import br.com.codex.v1.domain.cadastros.Departamento;
 import java.io.Serial;
 import java.io.Serializable;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
 public class DepartamentoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -46,7 +48,7 @@ public class DepartamentoDto implements Serializable {
     }
 
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        this.descricao = capitalizarPalavras(descricao);
     }
 
     public String getCentroCusto() {

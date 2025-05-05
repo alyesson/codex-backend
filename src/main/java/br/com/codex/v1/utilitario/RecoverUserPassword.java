@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
 public class RecoverUserPassword {
 
     @Id
@@ -19,15 +20,17 @@ public class RecoverUserPassword {
     @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     private UUID id;
     private String token;
-    private LocalDate expiration;
+    private LocalDateTime expiration;
     private LocalDateTime created;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     public RecoverUserPassword() {
         super();
     }
 
-    public RecoverUserPassword(UUID id, String token, LocalDate expiration, LocalDateTime created, Usuario usuario) {
+    public RecoverUserPassword(UUID id, String token, LocalDateTime expiration, LocalDateTime created, Usuario usuario) {
         this.id = id;
         this.token = token;
         this.expiration = expiration;
@@ -51,11 +54,11 @@ public class RecoverUserPassword {
         this.token = token;
     }
 
-    public LocalDate getExpiration() {
+    public LocalDateTime getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(LocalDate expiration) {
+    public void setExpiration(LocalDateTime expiration) {
         this.expiration = expiration;
     }
 

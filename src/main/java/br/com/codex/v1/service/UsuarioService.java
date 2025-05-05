@@ -3,6 +3,7 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.dto.UsuarioDto;
 import br.com.codex.v1.domain.enums.Perfil;
+import br.com.codex.v1.domain.repository.RecoverUserPasswordRepository;
 import br.com.codex.v1.domain.repository.UsuarioRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.codex.v1.utilitario.Base64Util;
@@ -29,7 +30,10 @@ public class UsuarioService {
     Base64Util encode = new Base64Util();
 
     @Autowired
-   private EmailRecuperaSenhaService emailRecuperaSenhaService;
+    private EmailRecuperaSenhaService emailRecuperaSenhaService;
+
+    @Autowired
+    private RecoverUserPasswordRepository recoverUserPasswordRepository;
 
     String senhaCriptografada;
 
@@ -106,12 +110,14 @@ public class UsuarioService {
             recoverUserPassword.setToken(UUID.randomUUID().toString());
             recoverUserPassword.setUsuario(user.get());
             LocalDateTime localDateTime = LocalDateTime.now();
-            recoverUserPassword.setExpiration(LocalDate.from(localDateTime.plusHours(1)));
+            recoverUserPassword.setExpiration(localDateTime.plusHours(1));
             recoverUserPassword.setCreated(localDateTime);
 
             String link = baseUrl + "?" + Base64Util.encode("key") + "=" + Base64Util.encode(recoverUserPassword.getToken()) +
                     "&" + Base64Util.encode("usuario") + "=" + Base64Util.encode(user.get().getEmail());
             emailRecuperaSenhaService.recoverPassword(link, user.get());
+
+            recoverUserPasswordRepository.save(recoverUserPassword);
         } catch (Exception erro) {
             throw new ObjectNotFoundException("Erro ao enviar e-mail para " + user.get().getEmail() + ": " + erro.getMessage());
         }
