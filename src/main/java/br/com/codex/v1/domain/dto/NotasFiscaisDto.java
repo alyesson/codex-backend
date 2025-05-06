@@ -5,6 +5,8 @@ import br.com.codex.v1.domain.estoque.NotasFiscais;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
 public class NotasFiscaisDto {
 
     private Integer id;
@@ -258,7 +260,7 @@ public class NotasFiscaisDto {
     }
 
     public void setRazaoSocialEmitente(String razaoSocialEmitente) {
-        this.razaoSocialEmitente = razaoSocialEmitente;
+        this.razaoSocialEmitente = capitalizarPalavras(razaoSocialEmitente);
     }
 
     public String getNomeFantasiaEmitente() {
@@ -266,7 +268,7 @@ public class NotasFiscaisDto {
     }
 
     public void setNomeFantasiaEmitente(String nomeFantasiaEmitente) {
-        this.nomeFantasiaEmitente = nomeFantasiaEmitente;
+        this.nomeFantasiaEmitente = capitalizarPalavras(nomeFantasiaEmitente);
     }
 
     public String getDocumentoEmitente() {
@@ -306,7 +308,7 @@ public class NotasFiscaisDto {
     }
 
     public void setNomeMunicipioEmitente(String nomeMunicipioEmitente) {
-        this.nomeMunicipioEmitente = nomeMunicipioEmitente;
+        this.nomeMunicipioEmitente = capitalizarPalavras(nomeMunicipioEmitente);
     }
 
     public String getBairroEmitente() {
@@ -314,7 +316,7 @@ public class NotasFiscaisDto {
     }
 
     public void setBairroEmitente(String bairroEmitente) {
-        this.bairroEmitente = bairroEmitente;
+        this.bairroEmitente = capitalizarPalavras(bairroEmitente);
     }
 
     public String getTelefoneEmitente() {
@@ -330,7 +332,7 @@ public class NotasFiscaisDto {
     }
 
     public void setLogradouroEmitente(String logradouroEmitente) {
-        this.logradouroEmitente = logradouroEmitente;
+        this.logradouroEmitente = capitalizarPalavras(logradouroEmitente);
     }
 
     public String getNumeroEnderecoEmitente() {
@@ -354,7 +356,7 @@ public class NotasFiscaisDto {
     }
 
     public void setRazaoSocialDestinatario(String razaoSocialDestinatario) {
-        this.razaoSocialDestinatario = razaoSocialDestinatario;
+        this.razaoSocialDestinatario = capitalizarPalavras(razaoSocialDestinatario);
     }
 
     public String getDocumentoDestinatario() {
@@ -394,7 +396,7 @@ public class NotasFiscaisDto {
     }
 
     public void setNomeMunicipioDestinatario(String nomeMunicipioDestinatario) {
-        this.nomeMunicipioDestinatario = nomeMunicipioDestinatario;
+        this.nomeMunicipioDestinatario = capitalizarPalavras(nomeMunicipioDestinatario);
     }
 
     public String getBairroDestinatario() {
@@ -402,7 +404,7 @@ public class NotasFiscaisDto {
     }
 
     public void setBairroDestinatario(String bairroDestinatario) {
-        this.bairroDestinatario = bairroDestinatario;
+        this.bairroDestinatario = capitalizarPalavras(bairroDestinatario);
     }
 
     public String getTelefoneDestinatario() {
@@ -418,7 +420,7 @@ public class NotasFiscaisDto {
     }
 
     public void setLogradouroDestinatario(String logradouroDestinatario) {
-        this.logradouroDestinatario = logradouroDestinatario;
+        this.logradouroDestinatario = capitalizarPalavras(logradouroDestinatario);
     }
 
     public String getNumeroEnderecoDestinatario() {
@@ -610,7 +612,7 @@ public class NotasFiscaisDto {
     }
 
     public void setNomeTransportador(String nomeTransportador) {
-        this.nomeTransportador = nomeTransportador;
+        this.nomeTransportador = capitalizarPalavras(nomeTransportador);
     }
 
     public String getEnderecoTransportador() {
@@ -618,7 +620,7 @@ public class NotasFiscaisDto {
     }
 
     public void setEnderecoTransportador(String enderecoTransportador) {
-        this.enderecoTransportador = enderecoTransportador;
+        this.enderecoTransportador = capitalizarPalavras(enderecoTransportador);
     }
 
     public String getMunicipioTransportador() {
@@ -626,7 +628,7 @@ public class NotasFiscaisDto {
     }
 
     public void setMunicipioTransportador(String municipioTransportador) {
-        this.municipioTransportador = municipioTransportador;
+        this.municipioTransportador = capitalizarPalavras(municipioTransportador);
     }
 
     public String getNumeroFatura() {
@@ -666,7 +668,7 @@ public class NotasFiscaisDto {
     }
 
     public void setInformacaoAdicionalFisco(String informacaoAdicionalFisco) {
-        this.informacaoAdicionalFisco = informacaoAdicionalFisco;
+        this.informacaoAdicionalFisco = capitalizarPalavras(informacaoAdicionalFisco);
     }
 
     public String getInformacaoAdicionalContribuinte() {
@@ -674,7 +676,7 @@ public class NotasFiscaisDto {
     }
 
     public void setInformacaoAdicionalContribuinte(String informacaoAdicionalContribuinte) {
-        this.informacaoAdicionalContribuinte = informacaoAdicionalContribuinte;
+        this.informacaoAdicionalContribuinte = capitalizarPalavras(informacaoAdicionalContribuinte);
     }
 
     public String getChave() {

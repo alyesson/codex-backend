@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.sql.Date;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,8 +72,8 @@ public class NotaFiscalResource {
     //Pesquisa Nota Fiscal Por Meio do Número e Do Emitente (razão Social)
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/id_nota_emissor")
-    public ResponseEntity<NotasFiscaisDto> findNotaFiscalByIdAndEmissor(@RequestParam("numero") String numero,@RequestParam("razaoSocialEmitente") String razaoSocialEmitente) {
-        NotasFiscais objNotas = notaFiscalService.findNotaFiscalByIdAndEmissor(numero, razaoSocialEmitente);
-        return ResponseEntity.ok().body(new NotasFiscaisDto(objNotas));
+    public ResponseEntity<Integer> findIdByNumeroAndRazaoSocialEmitente(@RequestParam("numero") String numero, @RequestParam("razaoSocialEmitente") String razaoSocialEmitente) {
+        Integer idNota = notaFiscalService.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+        return ResponseEntity.ok().body(idNota);
     }
 }

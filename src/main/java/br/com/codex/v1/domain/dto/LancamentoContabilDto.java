@@ -1,17 +1,11 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.contabilidade.Contas;
-import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
-import br.com.codex.v1.domain.estoque.NotasFiscais;
 
-import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.Objects;
-
 
 public class LancamentoContabilDto implements Serializable {
     @Serial
