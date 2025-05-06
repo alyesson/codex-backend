@@ -2,6 +2,8 @@ package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
+import br.com.codex.v1.domain.dto.MotivoAcertoDto;
+import br.com.codex.v1.domain.estoque.MotivoAcerto;
 import br.com.codex.v1.service.LancamentoContabilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,13 @@ public class LancamentoContabilResource {
         LancamentoContabil obj = lancamentoContabilService.create(lancamentoContabilDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<LancamentoContabilDto> update(@PathVariable Integer id, @Valid @RequestBody LancamentoContabilDto lancamentoContabilDto){
+        LancamentoContabil obj = lancamentoContabilService.update(id, lancamentoContabilDto);
+        return ResponseEntity.ok().body(new LancamentoContabilDto(obj));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")

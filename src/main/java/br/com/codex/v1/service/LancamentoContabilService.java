@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.contabilidade.Contas;
 import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
+import br.com.codex.v1.domain.estoque.MotivoAcerto;
 import br.com.codex.v1.domain.estoque.NotasFiscais;
 import br.com.codex.v1.domain.repository.ContasRepository;
 import br.com.codex.v1.domain.repository.HistoricoPadraoRepository;
@@ -13,6 +14,7 @@ import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.List;
@@ -70,6 +72,29 @@ public class LancamentoContabilService {
             nota = notaFiscalRepository.findById(lancamentoContabilDto.getNotaFiscalOrigemId())
                     .orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
         }
+
+        lancamento.setContaDebito(contaDebito);
+        lancamento.setContaCredito(contaCredito);
+        lancamento.setHistoricoPadrao(historico);
+        lancamento.setNotaFiscalOrigem(nota);
+        lancamento.setComplementoHistorico(lancamentoContabilDto.getComplementoHistorico());
+
+        return lancamentoContabilRepository.save(lancamento);
+    }
+
+    public LancamentoContabil update(Integer id, LancamentoContabilDto lancamentoContabilDto) {
+        LancamentoContabil lancamento = findById(id);
+        lancamentoContabilDto.setId(id);
+        lancamento.setValor(lancamentoContabilDto.getValor());
+
+        Contas contaDebito = contasRepository.findById(lancamentoContabilDto.getContaDebitoId())
+                .orElseThrow(() -> new ObjectNotFoundException("Conta débito não encontrada"));
+        Contas contaCredito = contasRepository.findById(lancamentoContabilDto.getContaCreditoId())
+                .orElseThrow(() -> new ObjectNotFoundException("Conta crédito não encontrada"));
+        HistoricoPadrao historico = historicoPadraoRepository.findById(lancamentoContabilDto.getHistoricoPadraoId())
+                .orElseThrow(() -> new ObjectNotFoundException("Histórico padrão não encontrado"));
+        NotasFiscais nota = notaFiscalRepository.findById(lancamentoContabilDto.getNotaFiscalOrigemId())
+                    .orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
 
         lancamento.setContaDebito(contaDebito);
         lancamento.setContaCredito(contaCredito);

@@ -33,7 +33,7 @@ public class GrupoResource {
     @PutMapping(value = "/{id}")
     public ResponseEntity<GrupoDto> update(@PathVariable Integer id, @Valid @RequestBody GrupoDto grupoDto){
         Grupo objGrupo = grupoService.update(id, grupoDto);
-        return ResponseEntity.ok().body(new GrupoDto((objGrupo)));
+        return ResponseEntity.ok().body(new GrupoDto(objGrupo));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
