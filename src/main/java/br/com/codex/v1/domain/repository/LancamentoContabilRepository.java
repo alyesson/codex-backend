@@ -18,4 +18,6 @@ public interface LancamentoContabilRepository extends JpaRepository<LancamentoCo
 
     @Query("SELECT l FROM LancamentoContabil l WHERE l.dataLancamento BETWEEN :dataInicio AND :dataFim")
     List<LancamentoContabil> findAllByYearRange(@Param("dataInicio") Date dataInicio, @Param("dataFim") Date dataFim);
+
+    List<LancamentoContabil> findByNotaFiscalOrigem(NotasFiscais nota);
 }
