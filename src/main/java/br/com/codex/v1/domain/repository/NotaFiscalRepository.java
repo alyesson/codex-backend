@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +22,8 @@ public interface NotaFiscalRepository extends JpaRepository<NotasFiscais, Intege
     @Query("SELECT a FROM NotasFiscais a WHERE a.dataImportacao BETWEEN :dataInicial AND :dataFinal")
     List<NotasFiscais> findAllEntradaPeriodo(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
 
-   // @Query("SELECT b FROM NotasFiscais b  WHERE b.id = : id")
-    //Optional<String> findById(@Param("id") Integer id);
-
     @Query("SELECT n.id FROM NotasFiscais n WHERE n.numero = :numero AND n.razaoSocialEmitente = :razaoSocialEmitente")
     Optional<Integer> findIdByNumeroAndRazaoSocialEmitente(@Param("numero") String numero, @Param("razaoSocialEmitente") String razaoSocialEmitente);
+
+    List<NotasFiscais> findByDataEmissaoBetween(LocalDate inicio, LocalDate fim);
 }

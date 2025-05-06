@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -50,4 +51,34 @@ public class ConciliacaoContabilService {
 
         return resultado;
     }
+
+    public List<ConciliacaoContabilDto> listarConciliacoesPorPeriodo(LocalDate inicio, LocalDate fim) {
+        List<NotasFiscais> notas = notaFiscalRepository.findByDataEmissaoBetween(inicio, fim);
+        List<ConciliacaoContabilDto> resultado = new ArrayList<>();
+
+        for (NotasFiscais nota : notas) {
+            List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByNotaFiscalOrigem(nota);
+            BigDecimal totalLançado = lancamentos.stream()
+                    .map(LancamentoContabil::getValor)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            boolean conciliado = nota.getValorTotal().compareTo(totalLançado) == 0;
+            String obs = lancamentos.isEmpty() ? "Sem lançamentos" :
+                    conciliado ? "OK" : "Diferença de valor";
+
+            ConciliacaoContabilDto dto = new ConciliacaoContabilDto();
+            dto.setNotaFiscalId(nota.getId());
+            dto.setNumeroNota(nota.getNumero());
+            dto.setValorNota(nota.getValorTotal());
+            dto.setValorLancado(totalLançado);
+            dto.setConciliado(conciliado);
+            dto.setObservacao(obs);
+
+            resultado.add(dto);
+        }
+
+        return resultado;
+    }
+
 }
