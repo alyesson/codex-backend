@@ -25,5 +25,5 @@ public interface NotaFiscalRepository extends JpaRepository<NotasFiscais, Intege
     @Query("SELECT n.id FROM NotasFiscais n WHERE n.numero = :numero AND n.razaoSocialEmitente = :razaoSocialEmitente")
     Optional<Integer> findIdByNumeroAndRazaoSocialEmitente(@Param("numero") String numero, @Param("razaoSocialEmitente") String razaoSocialEmitente);
 
-    List<NotasFiscais> findByDataEmissaoBetween(LocalDate inicio, LocalDate fim);
+    List<NotasFiscais> findByEmissaoBetween(LocalDate inicio, LocalDate fim);
 }

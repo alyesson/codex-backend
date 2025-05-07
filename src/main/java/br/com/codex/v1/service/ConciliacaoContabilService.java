@@ -53,7 +53,7 @@ public class ConciliacaoContabilService {
     }
 
     public List<ConciliacaoContabilDto> listarConciliacoesPorPeriodo(LocalDate inicio, LocalDate fim) {
-        List<NotasFiscais> notas = notaFiscalRepository.findByDataEmissaoBetween(inicio, fim);
+        List<NotasFiscais> notas = notaFiscalRepository.findByEmissaoBetween(inicio, fim);
         List<ConciliacaoContabilDto> resultado = new ArrayList<>();
 
         for (NotasFiscais nota : notas) {

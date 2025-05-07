@@ -98,20 +98,20 @@ public class NotasFiscais {
     @Column(length = 8)
     private String codigoMunicipioDestinatario;
 
-    @Column(length = 150)
+    @Column(length = 100)
     private String nomeMunicipioDestinatario;
 
     private String bairroDestinatario;
 
-    @Column(length = 45)
+    @Column(length = 25)
     private String telefoneDestinatario;
 
     private String logradouroDestinatario;
 
-    @Column(length = 45)
+    @Column(length = 5)
     private String numeroEnderecoDestinatario;
 
-    @Column(length = 45)
+    @Column(length = 15)
     private String ufDestinatario;
     private BigDecimal valorBaseCalculo;
     private BigDecimal valorIcms;
@@ -144,7 +144,7 @@ public class NotasFiscais {
     private String enderecoTransportador;
     private String municipioTransportador;
 
-    @Column(length = 45)
+    @Column(length = 15)
     private String numeroFatura;
     private BigDecimal valorOriginalFatura;
     private BigDecimal valorDescontoFatura;
@@ -171,7 +171,7 @@ public class NotasFiscais {
     @Column(length = 45)
     private String motivoProtocolo;
 
-    @Column(length = 45)
+    @Column(length = 15)
     private Date dataImportacao;
 
     public NotasFiscais() {
