@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,7 @@ public class NotaFiscalService {
     LancamentoContabilRepository lancamentoContabilRepository;
 
     String numeroDaNota;
+    String dataEmissaoNota;
 
     public NotasFiscais findByChave(String chave) {
         Optional<NotasFiscais> nota = notaFiscalRepository.findByChave(chave);
@@ -82,7 +84,7 @@ public class NotaFiscalService {
         nota.setXml(xml);
 
         /*
-         * Dados da cabeçalho nota
+         * Dados do cabeçalho nota
          */
         nota.setCodigoUf(nfe.getNFe().getInfNFe().getIde().getCUF());
         nota.setCodigoNf(nfe.getNFe().getInfNFe().getIde().getCNF());
@@ -90,7 +92,9 @@ public class NotaFiscalService {
         nota.setModelo(nfe.getNFe().getInfNFe().getIde().getMod());
         nota.setSerie(nfe.getNFe().getInfNFe().getIde().getSerie());
         nota.setNumero(nfe.getNFe().getInfNFe().getIde().getNNF());
-        nota.setEmissao(nfe.getNFe().getInfNFe().getIde().getDhEmi().substring(0, 10));
+        dataEmissaoNota = nfe.getNFe().getInfNFe().getIde().getDhEmi().substring(0, 10);
+        LocalDate dataEmissao = LocalDate.parse(dataEmissaoNota);
+        nota.setEmissao(dataEmissao);
         nota.setDhSaidaEntrada(nfe.getNFe().getInfNFe().getIde().getDhSaiEnt() != null ? nfe.getNFe().getInfNFe().getIde().getDhSaiEnt() : null);
         nota.setTipo(nfe.getNFe().getInfNFe().getIde().getTpNF());
         nota.setIndicadorPresenca(nfe.getNFe().getInfNFe().getIde().getIndPres() != null ? nfe.getNFe().getInfNFe().getIde().getIndPres() : "");

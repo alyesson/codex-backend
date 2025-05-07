@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.estoque.NotasFiscais;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
@@ -17,7 +18,7 @@ public class NotasFiscaisDto {
     private String modelo;
     private String serie;
     private String numero;
-    private String emissao;
+    private LocalDate emissao;
     private String dhSaidaEntrada;
     private String tipo;
     private String indicadorPresenca;
@@ -223,11 +224,11 @@ public class NotasFiscaisDto {
         this.numero = numero;
     }
 
-    public String getEmissao() {
+    public LocalDate getEmissao() {
         return emissao;
     }
 
-    public void setEmissao(String emissao) {
+    public void setEmissao(LocalDate emissao) {
         this.emissao = emissao;
     }
 

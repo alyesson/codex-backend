@@ -5,6 +5,7 @@ import br.com.codex.v1.domain.dto.NotasFiscaisDto;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -35,8 +36,8 @@ public class NotasFiscais {
     @Column(length = 15)
     private String numero;
 
-    @Column(length = 45)
-    private String emissao;
+    @Column(length = 15)
+    private LocalDate emissao;
 
     @Column(length = 45)
     private String dhSaidaEntrada;
@@ -178,7 +179,7 @@ public class NotasFiscais {
         super();
     }
 
-    public NotasFiscais(Integer id, String xml, String codigoUf, String codigoNf, String naturezaOperacao, String modelo, String serie, String numero, String emissao, String dhSaidaEntrada, String tipo, String indicadorPresenca, String razaoSocialEmitente, String nomeFantasiaEmitente, String documentoEmitente, String inscricaoEstadualEmitente, String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente, String telefoneEmitente, String logradouroEmitente, String numeroEnderecoEmitente, String ufEmitente, String razaoSocialDestinatario, String documentoDestinatario, String inscricaoEstadualDestinatario, String cepDestinatario, String codigoMunicipioDestinatario, String nomeMunicipioDestinatario, String bairroDestinatario, String telefoneDestinatario, String logradouroDestinatario, String numeroEnderecoDestinatario, String ufDestinatario, BigDecimal valorBaseCalculo, BigDecimal valorIcms, BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt, BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido, BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto, BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal, String modalidadeFrete, String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura, BigDecimal valorOriginalFatura, BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte, String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo, Date dataImportacao) {
+    public NotasFiscais(Integer id, String xml, String codigoUf, String codigoNf, String naturezaOperacao, String modelo, String serie, String numero, LocalDate emissao, String dhSaidaEntrada, String tipo, String indicadorPresenca, String razaoSocialEmitente, String nomeFantasiaEmitente, String documentoEmitente, String inscricaoEstadualEmitente, String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente, String telefoneEmitente, String logradouroEmitente, String numeroEnderecoEmitente, String ufEmitente, String razaoSocialDestinatario, String documentoDestinatario, String inscricaoEstadualDestinatario, String cepDestinatario, String codigoMunicipioDestinatario, String nomeMunicipioDestinatario, String bairroDestinatario, String telefoneDestinatario, String logradouroDestinatario, String numeroEnderecoDestinatario, String ufDestinatario, BigDecimal valorBaseCalculo, BigDecimal valorIcms, BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt, BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido, BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto, BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal, String modalidadeFrete, String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura, BigDecimal valorOriginalFatura, BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte, String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo, Date dataImportacao) {
         this.id = id;
         this.xml = xml;
         this.codigoUf = codigoUf;
@@ -390,11 +391,11 @@ public class NotasFiscais {
         this.numero = numero;
     }
 
-    public String getEmissao() {
+    public LocalDate getEmissao() {
         return emissao;
     }
 
-    public void setEmissao(String emissao) {
+    public void setEmissao(LocalDate emissao) {
         this.emissao = emissao;
     }
 
