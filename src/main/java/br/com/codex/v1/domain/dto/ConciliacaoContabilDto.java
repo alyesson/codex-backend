@@ -12,6 +12,7 @@ public class ConciliacaoContabilDto implements Serializable {
     private String numeroNota;
     private BigDecimal valorNota;
     private BigDecimal valorLancado;
+    private BigDecimal diferenca;
     private boolean conciliado;
     private String observacao;
 
@@ -49,6 +50,14 @@ public class ConciliacaoContabilDto implements Serializable {
 
     public void setValorLancado(BigDecimal valorLancado) {
         this.valorLancado = valorLancado;
+    }
+
+    public BigDecimal getDiferenca() {
+        return diferenca;
+    }
+
+    public void setDiferenca(BigDecimal diferenca) {
+        this.diferenca = diferenca;
     }
 
     public boolean isConciliado() {

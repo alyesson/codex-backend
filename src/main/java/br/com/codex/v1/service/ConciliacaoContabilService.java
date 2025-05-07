@@ -40,6 +40,7 @@ public class ConciliacaoContabilService {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             boolean conciliado = nota.getValorTotal().compareTo(totalLancado) == 0;
+            BigDecimal diferenca = nota.getValorTotal().subtract(totalLancado);
             String obs = lancamentos.isEmpty() ? "Sem lançamentos" : conciliado ? "OK" : "Diferença de valor";
 
             ConciliacaoContabilDto dto = new ConciliacaoContabilDto();
@@ -47,6 +48,7 @@ public class ConciliacaoContabilService {
             dto.setNumeroNota(nota.getNumero());
             dto.setValorNota(nota.getValorTotal());
             dto.setValorLancado(totalLancado);
+            dto.setDiferenca(diferenca);
             dto.setConciliado(conciliado);
             dto.setObservacao(obs);
 
