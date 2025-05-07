@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/conciliacao_contabil")
+@RequestMapping("v1/api/conciliacao_contabil")
 public class ConciliacaoContabilResource {
 
     @Autowired
