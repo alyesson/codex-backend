@@ -17,17 +17,17 @@ import java.util.List;
 public class ConciliacaoContabilResource {
 
     @Autowired
-    private ConciliacaoContabilService service;
+    private ConciliacaoContabilService conciliacaoContabilService;
 
     @GetMapping
-    public List<ConciliacaoContabilDto> listar() {
-        return service.listarConciliacoes();
+    public List<ConciliacaoContabilDto> listarConciliacoesMesCorrente() {
+        return conciliacaoContabilService.listarConciliacoesMesCorrente();
     }
 
     @GetMapping("/por_periodo")
     public List<ConciliacaoContabilDto> listarPorPeriodo(@RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
 
-        return service.listarConciliacoesPorPeriodo(inicio, fim);
+        return conciliacaoContabilService.listarConciliacoesPorPeriodo(inicio, fim);
     }
 }

@@ -23,26 +23,34 @@ public class ConciliacaoContabilService {
     @Autowired
     private LancamentoContabilRepository lancamentoContabilRepository;
 
-    public List<ConciliacaoContabilDto> listarConciliacoes() {
+    //Lista as concilicações do ano e do mes corrente
+    public List<ConciliacaoContabilDto> listarConciliacoesMesCorrente() {
+        LocalDate hoje = LocalDate.now();
+        LocalDate primeiroDia = hoje.withDayOfMonth(1);
+        LocalDate ultimoDia = hoje.withDayOfMonth(hoje.lengthOfMonth());
+
+        return listarConciliacoesPorPeriodo(primeiroDia, ultimoDia);
+    }
+
+    /*public List<ConciliacaoContabilDto> listarConciliacoes() {
         List<NotasFiscais> notas = notaFiscalRepository.findAll();
         List<ConciliacaoContabilDto> resultado = new ArrayList<>();
 
         for (NotasFiscais nota : notas) {
             List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByNotaFiscalOrigem(nota);
-            BigDecimal totalLançado = lancamentos.stream()
+            BigDecimal totalLancado = lancamentos.stream()
                     .map(LancamentoContabil::getValor)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            boolean conciliado = nota.getValorTotal().compareTo(totalLançado) == 0;
-            String obs = lancamentos.isEmpty() ? "Sem lançamentos" :
-                    conciliado ? "OK" : "Diferença de valor";
+            boolean conciliado = nota.getValorTotal().compareTo(totalLancado) == 0;
+            String obs = lancamentos.isEmpty() ? "Sem lançamentos" : conciliado ? "OK" : "Diferença de valor";
 
             ConciliacaoContabilDto dto = new ConciliacaoContabilDto();
             dto.setNotaFiscalId(nota.getId());
             dto.setNumeroNota(nota.getNumero());
             dto.setValorNota(nota.getValorTotal());
-            dto.setValorLancado(totalLançado);
+            dto.setValorLancado(totalLancado);
             dto.setConciliado(conciliado);
             dto.setObservacao(obs);
 
@@ -50,7 +58,7 @@ public class ConciliacaoContabilService {
         }
 
         return resultado;
-    }
+    }*/
 
     public List<ConciliacaoContabilDto> listarConciliacoesPorPeriodo(LocalDate inicio, LocalDate fim) {
         List<NotasFiscais> notas = notaFiscalRepository.findByEmissaoBetween(inicio, fim);
@@ -58,20 +66,19 @@ public class ConciliacaoContabilService {
 
         for (NotasFiscais nota : notas) {
             List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByNotaFiscalOrigem(nota);
-            BigDecimal totalLançado = lancamentos.stream()
+            BigDecimal totalLancado = lancamentos.stream()
                     .map(LancamentoContabil::getValor)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            boolean conciliado = nota.getValorTotal().compareTo(totalLançado) == 0;
-            String obs = lancamentos.isEmpty() ? "Sem lançamentos" :
-                    conciliado ? "OK" : "Diferença de valor";
+            boolean conciliado = nota.getValorTotal().compareTo(totalLancado) == 0;
+            String obs = lancamentos.isEmpty() ? "Sem lançamentos" : conciliado ? "OK" : "Diferença de valor";
 
             ConciliacaoContabilDto dto = new ConciliacaoContabilDto();
             dto.setNotaFiscalId(nota.getId());
             dto.setNumeroNota(nota.getNumero());
             dto.setValorNota(nota.getValorTotal());
-            dto.setValorLancado(totalLançado);
+            dto.setValorLancado(totalLancado);
             dto.setConciliado(conciliado);
             dto.setObservacao(obs);
 
@@ -80,5 +87,4 @@ public class ConciliacaoContabilService {
 
         return resultado;
     }
-
 }
