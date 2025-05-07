@@ -29,11 +29,7 @@ public class ConciliacaoContabilService {
         LocalDate primeiroDia = hoje.withDayOfMonth(1);
         LocalDate ultimoDia = hoje.withDayOfMonth(hoje.lengthOfMonth());
 
-        return listarConciliacoesPorPeriodo(primeiroDia, ultimoDia);
-    }
-
-    /*public List<ConciliacaoContabilDto> listarConciliacoes() {
-        List<NotasFiscais> notas = notaFiscalRepository.findAll();
+        List<NotasFiscais> notas = notaFiscalRepository.findByEmissaoBetween(primeiroDia, ultimoDia);
         List<ConciliacaoContabilDto> resultado = new ArrayList<>();
 
         for (NotasFiscais nota : notas) {
@@ -56,9 +52,8 @@ public class ConciliacaoContabilService {
 
             resultado.add(dto);
         }
-
         return resultado;
-    }*/
+    }
 
     public List<ConciliacaoContabilDto> listarConciliacoesPorPeriodo(LocalDate inicio, LocalDate fim) {
         List<NotasFiscais> notas = notaFiscalRepository.findByEmissaoBetween(inicio, fim);
@@ -84,7 +79,6 @@ public class ConciliacaoContabilService {
 
             resultado.add(dto);
         }
-
         return resultado;
     }
 }
