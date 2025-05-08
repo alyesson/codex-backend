@@ -5,16 +5,21 @@ import br.com.codex.v1.domain.dto.EmpresaDto;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EmpresaService {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public Empresa create(EmpresaDto empresaDto) {
         empresaDto.setId(null);
@@ -32,5 +37,9 @@ public class EmpresaService {
         if(objEmpresa.isPresent() && objEmpresa.get().getCnpj().equals(empresaDto.getCnpj())){
             throw new DataIntegrityViolationException("Já existe uma empresa cadastrada com o cnpj "+empresaDto.getCnpj());
         }
+    }
+
+    private void criarBaseDeDados(String nomeBanco) {
+        jdbcTemplate.execute("CREATE DATABASE " + nomeBanco);
     }
 }
