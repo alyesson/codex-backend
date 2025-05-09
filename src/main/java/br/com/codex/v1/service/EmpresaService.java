@@ -39,7 +39,17 @@ public class EmpresaService {
         }
     }
 
-    private void criarBaseDeDados(String nomeBanco) {
+    public Empresa cadastrarNovaEmpresa(Empresa empresa) {
+        // Exemplo: nome do banco "empresa_123"
+        String nomeBase = "master_"+empresa.getNome();
+        empresa.setNome(nomeBase);
+        empresaRepository.save(empresa);
+
+        criarBaseDeDados(nomeBase);
+        return empresa;
+    }
+
+    public void criarBaseDeDados(String nomeBanco) {
         jdbcTemplate.execute("CREATE DATABASE " + nomeBanco);
     }
 }
