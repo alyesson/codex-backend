@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>aliquota</w>
+      <w>classificacao</w>
       <w>cnae</w>
       <w>cofins</w>
       <w>competencia</w>
@@ -31,6 +32,8 @@
       <w>razao</w>
       <w>servico</w>
       <w>servicos</w>
+      <w>suframa</w>
+      <w>telelefone</w>
     </words>
   </dictionary>
 </component>
