@@ -40,7 +40,7 @@ public class EmpresaService {
 
     public Empresa cadastrarNovaEmpresa(Empresa empresa) {
         // Exemplo: nome do banco "empresa_123"
-        String nomeBase = "empresa_"+empresa.getNomeFantasia();
+        String nomeBase = empresa.getNomeFantasia();
         empresa.setNomeFantasia(nomeBase);
         empresaRepository.save(empresa);
 
