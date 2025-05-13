@@ -10,8 +10,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
-
 @Entity
 public class Empresa implements Serializable {
     @Serial
@@ -40,13 +38,14 @@ public class Empresa implements Serializable {
     private String emailContato;
     private String situacao;
     private String classificacaoFinanceira;
-    private String jdbcUrl;       // ex: jdbc:mysql://host:3306/empresa_012345
+    private String jdbcUrl;// ex: jdbc:mysql://host:3306/empresa_012345
+    private String tipoEmpresa;
 
     public Empresa() {
         super();
     }
 
-    public Empresa(Integer id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telelefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl) {
+    public Empresa(Integer id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telelefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa) {
         this.id = id;
         this.cnpj = cnpj;
         this.inscricaoEstadual = inscricaoEstadual;
@@ -69,6 +68,7 @@ public class Empresa implements Serializable {
         this.situacao = situacao;
         this.classificacaoFinanceira = classificacaoFinanceira;
         this.jdbcUrl = jdbcUrl;
+        this.tipoEmpresa = tipoEmpresa;
     }
 
     public Empresa(EmpresaDto obj) {
@@ -94,6 +94,7 @@ public class Empresa implements Serializable {
         this.situacao = obj.getSituacao();
         this.classificacaoFinanceira = obj.getClassificacaoFinanceira();
         this.jdbcUrl = obj.getJdbcUrl();
+        this.tipoEmpresa = obj.getTipoEmpresa();
     }
 
     public Integer getId() {
@@ -270,6 +271,14 @@ public class Empresa implements Serializable {
 
     public void setJdbcUrl(String jdbcUrl) {
         this.jdbcUrl = jdbcUrl;
+    }
+
+    public String getTipoEmpresa() {
+        return tipoEmpresa;
+    }
+
+    public void setTipoEmpresa(String tipoEmpresa) {
+        this.tipoEmpresa = tipoEmpresa;
     }
 
     @Override

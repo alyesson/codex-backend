@@ -2,13 +2,9 @@ package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.cadastros.Empresa;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
@@ -17,27 +13,40 @@ public class EmpresaDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
+    @NotNull(message = "Cnpj não pode estar em branco")
     private String cnpj;
     private String inscricaoEstadual;
     private String inscricaoMunicipal;
     private String inscricaoEstadualSt;
     private String suframa;
     private String cnae;
+    @NotNull(message = "Nome fantasia não pode estar em branco")
     private String nomeFantasia;
+    @NotNull(message = "Razão social não pode estar em branco")
     private String razaoSocial;
+    @NotNull(message = "Endereço não pode estar em branco")
     private String endereco;
     private String complemento;
     private String bairro;
+    @NotNull(message = "Cidade não pode estar em branco")
     private String cidade;
     private String cep;
+    @NotNull(message = "Uf não pode estar em branco")
     private String uf;
+    @NotNull(message = "Regime tributário não pode estar em branco")
     private String regimeTributario;
     private String telelefone;
+    @NotNull(message = "Celular não pode estar em branco")
     private String celular;
+    @NotNull(message = "E-mail não pode estar em branco")
     private String emailContato;
+    @NotNull(message = "Situação não pode estar em branco")
     private String situacao;
+    @NotNull(message = "Classificação financeira não pode estar em branco")
     private String classificacaoFinanceira;
-    private String jdbcUrl;       // ex: jdbc:mysql://host:3306/empresa_012345
+    private String jdbcUrl;// ex: jdbc:mysql://host:3306/empresa_012345
+    @NotNull(message = "Tipo de empresa não pode estar em branco")
+    private String tipoEmpresa;
 
     public EmpresaDto() {
         super();
@@ -66,6 +75,7 @@ public class EmpresaDto implements Serializable {
         this.situacao = obj.getSituacao();
         this.classificacaoFinanceira = obj.getClassificacaoFinanceira();
         this.jdbcUrl = obj.getJdbcUrl();
+        this.tipoEmpresa = obj.getTipoEmpresa();
     }
 
     public Integer getId() {
@@ -129,7 +139,7 @@ public class EmpresaDto implements Serializable {
     }
 
     public void setNomeFantasia(String nomeFantasia) {
-        this.nomeFantasia = nomeFantasia;
+        this.nomeFantasia = capitalizarPalavras(nomeFantasia);
     }
 
     public String getRazaoSocial() {
@@ -137,7 +147,7 @@ public class EmpresaDto implements Serializable {
     }
 
     public void setRazaoSocial(String razaoSocial) {
-        this.razaoSocial = razaoSocial;
+        this.razaoSocial = capitalizarPalavras(razaoSocial);
     }
 
     public String getEndereco() {
@@ -145,7 +155,7 @@ public class EmpresaDto implements Serializable {
     }
 
     public void setEndereco(String endereco) {
-        this.endereco = endereco;
+        this.endereco = capitalizarPalavras(endereco);
     }
 
     public String getComplemento() {
@@ -153,7 +163,7 @@ public class EmpresaDto implements Serializable {
     }
 
     public void setComplemento(String complemento) {
-        this.complemento = complemento;
+        this.complemento = capitalizarPalavras(complemento);
     }
 
     public String getBairro() {
@@ -161,7 +171,7 @@ public class EmpresaDto implements Serializable {
     }
 
     public void setBairro(String bairro) {
-        this.bairro = bairro;
+        this.bairro = capitalizarPalavras(bairro);
     }
 
     public String getCidade() {
@@ -169,7 +179,7 @@ public class EmpresaDto implements Serializable {
     }
 
     public void setCidade(String cidade) {
-        this.cidade = cidade;
+        this.cidade = capitalizarPalavras(cidade);
     }
 
     public String getCep() {
@@ -242,5 +252,13 @@ public class EmpresaDto implements Serializable {
 
     public void setJdbcUrl(String jdbcUrl) {
         this.jdbcUrl = jdbcUrl;
+    }
+
+    public String getTipoEmpresa() {
+        return tipoEmpresa;
+    }
+
+    public void setTipoEmpresa(String tipoEmpresa) {
+        this.tipoEmpresa = tipoEmpresa;
     }
 }
