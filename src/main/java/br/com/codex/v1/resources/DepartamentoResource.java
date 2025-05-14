@@ -2,7 +2,7 @@ package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.cadastros.Departamento;
 import br.com.codex.v1.domain.dto.DepartamentoDto;
-import br.com.codex.v1.service.exceptions.DepartamentoService;
+import br.com.codex.v1.service.DepartamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

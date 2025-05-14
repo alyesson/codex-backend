@@ -1,8 +1,9 @@
-package br.com.codex.v1.service.exceptions;
+package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.cadastros.Departamento;
 import br.com.codex.v1.domain.dto.DepartamentoDto;
 import br.com.codex.v1.domain.repository.DepartamentoRepository;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

@@ -24,6 +24,7 @@ public class CentroCustoService {
         CentroCusto centroDeCusto = new CentroCusto(centrocustoDto);
         return centroCustoRepository.save(centroDeCusto);
     }
+
     public CentroCusto update(Integer id, CentroCustoDto centrocustoDto) {
         centrocustoDto.setId(id);
         CentroCusto obj = findById(id);

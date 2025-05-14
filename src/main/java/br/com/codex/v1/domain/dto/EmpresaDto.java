@@ -2,7 +2,7 @@ package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.cadastros.Empresa;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -13,39 +13,39 @@ public class EmpresaDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    @NotNull(message = "Cnpj não pode estar em branco")
+    @NotBlank(message = "Cnpj não pode estar em branco")
     private String cnpj;
     private String inscricaoEstadual;
     private String inscricaoMunicipal;
     private String inscricaoEstadualSt;
     private String suframa;
     private String cnae;
-    @NotNull(message = "Nome fantasia não pode estar em branco")
+    @NotBlank(message = "Nome fantasia não pode estar em branco")
     private String nomeFantasia;
-    @NotNull(message = "Razão social não pode estar em branco")
+    @NotBlank(message = "Razão social não pode estar em branco")
     private String razaoSocial;
-    @NotNull(message = "Endereço não pode estar em branco")
+    @NotBlank(message = "Endereço não pode estar em branco")
     private String endereco;
     private String complemento;
     private String bairro;
-    @NotNull(message = "Cidade não pode estar em branco")
+    @NotBlank(message = "Cidade não pode estar em branco")
     private String cidade;
     private String cep;
-    @NotNull(message = "Uf não pode estar em branco")
+    @NotBlank(message = "Uf não pode estar em branco")
     private String uf;
-    @NotNull(message = "Regime tributário não pode estar em branco")
+    @NotBlank(message = "Regime tributário não pode estar em branco")
     private String regimeTributario;
     private String telelefone;
-    @NotNull(message = "Celular não pode estar em branco")
+    @NotBlank(message = "Celular não pode estar em branco")
     private String celular;
-    @NotNull(message = "E-mail não pode estar em branco")
+    @NotBlank(message = "E-mail não pode estar em branco")
     private String emailContato;
-    @NotNull(message = "Situação não pode estar em branco")
+    @NotBlank(message = "Situação não pode estar em branco")
     private String situacao;
-    @NotNull(message = "Classificação financeira não pode estar em branco")
+    @NotBlank(message = "Classificação financeira não pode estar em branco")
     private String classificacaoFinanceira;
     private String jdbcUrl;// ex: jdbc:mysql://host:3306/empresa_012345
-    @NotNull(message = "Tipo de empresa não pode estar em branco")
+    @NotBlank(message = "Tipo de empresa não pode estar em branco")
     private String tipoEmpresa;
 
     public EmpresaDto() {
