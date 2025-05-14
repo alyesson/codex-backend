@@ -33,7 +33,7 @@ public class Empresa implements Serializable {
     private String cep;
     private String uf;
     private String regimeTributario;
-    private String telelefone;
+    private String telefone;
     private String celular;
     private String emailContato;
     private String situacao;
@@ -45,7 +45,7 @@ public class Empresa implements Serializable {
         super();
     }
 
-    public Empresa(Integer id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telelefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa) {
+    public Empresa(Integer id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa) {
         this.id = id;
         this.cnpj = cnpj;
         this.inscricaoEstadual = inscricaoEstadual;
@@ -62,7 +62,7 @@ public class Empresa implements Serializable {
         this.cep = cep;
         this.uf = uf;
         this.regimeTributario = regimeTributario;
-        this.telelefone = telelefone;
+        this.telefone = telefone;
         this.celular = celular;
         this.emailContato = emailContato;
         this.situacao = situacao;
@@ -88,7 +88,7 @@ public class Empresa implements Serializable {
         this.cep = obj.getCep();
         this.uf = obj.getUf();
         this.regimeTributario = obj.getRegimeTributario();
-        this.telelefone = obj.getTelelefone();
+        this.telefone = obj.getTelelefone();
         this.celular = obj.getCelular();
         this.emailContato = obj.getEmailContato();
         this.situacao = obj.getSituacao();
@@ -226,11 +226,11 @@ public class Empresa implements Serializable {
     }
 
     public String getTelelefone() {
-        return telelefone;
+        return telefone;
     }
 
-    public void setTelelefone(String telelefone) {
-        this.telelefone = telelefone;
+    public void setTelelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getCelular() {

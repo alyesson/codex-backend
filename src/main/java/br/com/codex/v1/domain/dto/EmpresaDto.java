@@ -35,7 +35,7 @@ public class EmpresaDto implements Serializable {
     private String uf;
     @NotBlank(message = "Regime tributário não pode estar em branco")
     private String regimeTributario;
-    private String telelefone;
+    private String telefone;
     @NotBlank(message = "Celular não pode estar em branco")
     private String celular;
     @NotBlank(message = "E-mail não pode estar em branco")
@@ -69,7 +69,7 @@ public class EmpresaDto implements Serializable {
         this.cep = obj.getCep();
         this.uf = obj.getUf();
         this.regimeTributario = obj.getRegimeTributario();
-        this.telelefone = obj.getTelelefone();
+        this.telefone = obj.getTelelefone();
         this.celular = obj.getCelular();
         this.emailContato = obj.getEmailContato();
         this.situacao = obj.getSituacao();
@@ -207,11 +207,11 @@ public class EmpresaDto implements Serializable {
     }
 
     public String getTelelefone() {
-        return telelefone;
+        return telefone;
     }
 
-    public void setTelelefone(String telelefone) {
-        this.telelefone = telelefone;
+    public void setTelelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getCelular() {
