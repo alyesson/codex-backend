@@ -11,7 +11,7 @@ import java.sql.*;
 
 @Configuration
 @Profile("desenvolvimento")
-public class DesenvolvimentoConfig {
+public class DesenvolvimentoConfig implements DatabaseConfig{
     @Autowired
     private DBService dbService;
 
@@ -29,6 +29,36 @@ public class DesenvolvimentoConfig {
         try {
             // Extrai o nome do banco da URL (codex)
             String dbName = dbUrl.substring(dbUrl.lastIndexOf("/") + 1, dbUrl.indexOf("?"));
+
+            // Cria conexão sem especificar o banco de dados
+            String baseUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/")) + "/";
+
+            Connection connection = DriverManager.getConnection(baseUrl, dbUsername, dbPassword);
+            Statement statement = connection.createStatement();
+
+            // Verifica se o banco existe
+            ResultSet resultSet = statement.executeQuery("SHOW DATABASES LIKE '" + dbName + "'");
+
+            if (!resultSet.next()) {
+                // Banco não existe, cria o banco
+                statement.executeUpdate("CREATE DATABASE " + dbName);
+
+                // Agora executa a inicialização do banco
+                this.dbService.instanciaDB();
+            }
+
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
+    public boolean criaBaseDadosClienteFilial(String nomeBase) {
+        try {
+            // Extrai o nome do banco da URL (codex)
+            String dbName = nomeBase;
 
             // Cria conexão sem especificar o banco de dados
             String baseUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/")) + "/";

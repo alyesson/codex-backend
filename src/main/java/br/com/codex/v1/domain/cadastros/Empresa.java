@@ -2,10 +2,7 @@ package br.com.codex.v1.domain.cadastros;
 
 import br.com.codex.v1.domain.dto.EmpresaDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,27 +15,44 @@ public class Empresa implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 25)
     private String cnpj;
+    @Column(length = 20)
     private String inscricaoEstadual;
+    @Column(length = 20)
     private String inscricaoMunicipal;
+    @Column(length = 20)
     private String inscricaoEstadualSt;
+    @Column(length = 20)
     private String suframa;
     private String cnae;
+    @Column(length = 150)
     private String nomeFantasia;
+    @Column(length = 150)
     private String razaoSocial;
     private String endereco;
     private String complemento;
+    @Column(length = 60)
     private String bairro;
+    @Column(length = 50)
     private String cidade;
     private String cep;
+    @Column(length = 3)
     private String uf;
+    @Column(length = 20)
     private String regimeTributario;
+    @Column(length = 25)
     private String telefone;
+    @Column(length = 25)
     private String celular;
+    @Column(length = 40)
     private String emailContato;
+    @Column(length = 10)
     private String situacao;
+    @Column(length = 10)
     private String classificacaoFinanceira;
     private String jdbcUrl;// ex: jdbc:mysql://host:3306/empresa_012345
+    @Column(length = 40)
     private String tipoEmpresa;
 
     public Empresa() {
@@ -88,7 +102,7 @@ public class Empresa implements Serializable {
         this.cep = obj.getCep();
         this.uf = obj.getUf();
         this.regimeTributario = obj.getRegimeTributario();
-        this.telefone = obj.getTelelefone();
+        this.telefone = obj.getTelefone();
         this.celular = obj.getCelular();
         this.emailContato = obj.getEmailContato();
         this.situacao = obj.getSituacao();
@@ -225,11 +239,11 @@ public class Empresa implements Serializable {
         this.regimeTributario = regimeTributario;
     }
 
-    public String getTelelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelelefone(String telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 

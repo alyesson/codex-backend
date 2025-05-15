@@ -3,6 +3,7 @@ package br.com.codex.v1.domain.dto;
 import br.com.codex.v1.domain.cadastros.Empresa;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -21,6 +22,7 @@ public class EmpresaDto implements Serializable {
     private String suframa;
     private String cnae;
     @NotBlank(message = "Nome fantasia não pode estar em branco")
+    @Size(min = 3, max = 50, message = "Nome fantasia deve ter entre 3 e 50 caracteres")
     private String nomeFantasia;
     @NotBlank(message = "Razão social não pode estar em branco")
     private String razaoSocial;
@@ -69,7 +71,7 @@ public class EmpresaDto implements Serializable {
         this.cep = obj.getCep();
         this.uf = obj.getUf();
         this.regimeTributario = obj.getRegimeTributario();
-        this.telefone = obj.getTelelefone();
+        this.telefone = obj.getTelefone();
         this.celular = obj.getCelular();
         this.emailContato = obj.getEmailContato();
         this.situacao = obj.getSituacao();
@@ -206,11 +208,11 @@ public class EmpresaDto implements Serializable {
         this.regimeTributario = regimeTributario;
     }
 
-    public String getTelelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelelefone(String telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 

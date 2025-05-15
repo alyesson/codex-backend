@@ -1,5 +1,6 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.configuration.DatabaseConfig;
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.dto.EmpresaDto;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
@@ -9,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,9 @@ public class EmpresaService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DatabaseConfig databaseConfig;
 
     public Empresa create(EmpresaDto empresaDto) {
         empresaDto.setId(null);
@@ -55,17 +60,33 @@ public class EmpresaService {
         }
     }
 
-    public Empresa cadastrarNovaEmpresa(Empresa empresa) {
-        // Exemplo: nome do banco "empresa_123"
-        String nomeBase = empresa.getNomeFantasia();
-        empresa.setNomeFantasia(nomeBase);
-        empresaRepository.save(empresa);
+    public Empresa cadastrarNovaEmpresa(EmpresaDto empresaDto) {
+        empresaDto.setId(null);
+        validaEmpresa(empresaDto);
 
-        criarBaseDeDados(nomeBase);
+        // Substitui espaços por underscores e remove caracteres especiais
+        String nomeBase = normalizeDatabaseName(empresaDto.getNomeFantasia());
+
+        Empresa empresa = new Empresa(empresaDto);
+        empresa = empresaRepository.save(empresa);
+
+        //Aqui o sistema verifica o perfil que está no "application.properties"
+        databaseConfig.criaBaseDadosClienteFilial(nomeBase);
         return empresa;
     }
 
-    public void criarBaseDeDados(String nomeBanco) {
-        jdbcTemplate.execute("CREATE DATABASE " + nomeBanco);
+    private String normalizeDatabaseName(String nome) {
+        // Remove acentos, substitui espaços por underscore e remove caracteres especiais
+        String normalized = Normalizer.normalize(nome, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "")
+                .replaceAll("[^a-zA-Z0-9]", "_")
+                .toLowerCase();
+
+        // Garante que o nome não comece com número
+        if (normalized.matches("^[0-9].*")) {
+            normalized = "db_" + normalized;
+        }
+
+        return normalized;
     }
 }
