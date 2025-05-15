@@ -54,7 +54,6 @@ public class ProducaoConfig implements DatabaseConfig{
         return true;
     }
 
-
     public boolean criaBaseDadosClienteFilial(String nomeBase) {
         try {
             // Extrai o nome do banco da URL (codex)
