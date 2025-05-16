@@ -61,4 +61,11 @@ public class EmpresaResource {
         List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
+
+    @GetMapping(value = "/data_base")
+    public ResponseEntity<List<EmpresaDto>> findAllByDataBase(){
+        List<Empresa> list = empresaService.findAllByDataBase();
+        List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
 }

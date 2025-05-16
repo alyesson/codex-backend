@@ -54,12 +54,13 @@ public class Empresa implements Serializable {
     private String jdbcUrl;// ex: jdbc:mysql://host:3306/empresa_012345
     @Column(length = 40)
     private String tipoEmpresa;
+    private boolean possuiBase; //por padrão é inicializada como false;
 
     public Empresa() {
         super();
     }
 
-    public Empresa(Integer id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa) {
+    public Empresa(Integer id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa, Boolean possuiBase) {
         this.id = id;
         this.cnpj = cnpj;
         this.inscricaoEstadual = inscricaoEstadual;
@@ -83,6 +84,7 @@ public class Empresa implements Serializable {
         this.classificacaoFinanceira = classificacaoFinanceira;
         this.jdbcUrl = jdbcUrl;
         this.tipoEmpresa = tipoEmpresa;
+        this.possuiBase = possuiBase;
     }
 
     public Empresa(EmpresaDto obj) {
@@ -109,6 +111,7 @@ public class Empresa implements Serializable {
         this.classificacaoFinanceira = obj.getClassificacaoFinanceira();
         this.jdbcUrl = obj.getJdbcUrl();
         this.tipoEmpresa = obj.getTipoEmpresa();
+        this.possuiBase = obj.isPossuiBase();
     }
 
     public Integer getId() {
@@ -293,6 +296,14 @@ public class Empresa implements Serializable {
 
     public void setTipoEmpresa(String tipoEmpresa) {
         this.tipoEmpresa = tipoEmpresa;
+    }
+
+    public boolean isPossuiBase() {
+        return possuiBase;
+    }
+
+    public void setPossuiBase(boolean possuiBase) {
+        this.possuiBase = possuiBase;
     }
 
     @Override

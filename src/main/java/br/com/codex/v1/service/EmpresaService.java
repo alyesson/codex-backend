@@ -89,4 +89,8 @@ public class EmpresaService {
 
         return normalized;
     }
+
+    public List<Empresa> findAllByDataBase() {
+        return empresaRepository.findAllByDataBase();
+    }
 }

@@ -49,6 +49,7 @@ public class EmpresaDto implements Serializable {
     private String jdbcUrl;// ex: jdbc:mysql://host:3306/empresa_012345
     @NotBlank(message = "Tipo de empresa não pode estar em branco")
     private String tipoEmpresa;
+    private boolean possuiBase; //por padrão é inicializada como false;
 
     public EmpresaDto() {
         super();
@@ -78,6 +79,7 @@ public class EmpresaDto implements Serializable {
         this.classificacaoFinanceira = obj.getClassificacaoFinanceira();
         this.jdbcUrl = obj.getJdbcUrl();
         this.tipoEmpresa = obj.getTipoEmpresa();
+        this.possuiBase = obj.isPossuiBase();
     }
 
     public Integer getId() {
@@ -262,5 +264,13 @@ public class EmpresaDto implements Serializable {
 
     public void setTipoEmpresa(String tipoEmpresa) {
         this.tipoEmpresa = tipoEmpresa;
+    }
+
+    public boolean isPossuiBase() {
+        return possuiBase;
+    }
+
+    public void setPossuiBase(boolean possuiBase) {
+        this.possuiBase = possuiBase;
     }
 }
