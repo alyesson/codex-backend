@@ -4,6 +4,7 @@ public class CredenciaisDto {
 
     private String email;
     private String senha;
+    private String cnpjEmpresa;
 
     public String getEmail() {
         return email;
@@ -19,5 +20,13 @@ public class CredenciaisDto {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
+    }
+
+    public void setCnpjEmpresa(String cnpjEmpresa) {
+        this.cnpjEmpresa = cnpjEmpresa;
     }
 }

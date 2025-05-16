@@ -29,7 +29,7 @@ public class DBService {
         pessoa.addPerfil(Perfil.ADMINISTRADOR);
         usuarioRepository.saveAll(List.of(pessoa));
 
-        Empresa empresa =  new Empresa(null, "37025579000157", "", "", "", "", "", "Codex Soluções Em TI", "", "", "", "","", "", "", "", "", "", "", "Ativo", "Ótimo", "", "----",true);
+        Empresa empresa =  new Empresa(null, "37025579000157", "", "", "", "", "", "Codex Soluções Em TI", "", "", "", "","", "", "", "", "", "", "", "Ativo", "Ótimo", "codex", "----",true);
         empresaRepository.save(empresa);
     }
 }
