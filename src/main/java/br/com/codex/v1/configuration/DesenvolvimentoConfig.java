@@ -1,111 +1,118 @@
 package br.com.codex.v1.configuration;
 
 import br.com.codex.v1.service.DBService;
+
+import br.com.codex.v1.tenant.TenantExecutor;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @Profile("desenvolvimento")
-public class DesenvolvimentoConfig implements DatabaseConfig{
+public class DesenvolvimentoConfig implements DatabaseConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DesenvolvimentoConfig.class);
-
-    @Autowired
-    private DBService dbService;
 
     @Value("${spring.datasource.url}")
     private String dbUrl;
 
     @Value("${spring.datasource.username}")
-    private String dbUsername;
+    private String username;
 
     @Value("${spring.datasource.password}")
-    private String dbPassword;
+    private String password;
 
-    @Bean
-    public boolean instanciaDB() {
-        String dbName = "codex";
-        String baseUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/")) + "/";
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
 
-        // 1. Verifica e cria o banco se não existir
-        try (Connection conn = DriverManager.getConnection(baseUrl, dbUsername, dbPassword);
-             Statement stmt = conn.createStatement()) {
+    private final DBService dbService;
+    private final JdbcTemplate jdbcTemplate;
 
-            // Verifica existência do banco
-            ResultSet dbResult = stmt.executeQuery("SHOW DATABASES LIKE '" + dbName + "'");
-            if (!dbResult.next()) {
-                stmt.executeUpdate("CREATE DATABASE " + dbName);
-                logger.info("Banco de dados criado: " + dbName);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Falha ao verificar/criar banco de dados", e);
-        }
-
-        // 2. Verifica se as tabelas estão vazias (após garantir que o banco existe)
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-             Statement stmt = conn.createStatement()) {
-
-            // Verifica se a tabela pessoa existe e está vazia
-            ResultSet tableResult = stmt.executeQuery(
-                    "SELECT COUNT(*) AS count FROM information_schema.tables " +
-                            "WHERE table_schema = '" + dbName + "' AND table_name = 'pessoa'");
-
-            if (tableResult.next() && tableResult.getInt("count") > 0) {
-                // Tabela existe, verifica se está vazia
-                ResultSet dataResult = stmt.executeQuery("SELECT 1 FROM pessoa LIMIT 1");
-                if (!dataResult.next()) {
-                    logger.info("Tabela pessoa vazia - inserindo dados iniciais");
-                    dbService.instanciaDB();
-                }
-            } else {
-                // Tabela não existe (o Hibernate vai criar)
-                logger.info("Tabela pessoa não existe - será criada pelo Hibernate");
-            }
-
-            return true;
-        } catch (SQLException e) {
-            throw new RuntimeException("Falha ao verificar tabelas", e);
-        }
+    public DesenvolvimentoConfig(DBService dbService, JdbcTemplate jdbcTemplate) {
+        this.dbService = dbService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public boolean criaBaseDadosClienteFilial(String nomeBase) {
-
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-
         try {
-            String dbName = nomeBase;
-
-            // Cria conexão sem especificar o banco de dados
-            String baseUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/")) + "/";
-
-            connection = DriverManager.getConnection(baseUrl, dbUsername, dbPassword);
-            statement = connection.createStatement();
-
-            // Verifica se o banco existe
-            resultSet = statement.executeQuery("SHOW DATABASES LIKE '" + dbName + "'");
-
-            if (!resultSet.next()) {
-                // Banco não existe, cria o banco
-                statement.executeUpdate("CREATE DATABASE " + dbName);
-
-                // Agora executa a inicialização do banco
-                this.dbService.instanciaDB();
+            // 1. Cria o banco, se ainda não existir
+            if (!verificaSeBancoExiste(nomeBase)) {
+                criarBanco(nomeBase);
+            } else {
+                logger.info("Banco {} já existe. Ignorando criação.", nomeBase);
+                return false;
             }
 
-            connection.close();
-        } catch (SQLException e) {
-           //e.printStackTrace();
+            // 2. Cria o datasource para o novo banco
+            DataSource novoDataSource = criarDataSource(nomeBase);
+
+            // 3. Configura o Hibernate para criar o schema
+            configurarHibernate(novoDataSource);
+
+            // 4. Executa a geração das tabelas e dados iniciais no contexto do novo banco
+            TenantExecutor.runWithDataSource(novoDataSource, () -> {
+                try {
+                    dbService.instanciaDB();
+                } catch (Exception e) {
+                    logger.error("Erro ao popular dados iniciais: {}", e.getMessage());
+                    throw new RuntimeException("Erro ao popular dados iniciais", e);
+                }
+            });
+
+            logger.info("Banco {} criado e inicializado com sucesso.", nomeBase);
+            return true;
+
+        } catch (Exception e) {
+            logger.error("Erro ao criar banco de dados: {}", e.getMessage());
             throw new RuntimeException("Erro ao criar base de dados. Por favor, contate o suporte técnico.");
         }
-        return true;
+    }
+
+    private void configurarHibernate(DataSource dataSource) {
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setDataSource(dataSource);
+        factory.setPackagesToScan("br.com.codex.v1.domain");
+        factory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+
+        Properties props = new Properties();
+        props.put("hibernate.hbm2ddl.auto", "create");
+        props.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+
+        factory.setJpaProperties(props);
+        factory.afterPropertiesSet();
+    }
+
+
+    private boolean verificaSeBancoExiste(String nomeBase) {
+        String sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?";
+        return jdbcTemplate.queryForList(sql, String.class, nomeBase).size() > 0;
+    }
+
+    private void criarBanco(String nomeBase) {
+        String sql = "CREATE DATABASE " + nomeBase + " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+        jdbcTemplate.execute(sql);
+    }
+
+    private DataSource criarDataSource(String nomeBase) {
+        String jdbcUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/") + 1) + nomeBase + "?serverTimezone=UTC";
+
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(jdbcUrl);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        return dataSource;
     }
 }
+
