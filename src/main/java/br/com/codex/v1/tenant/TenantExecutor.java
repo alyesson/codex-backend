@@ -7,16 +7,10 @@ public class TenantExecutor {
 
     private static final ThreadLocal<DataSource> currentDataSource = new ThreadLocal<>();
 
-    /**
-     * Fornece o DataSource atual para o contexto.
-     */
     public static DataSource getCurrentDataSource() {
         return currentDataSource.get();
     }
 
-    /**
-     * Executa uma tarefa com um DataSource temporário.
-     */
     public static void runWithDataSource(DataSource dataSource, Runnable task) {
         try {
             currentDataSource.set(dataSource);
@@ -26,13 +20,9 @@ public class TenantExecutor {
         }
     }
 
-    /**
-     * Para usar com AbstractRoutingDataSource.
-     */
     public static class RoutingDataSource extends AbstractRoutingDataSource {
         @Override
         protected Object determineCurrentLookupKey() {
-            // Não estamos usando uma chave (como "tenantId"), só o DataSource diretamente
             return null;
         }
 

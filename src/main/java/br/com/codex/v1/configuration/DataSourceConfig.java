@@ -1,5 +1,6 @@
 package br.com.codex.v1.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +28,6 @@ public class DataSourceConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        DynamicDataSource routingDataSource = new DynamicDataSource();
-
-        // DataSource padrão (codex)
         DataSource defaultDataSource = DataSourceBuilder.create()
                 .url(defaultDbUrl)
                 .username(username)
@@ -39,17 +37,18 @@ public class DataSourceConfig {
 
         targetDataSources.put("default", defaultDataSource);
 
+        DynamicDataSource routingDataSource = new DynamicDataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
         routingDataSource.setDefaultTargetDataSource(defaultDataSource);
+        routingDataSource.afterPropertiesSet();
 
         return routingDataSource;
     }
 
-    // Método para adicionar novos DataSources em tempo de execução
-    public void addDataSource(String dbName, DataSource dataSource) {
-        targetDataSources.put(dbName, dataSource);
+    public synchronized void addDataSource(String tenantId, DataSource dataSource) {
+        targetDataSources.put(tenantId, dataSource);
         DynamicDataSource routingDataSource = (DynamicDataSource) dataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
-        routingDataSource.afterPropertiesSet(); // Atualiza o DataSource
+        routingDataSource.afterPropertiesSet();
     }
 }
