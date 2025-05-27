@@ -3,6 +3,7 @@ package br.com.codex.v1.configuration;
 import br.com.codex.v1.service.DBService;
 
 import br.com.codex.v1.tenant.TenantExecutor;
+
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-
 import javax.sql.DataSource;
 import java.util.Properties;
+
 
 @Configuration
 @Profile("desenvolvimento")
@@ -88,10 +89,26 @@ public class DesenvolvimentoConfig implements DatabaseConfig {
         props.put("hibernate.hbm2ddl.auto", "create");
         props.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
 
+        // Configurações para nomenclatura snake_case
+        props.put("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
+        props.put("hibernate.implicit_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
+
+        // Configurações para evitar problemas com DDL
+        props.put("hibernate.hbm2ddl.halt_on_error", "false");
+        props.put("hibernate.hbm2ddl.create_namespaces", "true");
+
+        // Desabilita validação durante a criação do schema
+        props.put("javax.persistence.schema-generation.database.action", "create");
+        props.put("javax.persistence.schema-generation.create-source", "metadata");
+        props.put("javax.persistence.schema-generation.drop-source", "metadata");
+        props.put("javax.persistence.schema-generation.scripts.action", "none");
+        props.put("hibernate.connection.autocommit", "true");
+        props.put("hibernate.transaction.flush_before_completion", "true");
+        props.put("hibernate.connection.release_mode", "after_transaction");
+
         factory.setJpaProperties(props);
         factory.afterPropertiesSet();
     }
-
 
     private boolean verificaSeBancoExiste(String nomeBase) {
         String sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?";
