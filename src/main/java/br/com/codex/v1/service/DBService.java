@@ -30,9 +30,8 @@ public class DBService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    @Transactional // Garante transação no contexto atual
     public void instanciaDB() {
-        if (usuarioRepository.count() == 0) {
+
             Usuario pessoa = new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                     "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2024!"), "Sistema", "00000");
@@ -43,7 +42,6 @@ public class DBService {
                     "Codex Soluções Em TI", "", "", "", "", "", "", "", "", "", "", "",
                     "Ativo", "Ótimo", "codex", "----", true);
             empresaRepository.save(empresa);
-        }
     }
 }
 

@@ -1,9 +1,6 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.configuration.DatabaseConfig;
-import br.com.codex.v1.configuration.DatabaseTenantInitializer;
-import br.com.codex.v1.configuration.DynamicDataSource;
-import br.com.codex.v1.tenant.TenantExecutor;
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.dto.EmpresaDto;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
@@ -22,11 +19,9 @@ public class EmpresaService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
-    @Autowired
-    private DatabaseTenantInitializer tenantInitializer;
 
-   // @Autowired
-    //private DatabaseConfig databaseConfig;
+   @Autowired
+   private DatabaseConfig databaseConfig;
 
     public Empresa create(EmpresaDto empresaDto) {
         empresaDto.setId(null);
@@ -73,8 +68,7 @@ public class EmpresaService {
         empresa = empresaRepository.save(empresa);
 
         //Aqui o sistema verifica o perfil que está no "application.properties"
-        tenantInitializer.inicializarEmpresa(nomeBase);
-        //databaseConfig.criaBaseDadosClienteFilial(nomeBase);
+        databaseConfig.criaBaseDadosClienteFilial(nomeBase);
         return empresa;
     }
 
