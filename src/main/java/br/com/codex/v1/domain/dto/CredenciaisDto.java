@@ -4,7 +4,7 @@ public class CredenciaisDto {
 
     private String email;
     private String senha;
-    private String cnpjEmpresa;
+    private String jdbcUrl;
 
     public String getEmail() {
         return email;
@@ -22,11 +22,11 @@ public class CredenciaisDto {
         this.senha = senha;
     }
 
-    public String getCnpjEmpresa() {
-        return cnpjEmpresa;
+    public String getJdbcUrl() {
+        return jdbcUrl;
     }
 
-    public void setCnpjEmpresa(String cnpjEmpresa) {
-        this.cnpjEmpresa = cnpjEmpresa;
+    public void setJdbcUrl(String jdbcUrl) {
+        this.jdbcUrl = jdbcUrl;
     }
 }
