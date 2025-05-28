@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>abaixo</w>
       <w>aliquota</w>
       <w>atualiza</w>
       <w>basedados</w>
@@ -8,6 +9,7 @@
       <w>classificacao</w>
       <w>cnae</w>
       <w>cofins</w>
+      <w>comando</w>
       <w>competencia</w>
       <w>conciliacao</w>
       <w>conciliacoes</w>
@@ -29,8 +31,10 @@
       <w>destinatario</w>
       <w>devolucao</w>
       <w>diferenca</w>
+      <w>diretório</w>
       <w>erro</w>
       <w>existe</w>
+      <w>expiração</w>
       <w>fechar</w>
       <w>hortolândia</w>
       <w>ignorando</w>
@@ -42,21 +46,28 @@
       <w>inicializa</w>
       <w>inscricao</w>
       <w>instancia</w>
+      <w>isso</w>
       <w>lancado</w>
       <w>lancamento</w>
       <w>lancamentos</w>
+      <w>listadas</w>
+      <w>liste</w>
       <w>metodo</w>
       <w>migracao</w>
+      <w>milissegundos</w>
       <w>neutro</w>
       <w>nomes</w>
       <w>operacao</w>
       <w>populado</w>
       <w>populados</w>
+      <w>preciso</w>
       <w>presenca</w>
       <w>producao</w>
       <w>razao</w>
       <w>servico</w>
       <w>servicos</w>
+      <w>servidor</w>
+      <w>serão</w>
       <w>sucesso</w>
       <w>suframa</w>
       <w>suporte</w>
@@ -65,6 +76,7 @@
       <w>transacional</w>
       <w>tributario</w>
       <w>técnico</w>
+      <w>usadas</w>
     </words>
   </dictionary>
 </component>
