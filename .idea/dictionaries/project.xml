@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>aliquota</w>
+      <w>atualiza</w>
       <w>basedados</w>
       <w>chown</w>
       <w>classificacao</w>
@@ -12,35 +13,58 @@
       <w>conciliacoes</w>
       <w>concilicações</w>
       <w>concluido</w>
+      <w>conexão</w>
       <w>contabil</w>
       <w>contate</w>
+      <w>criado</w>
+      <w>criando</w>
+      <w>criar</w>
+      <w>criação</w>
       <w>criptografada</w>
       <w>csll</w>
       <w>cstat</w>
+      <w>dados</w>
+      <w>desenvolvimento</w>
       <w>desonerado</w>
       <w>destinatario</w>
       <w>devolucao</w>
       <w>diferenca</w>
+      <w>erro</w>
+      <w>existe</w>
+      <w>fechar</w>
       <w>hortolândia</w>
+      <w>ignorando</w>
       <w>importacao</w>
       <w>inclusao</w>
+      <w>indefinida</w>
+      <w>indefinido</w>
       <w>informacao</w>
+      <w>inicializa</w>
       <w>inscricao</w>
+      <w>instancia</w>
       <w>lancado</w>
       <w>lancamento</w>
       <w>lancamentos</w>
       <w>metodo</w>
       <w>migracao</w>
+      <w>neutro</w>
+      <w>nomes</w>
       <w>operacao</w>
+      <w>populado</w>
       <w>populados</w>
       <w>presenca</w>
       <w>producao</w>
       <w>razao</w>
       <w>servico</w>
       <w>servicos</w>
+      <w>sucesso</w>
       <w>suframa</w>
+      <w>suporte</w>
+      <w>tabelas</w>
       <w>telelefone</w>
+      <w>transacional</w>
       <w>tributario</w>
+      <w>técnico</w>
     </words>
   </dictionary>
 </component>

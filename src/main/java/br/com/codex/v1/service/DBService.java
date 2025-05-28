@@ -1,7 +1,6 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.configuration.PersistenceUnitInfoAdapter;
-import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.enums.Perfil;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
@@ -13,13 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 @Service
 public class DBService {
