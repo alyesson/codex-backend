@@ -30,7 +30,7 @@ public class ProducaoConfig implements DatabaseConfig {
     private String dbPassword;
 
     @Bean
-    public boolean instanciaDB() {
+    public void instanciaDB() {
         String dbName = "codex";
         String baseUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/")) + "/";
 
@@ -62,14 +62,13 @@ public class ProducaoConfig implements DatabaseConfig {
                 ResultSet dataResult = stmt.executeQuery("SELECT 1 FROM pessoa LIMIT 1");
                 if (!dataResult.next()) {
                     logger.info("Tabela pessoa vazia - inserindo dados iniciais");
-                    dbService.instanciaDB();
+                    instanciaDB();
                 }
             } else {
                 // Tabela não existe (o Hibernate vai criar)
                 logger.info("Tabela pessoa não existe - será criada pelo Hibernate");
             }
 
-            return true;
         } catch (SQLException e) {
             throw new RuntimeException("Falha ao verificar tabelas", e);
         }
