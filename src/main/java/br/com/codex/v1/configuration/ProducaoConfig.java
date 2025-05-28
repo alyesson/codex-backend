@@ -60,7 +60,7 @@ public class ProducaoConfig implements DatabaseConfig {
                 dataSource.setDriverClassName(driverClassName);
 
                 // Inicializa tabelas e dados
-                dbService.instanciaDB(dataSource);
+                dbService.criaOutrasBases(dataSource);
                 logger.info("Banco de dados {} criado e populado com sucesso!", dbName);
                 return true;
             } else {

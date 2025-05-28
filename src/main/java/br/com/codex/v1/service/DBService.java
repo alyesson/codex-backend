@@ -1,6 +1,7 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.configuration.PersistenceUnitInfoAdapter;
+import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.enums.Perfil;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
@@ -29,7 +30,7 @@ public class DBService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    public void instanciaDB(DataSource dataSource) {
+    public void criaOutrasBases(DataSource dataSource) {
         Map<String, Object> props = new HashMap<>();
         props.put("hibernate.hbm2ddl.auto", "update");  // cria ou atualiza tabelas
         props.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
@@ -65,5 +66,20 @@ public class DBService {
             em.close();
             emf.close();
         }
+    }
+
+    public void criaBaseCodex() {
+            Usuario pessoa = new Usuario(null, "Administrador", "80374841063",
+                    Date.valueOf("2024-01-07"), "Neutro", "19974061119",
+                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP",
+                    "13185-421", "suporte@codexsolucoes.com.br",
+                    encoder.encode("Admin@2024!"), "Sistema", "00000");
+            pessoa.addPerfil(Perfil.ADMINISTRADOR);
+            usuarioRepository.save(pessoa);
+
+            Empresa empresa = new Empresa(null, "37025579000157", "", "", "", "", "",
+                    "Codex Soluções Em TI", "", "", "", "", "", "", "", "", "", "", "",
+                    "Ativo", "Ótimo", "codex", "----", true);
+            empresaRepository.save(empresa);
     }
 }

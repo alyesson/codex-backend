@@ -3,7 +3,9 @@
     <words>
       <w>abaixo</w>
       <w>aliquota</w>
+      <w>ativo</w>
       <w>atualiza</w>
+      <w>ação</w>
       <w>basedados</w>
       <w>chown</w>
       <w>classificacao</w>
@@ -18,6 +20,7 @@
       <w>conexão</w>
       <w>contabil</w>
       <w>contate</w>
+      <w>contém</w>
       <w>criado</w>
       <w>criando</w>
       <w>criar</w>
@@ -43,8 +46,11 @@
       <w>indefinida</w>
       <w>indefinido</w>
       <w>informacao</w>
+      <w>iniciais</w>
       <w>inicializa</w>
+      <w>inicializar</w>
       <w>inscricao</w>
+      <w>inseridos</w>
       <w>instancia</w>
       <w>isso</w>
       <w>lancado</w>
@@ -55,28 +61,41 @@
       <w>metodo</w>
       <w>migracao</w>
       <w>milissegundos</w>
+      <w>nenhuma</w>
       <w>neutro</w>
       <w>nomes</w>
       <w>operacao</w>
+      <w>outras</w>
+      <w>perfil</w>
       <w>populado</w>
       <w>populados</w>
+      <w>populando</w>
       <w>preciso</w>
       <w>presenca</w>
       <w>producao</w>
+      <w>quiser</w>
       <w>razao</w>
       <w>servico</w>
       <w>servicos</w>
       <w>servidor</w>
       <w>serão</w>
+      <w>soluções</w>
       <w>sucesso</w>
       <w>suframa</w>
       <w>suporte</w>
+      <w>tabela</w>
       <w>tabelas</w>
+      <w>também</w>
       <w>telelefone</w>
       <w>transacional</w>
       <w>tributario</w>
       <w>técnico</w>
       <w>usadas</w>
+      <w>usuários</w>
+      <w>vazia</w>
+      <w>vazio</w>
+      <w>verifica</w>
+      <w>ótimo</w>
     </words>
   </dictionary>
 </component>
