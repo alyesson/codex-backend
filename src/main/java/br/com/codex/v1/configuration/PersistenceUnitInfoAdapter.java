@@ -70,11 +70,6 @@ public class PersistenceUnitInfoAdapter implements PersistenceUnitInfo {
         Reflections reflections = new Reflections("br.com.codex.v1.domain");
         Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
         return entities.stream().map(Class::getName).collect(Collectors.toList());
-        /*return List.of(
-                "br.com.codex.v1.domain.cadastros.Usuario",
-                "br.com.codex.v1.domain.cadastros.Empresa"
-                // adicione todas suas entidades importantes
-        );*/
     }
 
     @Override
