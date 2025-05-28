@@ -1,10 +1,12 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.configuration.PersistenceUnitInfoAdapter;
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.enums.Perfil;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
 import br.com.codex.v1.domain.repository.UsuarioRepository;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -30,8 +33,49 @@ public class DBService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    public void instanciaDB() {
+    public void instanciaDB(DataSource dataSource) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("hibernate.hbm2ddl.auto", "update");  // cria ou atualiza tabelas
+        props.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
 
+        // Use a naming strategy do Spring Boot que gera nomes snake_case:
+        props.put("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+
+        // Datasource não transacional
+        props.put("javax.persistence.nonJtaDataSource", dataSource);
+
+        PersistenceUnitInfoAdapter info = new PersistenceUnitInfoAdapter("dynamicUnit", dataSource);
+
+        EntityManagerFactory emf = new HibernatePersistenceProvider()
+                .createContainerEntityManagerFactory(info, props);
+
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        try {
+            Usuario pessoa = new Usuario(null, "Administrador", "80374841063",
+                    Date.valueOf("2024-01-07"), "Neutro", "19974061119",
+                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP",
+                    "13185-421", "suporte@codexsolucoes.com.br",
+                    encoder.encode("Admin@2024!"), "Sistema", "00000");
+            pessoa.addPerfil(Perfil.ADMINISTRADOR);
+            em.persist(pessoa);
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new RuntimeException("Erro ao popular dados", e);
+        } finally {
+            em.close();
+            emf.close();
+        }
+    }
+
+
+
+    /*public void instanciaDB() {
+
+        System.out.println("Chegou até aqui...");
             Usuario pessoa = new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                     "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2024!"), "Sistema", "00000");
@@ -42,7 +86,7 @@ public class DBService {
                     "Codex Soluções Em TI", "", "", "", "", "", "", "", "", "", "", "",
                     "Ativo", "Ótimo", "codex", "----", true);
             empresaRepository.save(empresa);
-    }
+    }*/
 }
 
 /*@Service
