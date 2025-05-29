@@ -34,7 +34,7 @@ public class ConciliacaoContabilService {
 
         for (NotasFiscais nota : notas) {
             List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByNotaFiscalOrigem(nota);
-            System.out.println("Nota " + nota.getNumero() + " tem " + lancamentos.size() + " lançamentos");
+            //System.out.println("Nota " + nota.getNumero() + " tem " + lancamentos.size() + " lançamentos");
             BigDecimal totalLancado = lancamentos.stream()
                     .map(LancamentoContabil::getValor)
                     .filter(Objects::nonNull)

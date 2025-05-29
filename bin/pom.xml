@@ -71,14 +71,14 @@
 
 		<dependency>
 			<!-- https://github.com/Samuel-Oliveira/Java_NFe -->
-			<groupId>br.com.swconsultoria</groupId>
+			<groupId>br.com.codex.v1</groupId>
 			<artifactId>java-nfe</artifactId>
 			<version>4.00.17</version>
 		</dependency>
 
 		<dependency>
 			<!-- https://github.com/Samuel-Oliveira/Java_CTe -->
-			<groupId>br.com.swconsultoria</groupId>
+			<groupId>br.com.codex.v1</groupId>
 			<artifactId>java-cte</artifactId>
 			<version>3.00.7</version>
 		</dependency>
