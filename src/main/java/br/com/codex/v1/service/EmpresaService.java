@@ -64,6 +64,7 @@ public class EmpresaService {
 
         // Substitui espaços por underscores e remove caracteres especiais
         String nomeBase = normalizeDatabaseName(empresaDto.getNomeFantasia());
+        empresaDto.setJdbcUrl(nomeBase);
 
         Empresa empresa = new Empresa(empresaDto);
         empresa = empresaRepository.save(empresa);
