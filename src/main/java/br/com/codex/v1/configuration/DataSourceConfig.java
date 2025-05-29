@@ -6,12 +6,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class DataSourceConfig {
+
+    private final Map<Object, Object> targetDataSources = new ConcurrentHashMap<>();
+    private DataSource defaultDataSource;
 
     @Value("${spring.datasource.url}")
     private String defaultDbUrl;
@@ -22,9 +27,8 @@ public class DataSourceConfig {
     @Value("${spring.datasource.password}")
     private String password;
 
-    private final Map<Object, Object> targetDataSources = new HashMap<>();
 
-    @Bean
+   /* @Bean -----> Funcionava aqui antes
     @Primary
     public DataSource dataSource() {
         DataSource defaultDataSource = DataSourceBuilder.create()
@@ -42,6 +46,22 @@ public class DataSourceConfig {
         routingDataSource.afterPropertiesSet();
 
         return routingDataSource;
+    }*/
+
+    @PostConstruct
+    public void init() {
+        this.defaultDataSource = createDataSource(defaultDbUrl);
+        targetDataSources.put("default", defaultDataSource);
+    }
+
+    @Bean
+    @Primary
+    public DataSource dataSource() {
+        DynamicDataSource routingDataSource = new DynamicDataSource();
+        routingDataSource.setTargetDataSources(targetDataSources);
+        routingDataSource.setDefaultTargetDataSource(defaultDataSource);
+        routingDataSource.afterPropertiesSet();
+        return routingDataSource;
     }
 
     public synchronized void addDataSource(String tenantId, DataSource dataSource) {
@@ -49,5 +69,18 @@ public class DataSourceConfig {
         DynamicDataSource routingDataSource = (DynamicDataSource) dataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
         routingDataSource.afterPropertiesSet();
+    }
+
+    public boolean containsDataSource(String tenantId) {
+        return targetDataSources.containsKey(tenantId);
+    }
+
+    public DataSource createDataSource(String url) {
+        return DataSourceBuilder.create()
+                .url(url)
+                .username(username)
+                .password(password)
+                .driverClassName("com.mysql.cj.jdbc.Driver")
+                .build();
     }
 }

@@ -1,7 +1,11 @@
 package br.com.codex.v1.security;
 
+import br.com.codex.v1.configuration.DataSourceConfig;
+import br.com.codex.v1.configuration.DatabaseContextHolder;
 import br.com.codex.v1.domain.dto.CredenciaisDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +16,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,29 +24,67 @@ import java.util.List;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JWTUtil jwtUtil;
+    private final DataSourceConfig dataSourceConfig;
+    private String defaultDbUrl;
 
-    private JWTUtil jwtUtil;
-
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-        super();
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,
+                                   JWTUtil jwtUtil,
+                                   DataSourceConfig dataSourceConfig,
+                                   String defaultDbUrl) { // Modificado construtor
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.dataSourceConfig = dataSourceConfig;
+        this.defaultDbUrl = defaultDbUrl;
+        setFilterProcessesUrl("/login");
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                HttpServletResponse response) throws AuthenticationException {
+        try {
+            CredenciaisDto creds = new ObjectMapper().readValue(request.getInputStream(), CredenciaisDto.class);
 
-            try{
-                CredenciaisDto creds = new ObjectMapper().readValue(request.getInputStream(),CredenciaisDto.class);
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha(), new ArrayList<>());
-                Authentication authentication = authenticationManager.authenticate(authenticationToken);
-                return authentication;
+            // Monta a URL completa
+            String baseUrl = defaultDbUrl.substring(0, defaultDbUrl.lastIndexOf("/") + 1);
+            String jdbcUrl = baseUrl + creds.getJdbcUrl() + "?createDatabaseIfNotExist=true&serverTimezone=UTC";
 
-            }catch (Exception erro){
-                throw new RuntimeException(erro);
+            System.out.println("URL completa: " + jdbcUrl); // Log para depuração
+
+            String dbName = extractDatabaseName(creds.getJdbcUrl()); // Extrai apenas do nome do banco
+
+            if (!dataSourceConfig.containsDataSource(dbName)) {
+                DataSource newDataSource = createDataSource(jdbcUrl); // Usa a URL completa aqui
+                dataSourceConfig.addDataSource(dbName, newDataSource);
             }
+
+            DatabaseContextHolder.setCurrentDb(dbName);
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    creds.getEmail(),
+                    creds.getSenha(),
+                    new ArrayList<>());
+
+            return authenticationManager.authenticate(authToken);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha na autenticação: " + e.getMessage(), e);
+        }
+    }
+
+    private String extractDatabaseName(String jdbcUrl) {
+        // Exemplo: jdbc:mysql://localhost:3306/barbearia_mourao?params
+        String[] parts = jdbcUrl.split("/");
+        return parts[parts.length - 1].split("\\?")[0];
+    }
+
+    private DataSource createDataSource(String jdbcUrl) {
+        return DataSourceBuilder.create()
+                .url(jdbcUrl) // Usa a URL completa aqui
+                .username("dbuser")
+                .password("A45mk#@2024!qzXA-2")
+                .driverClassName("com.mysql.cj.jdbc.Driver")
+                .build();
     }
 
     @Override
