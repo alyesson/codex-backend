@@ -51,7 +51,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             String jdbcUrl = baseUrl + creds.getJdbcUrl() + "?createDatabaseIfNotExist=true&serverTimezone=UTC";
 
             System.out.println("URL completa: " + jdbcUrl); // Log para depuração
-
             String dbName = extractDatabaseName(creds.getJdbcUrl()); // Extrai apenas do nome do banco
 
             if (!dataSourceConfig.containsDataSource(dbName)) {
