@@ -23,9 +23,9 @@ public class CadastroColaboradores implements Serializable {
     protected String nomeDepartamento;
     @Column(length = 25)
     protected String estadoCivil;
-    @Column(length = 50)
+    @Column(length = 70)
     protected String cargo;
-    @Column(length = 4)
+    @Column(length = 6)
     protected int numeroMatricula;
     @Column(length = 12)
     protected Date dataContratacao;
@@ -43,13 +43,13 @@ public class CadastroColaboradores implements Serializable {
     protected String unidadeContratante;
     @Column(length = 8)
     protected String codCbo;
-    @Column(length = 30)
+    @Column(length = 100)
     protected String descricaoCbo;
     @Column(length = 150)
     protected String logradouro;
-    @Column(length = 50)
+    @Column(length = 60)
     protected String bairro;
-    @Column(length = 50)
+    @Column(length = 60)
     protected String cidade;
     @Column(length = 10)
     protected String cep;
@@ -73,15 +73,15 @@ public class CadastroColaboradores implements Serializable {
     protected String habilitacao;
     @Column(length = 20)
     protected String tituloEleitor;
-    @Column(length = 4)
+    @Column(length = 6)
     protected String zonaEleitor;
-    @Column(length = 4)
+    @Column(length = 6)
     protected String secaoEleitor;
     @Column(length = 20)
     protected String numeroReservista;
     @Column(length = 6)
     protected String numeroCarteiraTrabalho;
-    @Column(length = 4)
+    @Column(length = 6)
     protected String serieCarteiraTrabalho;
     @Column(length = 2)
     protected String ufCtps;
@@ -97,9 +97,9 @@ public class CadastroColaboradores implements Serializable {
     protected String orgaoEmissorRg;
     @Column(length = 12)
     protected String cpf;
-    @Column(length = 15)
+    @Column(length = 25)
     protected String centroCusto;
-    @Column(length = 15)
+    @Column(length = 25)
     protected String numeroPis;
     @Column(length = 10)
     protected BigDecimal ultimoSalario;
@@ -113,9 +113,9 @@ public class CadastroColaboradores implements Serializable {
     protected BigDecimal salarioColaborador;
     @Column(length = 35)
     protected String jornada;
-    @Column(length = 50)
+    @Column(length = 60)
     protected String nomePai;
-    @Column(length = 50)
+    @Column(length = 60)
     protected String nomeMae;
     @Column(length = 30)
     protected String escolaridade;
@@ -133,7 +133,7 @@ public class CadastroColaboradores implements Serializable {
     protected String termoCertidao;
     @Column(length = 2)
     protected String ufCertidao;
-    @Column(length = 35)
+    @Column(length = 50)
     protected String municipioCertidao;
     @Column(length = 30)
     protected String tipoContrato;
