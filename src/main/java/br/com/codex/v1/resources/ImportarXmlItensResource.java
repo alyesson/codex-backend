@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "v1/api/nota_fiscal_itens")
+@RequestMapping(value = "v1/api/importar_xml_itens")
 public class ImportarXmlItensResource {
 
     @Autowired
