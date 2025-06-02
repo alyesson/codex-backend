@@ -1,16 +1,13 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.contabilidade.Contas;
-import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
-import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
+import br.com.codex.v1.domain.contabilidade.*;
 import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.codex.v1.api.schema_4.consReciNFe.TIpi;
 import br.com.codex.v1.api.schema_4.consReciNFe.TNFe;
 import br.com.codex.v1.api.schema_4.consReciNFe.TNfeProc;
 import br.com.codex.v1.api.util.XmlNfeUtil;
-import br.com.codex.v1.domain.estoque.NotaFiscalItens;
-import br.com.codex.v1.domain.estoque.NotasFiscais;
+import br.com.codex.v1.domain.contabilidade.ImportarXml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,13 +26,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class NotaFiscalService {
+public class ImportarXmlService {
 
     @Autowired
-    private NotaFiscalRepository notaFiscalRepository;
+    private ImportarXmlRepository importarXmlRepository;
 
     @Autowired
-    private NotaFiscalItensRepository itensNotaFiscalRepository;
+    private ImportarXmlItensRepository itensNotaFiscalRepository;
 
     @Autowired
     ContasService contasService;
@@ -49,8 +46,8 @@ public class NotaFiscalService {
     String numeroDaNota;
     String dataEmissaoNota;
 
-    public NotasFiscais findByChave(String chave) {
-        Optional<NotasFiscais> nota = notaFiscalRepository.findByChave(chave);
+    public ImportarXml findByChave(String chave) {
+        Optional<ImportarXml> nota = importarXmlRepository.findByChave(chave);
 
         if(!nota.isPresent()){
             throw new DataIntegrityViolationException("A chave " + chave + " não foi localizada");
@@ -60,7 +57,7 @@ public class NotaFiscalService {
         }
     }
 
-    public NotasFiscais obterXmlCompleto(MultipartFile file) {
+    public ImportarXml obterXmlCompleto(MultipartFile file) {
         TNfeProc nfe = null;
         String xml=null;
 
@@ -76,7 +73,7 @@ public class NotaFiscalService {
             throw new DataIntegrityViolationException("Erro nfe XmlNfeUtil.xmlToObject: " + e.getMessage());
         }
 
-        NotasFiscais nota = new NotasFiscais();
+        ImportarXml nota = new ImportarXml();
         String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
         nota.setDataImportacao(java.sql.Date.valueOf(dataAtual));
         nota.setXml(xml);
@@ -256,7 +253,7 @@ public class NotaFiscalService {
         nota.setDataHoraProtocolo(nfe.getProtNFe().getInfProt().getDhRecbto());
         nota.setMotivoProtocolo(nfe.getProtNFe().getInfProt().getXMotivo());
 
-        List<NotaFiscalItens> itens = obterItensXmlCompleto(nota);
+        List<ImportarXmlItens> itens = obterItensXmlCompleto(nota);
 
         salvarNotaFiscal(nota);
         salvarNotaFiscalItens(itens);
@@ -265,20 +262,20 @@ public class NotaFiscalService {
         return nota;
     }
 
-    public List<NotaFiscalItens> obterItensXmlCompleto(NotasFiscais notasFiscais) {
+    public List<ImportarXmlItens> obterItensXmlCompleto(ImportarXml importarXml) {
 
         TNfeProc nfeIten = null;
 
-        List<NotaFiscalItens> itens = new ArrayList<>();
+        List<ImportarXmlItens> itens = new ArrayList<>();
 
         try {
-            nfeIten = XmlNfeUtil.xmlToObject(notasFiscais.getXml(), TNfeProc.class);
+            nfeIten = XmlNfeUtil.xmlToObject(importarXml.getXml(), TNfeProc.class);
         } catch (JAXBException e) {
             throw new DataIntegrityViolationException("Erro item XmlNfeUtil.xmlToObject: " + e.getMessage());
         }
 
         nfeIten.getNFe().getInfNFe().getDet().forEach(i -> {
-            NotaFiscalItens item = new NotaFiscalItens();
+            ImportarXmlItens item = new ImportarXmlItens();
 
             item.setNomeProduto(i.getProd().getXProd() != null ? i.getProd().getXProd() : "");
             item.setCodigoProduto(i.getProd().getCProd() != null ? i.getProd().getCProd() : "");
@@ -667,57 +664,57 @@ public class NotaFiscalService {
         return itens;
     }
 
-    private NotasFiscais salvarNotaFiscal(NotasFiscais notasFiscais){
+    private ImportarXml salvarNotaFiscal(ImportarXml importarXml){
 
-        boolean verificaChave = notaFiscalRepository.existsByChave(notasFiscais.getChave());
+        boolean verificaChave = importarXmlRepository.existsByChave(importarXml.getChave());
            if(verificaChave){
-                throw new DataIntegrityViolationException("A nota fiscal " + notasFiscais.getNumero() + " já foi importada");
+                throw new DataIntegrityViolationException("A nota fiscal " + importarXml.getNumero() + " já foi importada");
            }
-        return notaFiscalRepository.save(notasFiscais);
+        return importarXmlRepository.save(importarXml);
     }
 
-    public List<NotaFiscalItens> salvarNotaFiscalItens(List<NotaFiscalItens> notaFiscalItensList) {
-        return itensNotaFiscalRepository.saveAll(notaFiscalItensList);
+    public List<ImportarXmlItens> salvarNotaFiscalItens(List<ImportarXmlItens> importarXmlItensList) {
+        return itensNotaFiscalRepository.saveAll(importarXmlItensList);
     }
 
-    public List<NotasFiscais> listarNotas(){
-        return notaFiscalRepository.findAll();
+    public List<ImportarXml> listarNotas(){
+        return importarXmlRepository.findAll();
     }
 
     public void delete(Integer id) {
         itensNotaFiscalRepository.deleteById(id);
     }
 
-    public List<NotasFiscais> findAllByYear(Integer anoAtual) {
-        return notaFiscalRepository.findAllByYear(anoAtual);
+    public List<ImportarXml> findAllByYear(Integer anoAtual) {
+        return importarXmlRepository.findAllByYear(anoAtual);
     }
 
-    public List<NotasFiscais> findAllEntradaPeriodo(Date dataInicial, Date dataFinal) {
-        return notaFiscalRepository.findAllEntradaPeriodo(dataInicial, dataFinal);
+    public List<ImportarXml> findAllEntradaPeriodo(Date dataInicial, Date dataFinal) {
+        return importarXmlRepository.findAllEntradaPeriodo(dataInicial, dataFinal);
     }
 
-    private LancamentoContabil lancamentoContabil(NotasFiscais notasFiscais) {
+    private LancamentoContabil lancamentoContabil(ImportarXml importarXml) {
 
         Contas contaDebito;
         Contas contaCredito;
         HistoricoPadrao historico;
 
         LancamentoContabil lancamento = new LancamentoContabil();
-        lancamento.setDataLancamento(notasFiscais.getDataImportacao());
-        lancamento.setValor(notasFiscais.getValorTotal());
+        lancamento.setDataLancamento(importarXml.getDataImportacao());
+        lancamento.setValor(importarXml.getValorTotal());
 
         // Verifica se a nota é de entrada (compra): tpNF = 1 significa saída do fornecedor, entrada para a empresa
-        boolean isNotaEntrada = "1".equals(notasFiscais.getTipo());
+        boolean isNotaEntrada = "1".equals(importarXml.getTipo());
 
         if (isNotaEntrada) {
             // Nota de ENTRADA (compra feita pela empresa)
             contaDebito = contasService.findByNome("Estoque");
-            contaCredito = contasService.findByNome(notasFiscais.getRazaoSocialEmitente());
+            contaCredito = contasService.findByNome(importarXml.getRazaoSocialEmitente());
             historico = historicoPadraoService.findByDescricao("Compra de Mercadorias");
 
-            String complemento = "NF " + notasFiscais.getNumero()
-                    + " - Fornecedor: " + (notasFiscais.getRazaoSocialEmitente() != null ? notasFiscais.getRazaoSocialEmitente() : "Desconhecido")
-                    + " - Chave: " + notasFiscais.getChave();
+            String complemento = "NF " + importarXml.getNumero()
+                    + " - Fornecedor: " + (importarXml.getRazaoSocialEmitente() != null ? importarXml.getRazaoSocialEmitente() : "Desconhecido")
+                    + " - Chave: " + importarXml.getChave();
             lancamento.setComplementoHistorico(complemento);
 
         } else {
@@ -726,22 +723,22 @@ public class NotaFiscalService {
             contaCredito = contasService.findByNome("Receita Bruta De Vendas E Mercadorias");
             historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
 
-            String complemento = "NF " + notasFiscais.getNumero()
-                    + " - Cliente: " + (notasFiscais.getRazaoSocialDestinatario() != null ? notasFiscais.getRazaoSocialDestinatario() : "Desconhecido")
-                    + " - Chave: " + notasFiscais.getChave();
+            String complemento = "NF " + importarXml.getNumero()
+                    + " - Cliente: " + (importarXml.getRazaoSocialDestinatario() != null ? importarXml.getRazaoSocialDestinatario() : "Desconhecido")
+                    + " - Chave: " + importarXml.getChave();
             lancamento.setComplementoHistorico(complemento);
         }
 
         lancamento.setContaDebito(contaDebito);
         lancamento.setContaCredito(contaCredito);
         lancamento.setHistoricoPadrao(historico);
-        lancamento.setNotaFiscalOrigem(notasFiscais);
+        lancamento.setNotaFiscalOrigem(importarXml);
 
         return lancamentoContabilRepository.save(lancamento);
     }
 
     public Integer findByNumeroAndRazaoSocialEmitente(String numero, String razaoSocialEmitente) {
-        Optional<Integer> objNotaId = notaFiscalRepository.findIdByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+        Optional<Integer> objNotaId = importarXmlRepository.findIdByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
         return objNotaId.orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada para o emissor "+razaoSocialEmitente));
     }
 

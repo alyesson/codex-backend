@@ -1,4 +1,4 @@
-package br.com.codex.v1.domain.estoque;
+package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.NotaFiscalItensDto;
 
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-public class NotaFiscalItens {
+public class ImportarXmlItens {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,11 +96,11 @@ public class NotaFiscalItens {
     private BigDecimal valorIpi;
     private BigDecimal valorUniIpi;
 
-    public NotaFiscalItens() {
+    public ImportarXmlItens() {
         super();
     }
 
-    public NotaFiscalItens(Integer id, String numeroNotaFiscal, String nomeProduto, String codigoProduto, String ncmSh, String cfop, String item, String unidadeComercial, BigDecimal quantidadeComercial, BigDecimal valorUnitarioComercial, BigDecimal valorTotalProdutos, String unidadeTributacao, BigDecimal quantidadeTributacao, BigDecimal valorUnitarioTributacao, BigDecimal valorDesconto, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorOutro, String informacaoAdicional, String validadeLote, String fabricacaoLote, String numeroLote, String cstIcms, String modBc, String origIcms, BigDecimal aliqIcms, BigDecimal bcIcms, BigDecimal valorIcms, BigDecimal aliqFcp, BigDecimal valorFcp, String modBcSt, String motDesIcms, BigDecimal valorIcmsDesonerado, BigDecimal aliqFcpSt, BigDecimal aliqIcmsSt, BigDecimal percentMargemIcmsSt, BigDecimal percentRedBc, BigDecimal percentRedBcSt, BigDecimal valorIcmsSt, BigDecimal valorFcpSt, BigDecimal bcIcmsSt, BigDecimal bcFcp, BigDecimal bcFcpSt, BigDecimal aliqIcmsDiferido, BigDecimal valorIcmsDiferido, BigDecimal valorIcmsOperacao, BigDecimal aliqFcpStRetido, BigDecimal aliqIcmsEfetivo, BigDecimal percentRedBcEfetivo, BigDecimal bcIcmsEfetivo, BigDecimal bcFcpStRetido, BigDecimal valorIcmsEfetivo, BigDecimal valorIcmsSubstituto, BigDecimal valorFcpStRetido, String csoSn, BigDecimal pstIcms, BigDecimal aliqCredSn, BigDecimal valorCredIcmsSn, BigDecimal bcIcmsStRetido, BigDecimal bcIcmsStDestino, BigDecimal valorIcmsStRetido, BigDecimal valorIcmsStDestino, BigDecimal percentBcOperacao, String ufIcmsSt, String cstPis, BigDecimal aliqPis, BigDecimal bcPis, BigDecimal valorPis, String cstCofins, BigDecimal aliqCofins, BigDecimal quantVendidaCofins, BigDecimal valorAliqCofinsRs, BigDecimal bcCofins, BigDecimal valorCofins, String enquadramentoIpi, String cnpjProdIpi, String codigoSeloIpi, BigDecimal quantidadeSeloIpi, String cstIpi, BigDecimal aliqIpi, BigDecimal quantUniIpi, BigDecimal bcIpi, BigDecimal valorIpi, BigDecimal valorUniIpi) {
+    public ImportarXmlItens(Integer id, String numeroNotaFiscal, String nomeProduto, String codigoProduto, String ncmSh, String cfop, String item, String unidadeComercial, BigDecimal quantidadeComercial, BigDecimal valorUnitarioComercial, BigDecimal valorTotalProdutos, String unidadeTributacao, BigDecimal quantidadeTributacao, BigDecimal valorUnitarioTributacao, BigDecimal valorDesconto, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorOutro, String informacaoAdicional, String validadeLote, String fabricacaoLote, String numeroLote, String cstIcms, String modBc, String origIcms, BigDecimal aliqIcms, BigDecimal bcIcms, BigDecimal valorIcms, BigDecimal aliqFcp, BigDecimal valorFcp, String modBcSt, String motDesIcms, BigDecimal valorIcmsDesonerado, BigDecimal aliqFcpSt, BigDecimal aliqIcmsSt, BigDecimal percentMargemIcmsSt, BigDecimal percentRedBc, BigDecimal percentRedBcSt, BigDecimal valorIcmsSt, BigDecimal valorFcpSt, BigDecimal bcIcmsSt, BigDecimal bcFcp, BigDecimal bcFcpSt, BigDecimal aliqIcmsDiferido, BigDecimal valorIcmsDiferido, BigDecimal valorIcmsOperacao, BigDecimal aliqFcpStRetido, BigDecimal aliqIcmsEfetivo, BigDecimal percentRedBcEfetivo, BigDecimal bcIcmsEfetivo, BigDecimal bcFcpStRetido, BigDecimal valorIcmsEfetivo, BigDecimal valorIcmsSubstituto, BigDecimal valorFcpStRetido, String csoSn, BigDecimal pstIcms, BigDecimal aliqCredSn, BigDecimal valorCredIcmsSn, BigDecimal bcIcmsStRetido, BigDecimal bcIcmsStDestino, BigDecimal valorIcmsStRetido, BigDecimal valorIcmsStDestino, BigDecimal percentBcOperacao, String ufIcmsSt, String cstPis, BigDecimal aliqPis, BigDecimal bcPis, BigDecimal valorPis, String cstCofins, BigDecimal aliqCofins, BigDecimal quantVendidaCofins, BigDecimal valorAliqCofinsRs, BigDecimal bcCofins, BigDecimal valorCofins, String enquadramentoIpi, String cnpjProdIpi, String codigoSeloIpi, BigDecimal quantidadeSeloIpi, String cstIpi, BigDecimal aliqIpi, BigDecimal quantUniIpi, BigDecimal bcIpi, BigDecimal valorIpi, BigDecimal valorUniIpi) {
         this.id = id;
         this.numeroNotaFiscal = numeroNotaFiscal;
         this.nomeProduto = nomeProduto;
@@ -187,7 +187,7 @@ public class NotaFiscalItens {
         this.valorUniIpi = valorUniIpi;
     }
 
-    public NotaFiscalItens(NotaFiscalItensDto obj) {
+    public ImportarXmlItens(NotaFiscalItensDto obj) {
         this.id = obj.getId();
         this.numeroNotaFiscal = obj.getNumeroNotaFiscal();
         this.nomeProduto = obj.getNomeProduto();
@@ -950,7 +950,7 @@ public class NotaFiscalItens {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NotaFiscalItens that = (NotaFiscalItens) o;
+        ImportarXmlItens that = (ImportarXmlItens) o;
         return Objects.equals(id, that.id);
     }
 

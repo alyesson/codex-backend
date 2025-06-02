@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.estoque.NotasFiscais;
+import br.com.codex.v1.domain.contabilidade.ImportarXml;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -86,7 +86,7 @@ public class NotasFiscaisDto {
         super();
     }
 
-    public NotasFiscaisDto(NotasFiscais obj) {
+    public NotasFiscaisDto(ImportarXml obj) {
         this.id = obj.getId();
         this.xml = obj.getXml();
         this.codigoUf = obj.getCodigoUf();

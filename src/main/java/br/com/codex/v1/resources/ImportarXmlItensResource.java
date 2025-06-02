@@ -1,8 +1,8 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.estoque.NotaFiscalItens;
+import br.com.codex.v1.domain.contabilidade.ImportarXmlItens;
 import br.com.codex.v1.domain.dto.NotaFiscalItensDto;
-import br.com.codex.v1.service.NotaFiscalItensService;
+import br.com.codex.v1.service.ImportarXmlItensService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "v1/api/nota_fiscal_itens")
-public class NotaFiscalItensResource {
+public class ImportarXmlItensResource {
 
     @Autowired
-    private NotaFiscalItensService notaFiscalItensService;
+    private ImportarXmlItensService importarXmlItensService;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/id_nota")
     public ResponseEntity<List<NotaFiscalItensDto>> findByNumeroNotaFiscal(@RequestParam(value = "numeroNotaFiscal") String numeroNotaFiscal){
-        List<NotaFiscalItens> list = notaFiscalItensService.findByNumero(numeroNotaFiscal);
+        List<ImportarXmlItens> list = importarXmlItensService.findByNumero(numeroNotaFiscal);
         List<NotaFiscalItensDto> objList = list.stream().map(NotaFiscalItensDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(objList);
     }

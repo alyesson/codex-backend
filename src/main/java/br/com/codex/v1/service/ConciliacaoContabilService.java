@@ -2,9 +2,9 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.dto.ConciliacaoContabilDto;
-import br.com.codex.v1.domain.estoque.NotasFiscais;
+import br.com.codex.v1.domain.contabilidade.ImportarXml;
 import br.com.codex.v1.domain.repository.LancamentoContabilRepository;
-import br.com.codex.v1.domain.repository.NotaFiscalRepository;
+import br.com.codex.v1.domain.repository.ImportarXmlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.Objects;
 public class ConciliacaoContabilService {
 
     @Autowired
-    private NotaFiscalRepository notaFiscalRepository;
+    private ImportarXmlRepository importarXmlRepository;
 
     @Autowired
     private LancamentoContabilRepository lancamentoContabilRepository;
@@ -29,10 +29,10 @@ public class ConciliacaoContabilService {
         LocalDate primeiroDia = hoje.withDayOfMonth(1);
         LocalDate ultimoDia = hoje.withDayOfMonth(hoje.lengthOfMonth());
 
-        List<NotasFiscais> notas = notaFiscalRepository.findByEmissaoBetween(primeiroDia, ultimoDia);
+        List<ImportarXml> notas = importarXmlRepository.findByEmissaoBetween(primeiroDia, ultimoDia);
         List<ConciliacaoContabilDto> resultado = new ArrayList<>();
 
-        for (NotasFiscais nota : notas) {
+        for (ImportarXml nota : notas) {
             List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByNotaFiscalOrigem(nota);
             //System.out.println("Nota " + nota.getNumero() + " tem " + lancamentos.size() + " lançamentos");
             BigDecimal totalLancado = lancamentos.stream()
@@ -61,10 +61,10 @@ public class ConciliacaoContabilService {
 
 
     public List<ConciliacaoContabilDto> listarConciliacoesPorPeriodo(LocalDate inicio, LocalDate fim) {
-        List<NotasFiscais> notas = notaFiscalRepository.findByEmissaoBetween(inicio, fim);
+        List<ImportarXml> notas = importarXmlRepository.findByEmissaoBetween(inicio, fim);
         List<ConciliacaoContabilDto> resultado = new ArrayList<>();
 
-        for (NotasFiscais nota : notas) {
+        for (ImportarXml nota : notas) {
             List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByNotaFiscalOrigem(nota);
             BigDecimal totalLancado = lancamentos.stream()
                     .map(LancamentoContabil::getValor)

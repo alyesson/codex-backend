@@ -1,19 +1,11 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.enums.TipoHorario;
-import br.com.codex.v1.domain.enums.TipoJornada;
 import br.com.codex.v1.domain.rh.CadastroJornada;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class CadastroJornadaDto implements Serializable {
     @Serial

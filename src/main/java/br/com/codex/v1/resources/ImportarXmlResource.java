@@ -1,13 +1,10 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.dto.ProdutoDto;
-import br.com.codex.v1.domain.estoque.NotasFiscais;
+import br.com.codex.v1.domain.contabilidade.ImportarXml;
 import br.com.codex.v1.domain.dto.NotasFiscaisDto;
-import br.com.codex.v1.domain.repository.NotaFiscalRepository;
-import br.com.codex.v1.resources.exceptions.StandardError;
-import br.com.codex.v1.service.NotaFiscalService;
+import br.com.codex.v1.domain.repository.ImportarXmlRepository;
+import br.com.codex.v1.service.ImportarXmlService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +13,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.sql.Date;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "v1/api/nota_fiscal")
-public class NotaFiscalResource {
+public class ImportarXmlResource {
 
     @Autowired
-    private NotaFiscalService notaFiscalService;
+    private ImportarXmlService importarXmlService;
 
     @Autowired
-    private NotaFiscalRepository notaFiscalRepository;
+    private ImportarXmlRepository importarXmlRepository;
 
     URI uri = null;
 
@@ -38,7 +33,7 @@ public class NotaFiscalResource {
     public ResponseEntity<NotasFiscaisDto> create(@RequestParam("files") MultipartFile[] files) throws Exception {
 
         for (MultipartFile file : files) {
-            NotasFiscais objNota = notaFiscalService.obterXmlCompleto(file);
+            ImportarXml objNota = importarXmlService.obterXmlCompleto(file);
             uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(objNota.getId()).toUri();
         }
         return ResponseEntity.created(uri).build();
@@ -47,7 +42,7 @@ public class NotaFiscalResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<NotasFiscaisDto> delete(@PathVariable Integer id){
-        notaFiscalService.delete(id);
+        importarXmlService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -55,7 +50,7 @@ public class NotaFiscalResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/ano_corrente")
     public ResponseEntity<List<NotasFiscaisDto>> findAllByYear(@RequestParam(value = "ano") Integer ano){
-        List<NotasFiscais> list = notaFiscalService.findAllByYear(ano);
+        List<ImportarXml> list = importarXmlService.findAllByYear(ano);
         List<NotasFiscaisDto> objList = list.stream().map(NotasFiscaisDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(objList);
     }
@@ -64,7 +59,7 @@ public class NotaFiscalResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/entrada_notas_fiscais_periodo")
     public ResponseEntity<List<NotasFiscaisDto>> findAllEntradaPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
-        List<NotasFiscais> list = notaFiscalService.findAllEntradaPeriodo(dataInicial, dataFinal);
+        List<ImportarXml> list = importarXmlService.findAllEntradaPeriodo(dataInicial, dataFinal);
         List<NotasFiscaisDto> listDto = list.stream().map(NotasFiscaisDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
@@ -73,7 +68,7 @@ public class NotaFiscalResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/id_nota_emissor")
     public ResponseEntity<Integer> findIdByNumeroAndRazaoSocialEmitente(@RequestParam("numero") String numero, @RequestParam("razaoSocialEmitente") String razaoSocialEmitente) {
-        Integer idNota = notaFiscalService.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+        Integer idNota = importarXmlService.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
         return ResponseEntity.ok().body(idNota);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.estoque.NotaFiscalItens;
+import br.com.codex.v1.domain.contabilidade.ImportarXmlItens;
 
 import java.math.BigDecimal;
 
@@ -95,7 +95,7 @@ public class NotaFiscalItensDto {
         super();
     }
 
-    public NotaFiscalItensDto(NotaFiscalItens obj) {
+    public NotaFiscalItensDto(ImportarXmlItens obj) {
         this.id = obj.getId();
         this.numeroNotaFiscal = obj.getNumeroNotaFiscal();
         this.nomeProduto = obj.getNomeProduto();

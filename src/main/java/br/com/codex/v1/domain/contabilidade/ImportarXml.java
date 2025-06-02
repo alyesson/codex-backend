@@ -1,4 +1,4 @@
-package br.com.codex.v1.domain.estoque;
+package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.NotasFiscaisDto;
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-public class NotasFiscais {
+public class ImportarXml {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -175,11 +175,11 @@ public class NotasFiscais {
     @Column(length = 15)
     private Date dataImportacao;
 
-    public NotasFiscais() {
+    public ImportarXml() {
         super();
     }
 
-    public NotasFiscais(Integer id, String xml, String codigoUf, String codigoNf, String naturezaOperacao, String modelo, String serie, String numero, LocalDate emissao, String dhSaidaEntrada, String tipo, String indicadorPresenca, String razaoSocialEmitente, String nomeFantasiaEmitente, String documentoEmitente, String inscricaoEstadualEmitente, String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente, String telefoneEmitente, String logradouroEmitente, String numeroEnderecoEmitente, String ufEmitente, String razaoSocialDestinatario, String documentoDestinatario, String inscricaoEstadualDestinatario, String cepDestinatario, String codigoMunicipioDestinatario, String nomeMunicipioDestinatario, String bairroDestinatario, String telefoneDestinatario, String logradouroDestinatario, String numeroEnderecoDestinatario, String ufDestinatario, BigDecimal valorBaseCalculo, BigDecimal valorIcms, BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt, BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido, BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto, BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal, String modalidadeFrete, String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura, BigDecimal valorOriginalFatura, BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte, String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo, Date dataImportacao) {
+    public ImportarXml(Integer id, String xml, String codigoUf, String codigoNf, String naturezaOperacao, String modelo, String serie, String numero, LocalDate emissao, String dhSaidaEntrada, String tipo, String indicadorPresenca, String razaoSocialEmitente, String nomeFantasiaEmitente, String documentoEmitente, String inscricaoEstadualEmitente, String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente, String telefoneEmitente, String logradouroEmitente, String numeroEnderecoEmitente, String ufEmitente, String razaoSocialDestinatario, String documentoDestinatario, String inscricaoEstadualDestinatario, String cepDestinatario, String codigoMunicipioDestinatario, String nomeMunicipioDestinatario, String bairroDestinatario, String telefoneDestinatario, String logradouroDestinatario, String numeroEnderecoDestinatario, String ufDestinatario, BigDecimal valorBaseCalculo, BigDecimal valorIcms, BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt, BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido, BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto, BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal, String modalidadeFrete, String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura, BigDecimal valorOriginalFatura, BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte, String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo, Date dataImportacao) {
         this.id = id;
         this.xml = xml;
         this.codigoUf = codigoUf;
@@ -253,7 +253,7 @@ public class NotasFiscais {
         this.dataImportacao = dataImportacao;
     }
 
-    public NotasFiscais(NotasFiscaisDto obj) {
+    public ImportarXml(NotasFiscaisDto obj) {
         this.id = obj.getId();
         this.xml = obj.getXml();
         this.codigoUf = obj.getCodigoUf();
@@ -899,7 +899,7 @@ public class NotasFiscais {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NotasFiscais that = (NotasFiscais) o;
+        ImportarXml that = (ImportarXml) o;
         return Objects.equals(id, that.id);
     }
 

@@ -2,8 +2,6 @@ package br.com.codex.v1.resources;
 
 
 import br.com.codex.v1.domain.dto.CadastroJornadaDto;
-import br.com.codex.v1.domain.dto.NotaFiscalItensDto;
-import br.com.codex.v1.domain.estoque.NotaFiscalItens;
 import br.com.codex.v1.domain.rh.CadastroJornada;
 import br.com.codex.v1.service.CadastroJornadaService;
 import org.springframework.beans.factory.annotation.Autowired;

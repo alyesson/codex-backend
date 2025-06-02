@@ -1,7 +1,6 @@
 package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
-import br.com.codex.v1.domain.estoque.NotasFiscais;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -38,14 +37,14 @@ public class LancamentoContabil implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "nota_fiscal_id")
-    private NotasFiscais notaFiscalOrigem;
+    private ImportarXml notaFiscalOrigem;
 
     private String complementoHistorico; // opcional, se quiser adicionar infos extras
 
     public LancamentoContabil() {
     }
 
-    public LancamentoContabil(Integer id, Date dataLancamento, BigDecimal valor, Contas contaDebito, Contas contaCredito, HistoricoPadrao historicoPadrao, NotasFiscais notaFiscalOrigem, String complementoHistorico) {
+    public LancamentoContabil(Integer id, Date dataLancamento, BigDecimal valor, Contas contaDebito, Contas contaCredito, HistoricoPadrao historicoPadrao, ImportarXml notaFiscalOrigem, String complementoHistorico) {
         this.id = id;
         this.dataLancamento = dataLancamento;
         this.valor = valor;
@@ -111,11 +110,11 @@ public class LancamentoContabil implements Serializable {
         this.historicoPadrao = historicoPadrao;
     }
 
-    public NotasFiscais getNotaFiscalOrigem() {
+    public ImportarXml getNotaFiscalOrigem() {
         return notaFiscalOrigem;
     }
 
-    public void setNotaFiscalOrigem(NotasFiscais notaFiscalOrigem) {
+    public void setNotaFiscalOrigem(ImportarXml notaFiscalOrigem) {
         this.notaFiscalOrigem = notaFiscalOrigem;
     }
 

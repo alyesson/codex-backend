@@ -2,19 +2,17 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.contabilidade.Contas;
 import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
+import br.com.codex.v1.domain.contabilidade.ImportarXml;
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
-import br.com.codex.v1.domain.estoque.MotivoAcerto;
-import br.com.codex.v1.domain.estoque.NotasFiscais;
 import br.com.codex.v1.domain.repository.ContasRepository;
 import br.com.codex.v1.domain.repository.HistoricoPadraoRepository;
 import br.com.codex.v1.domain.repository.LancamentoContabilRepository;
-import br.com.codex.v1.domain.repository.NotaFiscalRepository;
+import br.com.codex.v1.domain.repository.ImportarXmlRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.List;
@@ -33,7 +31,7 @@ public class LancamentoContabilService {
     private HistoricoPadraoRepository historicoPadraoRepository;
 
     @Autowired
-    private NotaFiscalRepository notaFiscalRepository;
+    private ImportarXmlRepository importarXmlRepository;
 
     public List<LancamentoContabil> findAllByYearAndMonth(Integer ano, Integer mes) {
         return lancamentoContabilRepository.findAllByYearAndMonth(ano, mes);
@@ -67,9 +65,9 @@ public class LancamentoContabilService {
         HistoricoPadrao historico = historicoPadraoRepository.findById(lancamentoContabilDto.getHistoricoPadraoId())
                 .orElseThrow(() -> new ObjectNotFoundException("Histórico padrão não encontrado"));
 
-        NotasFiscais nota = null;
+        ImportarXml nota = null;
         if (lancamentoContabilDto.getNotaFiscalOrigemId() != null) {
-            nota = notaFiscalRepository.findById(lancamentoContabilDto.getNotaFiscalOrigemId())
+            nota = importarXmlRepository.findById(lancamentoContabilDto.getNotaFiscalOrigemId())
                     .orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
         }
 
@@ -93,7 +91,7 @@ public class LancamentoContabilService {
                 .orElseThrow(() -> new ObjectNotFoundException("Conta crédito não encontrada"));
         HistoricoPadrao historico = historicoPadraoRepository.findById(lancamentoContabilDto.getHistoricoPadraoId())
                 .orElseThrow(() -> new ObjectNotFoundException("Histórico padrão não encontrado"));
-        NotasFiscais nota = notaFiscalRepository.findById(lancamentoContabilDto.getNotaFiscalOrigemId())
+        ImportarXml nota = importarXmlRepository.findById(lancamentoContabilDto.getNotaFiscalOrigemId())
                     .orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada"));
 
         lancamento.setContaDebito(contaDebito);
