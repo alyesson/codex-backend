@@ -44,6 +44,9 @@ public class ConfiguracaoCertificadoDto implements Serializable {
     @NotBlank(message = "A situação do certificado não pode estar em branco")
     private boolean ativo = true;
 
+    @NotBlank(message = "A senha do certificado não pode estar em branco")
+    private String senha;
+
     public ConfiguracaoCertificadoDto() {
         super();
     }
@@ -58,6 +61,7 @@ public class ConfiguracaoCertificadoDto implements Serializable {
         this.cnpj = obj.getCnpj();
         this.dataCadastro = obj.getDataCadastro();
         this.ativo = obj.isAtivo();
+        this.senha = obj.getSenha();
     }
 
     public void setRazaoSocial(String razaoSocial) {

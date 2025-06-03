@@ -43,11 +43,14 @@ public class ConfiguracaoCertificado implements Serializable {
     @Column(nullable = false)
     private boolean ativo = true;
 
+    @Column(nullable = false)
+    private String senha;
+
     public ConfiguracaoCertificado() {
         super();
     }
 
-    public ConfiguracaoCertificado(Integer id, String nome, byte[] arquivo, String tipo, Date dataValidade, String razaoSocial, String cnpj, LocalDateTime dataCadastro, boolean ativo) {
+    public ConfiguracaoCertificado(Integer id, String nome, byte[] arquivo, String tipo, Date dataValidade, String razaoSocial, String cnpj, LocalDateTime dataCadastro, boolean ativo, String senha) {
         this.id = id;
         this.nome = nome;
         this.arquivo = arquivo;
@@ -57,6 +60,7 @@ public class ConfiguracaoCertificado implements Serializable {
         this.cnpj = cnpj;
         this.dataCadastro = dataCadastro;
         this.ativo = ativo;
+        this.senha = senha;
     }
 
     public ConfiguracaoCertificado(ConfiguracaoCertificadoDto obj) {
@@ -69,6 +73,7 @@ public class ConfiguracaoCertificado implements Serializable {
         this.cnpj = obj.getCnpj();
         this.dataCadastro = obj.getDataCadastro();
         this.ativo = obj.isAtivo();
+        this.senha = obj.getSenha();
     }
 
     @Override

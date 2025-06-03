@@ -14,10 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +26,8 @@ public class ConfiguracaoCertificadoResource {
 
     @Autowired
     private ConfiguracaoCertificadoService configuracaoCertificadoService;
+
+    URI uri = null;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/{id}")
@@ -45,39 +45,19 @@ public class ConfiguracaoCertificadoResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestParam("nome") String nomeContrato,
-                                         @RequestParam("tipo") String tipo,
-                                         @RequestParam("dataValidade") Date dataValidade,
-                                         @RequestParam("razaoSocial") String razaoSocial,
-                                         @RequestParam("cnpj") String cnpj,
-                                         @RequestParam("dataCadastro") LocalDateTime dataCadastro,
-                                         @RequestParam("ativo") boolean ativo,
-                                         @RequestParam(value = "arquivo", required = false) MultipartFile arquivo) {
+    // ConfiguracaoCertificadoResource.java
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> create(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("senha") String senha) throws Exception {
 
-        try {
-            ConfiguracaoCertificadoDto documento = new ConfiguracaoCertificadoDto();
-            documento.setNome(nomeContrato);
-            documento.setTipo(tipo);
-            documento.setDataValidade(dataValidade);
-            documento.setRazaoSocial(razaoSocial);
-            documento.setCnpj(cnpj);
-            documento.setDataCadastro(dataCadastro);
-            documento.setRazaoSocial(razaoSocial);
-            documento.setAtivo(ativo);
+        ConfiguracaoCertificado certificado = configuracaoCertificadoService.create(file, senha);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(certificado.getId())
+                .toUri();
 
-            if (arquivo != null) {
-                documento.setArquivo(arquivo.getBytes());
-            }else{
-                documento.setArquivo(null);
-            }
-
-            ConfiguracaoCertificado objDoc = configuracaoCertificadoService.create(documento);
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(objDoc.getId()).toUri();
-            return ResponseEntity.created(uri).build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao salvar certificado: "+e);
-        }
+        return ResponseEntity.created(uri).build();
     }
 
 
