@@ -186,7 +186,7 @@ public class ContratosResource {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", "currículo_"+objDoc.getNomeContrato());
+        headers.setContentDispositionFormData("attachment", "contrato_"+objDoc.getNomeContrato());
         headers.setContentLength(fileBytes.length);
 
         return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
