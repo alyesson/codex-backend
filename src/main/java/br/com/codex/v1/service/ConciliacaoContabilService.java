@@ -51,6 +51,7 @@ public class ConciliacaoContabilService {
             dto.setValorLancado(totalLancado);
             dto.setConciliado(conciliado);
             dto.setObservacao(obs);
+            dto.setConta(nota.getRazaoSocialEmitente());
             dto.setDiferenca(diferenca); // <-- Aqui calcula e seta a diferença
 
             resultado.add(dto);
@@ -81,6 +82,7 @@ public class ConciliacaoContabilService {
             dto.setValorLancado(totalLancado);
             dto.setConciliado(conciliado);
             dto.setObservacao(obs);
+            dto.setConta(nota.getRazaoSocialEmitente());
 
             resultado.add(dto);
         }
