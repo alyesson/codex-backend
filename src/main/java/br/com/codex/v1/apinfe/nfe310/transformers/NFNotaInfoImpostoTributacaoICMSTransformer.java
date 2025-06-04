@@ -1,0 +1,17 @@
+package br.com.codex.v1.apinfe.nfe310.transformers;
+
+import br.com.codex.v1.apinfe.nfe310.classes.NFNotaInfoImpostoTributacaoICMS;
+import org.simpleframework.xml.transform.Transform;
+
+public class NFNotaInfoImpostoTributacaoICMSTransformer implements Transform<NFNotaInfoImpostoTributacaoICMS> {
+
+    @Override
+    public NFNotaInfoImpostoTributacaoICMS read(final String icms) {
+        return NFNotaInfoImpostoTributacaoICMS.valueOfCodigo(icms);
+    }
+
+    @Override
+    public String write(final NFNotaInfoImpostoTributacaoICMS icms) {
+        return icms.getCodigo();
+    }
+}
