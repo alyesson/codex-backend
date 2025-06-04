@@ -30,7 +30,6 @@ public class ConfiguracaoCertificadoService {
        return configuracaoCertificadoRepository.findAll();
     }
 
-    // ConfiguracaoCertificadoService.java
     public ConfiguracaoCertificado create(MultipartFile file, String senha) throws Exception {
 
         try{

@@ -45,6 +45,14 @@ public class ConfiguracaoCertificadoResource {
             @RequestParam("file") MultipartFile file,
             @RequestParam("senha") String senha) throws Exception {
 
+        // Validação básica
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Arquivo não pode estar vazio");
+        }
+        if (senha == null || senha.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Senha não pode estar vazia");
+        }
+
         ConfiguracaoCertificado certificado = configuracaoCertificadoService.create(file, senha);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
