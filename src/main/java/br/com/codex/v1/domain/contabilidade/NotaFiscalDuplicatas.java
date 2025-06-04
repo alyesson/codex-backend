@@ -1,9 +1,12 @@
 package br.com.codex.v1.domain.contabilidade;
 
+import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -11,7 +14,10 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class NotaFiscalDuplicatas {
+public class NotaFiscalDuplicatas implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Long id;
@@ -34,6 +40,13 @@ public class NotaFiscalDuplicatas {
         this.dataVencimento = dataVencimento;
         this.valorDuplicata = valorDuplicata;
         this.notaFiscal = notaFiscal;
+    }
+
+    public NotaFiscalDuplicatas(NotaFiscalDuplicatasDto obj) {
+        this.id = obj.getId();
+        this.numeroDuplicata = obj.getNumeroDuplicata();
+        this.dataVencimento = obj.getDataVencimento();
+        this.valorDuplicata = obj.getValorDuplicata();
     }
 
     @Override

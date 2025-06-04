@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.contabilidade;
 
+import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -68,6 +69,25 @@ public class NotaFiscalItem implements Serializable {
         this.vCOFINS = vCOFINS;
     }
 
+    public NotaFiscalItem(NotaFiscalItemDto obj) {
+        this.id = obj.getId();
+        this.cProd = obj.getCProd();
+        this.xProd = obj.getXProd();
+        this.ncm = obj.getNcm();
+        this.cfop = obj.getCfop();
+        this.uCom = obj.getUCom();
+        this.qCom = obj.getQCom();
+        this.vUnCom = obj.getVUnCom();
+        this.vProd = obj.getVProd();
+        this.uTrib = obj.getUTrib();
+        this.qTrib = obj.getQTrib();
+        this.vUnTrib = obj.getVUnTrib();
+        this.vICMS = obj.getVICMS();
+        this.vIPI = obj.getVIPI();
+        this.vPIS = obj.getVPIS();
+        this.vCOFINS = obj.getVCOFINS();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -80,4 +100,3 @@ public class NotaFiscalItem implements Serializable {
         return Objects.hashCode(id);
     }
 }
-

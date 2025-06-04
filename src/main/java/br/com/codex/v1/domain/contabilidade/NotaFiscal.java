@@ -1,5 +1,8 @@
 package br.com.codex.v1.domain.contabilidade;
 
+import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
+import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -144,6 +148,66 @@ public class NotaFiscal implements Serializable {
         this.duplicatas = duplicatas;
     }
 
+    public NotaFiscal(NotaFiscalDto obj) {
+        this.id = obj.getId();
+        this.chaveAcesso = obj.getChaveAcesso();
+        this.cuf = obj.getCuf();
+        this.modelo = obj.getModelo();
+        this.serie = obj.getSerie();
+        this.numero = obj.getNumero();
+        this.dataHoraEmissao = obj.getDataHoraEmissao();
+        this.tpEmis = obj.getTpEmis();
+        this.tpNF = obj.getTpNF();
+        this.natOp = obj.getNatOp();
+        this.cnpjEmit = obj.getCnpjEmit();
+        this.xNomeEmit = obj.getXNomeEmit();
+        this.ieEmit = obj.getIeEmit();
+        this.crt = obj.getCrt();
+        this.cnpjDest = obj.getCnpjDest();
+        this.xNomeDest = obj.getXNomeDest();
+        this.ieDest = obj.getIeDest();
+        this.xLgrDest = obj.getXLgrDest();
+        this.nroDest = obj.getNroDest();
+        this.xCplDest = obj.getXCplDest();
+        this.xBairroDest = obj.getXBairroDest();
+        this.cMunDest = obj.getCMunDest();
+        this.xMunDest = obj.getXMunDest();
+        this.ufDest = obj.getUfDest();
+        this.cepDest = obj.getCepDest();
+        this.cPaisDest = obj.getCPaisDest();
+        this.xPaisDest = obj.getXPaisDest();
+        this.foneDest = obj.getFoneDest();
+        this.modFrete = obj.getModFrete();
+        this.cnpjTransp = obj.getCnpjTransp();
+        this.xNomeTransp = obj.getXNomeTransp();
+        this.ieTransp = obj.getIeTransp();
+        this.xEndTransp = obj.getXEndTransp();
+        this.xMunTransp = obj.getXMunTransp();
+        this.ufTransp = obj.getUfTransp();
+        this.numeroFatura = obj.getNumeroFatura();
+        this.valorOriginalFatura = obj.getValorOriginalFatura();
+        this.valorDescontoFatura = obj.getValorDescontoFatura();
+        this.valorLiquidoFatura = obj.getValorLiquidoFatura();
+        this.vNF = obj.getVNF();
+        this.vICMS = obj.getVICMS();
+        this.vST = obj.getVST();
+        this.infRespTec = obj.getInfRespTec();
+        this.infIntermed = obj.getInfIntermed();
+        this.infAdic = obj.getInfAdic();
+        this.pag = obj.getPag();
+
+        // Convertendo itens da nota fiscal para DTO
+        this.itens = obj.getItens() != null
+                ? obj.getItens().stream().map(NotaFiscalItem::new).toList()
+                : null;
+
+        // Convertendo duplicatas da nota fiscal para DTO
+        this.duplicatas = obj.getDuplicatas() != null
+                ? obj.getDuplicatas().stream().map(NotaFiscalDuplicatas::new).toList()
+                : null;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -156,4 +220,3 @@ public class NotaFiscal implements Serializable {
         return Objects.hashCode(id);
     }
 }
-
