@@ -47,7 +47,7 @@ public class DFAssinaturaDigital implements DFLog {
         final Document document = dbf.newDocumentBuilder().parse(xmlStream);
         final NodeList nodeList = document.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
         if (nodeList.getLength() == 0) {
-            throw new IllegalStateException("Nao foi encontrada a assinatura do XML.");
+            throw new IllegalStateException("Não foi encontrada a assinatura do XML.");
         }
 
         final DOMValidateContext validateContext = new DOMValidateContext(new DFKeySelector(), nodeList.item(0));

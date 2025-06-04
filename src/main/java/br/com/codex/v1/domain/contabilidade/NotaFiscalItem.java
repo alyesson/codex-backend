@@ -1,0 +1,83 @@
+package br.com.codex.v1.domain.contabilidade;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Objects;
+
+@Entity
+@Getter
+@Setter
+public class NotaFiscalItem implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /* FK — chave estrangeira para NotaFiscal.id */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nota_fiscal_id", nullable = false)
+    private NotaFiscal notaFiscal;
+
+    /* ------------ GRUPO PROD (det) ------------ */
+    private String cProd;          // Código do produto
+    private String xProd;          // Descrição
+    private String ncm;            // NCM
+    private String cfop;           // CFOP
+    private String uCom;           // Unidade comercial
+    private BigDecimal qCom;       // Quantidade
+    private BigDecimal vUnCom;     // Valor unitário
+    private BigDecimal vProd;      // Valor total do item
+    private String uTrib;          // Unidade tributável (opcional)
+    private BigDecimal qTrib;      // Quantidade tributável (opcional)
+    private BigDecimal vUnTrib;    // Valor unitário tributável (opcional)
+
+    /* ------------ IMPOSTOS (simplificado) ------------ */
+    private BigDecimal vICMS;
+    private BigDecimal vIPI;
+    private BigDecimal vPIS;
+    private BigDecimal vCOFINS;
+
+    public NotaFiscalItem() {
+        super();
+    }
+
+    public NotaFiscalItem(Long id, NotaFiscal notaFiscal, String cProd, String xProd, String ncm, String cfop, String uCom, BigDecimal qCom, BigDecimal vUnCom, BigDecimal vProd, String uTrib, BigDecimal qTrib, BigDecimal vUnTrib, BigDecimal vICMS, BigDecimal vIPI, BigDecimal vPIS, BigDecimal vCOFINS) {
+        this.id = id;
+        this.notaFiscal = notaFiscal;
+        this.cProd = cProd;
+        this.xProd = xProd;
+        this.ncm = ncm;
+        this.cfop = cfop;
+        this.uCom = uCom;
+        this.qCom = qCom;
+        this.vUnCom = vUnCom;
+        this.vProd = vProd;
+        this.uTrib = uTrib;
+        this.qTrib = qTrib;
+        this.vUnTrib = vUnTrib;
+        this.vICMS = vICMS;
+        this.vIPI = vIPI;
+        this.vPIS = vPIS;
+        this.vCOFINS = vCOFINS;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        NotaFiscalItem that = (NotaFiscalItem) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+}
+
