@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,14 +26,12 @@ public class ConfiguracaoCertificadoResource {
 
     URI uri = null;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<ConfiguracaoCertificadoDto> findById(@PathVariable Integer id) {
         ConfiguracaoCertificado obj = configuracaoCertificadoService.findById(id);
         return ResponseEntity.ok().body(new ConfiguracaoCertificadoDto(obj));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping
     public ResponseEntity<List<ConfiguracaoCertificadoDto>> findAll() {
         List<ConfiguracaoCertificado> list = configuracaoCertificadoService.findAll();
@@ -44,8 +39,7 @@ public class ConfiguracaoCertificadoResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    // ConfiguracaoCertificadoResource.java
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> create(
             @RequestParam("file") MultipartFile file,
@@ -68,7 +62,7 @@ public class ConfiguracaoCertificadoResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', GERENTE_CONTABILIDADE, CONTABILIDADE)")
     @GetMapping(value = "/downloads/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) {
         ConfiguracaoCertificado objDoc = configuracaoCertificadoService.findById(id);
