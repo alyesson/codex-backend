@@ -1,8 +1,6 @@
 package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
-import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
-import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -73,7 +70,6 @@ public class NotaFiscal implements Serializable {
     private BigDecimal valorOriginalFatura;
     private BigDecimal valorDescontoFatura;
     private BigDecimal valorLiquidoFatura;
-
 
     /* ------------ TOTAIS ------------ */
     private BigDecimal vNF;             // Valor total da nota (P32)
