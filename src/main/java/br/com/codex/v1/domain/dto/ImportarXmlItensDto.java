@@ -4,7 +4,7 @@ import br.com.codex.v1.domain.contabilidade.ImportarXmlItens;
 
 import java.math.BigDecimal;
 
-public class NotaFiscalItensDto {
+public class ImportarXmlItensDto {
 
     private Integer id;
     private String numeroNotaFiscal;
@@ -91,11 +91,11 @@ public class NotaFiscalItensDto {
     private BigDecimal valorIpi;
     private BigDecimal valorUniIpi;
 
-    public NotaFiscalItensDto() {
+    public ImportarXmlItensDto() {
         super();
     }
 
-    public NotaFiscalItensDto(ImportarXmlItens obj) {
+    public ImportarXmlItensDto(ImportarXmlItens obj) {
         this.id = obj.getId();
         this.numeroNotaFiscal = obj.getNumeroNotaFiscal();
         this.nomeProduto = obj.getNomeProduto();

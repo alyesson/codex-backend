@@ -19,7 +19,7 @@ public class NotaFiscalDuplicatas implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String numeroDuplicata;
@@ -39,7 +39,7 @@ public class NotaFiscalDuplicatas implements Serializable {
         this.numeroDuplicata = numeroDuplicata;
         this.dataVencimento = dataVencimento;
         this.valorDuplicata = valorDuplicata;
-        this.notaFiscal = notaFiscal;
+        //this.notaFiscal = notaFiscal;
     }
 
     public NotaFiscalDuplicatas(NotaFiscalDuplicatasDto obj) {

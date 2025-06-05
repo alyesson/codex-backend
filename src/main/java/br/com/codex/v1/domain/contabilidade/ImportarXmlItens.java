@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.contabilidade;
 
-import br.com.codex.v1.domain.dto.NotaFiscalItensDto;
+import br.com.codex.v1.domain.dto.ImportarXmlItensDto;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -191,7 +191,7 @@ public class ImportarXmlItens implements Serializable {
         this.valorUniIpi = valorUniIpi;
     }
 
-    public ImportarXmlItens(NotaFiscalItensDto obj) {
+    public ImportarXmlItens(ImportarXmlItensDto obj) {
         this.id = obj.getId();
         this.numeroNotaFiscal = obj.getNumeroNotaFiscal();
         this.nomeProduto = obj.getNomeProduto();

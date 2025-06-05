@@ -90,7 +90,7 @@ public class NotaFiscal implements Serializable {
     @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NotaFiscalItem> itens;
 
-    @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NotaFiscalDuplicatas> duplicatas;
 
     public NotaFiscal() {

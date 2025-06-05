@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
-public class NotasFiscaisDto {
+public class ImportarXmlDto {
 
     private Integer id;
     private String xml;
@@ -82,11 +82,11 @@ public class NotasFiscaisDto {
     private String motivoProtocolo;
     private Date dataImportacao;
 
-    public NotasFiscaisDto() {
+    public ImportarXmlDto() {
         super();
     }
 
-    public NotasFiscaisDto(ImportarXml obj) {
+    public ImportarXmlDto(ImportarXml obj) {
         this.id = obj.getId();
         this.xml = obj.getXml();
         this.codigoUf = obj.getCodigoUf();

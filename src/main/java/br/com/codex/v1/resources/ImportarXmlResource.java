@@ -1,7 +1,7 @@
 package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.contabilidade.ImportarXml;
-import br.com.codex.v1.domain.dto.NotasFiscaisDto;
+import br.com.codex.v1.domain.dto.ImportarXmlDto;
 import br.com.codex.v1.domain.repository.ImportarXmlRepository;
 import br.com.codex.v1.service.ImportarXmlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class ImportarXmlResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO', 'ADMINISTRATIVO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PostMapping("/xml_nota")
-    public ResponseEntity<NotasFiscaisDto> create(@RequestParam("files") MultipartFile[] files) throws Exception {
+    public ResponseEntity<ImportarXmlDto> create(@RequestParam("files") MultipartFile[] files) throws Exception {
 
         for (MultipartFile file : files) {
             ImportarXml objNota = importarXmlService.obterXmlCompleto(file);
@@ -41,7 +41,7 @@ public class ImportarXmlResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<NotasFiscaisDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ImportarXmlDto> delete(@PathVariable Integer id){
         importarXmlService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -49,18 +49,18 @@ public class ImportarXmlResource {
     //Mostra Todas as Notas Fiscais do Ano Corrente
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/ano_corrente")
-    public ResponseEntity<List<NotasFiscaisDto>> findAllByYear(@RequestParam(value = "ano") Integer ano){
+    public ResponseEntity<List<ImportarXmlDto>> findAllByYear(@RequestParam(value = "ano") Integer ano){
         List<ImportarXml> list = importarXmlService.findAllByYear(ano);
-        List<NotasFiscaisDto> objList = list.stream().map(NotasFiscaisDto::new).collect(Collectors.toList());
+        List<ImportarXmlDto> objList = list.stream().map(ImportarXmlDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(objList);
     }
 
     //Entrada de Nota Fiscal Por Período
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/entrada_notas_fiscais_periodo")
-    public ResponseEntity<List<NotasFiscaisDto>> findAllEntradaPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+    public ResponseEntity<List<ImportarXmlDto>> findAllEntradaPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
         List<ImportarXml> list = importarXmlService.findAllEntradaPeriodo(dataInicial, dataFinal);
-        List<NotasFiscaisDto> listDto = list.stream().map(NotasFiscaisDto::new).collect(Collectors.toList());
+        List<ImportarXmlDto> listDto = list.stream().map(ImportarXmlDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 
