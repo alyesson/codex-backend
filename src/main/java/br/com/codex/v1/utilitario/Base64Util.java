@@ -11,7 +11,7 @@ public class Base64Util {
         return encoded;
     }
 
-    public String decode(String valor){
+    public static String decode(String valor){
         byte[] decodeBytes = Base64.getDecoder().decode(valor);
         String decoded = new String(decodeBytes);
         return decoded;

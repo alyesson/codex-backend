@@ -35,6 +35,7 @@
       <w>concilicações</w>
       <w>concluido</w>
       <w>conexão</w>
+      <w>configuracoes</w>
       <w>contabil</w>
       <w>contate</w>
       <w>contém</w>
@@ -92,6 +93,7 @@
       <w>inscricao</w>
       <w>inseridos</w>
       <w>instancia</w>
+      <w>insuccesso</w>
       <w>intermed</w>
       <w>islandia</w>
       <w>isso</w>
@@ -118,7 +120,9 @@
       <w>navidad</w>
       <w>nenhuma</w>
       <w>neutro</w>
+      <w>nfestatusservico</w>
       <w>nomes</w>
+      <w>numeracao</w>
       <w>nunicipio</w>
       <w>operacao</w>
       <w>outras</w>
@@ -136,12 +140,15 @@
       <w>presenca</w>
       <w>producao</w>
       <w>proprio</w>
+      <w>publiccloud</w>
       <w>quenia</w>
       <w>quiser</w>
       <w>razao</w>
       <w>reuniao</w>
       <w>romenia</w>
+      <w>saidas</w>
       <w>salomao</w>
+      <w>sefaz</w>
       <w>senha</w>
       <w>servico</w>
       <w>servicos</w>
@@ -165,6 +172,7 @@
       <w>tcheca</w>
       <w>telelefone</w>
       <w>territorio</w>
+      <w>tnfe</w>
       <w>transacional</w>
       <w>tributario</w>
       <w>turcomenistao</w>
@@ -174,6 +182,7 @@
       <w>usuario</w>
       <w>usuários</w>
       <w>uzbequistao</w>
+      <w>validador</w>
       <w>vazia</w>
       <w>vazio</w>
       <w>verifica</w>
