@@ -4,10 +4,7 @@ import br.com.codex.v1.domain.dto.AmbienteNotaFiscalDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,6 +19,7 @@ public class AmbienteNotaFiscal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 30, nullable = false)
     private Integer codigoAmbiente;
 
     public AmbienteNotaFiscal() {
