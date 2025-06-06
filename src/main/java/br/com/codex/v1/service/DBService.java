@@ -1,9 +1,11 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.configuration.PersistenceUnitInfoAdapter;
+import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.enums.Perfil;
+import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
 import br.com.codex.v1.domain.repository.UsuarioRepository;
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -26,6 +28,9 @@ public class DBService {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+
+    @Autowired
+    private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -81,5 +86,8 @@ public class DBService {
                     "Codex Soluções Em TI", "", "", "", "", "", "", "", "", "", "", "",
                     "Ativo", "Ótimo", "codex", "----", true);
             empresaRepository.save(empresa);
+
+        AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
+        ambienteNotaFiscalRepository.save(ambienteNotaFiscal);
     }
 }

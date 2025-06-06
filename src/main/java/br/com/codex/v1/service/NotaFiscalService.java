@@ -1,7 +1,10 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
 import br.com.codex.v1.domain.contabilidade.NotaFiscal;
+import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.mapper.NotaFiscalMapper;
+import br.com.codex.v1.utilitario.Base64Util;
 import br.com.swconsultoria.certificado.Certificado;
 import br.com.swconsultoria.certificado.CertificadoService;
 import br.com.swconsultoria.nfe.Assinar;
@@ -37,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class NotaFiscalService {
@@ -57,14 +61,13 @@ public class NotaFiscalService {
 
     private static final String CAMINHO_SCHEMAS = "src/main/resources/schemas";
 
-    public ConfiguracoesNfe iniciarConfiguracao(String uf, byte[] certificadoBytes, String senha) throws Exception {
-        Certificado certificado = CertificadoService.certificadoPfxBytes(certificadoBytes, senha);
-        return ConfiguracoesNfe.criarConfiguracoes(
-                EstadosEnum.valueOf(uf),
-                AmbienteEnum.HOMOLOGACAO,
-                certificado,
-                "schemas"
-        );
+    public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws Exception {
+        Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getCnpjEmit());
+
+        String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
+
+        Certificado certificado = CertificadoService.certificadoPfxBytes(cert.get().getArquivo(), senhaDecodificada);
+        return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), AmbienteEnum.HOMOLOGACAO, certificado,"schemas");
     }
 
     public TEnviNFe montarNotaFiscal(NotaFiscal nota) throws Exception {

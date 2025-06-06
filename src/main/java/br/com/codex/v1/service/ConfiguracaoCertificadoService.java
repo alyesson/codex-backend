@@ -44,6 +44,7 @@ public class ConfiguracaoCertificadoService {
             dto.setDataValidade(new java.sql.Date(info.getDataValidade().getTime()));
             dto.setTipo("A1"); // Ou detecte automaticamente
             dto.setSenha(Base64Util.encode(senha)); // 🔒 Criptografa antes de salvar
+            dto.setUf(info.getUf());
 
             ConfiguracaoCertificado certificado = new ConfiguracaoCertificado(dto);
             return configuracaoCertificadoRepository.save(certificado);
@@ -55,16 +56,5 @@ public class ConfiguracaoCertificadoService {
 
     public void delete(Integer id){
         configuracaoCertificadoRepository.deleteById(id);
-    }
-
-    //Métudo para ser usado no processo de emissão de notas fiscais
-    public KeyStore getCertificadoKeyStore(Integer id) throws Exception {
-        ConfiguracaoCertificado certificado = findById(id);
-        String senhaDescriptografada = Base64Util.encode(certificado.getSenha());
-
-        KeyStore ks = KeyStore.getInstance("PKCS12");
-        ks.load(new ByteArrayInputStream(certificado.getArquivo()), senhaDescriptografada.toCharArray());
-
-        return ks; // Pronto para uso na emissão de notas
     }
 }

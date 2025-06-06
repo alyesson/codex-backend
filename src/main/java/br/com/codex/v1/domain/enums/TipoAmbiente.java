@@ -1,13 +1,12 @@
 package br.com.codex.v1.domain.enums;
 
-public enum TipoHorario {
-
-    DIURNO(0, "DIURNO"), NOTURNO(1, "NOTURNO"), MISTO(2, "MISTO");
+public enum TipoAmbiente {
+    PRODUCAO(1, "PRODUÇÃO"), HOMOLOGACAO(2, "HOMOLOGAÇÃO");
 
     private Integer codigo;
     private String descricao;
 
-    private TipoHorario(Integer codigo, String descricao) {
+    private TipoAmbiente(Integer codigo, String descricao) {
         this.codigo = codigo;
         this.descricao = descricao;
     }
@@ -20,17 +19,17 @@ public enum TipoHorario {
         return descricao;
     }
 
-    public static TipoHorario toEnum(Integer cod) {
+    public static TipoAmbiente toEnum(Integer cod) {
         if(cod == null) {
             return null;
         }
 
-        for(TipoHorario x : TipoHorario.values()) {
+        for(TipoAmbiente x : TipoAmbiente.values()) {
             if(cod.equals(x.getCodigo())) {
                 return x;
             }
         }
 
-        throw new IllegalArgumentException("Tipo de horário inválido");
+        throw new IllegalArgumentException("Ambiente de nota fiscal inválido");
     }
 }

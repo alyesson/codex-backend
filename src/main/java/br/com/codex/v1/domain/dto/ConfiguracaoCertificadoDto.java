@@ -47,6 +47,8 @@ public class ConfiguracaoCertificadoDto implements Serializable {
     @NotBlank(message = "A senha do certificado não pode estar em branco")
     private String senha;
 
+    private String uf;
+
     public ConfiguracaoCertificadoDto() {
         super();
     }
@@ -62,6 +64,7 @@ public class ConfiguracaoCertificadoDto implements Serializable {
         this.dataCadastro = obj.getDataCadastro();
         this.ativo = obj.isAtivo();
         this.senha = obj.getSenha();
+        this.uf = obj.getUf();
     }
 
     public void setRazaoSocial(String razaoSocial) {

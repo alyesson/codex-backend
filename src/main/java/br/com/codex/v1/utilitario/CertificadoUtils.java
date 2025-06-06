@@ -5,6 +5,8 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CertificadoUtils {
 
@@ -20,8 +22,9 @@ public class CertificadoUtils {
         String razaoSocial = extrairRazaoSocial(nome);
         String cnpj = extrairCNPJ(nome);
         Date dataValidade = cert.getNotAfter();
+        String uf = extrairUF(nome);
 
-        return new CertificadoInfo(razaoSocial, cnpj, dataValidade);
+        return new CertificadoInfo(razaoSocial, cnpj, dataValidade, uf);
     }
 
     private static String extrairRazaoSocial(String nome) {
@@ -47,20 +50,42 @@ public class CertificadoUtils {
         return "";
     }
 
+    private static String extrairUF(String nome) {
+        // Padrão 1: Busca por "ST=SP" (sigla direta)
+        Pattern pattern = Pattern.compile("ST=([A-Z]{2})");
+        Matcher matcher = pattern.matcher(nome);
+        if (matcher.find()) {
+            return matcher.group(1); // Retorna a UF (ex: "SP")
+        }
+
+        // Padrão 2: Busca por "OU=RFB e-CNPJ A1 SP" (formato comum em certificados da Receita)
+        pattern = Pattern.compile("OU=.*?(A1|A3)\\s([A-Z]{2})");
+        matcher = pattern.matcher(nome);
+        if (matcher.find()) {
+            return matcher.group(2); // Retorna a UF (ex: "SP")
+        }
+
+        return "UF não identificada";
+    }
+
+
     public static class CertificadoInfo {
         private String razaoSocial;
         private String cnpj;
         private Date dataValidade;
+        private String uf;
 
-        public CertificadoInfo(String razaoSocial, String cnpj, Date dataValidade) {
+        public CertificadoInfo(String razaoSocial, String cnpj, Date dataValidade, String uf) {
             this.razaoSocial = razaoSocial;
             this.cnpj = cnpj;
             this.dataValidade = dataValidade;
+            this.uf = uf;
         }
 
         // Getters
         public String getRazaoSocial() { return razaoSocial; }
         public String getCnpj() { return cnpj; }
         public Date getDataValidade() { return dataValidade; }
+        public String getUf() { return uf; }
     }
 }

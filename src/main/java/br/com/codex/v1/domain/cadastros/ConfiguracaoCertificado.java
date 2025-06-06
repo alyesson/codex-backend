@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Objects;
+
 @Getter
 @Setter
 @Entity
@@ -46,11 +47,13 @@ public class ConfiguracaoCertificado implements Serializable {
     @Column(nullable = false)
     private String senha;
 
+    private String uf;
+
     public ConfiguracaoCertificado() {
         super();
     }
 
-    public ConfiguracaoCertificado(Integer id, String nome, byte[] arquivo, String tipo, Date dataValidade, String razaoSocial, String cnpj, LocalDateTime dataCadastro, boolean ativo, String senha) {
+    public ConfiguracaoCertificado(Integer id, String nome, byte[] arquivo, String tipo, Date dataValidade, String razaoSocial, String cnpj, LocalDateTime dataCadastro, boolean ativo, String senha, String uf) {
         this.id = id;
         this.nome = nome;
         this.arquivo = arquivo;
@@ -61,6 +64,7 @@ public class ConfiguracaoCertificado implements Serializable {
         this.dataCadastro = dataCadastro;
         this.ativo = ativo;
         this.senha = senha;
+        this.uf = uf;
     }
 
     public ConfiguracaoCertificado(ConfiguracaoCertificadoDto obj) {
@@ -74,6 +78,7 @@ public class ConfiguracaoCertificado implements Serializable {
         this.dataCadastro = obj.getDataCadastro();
         this.ativo = obj.isAtivo();
         this.senha = obj.getSenha();
+        this.uf = obj.getUf();
     }
 
     @Override
