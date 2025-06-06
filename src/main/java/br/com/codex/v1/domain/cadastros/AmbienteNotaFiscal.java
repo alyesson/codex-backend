@@ -19,7 +19,7 @@ public class AmbienteNotaFiscal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(length = 30, nullable = false)
+    @Column(length = 3, nullable = false)
     private Integer codigoAmbiente;
 
     public AmbienteNotaFiscal() {
