@@ -4,10 +4,12 @@ import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.dto.AmbienteNotaFiscalDto;
 import br.com.codex.v1.domain.enums.TipoAmbiente;
 import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 public class AmbienteNotaFiscalService {
@@ -33,5 +35,10 @@ public class AmbienteNotaFiscalService {
 
         // 6. Salva e retorna
         return ambienteNotaFiscalRepository.save(ambienteExistente);
+    }
+
+    public AmbienteNotaFiscal findById(Integer id) {
+        Optional<AmbienteNotaFiscal> obj = ambienteNotaFiscalRepository.findById(id);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Ambiente não encontrado"));
     }
 }

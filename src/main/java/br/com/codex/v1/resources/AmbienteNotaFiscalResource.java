@@ -5,12 +5,7 @@ import br.com.codex.v1.domain.dto.AmbienteNotaFiscalDto;
 import br.com.codex.v1.service.AmbienteNotaFiscalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "v1/api/ambiente_nota_fiscal")
@@ -20,9 +15,14 @@ public class AmbienteNotaFiscalResource {
     private AmbienteNotaFiscalService ambienteNotaFiscalService;
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<AmbienteNotaFiscalDto> getAmbienteNotaFiscal(@Valid @RequestBody Integer id, AmbienteNotaFiscalDto ambienteNotaFiscalDto) {
-        AmbienteNotaFiscal ambienteNotaFiscal = ambienteNotaFiscalService.update(id, ambienteNotaFiscalDto);
-        AmbienteNotaFiscalDto dto = new AmbienteNotaFiscalDto(ambienteNotaFiscal);
-        return ResponseEntity.ok().body(dto);
+    public ResponseEntity<AmbienteNotaFiscalDto> updateAmbiente(@PathVariable Integer id, @RequestBody AmbienteNotaFiscalDto dto) {
+        AmbienteNotaFiscal ambienteAtualizado = ambienteNotaFiscalService.update(id, dto);
+        return ResponseEntity.ok(new AmbienteNotaFiscalDto(ambienteAtualizado));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<AmbienteNotaFiscalDto> getAmbienteNotaFiscal(@PathVariable Integer id) {
+        AmbienteNotaFiscal ambiente = ambienteNotaFiscalService.findById(id);
+        return ResponseEntity.ok().body(new AmbienteNotaFiscalDto(ambiente));
     }
 }
