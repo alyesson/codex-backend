@@ -1,8 +1,10 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
 import br.com.codex.v1.domain.contabilidade.NotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
 import br.com.codex.v1.mapper.NotaFiscalMapper;
 import br.com.codex.v1.utilitario.Base64Util;
 import br.com.swconsultoria.certificado.Certificado;
@@ -59,15 +61,19 @@ public class NotaFiscalService {
     @Autowired
     private ConfiguracaoCertificadoRepository certificadoRepository;
 
+    @Autowired
+    private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
+
     private static final String CAMINHO_SCHEMAS = "src/main/resources/schemas";
 
     public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws Exception {
         Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getCnpjEmit());
+        Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1); //aqui o ID sempre será 1, pois é a únia informação que deve ser mantida.
 
         String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
 
         Certificado certificado = CertificadoService.certificadoPfxBytes(cert.get().getArquivo(), senhaDecodificada);
-        return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), AmbienteEnum.HOMOLOGACAO, certificado,"schemas");
+        return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), AmbienteEnum.valueOf(String.valueOf(ambienteNotaFiscal.get().getCodigoAmbiente()))/*AmbienteEnum.HOMOLOGACAO*/, certificado,"schemas");
     }
 
     public TEnviNFe montarNotaFiscal(NotaFiscal nota) throws Exception {
