@@ -24,21 +24,37 @@ public class NotaFiscal implements Serializable {
     private Long id;
 
     /* ------------ GRUPO IDE (identificação) ------------ */
-    private String chaveAcesso;         // 44 dígitos
-    private String cuf;                 // Código da UF (B02)
-    private Integer modelo;             // 55
+    private String natOp;               // Natureza da operação (B11) - Obrigatório
     private Integer serie;              // (B07)
     private Long numero;                // nNF (B08)
-    private OffsetDateTime dataHoraEmissao; // dhEmi (B09)
-    private Integer tpEmis;             // Forma de emissão (B22)
-    private Integer tpNF;               // 0=entrada,1=saída (P24)
-    private String natOp;               // Natureza da operação (B11)
+    private OffsetDateTime dataHoraEmissao; // dhEmi (B09)- Obrigatório
+    private OffsetDateTime dhSaiEnt;        // Data e hora de entrada (em notas de entrada) ou saída (em notas de saída)
+    private Integer tpNF;               // tipo de documento 0=entrada,1=saída (P24) - Obrigatório
+    private Integer idDest;             //Identificador de local de destino da operação 1: Operação interna 2: Operação interestadual 3: Operação com exterior - Obrigatório
+    private Integer cMunFG;             //Código do município de ocorrência do fato gerador do ICMS. Utiliza os dados do cadastro da empresa emitente quando omitido.
+    private Integer finNFe;             //Finalidade da nota fiscal. 1: Nota normal 2: Nota complementar 3: Nota de ajuste 4: Devolução de mercadoria - Obrigatório
+    private Integer indFinal;           //Indica operação com consumidor final 0: Normal 1: Consumidor final - Obrigatório
+    private Integer indPres;            //(obrigatório) Indicador de presença do comprador no estabelecimento comercial no momento da operação 0: Não se aplica (por exemplo, para a Nota Fiscal complementar ou de ajuste); 1: Operação presencial 2: Operação não presencial, pela Internet 3: Operação não presencial, Teleatendimento 4: NFC-e em operação com entrega em domicílio 5: Operação presencial, fora do estabelecimento; 9: Operação não presencial, outros
+    private Integer indIntermed;        // Indicador de intermediador/marketplace 0: (valor default) Operação sem intermediador (em site ou plataforma própria) 1: Operação em site ou plataforma de terceiros (intermediadores/marketplace)
+    private String chaveAcesso;         // 44 dígitos
+    private Integer modelo;             // 55
 
     /* ------------ GRUPO EMIT (emitente) ------------ */
-    private String cnpjEmit;            // C02
-    private String xNomeEmit;           // C03
-    private String ieEmit;              // C17
-    private String crt;                 // Regime tributário
+    private String cnpj;            // Obrigatório - CNPJ da empresa emitente.
+    private String cpf;             // Obrigatório - CPF da empresa emitente quando utiliza eCPF.
+    private String xNome;           // C03
+    private String xFant;
+    private String xLgr;
+    private String nro;
+    private String xCpl;
+    private String xBairro;
+    private String cMun;
+    private String xMun;
+    private String uf;
+    private String cep;
+    private String fone;
+    private String ie;
+    private String crt;
 
     /* ------------ GRUPO DEST (destinatário) ------------ */
     private String cnpjDest;            // CNPJ/CPF destinatário

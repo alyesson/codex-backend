@@ -27,6 +27,8 @@ public class NotaFiscalItem implements Serializable {
     private NotaFiscal notaFiscal;
 
     /* ------------ GRUPO PROD (det) ------------ */
+    private Integer nItem;         // Número do item
+    private Integer cEAN;          // Código GTIN/EAN do produto
     private String cProd;          // Código do produto
     private String xProd;          // Descrição
     private String ncm;            // NCM
@@ -49,9 +51,11 @@ public class NotaFiscalItem implements Serializable {
         super();
     }
 
-    public NotaFiscalItem(Long id, NotaFiscal notaFiscal, String cProd, String xProd, String ncm, String cfop, String uCom, BigDecimal qCom, BigDecimal vUnCom, BigDecimal vProd, String uTrib, BigDecimal qTrib, BigDecimal vUnTrib, BigDecimal vICMS, BigDecimal vIPI, BigDecimal vPIS, BigDecimal vCOFINS) {
+    public NotaFiscalItem(Long id, NotaFiscal notaFiscal, Integer nItem, Integer cEan, String cProd, String xProd, String ncm, String cfop, String uCom, BigDecimal qCom, BigDecimal vUnCom, BigDecimal vProd, String uTrib, BigDecimal qTrib, BigDecimal vUnTrib, BigDecimal vICMS, BigDecimal vIPI, BigDecimal vPIS, BigDecimal vCOFINS) {
         this.id = id;
         this.notaFiscal = notaFiscal;
+        this.nItem = nItem;
+        this.cEAN = cEAN;
         this.cProd = cProd;
         this.xProd = xProd;
         this.ncm = ncm;
@@ -71,6 +75,8 @@ public class NotaFiscalItem implements Serializable {
 
     public NotaFiscalItem(NotaFiscalItemDto obj) {
         this.id = obj.getId();
+        this.nItem = obj.getNItem();
+        this.cEAN = obj.getCEAN();
         this.cProd = obj.getCProd();
         this.xProd = obj.getXProd();
         this.ncm = obj.getNcm();
