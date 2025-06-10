@@ -27,19 +27,31 @@ public class NotaFiscalItem implements Serializable {
     private NotaFiscal notaFiscal;
 
     /* ------------ GRUPO PROD (det) ------------ */
-    private Integer nItem;         // Número do item
+    private Integer nItem;         //Obrigatório - Número do item
+    private String cProd;          //Obrigatório - Código do produto
     private Integer cEAN;          // Código GTIN/EAN do produto
-    private String cProd;          // Código do produto
-    private String xProd;          // Descrição
-    private String ncm;            // NCM
-    private String cfop;           // CFOP
-    private String uCom;           // Unidade comercial
-    private BigDecimal qCom;       // Quantidade
-    private BigDecimal vUnCom;     // Valor unitário
-    private BigDecimal vProd;      // Valor total do item
+    private String xProd;          //Obrigatório - Descrição
+    private Integer ncm;           //Obrigatório - NCM
+    private String nve;           // Nomeclatura de valor Aduaneiro e Estatística
+    private Integer cest;          // Código especificador da Substituição tributária
+    private boolean indEscala;     // Indicador de produção em escala relevante - Convênio icms 52/2017
+    private Integer cnpjFab;       // Obrigatório para produto em escala NÃO relevante;
+    private Integer extipi;        // Código Ex tipi do produto
+    private String cfop;           //Obrigatório - CFOP
+    private String uCom;           //Obrigatório - Unidade comercial
+    private BigDecimal qCom;       //Obrigatório - Quantidade
+    private BigDecimal vUnCom;     //Obrigatório - Valor unitário Comercial
+    private BigDecimal vProd;      // Valor bruto. Deve ser igual ao produto de Valor unitário comercial com quantidade comercial
     private String uTrib;          // Unidade tributável (opcional)
     private BigDecimal qTrib;      // Quantidade tributável (opcional)
     private BigDecimal vUnTrib;    // Valor unitário tributável (opcional)
+    private BigDecimal vFrete;      // Valor do frete (opcional)
+    private BigDecimal vSeg;        // Valor do seguro (opcional)
+    private BigDecimal vDesc;       // Valor do desconto (opcional)
+    private BigDecimal vOutro;      // Valor de outras despesas acessórias.
+    private Integer indTot;         //Valor do item (valor_bruto) compõe valor total da NFe (valor_produtos)? 0: não 1: sim (valor padrão)
+    private Integer xPed;           // Número do Item de Pedido de Compra.
+    private Integer tpOp;           //Tipo da operação. 1: venda concessionária 2: faturamento direto 3: venda direta 0: outros
 
     /* ------------ IMPOSTOS (simplificado) ------------ */
     private BigDecimal vICMS;

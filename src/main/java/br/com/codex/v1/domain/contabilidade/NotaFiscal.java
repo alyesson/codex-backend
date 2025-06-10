@@ -40,8 +40,8 @@ public class NotaFiscal implements Serializable {
     private Integer modelo;             // 55
 
     /* ------------ GRUPO EMIT (emitente) ------------ */
-    private String cnpj;            // Obrigatório - CNPJ da empresa emitente.
-    private String cpf;             // Obrigatório - CPF da empresa emitente quando utiliza eCPF.
+    private String cnpjEmitente;            // Obrigatório - CNPJ da empresa emitente.
+    private String cpfEmitente;             // Obrigatório - CPF da empresa emitente quando utiliza eCPF.
     private String xNome;           // C03
     private String xFant;
     private String xLgr;
@@ -54,23 +54,30 @@ public class NotaFiscal implements Serializable {
     private String cep;
     private String fone;
     private String ie;
-    private String crt;
+    private String iest;
+    private String im;
+    private Integer cnae;
+    private Integer crt;            //Código de regime tributário. 1: Simples Nacional 2: Simples Nacional - excesso de sublimite de receita bruta 3: Regime Normal 4: Simples Nacional - Microempreendedor Individual - MEI
 
     /* ------------ GRUPO DEST (destinatário) ------------ */
-    private String cnpjDest;            // CNPJ/CPF destinatário
-    private String xNomeDest;
-    private String ieDest;
-    private String xLgrDest;    // Logradouro
-    private String nroDest;     // Número
-    private String xCplDest;    // Complemento
-    private String xBairroDest; // Bairro
-    private String cMunDest;    // Código IBGE
-    private String xMunDest;    // Nome município
-    private String ufDest;      // UF
-    private String cepDest;     // CEP
-    private String cPaisDest;   // Código país
-    private String xPaisDest;   // Nome país
-    private String foneDest;    // Telefone
+    private String cnpjCfpDestinatario;            // CNPJ/CPF destinatário
+    private String idEstrangeiro;                  //Identificação do destinatário no caso de comprador estrangeiro
+    private String xNomeDestinatario;              //Obrigatório
+    private String xLgrDDestinatario;              //Obrigatório - Logradouro
+    private String nroDDDestinatario;              //Obrigatório - Complemento
+    private String xBairroDestinatario;            //Obrigatório - bairro
+    private String xCplDestinatario;
+    private String cMunDestinatario;               // Código IBGE
+    private String xMunDestinatario;               //Obrigatório - Nome município
+    private String ufDestinatario;                 //Obrigatório - UF
+    private String cepDestinatario;                // CEP
+    private String cPaisDestinatario;              // Código país
+    private String xPaisDestinatario;              // Nome país
+    private String foneDestinatario;               // Telefone
+    private Integer indIEDest;                     // Obrigatório - Inscrição Estadual do destinatário. 1: Contribuinte ICMS (informar a IE do destinatário) 2: Contribuinte isento de Inscrição no cadastro de Contribuintes do ICMS 9: Não Contribuinte, que pode ou não possuir Inscrição Estadual no Cadastro de Contribuintes do ICMS
+    private Integer ieDestinatario;
+    private Integer isufDestinatario;
+    private String emailDestinatario;
 
     /* ------------ TRANSPORTADOR (transporta) ------------ */
     private String modFrete;    // Modalidade do frete (0=emitente, 1=destinatário, etc.)
@@ -218,7 +225,6 @@ public class NotaFiscal implements Serializable {
                 ? obj.getDuplicatas().stream().map(NotaFiscalDuplicatas::new).toList()
                 : null;
     }
-
 
     @Override
     public boolean equals(Object o) {
