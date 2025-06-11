@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class NotaFiscalDuplicatasDto implements Serializable {
     private Long notaFiscalId;
 
     private String numeroDuplicata;
-    private OffsetDateTime dataVencimento;
+    private LocalDate dataVencimento;
     private BigDecimal valorDuplicata;
 
     public NotaFiscalDuplicatasDto() {

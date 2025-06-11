@@ -67,7 +67,7 @@ public class NotaFiscalService {
     private static final String CAMINHO_SCHEMAS = "src/main/resources/schemas";
 
     public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws Exception {
-        Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getCnpjEmit());
+        Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getCnpjEmitente());
         Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1); //aqui o ID sempre será 1, pois é a únia informação que deve ser mantida.
 
         String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
@@ -76,7 +76,7 @@ public class NotaFiscalService {
         return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), AmbienteEnum.valueOf(String.valueOf(ambienteNotaFiscal.get().getCodigoAmbiente()))/*AmbienteEnum.HOMOLOGACAO*/, certificado,"schemas");
     }
 
-    public TEnviNFe montarNotaFiscal(NotaFiscal nota) throws Exception {
+    public TEnviNFe montarNotaFiscal(NotaFiscalDto nota) throws Exception {
         TNFe tnfe = NotaFiscalMapper.paraTNFe(nota);
 
         TEnviNFe enviNFe = new TEnviNFe();

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class NotaFiscalDuplicatas implements Serializable {
     private Long id;
 
     private String numeroDuplicata;
-    private OffsetDateTime dataVencimento;
+    private LocalDate dataVencimento;
     private BigDecimal valorDuplicata;
 
     @ManyToOne
@@ -34,12 +35,12 @@ public class NotaFiscalDuplicatas implements Serializable {
         super();
     }
 
-    public NotaFiscalDuplicatas(Long id, String numeroDuplicata, OffsetDateTime dataVencimento, BigDecimal valorDuplicata, NotaFiscal notaFiscal) {
+    public NotaFiscalDuplicatas(Long id, String numeroDuplicata, LocalDate dataVencimento, BigDecimal valorDuplicata, NotaFiscal notaFiscal) {
         this.id = id;
         this.numeroDuplicata = numeroDuplicata;
         this.dataVencimento = dataVencimento;
         this.valorDuplicata = valorDuplicata;
-        //this.notaFiscal = notaFiscal;
+        this.notaFiscal = notaFiscal;
     }
 
     public NotaFiscalDuplicatas(NotaFiscalDuplicatasDto obj) {

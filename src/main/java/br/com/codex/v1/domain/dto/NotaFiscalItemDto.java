@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
+
 import br.com.codex.v1.domain.contabilidade.NotaFiscalItem;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,30 +16,48 @@ public class NotaFiscalItemDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
-    /* FK simples (id da nota) – facilita envio via JSON */
     private Long notaFiscalId;
 
-    /* PROD */
-    private Integer nItem;         // Número do item
-    private Integer cEAN;
-    private String cProd;
-    private String xProd;
+    /* ------------ GRUPO PROD (det) ------------ */
+    private Integer numeroItem;
+    private String codigoProduto;
+    private String descricao;
+    private String cean;
     private String ncm;
+    private Integer cest;
+    private String extipi;
     private String cfop;
-    private String uCom;
-    private BigDecimal qCom;
-    private BigDecimal vUnCom;
-    private BigDecimal vProd;
-    private String uTrib;
-    private BigDecimal qTrib;
-    private BigDecimal vUnTrib;
+    private String unidadeComercial;
+    private BigDecimal quantidadeComercial;
+    private BigDecimal valorUnitarioComercial;
+    private BigDecimal valorBruto;
+    private String codigoBarrasTributavel;
+    private BigDecimal valorFrete;
+    private BigDecimal valorSeguro;
+    private BigDecimal valorDesconto;
+    private BigDecimal valorOutrasDespesas;
+    private String pedidoCompra;
 
-    /* IMPOSTOS */
-    private BigDecimal vICMS;
-    private BigDecimal vIPI;
-    private BigDecimal vPIS;
-    private BigDecimal vCOFINS;
+    // Tributos
+    private Integer icmsOrigem;
+    private Integer icmsSituacaoTributaria;
+    private BigDecimal icmsBaseCalculo;
+    private BigDecimal icmsAliquota;
+    private BigDecimal icmsValor;
+    private Integer ipiSituacaoTributaria;
+    private BigDecimal ipiBaseCalculo;
+    private BigDecimal ipiAliquota;
+    private BigDecimal ipiValor;
+    private Integer pisSituacaoTributaria;
+    private BigDecimal pisBaseCalculo;
+    private BigDecimal pisAliquota;
+    private BigDecimal pisValor;
+    private Integer cofinsSituacaoTributaria;
+    private BigDecimal cofinsBaseCalculo;
+    private BigDecimal cofinsAliquota;
+    private BigDecimal cofinsValor;
+
+    private String informacoesAdicionaisItem;
 
     public NotaFiscalItemDto() {
         super();
@@ -47,23 +66,42 @@ public class NotaFiscalItemDto implements Serializable {
     public NotaFiscalItemDto(NotaFiscalItem obj) {
         this.id = obj.getId();
         this.notaFiscalId = obj.getNotaFiscal() != null ? obj.getNotaFiscal().getId() : null;
-        this.nItem = obj.getNItem();
-        this.cEAN = obj.getCEAN();
-        this.cProd = obj.getCProd();
-        this.xProd = obj.getXProd();
+        this.numeroItem = obj.getNumeroItem();
+        this.codigoProduto = obj.getCodigoProduto();
+        this.descricao = obj.getDescricao();
+        this.cean = obj.getCean();
         this.ncm = obj.getNcm();
+        this.cest = obj.getCest();
+        this.extipi = obj.getExtipi();
         this.cfop = obj.getCfop();
-        this.uCom = obj.getUCom();
-        this.qCom = obj.getQCom();
-        this.vUnCom = obj.getVUnCom();
-        this.vProd = obj.getVProd();
-        this.uTrib = obj.getUTrib();
-        this.qTrib = obj.getQTrib();
-        this.vUnTrib = obj.getVUnTrib();
-        this.vICMS = obj.getVICMS();
-        this.vIPI = obj.getVIPI();
-        this.vPIS = obj.getVPIS();
-        this.vCOFINS = obj.getVCOFINS();
+        this.unidadeComercial = obj.getUnidadeComercial();
+        this.quantidadeComercial = obj.getQuantidadeComercial();
+        this.valorUnitarioComercial = obj.getValorUnitarioComercial();
+        this.valorBruto = obj.getValorBruto();
+        this.codigoBarrasTributavel = obj.getCodigoBarrasTributavel();
+        this.valorFrete = obj.getValorFrete();
+        this.valorSeguro = obj.getValorSeguro();
+        this.valorDesconto = obj.getValorDesconto();
+        this.valorOutrasDespesas = obj.getValorOutrasDespesas();
+        this.pedidoCompra = obj.getPedidoCompra();
+        this.icmsOrigem = obj.getIcmsOrigem();
+        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
+        this.icmsBaseCalculo = obj.getIcmsBaseCalculo();
+        this.icmsAliquota = obj.getIcmsAliquota();
+        this.icmsValor = obj.getIcmsValor();
+        this.ipiSituacaoTributaria = obj.getIpiSituacaoTributaria();
+        this.ipiBaseCalculo = obj.getIpiBaseCalculo();
+        this.ipiAliquota = obj.getIpiAliquota();
+        this.ipiValor = obj.getIpiValor();
+        this.pisSituacaoTributaria = obj.getPisSituacaoTributaria();
+        this.pisBaseCalculo = obj.getPisBaseCalculo();
+        this.pisAliquota = obj.getPisAliquota();
+        this.pisValor = obj.getPisValor();
+        this.cofinsSituacaoTributaria = obj.getCofinsSituacaoTributaria();
+        this.cofinsBaseCalculo = obj.getCofinsBaseCalculo();
+        this.cofinsAliquota = obj.getCofinsAliquota();
+        this.cofinsValor = obj.getCofinsValor();
+        this.informacoesAdicionaisItem = obj.getInformacoesAdicionaisItem();
     }
 }
 

@@ -112,11 +112,6 @@
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.70</version>
 		</dependency>
-		<dependency>
-			<groupId>com.github.wmixvideo</groupId>
-			<artifactId>nfe</artifactId>
-			<version>4.0.83</version>
-		</dependency>
 	</dependencies>
 
 	<build>
