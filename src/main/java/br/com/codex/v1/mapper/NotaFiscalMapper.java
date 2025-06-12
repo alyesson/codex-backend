@@ -138,16 +138,6 @@ public class NotaFiscalMapper {
             icms.setICMS00(icms00);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoICMS(icms));
 
-            // === IPI ===
-            TNFe.InfNFe.Det.IPI ipi = new TNFe.InfNFe.Det.Imposto.IPI();
-            TNFe.InfNFe.Det.Imposto.IPI.IPITrib ipiTrib = new TNFe.InfNFe.Det.Imposto.IPI.IPITrib();
-            ipiTrib.setCST(item.getIpiSituacaoTributaria());
-            ipiTrib.setVBC(item.getIpiBaseCalculo().toString());
-            ipiTrib.setPIPI(item.getIpiAliquota().toString());
-            ipiTrib.setVIPI(item.getIpiValor().toString());
-            ipi.setIPITrib(ipiTrib);
-            imposto.getContent().add(factory.createTNFeInfNFeDetImpostoIPI(ipi));
-
             // === PIS ===
             TNFe.InfNFe.Det.Imposto.PIS pis = new TNFe.InfNFe.Det.Imposto.PIS();
             TNFe.InfNFe.Det.Imposto.PIS.PISAliq pisAliq = new TNFe.InfNFe.Det.Imposto.PIS.PISAliq();
