@@ -7,7 +7,8 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -17,85 +18,75 @@ public class NotaFiscalDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
-    // ------------ GRUPO IDE (Identificação) ------------
+    private String codigoUf;
+    private String codigoNf;
     private String naturezaOperacao;
-    private Integer serie;
-    private Integer numero;
-    private LocalDateTime dataEmissao;
-    private LocalDateTime dataEntradaSaida;
-    private Integer tipoDocumento; // 0-Entrada, 1-Saída
-    private Integer localDestino; // 1-Interna, 2-Interestadual, 3-Exterior
-    private Integer municipio;
-    private Integer finalidadeEmissao; // 1-Normal, 2-Complementar, etc.
-    private Integer consumidorFinal; // 0-Normal, 1-Consumidor final
-    private Integer presencaComprador; // 0-Não se aplica, 1-Presencial, etc.
-    private Integer indicadorIntermediario; // 0-Sem intermediador, 1-Com intermediador
-
-    // Emitente
-    private String cnpjEmitente;
-    private String cpfEmitente;
-    private String nomeEmitente;
+    private String modelo;
+    private String serie;
+    private String numero;
+    private LocalDate emissao;
+    private String dhSaidaEntrada;
+    private String tipo;
+    private String indicadorPresenca;
+    private String razaoSocialEmitente;
     private String nomeFantasiaEmitente;
-    private String logradouroEmitente;
-    private String numeroEmitente;
-    private String complementoEmitente;
-    private String bairroEmitente;
-    private String codigoMunicipioEmitente;
-    private String municipioEmitente;
-    private String ufEmitente;
-    private String cepEmitente;
-    private String telefoneEmitente;
+    private String documentoEmitente;
     private String inscricaoEstadualEmitente;
-    private String inscricaoEstadualStEmitente;
-    private String inscricaoMunicipalEmitente;
-    private String cnaeFiscalEmitente;
-    private String regimeTributarioEmitente;
-
-    // Destinatário
-    private String cnpjDestinatario;
-    private String cpfDestinatario;
-    private String nomeDestinatario;
-    private String nomeFantasiaDestinatario;
-    private String logradouroDestinatario;
-    private String numeroDestinatario;
-    private String complementoDestinatario;
-    private String bairroDestinatario;
-    private String codigoMunicipioDestinatario;
-    private String municipioDestinatario;
-    private String ufDestinatario;
-    private String cepDestinatario;
-    private String codigoPaisDestinatario;
-    private String paisDestinatario;
-    private String telefoneDestinatario;
-    private Integer indicadorInscricaoEstadualDestinatario;
+    private String cepEmitente;
+    private String codigoMunicipioEmitente;
+    private String nomeMunicipioEmitente;
+    private String bairroEmitente;
+    private String telefoneEmitente;
+    private String logradouroEmitente;
+    private String numeroEnderecoEmitente;
+    private String ufEmitente;
+    private String razaoSocialDestinatario;
+    private String documentoDestinatario;
     private String inscricaoEstadualDestinatario;
-    private String inscricaoSuframaDestinatario;
-    private String inscricaoMunicipalDestinatario;
-    private String emailDestinatario;
-
-    // Totais
+    private String cepDestinatario;
+    private String codigoMunicipioDestinatario;
+    private String nomeMunicipioDestinatario;
+    private String bairroDestinatario;
+    private String telefoneDestinatario;
+    private String logradouroDestinatario;
+    private String numeroEnderecoDestinatario;
+    private String ufDestinatario;
+    private BigDecimal valorBaseCalculo;
+    private BigDecimal valorIcms;
+    private BigDecimal valorIcmsDesonerado;
+    private BigDecimal valorFcp;
+    private BigDecimal valorBaseCalculoSt;
+    private BigDecimal valorSt;
+    private BigDecimal valorFcpSt;
+    private BigDecimal valorFcpStRetido;
     private BigDecimal valorProdutos;
     private BigDecimal valorFrete;
     private BigDecimal valorSeguro;
     private BigDecimal valorDesconto;
-    private BigDecimal valorTotalII;
-    private BigDecimal valorIPI;
-    private BigDecimal valorPIS;
-    private BigDecimal valorCOFINS;
-    private BigDecimal valorOutrasDespesas;
+    private BigDecimal valorIi;
+    private BigDecimal valorIpi;
+    private BigDecimal valorIpiDevolucao;
+    private BigDecimal valorPis;
+    private BigDecimal valorCofins;
+    private BigDecimal valorOutros;
     private BigDecimal valorTotal;
-    private BigDecimal valorTotalTributos;
-
-    // Transporte
-    private Integer modalidadeFrete; // 0-por conta do remetente, 1-por conta destinatário, etc.
+    private String modalidadeFrete;
     private String cnpjTransportador;
-    private String placaVeiculo;
-    private String ufVeiculo;
-
-    // Informações adicionais
-    private String informacoesAdicionaisFisco;
-    private String informacoesAdicionaisContribuinte;
+    private String nomeTransportador;
+    private String enderecoTransportador;
+    private String municipioTransportador;
+    private String numeroFatura;
+    private BigDecimal valorOriginalFatura;
+    private BigDecimal valorDescontoFatura;
+    private BigDecimal valorLiquidoFatura;
+    private String informacaoAdicionalFisco;
+    private String informacaoAdicionalContribuinte;
+    private String chave;
+    private String cstat;
+    private String numeroProtocolo;
+    private String dataHoraProtocolo;
+    private String motivoProtocolo;
+    private Date dataImportacao;
 
     /* ------------ RELACIONAMENTO ------------ */
     private List<NotaFiscalItemDto> itens;
@@ -107,73 +98,75 @@ public class NotaFiscalDto implements Serializable {
 
     public NotaFiscalDto(NotaFiscal obj) {
         this.id = obj.getId();
+        this.codigoUf = obj.getCodigoUf();
+        this.codigoNf = obj.getCodigoNf();
         this.naturezaOperacao = obj.getNaturezaOperacao();
+        this.modelo = obj.getModelo();
         this.serie = obj.getSerie();
         this.numero = obj.getNumero();
-        this.dataEmissao = obj.getDataEmissao();
-        this.dataEntradaSaida = obj.getDataEntradaSaida();
-        this.tipoDocumento = obj.getTipoDocumento();
-        this.localDestino = obj.getLocalDestino();
-        this.municipio = obj.getMunicipio();
-        this.finalidadeEmissao = obj.getFinalidadeEmissao();
-        this.consumidorFinal = obj.getConsumidorFinal();
-        this.presencaComprador = obj.getPresencaComprador();
-        this.indicadorIntermediario = obj.getIndicadorIntermediario();
-        this.cnpjEmitente = obj.getCnpjEmitente();
-        this.cpfEmitente = obj.getCpfEmitente();
-        this.nomeEmitente = obj.getNomeEmitente();
+        this.emissao = obj.getEmissao();
+        this.dhSaidaEntrada = obj.getDhSaidaEntrada();
+        this.tipo = obj.getTipo();
+        this.indicadorPresenca = obj.getIndicadorPresenca();
+        this.razaoSocialEmitente = obj.getRazaoSocialEmitente();
         this.nomeFantasiaEmitente = obj.getNomeFantasiaEmitente();
-        this.logradouroEmitente = obj.getLogradouroEmitente();
-        this.numeroEmitente = obj.getNumeroEmitente();
-        this.complementoEmitente = obj.getComplementoEmitente();
-        this.bairroEmitente = obj.getBairroEmitente();
-        this.codigoMunicipioEmitente = obj.getCodigoMunicipioEmitente();
-        this.municipioEmitente = obj.getMunicipioEmitente();
-        this.ufEmitente = obj.getUfEmitente();
-        this.cepEmitente = obj.getCepEmitente();
-        this.telefoneEmitente = obj.getTelefoneEmitente();
+        this.documentoEmitente = obj.getDocumentoEmitente();
         this.inscricaoEstadualEmitente = obj.getInscricaoEstadualEmitente();
-        this.inscricaoEstadualStEmitente = obj.getInscricaoEstadualStEmitente();
-        this.inscricaoMunicipalEmitente = obj.getInscricaoMunicipalEmitente();
-        this.cnaeFiscalEmitente = obj.getCnaeFiscalEmitente();
-        this.regimeTributarioEmitente = obj.getRegimeTributarioEmitente();
-        this.cnpjDestinatario = obj.getCnpjDestinatario();
-        this.cpfDestinatario = obj.getCpfDestinatario();
-        this.nomeDestinatario = obj.getNomeDestinatario();
-        this.nomeFantasiaDestinatario = obj.getNomeFantasiaDestinatario();
-        this.logradouroDestinatario = obj.getLogradouroDestinatario();
-        this.numeroDestinatario = obj.getNumeroDestinatario();
-        this.complementoDestinatario = obj.getComplementoDestinatario();
-        this.bairroDestinatario = obj.getBairroDestinatario();
-        this.codigoMunicipioDestinatario = obj.getCodigoMunicipioDestinatario();
-        this.municipioDestinatario = obj.getMunicipioDestinatario();
-        this.ufDestinatario = obj.getUfDestinatario();
-        this.cepDestinatario = obj.getCepDestinatario();
-        this.codigoPaisDestinatario = obj.getCodigoPaisDestinatario();
-        this.paisDestinatario = obj.getPaisDestinatario();
-        this.telefoneDestinatario = obj.getTelefoneDestinatario();
-        this.indicadorInscricaoEstadualDestinatario = obj.getIndicadorInscricaoEstadualDestinatario();
+        this.cepEmitente = obj.getCepEmitente();
+        this.codigoMunicipioEmitente = obj.getCodigoMunicipioEmitente();
+        this.nomeMunicipioEmitente = obj.getNomeMunicipioEmitente();
+        this.bairroEmitente = obj.getBairroEmitente();
+        this.telefoneEmitente = obj.getTelefoneEmitente();
+        this.logradouroEmitente = obj.getLogradouroEmitente();
+        this.numeroEnderecoEmitente = obj.getNumeroEnderecoEmitente();
+        this.ufEmitente = obj.getUfEmitente();
+        this.razaoSocialDestinatario = obj.getRazaoSocialDestinatario();
+        this.documentoDestinatario = obj.getDocumentoDestinatario();
         this.inscricaoEstadualDestinatario = obj.getInscricaoEstadualDestinatario();
-        this.inscricaoSuframaDestinatario = obj.getInscricaoSuframaDestinatario();
-        this.inscricaoMunicipalDestinatario = obj.getInscricaoMunicipalDestinatario();
-        this.emailDestinatario = obj.getEmailDestinatario();
+        this.cepDestinatario = obj.getCepDestinatario();
+        this.codigoMunicipioDestinatario = obj.getCodigoMunicipioDestinatario();
+        this.nomeMunicipioDestinatario = obj.getNomeMunicipioDestinatario();
+        this.bairroDestinatario = obj.getBairroDestinatario();
+        this.telefoneDestinatario = obj.getTelefoneDestinatario();
+        this.logradouroDestinatario = obj.getLogradouroDestinatario();
+        this.numeroEnderecoDestinatario = obj.getNumeroEnderecoDestinatario();
+        this.ufDestinatario = obj.getUfDestinatario();
+        this.valorBaseCalculo = obj.getValorBaseCalculo();
+        this.valorIcms = obj.getValorIcms();
+        this.valorIcmsDesonerado = obj.getValorIcmsDesonerado();
+        this.valorFcp = obj.getValorFcp();
+        this.valorBaseCalculoSt = obj.getValorBaseCalculoSt();
+        this.valorSt = obj.getValorSt();
+        this.valorFcpSt = obj.getValorFcpSt();
+        this.valorFcpStRetido = obj.getValorFcpStRetido();
         this.valorProdutos = obj.getValorProdutos();
         this.valorFrete = obj.getValorFrete();
         this.valorSeguro = obj.getValorSeguro();
         this.valorDesconto = obj.getValorDesconto();
-        this.valorTotalII = obj.getValorTotalII();
-        this.valorIPI = obj.getValorIPI();
-        this.valorPIS = obj.getValorPIS();
-        this.valorCOFINS = obj.getValorCOFINS();
-        this.valorOutrasDespesas = obj.getValorOutrasDespesas();
+        this.valorIi = obj.getValorIi();
+        this.valorIpi = obj.getValorIpi();
+        this.valorIpiDevolucao = obj.getValorIpiDevolucao();
+        this.valorPis = obj.getValorPis();
+        this.valorCofins = obj.getValorCofins();
+        this.valorOutros = obj.getValorOutros();
         this.valorTotal = obj.getValorTotal();
-        this.valorTotalTributos = obj.getValorTotalTributos();
         this.modalidadeFrete = obj.getModalidadeFrete();
         this.cnpjTransportador = obj.getCnpjTransportador();
-        this.placaVeiculo = obj.getPlacaVeiculo();
-        this.ufVeiculo = obj.getUfVeiculo();
-        this.informacoesAdicionaisFisco = obj.getInformacoesAdicionaisFisco();
-        this.informacoesAdicionaisContribuinte = obj.getInformacoesAdicionaisContribuinte();
+        this.nomeTransportador = obj.getNomeTransportador();
+        this.enderecoTransportador = obj.getEnderecoTransportador();
+        this.municipioTransportador = obj.getMunicipioTransportador();
+        this.numeroFatura = obj.getNumeroFatura();
+        this.valorOriginalFatura = obj.getValorOriginalFatura();
+        this.valorDescontoFatura = obj.getValorDescontoFatura();
+        this.valorLiquidoFatura = obj.getValorLiquidoFatura();
+        this.informacaoAdicionalFisco = obj.getInformacaoAdicionalFisco();
+        this.informacaoAdicionalContribuinte = obj.getInformacaoAdicionalContribuinte();
+        this.chave = obj.getChave();
+        this.cstat = obj.getCstat();
+        this.numeroProtocolo = obj.getNumeroProtocolo();
+        this.dataHoraProtocolo = obj.getDataHoraProtocolo();
+        this.motivoProtocolo = obj.getMotivoProtocolo();
+        this.dataImportacao = obj.getDataImportacao();
 
         // Convertendo itens da nota fiscal para DTO
         this.itens = obj.getItens() != null ? obj.getItens().stream().map(NotaFiscalItemDto::new).toList() : null;

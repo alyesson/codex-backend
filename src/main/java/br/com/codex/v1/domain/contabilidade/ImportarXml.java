@@ -1,6 +1,8 @@
 package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.ImportarXmlDto;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class ImportarXml implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -331,7 +335,7 @@ public class ImportarXml implements Serializable {
         this.dataImportacao = obj.getDataImportacao();
     }
 
-    public Integer getId() {
+    /*public Integer getId() {
         return id;
     }
 
@@ -897,7 +901,7 @@ public class ImportarXml implements Serializable {
 
     public void setDataImportacao(Date dataImportacao) {
         this.dataImportacao = dataImportacao;
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.*;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
 
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -24,13 +25,13 @@ public class NotaFiscalMapper {
         ide.setNatOp(dto.getNaturezaOperacao());
         ide.setSerie(String.valueOf(dto.getSerie()));
         ide.setNNF(String.valueOf(dto.getNumero()));
-        ide.setDhEmi(dto.getDataEmissao().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        ide.setDhSaiEnt(dto.getDataEntradaSaida().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        ide.setTpNF(dto.getTipoDocumento().toString());
-        ide.setIdDest(dto.getLocalDestino().toString());
-        ide.setCMunFG(dto.getMunicipio().toString());
-        ide.setFinNFe(dto.getFinalidadeEmissao().toString());
-        ide.setIndFinal(dto.getConsumidorFinal().toString());
+        ide.setDhEmi(dto.getEmissao().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        ide.setDhSaiEnt(dto.getDhSaidaEntrada());
+        ide.setTpNF(dto.getTipo());
+        ide.setIdDest(dto.getIndicadorPresenca());
+        ide.setCMunFG(dto.getCodigoMunicipioEmitente());
+        ide.setFinNFe(dto.getCodigoNf());
+        ide.setIndFinal(dto.get().toString());
         ide.setIndPres(dto.getPresencaComprador().toString());
         ide.setProcEmi("0");
         ide.setVerProc("1.0");
@@ -94,21 +95,21 @@ public class NotaFiscalMapper {
 
             TNFe.InfNFe.Det.Prod prod = new TNFe.InfNFe.Det.Prod();
             prod.setCProd(item.getCodigoProduto());
-            prod.setXProd(item.getDescricao());
-            prod.setCEAN(item.getCean());
+            prod.setXProd(item.getNomeProduto());
+            prod.setCEAN(item.getCEAN());
             prod.setCBarra("");
-            prod.setNCM(item.getNcm());
+            prod.setNCM(item.getNcmSh());
             prod.setCEST(String.valueOf(item.getCest()));
             prod.setIndEscala("");
-            prod.setCNPJFab(dto.getCnpjEmitente());
+            prod.setCNPJFab("");
             prod.setCBenef("");
             prod.setEXTIPI(item.getExtipi());
             prod.setCFOP(item.getCfop());
             prod.setUCom(item.getUnidadeComercial());
             prod.setQCom(String.valueOf(item.getQuantidadeComercial()));
             prod.setVUnCom(String.valueOf(item.getValorUnitarioComercial()));
-            prod.setVProd(String.valueOf(item.getValorBruto()));
-            prod.setCEANTrib(item.getCodigoBarrasTributavel());
+            prod.setVProd(String.valueOf(item.getValorUnitarioComercial()));
+            prod.setCEANTrib(item.getCEAN());
             prod.setCBarraTrib("");
             prod.setUTrib(item.getUnidadeComercial());
             prod.setQTrib(String.valueOf(item.getQuantidadeComercial()));
@@ -128,39 +129,141 @@ public class NotaFiscalMapper {
 
             // === ICMS ===
             TNFe.InfNFe.Det.Imposto.ICMS icms = new TNFe.InfNFe.Det.Imposto.ICMS();
-            TNFe.InfNFe.Det.Imposto.ICMS.ICMS00 icms00 = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS00();
-            icms00.setOrig(String.valueOf(item.getIcmsOrigem()));
-            icms00.setCST(String.valueOf(item.getIcmsSituacaoTributaria()));
-            icms00.setModBC("0");
-            icms00.setVBC(item.getIcmsBaseCalculo().toString());
-            icms00.setPICMS(item.getIcmsAliquota().toString());
-            icms00.setVICMS(item.getIcmsValor().toString());
-            icms.setICMS00(icms00);
+            String cst = item.getCstIcms();
+            switch (cst) {
+                case "00" -> {
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS00 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS00();
+                    obj.setOrig(item.getOrigIcms());
+                    obj.setCST(cst);
+                    obj.setModBC(item.getModBc());
+                    obj.setVBC(item.getBcIcms().toString());
+                    obj.setPICMS(item.getAliqIcms().toString());
+                    obj.setVICMS(item.getValorIcms().toString());
+                    obj.setPFCP(item.getAliqFcp().toString());
+                    obj.setVFCP(item.getValorFcp().toString());
+                    icms.setICMS00(obj);
+                }
+
+                case "02" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS02 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS02();
+
+                }
+
+                case "10" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS10 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS10();
+
+                }
+
+                case "15" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS15 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS15();
+                }
+
+                case "20" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS20 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS20();
+                }
+
+                case "30" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS30 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS30();
+
+                }
+
+                case "51" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS51 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS51();
+
+                }
+
+                case "53" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS53 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS53();
+
+                }
+
+                case "60" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS60 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS60();
+
+                }
+
+                case "61" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS61 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS61();
+
+                }
+
+                case "70" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS70 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS70();
+
+                }
+
+                case "90" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMS90 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS90();
+
+                }
+
+                case "part" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSPart obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSPart();
+
+                }
+
+                case "st" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSST obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSST();
+
+                }
+
+                case "101" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN101 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN101();
+
+                }
+
+                case "102" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN102 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN102();
+
+
+                }
+
+                case "201" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN201 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN201();
+
+                }
+
+                case "202" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN202 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN202();
+
+                }
+
+                case "500" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN500 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN500();
+
+                }
+
+                case "900" ->{
+                    TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN900 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN900();
+
+                }
+
+            }
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoICMS(icms));
+
 
             // === PIS ===
             TNFe.InfNFe.Det.Imposto.PIS pis = new TNFe.InfNFe.Det.Imposto.PIS();
             TNFe.InfNFe.Det.Imposto.PIS.PISAliq pisAliq = new TNFe.InfNFe.Det.Imposto.PIS.PISAliq();
-            pisAliq.setCST(String.valueOf(item.getPisSituacaoTributaria()));
-            pisAliq.setVBC(item.getPisBaseCalculo().toString());
-            pisAliq.setPPIS(item.getPisAliquota().toString());
-            pisAliq.setVPIS(item.getPisValor().toString());
+            pisAliq.setCST(String.valueOf(item.getCstPis()));
+            pisAliq.setVBC(item.getBcPis().toString());
+            pisAliq.setPPIS(item.getAliqPis().toString());
+            pisAliq.setVPIS(item.getValorPis().toString());
             pis.setPISAliq(pisAliq);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoPIS(pis));
 
             // === COFINS ===
             TNFe.InfNFe.Det.Imposto.COFINS cofins = new TNFe.InfNFe.Det.Imposto.COFINS();
             TNFe.InfNFe.Det.Imposto.COFINS.COFINSAliq cofinsAliq = new TNFe.InfNFe.Det.Imposto.COFINS.COFINSAliq();
-            cofinsAliq.setCST(String.valueOf(item.getCofinsSituacaoTributaria()));
-            cofinsAliq.setVBC(item.getCofinsBaseCalculo().toString());
-            cofinsAliq.setPCOFINS(item.getCofinsAliquota().toString());
-            cofinsAliq.setVCOFINS(item.getCofinsValor().toString());
+            cofinsAliq.setCST(String.valueOf(item.getCstCofins()));
+            cofinsAliq.setVBC(item.getBcCofins().toString());
+            cofinsAliq.setPCOFINS(item.getAliqCofins().toString());
+            cofinsAliq.setVCOFINS(item.getValorCofins().toString());
             cofins.setCOFINSAliq(cofinsAliq);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoCOFINS(cofins));
 
             // Atribui o bloco imposto ao item
             det.setImposto(imposto);
-
             infNFe.getDet().add(det);
         }
 
@@ -172,10 +275,10 @@ public class NotaFiscalMapper {
         icmsTot.setVDesc(String.valueOf(dto.getValorDesconto()));
         icmsTot.setVFrete(String.valueOf(dto.getValorFrete()));
         icmsTot.setVSeg(String.valueOf(dto.getValorSeguro()));
-        icmsTot.setVII(String.valueOf(dto.getValorTotalII()));
-        icmsTot.setVIPI(String.valueOf(dto.getValorIPI()));
-        icmsTot.setVPIS(String.valueOf(dto.getValorPIS()));
-        icmsTot.setVCOFINS(String.valueOf(dto.getValorCOFINS()));
+        icmsTot.setVII(String.valueOf(dto.getValorIi()));
+        icmsTot.setVIPI(String.valueOf(dto.getValorIpi()));
+        icmsTot.setVPIS(String.valueOf(dto.getValorPis()));
+        icmsTot.setVCOFINS(String.valueOf(dto.getValorCofins()));
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
 
@@ -197,8 +300,8 @@ public class NotaFiscalMapper {
 
         // Info adicional
         TNFe.InfNFe.InfAdic infAdic = new TNFe.InfNFe.InfAdic();
-        infAdic.setInfAdFisco(dto.getInformacoesAdicionaisFisco());
-        infAdic.setInfCpl(dto.getInformacoesAdicionaisContribuinte());
+        infAdic.setInfAdFisco(dto.getInformacaoAdicionalFisco().toString());
+        infAdic.setInfCpl(dto.getInformacaoAdicionalContribuinte().toString());
         infNFe.setInfAdic(infAdic);
 
         tnFe.setInfNFe(infNFe);
