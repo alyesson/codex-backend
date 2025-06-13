@@ -677,10 +677,6 @@ public class ImportarXmlService {
         return itensNotaFiscalRepository.saveAll(importarXmlItensList);
     }
 
-    public List<ImportarXml> listarNotas(){
-        return importarXmlRepository.findAll();
-    }
-
     public void delete(Integer id) {
         itensNotaFiscalRepository.deleteById(id);
     }
