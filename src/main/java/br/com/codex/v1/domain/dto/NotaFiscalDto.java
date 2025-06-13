@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.contabilidade.NotaFiscal;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,10 +29,15 @@ public class NotaFiscalDto implements Serializable {
     private String dhSaidaEntrada;
     private String tipo;
     private String indicadorPresenca;
+    private Integer indicadorFinal;
     private String razaoSocialEmitente;
     private String nomeFantasiaEmitente;
     private String documentoEmitente;
     private String inscricaoEstadualEmitente;
+    private Integer inscricaoEstadualStEmitente;
+    private Integer inscricaoMunicipalEmitente;
+    private String cnaeEmitente;
+    private Integer regimeTributarioEmitente;
     private String cepEmitente;
     private String codigoMunicipioEmitente;
     private String nomeMunicipioEmitente;
@@ -42,6 +48,7 @@ public class NotaFiscalDto implements Serializable {
     private String ufEmitente;
     private String razaoSocialDestinatario;
     private String documentoDestinatario;
+    private Integer indicadorInscricaoEstadualDestinatario;
     private String inscricaoEstadualDestinatario;
     private String cepDestinatario;
     private String codigoMunicipioDestinatario;
@@ -51,6 +58,9 @@ public class NotaFiscalDto implements Serializable {
     private String logradouroDestinatario;
     private String numeroEnderecoDestinatario;
     private String ufDestinatario;
+    private String emailDestinatario;
+    private String codigoPaisDestinatario;
+    private String paisDestinatario;
     private BigDecimal valorBaseCalculo;
     private BigDecimal valorIcms;
     private BigDecimal valorIcmsDesonerado;
@@ -108,10 +118,15 @@ public class NotaFiscalDto implements Serializable {
         this.dhSaidaEntrada = obj.getDhSaidaEntrada();
         this.tipo = obj.getTipo();
         this.indicadorPresenca = obj.getIndicadorPresenca();
+        this.indicadorFinal = obj.getIndicadorFinal();
         this.razaoSocialEmitente = obj.getRazaoSocialEmitente();
         this.nomeFantasiaEmitente = obj.getNomeFantasiaEmitente();
         this.documentoEmitente = obj.getDocumentoEmitente();
         this.inscricaoEstadualEmitente = obj.getInscricaoEstadualEmitente();
+        this.inscricaoEstadualStEmitente = obj.getInscricaoEstadualStEmitente();
+        this.inscricaoMunicipalEmitente = obj.getInscricaoMunicipalEmitente();
+        this.cnaeEmitente = obj.getCnaeEmitente();
+        this.regimeTributarioEmitente = obj.getRegimeTributarioEmitente();
         this.cepEmitente = obj.getCepEmitente();
         this.codigoMunicipioEmitente = obj.getCodigoMunicipioEmitente();
         this.nomeMunicipioEmitente = obj.getNomeMunicipioEmitente();
@@ -122,6 +137,7 @@ public class NotaFiscalDto implements Serializable {
         this.ufEmitente = obj.getUfEmitente();
         this.razaoSocialDestinatario = obj.getRazaoSocialDestinatario();
         this.documentoDestinatario = obj.getDocumentoDestinatario();
+        this.indicadorInscricaoEstadualDestinatario =  obj.getIndicadorInscricaoEstadualDestinatario();
         this.inscricaoEstadualDestinatario = obj.getInscricaoEstadualDestinatario();
         this.cepDestinatario = obj.getCepDestinatario();
         this.codigoMunicipioDestinatario = obj.getCodigoMunicipioDestinatario();
@@ -131,6 +147,9 @@ public class NotaFiscalDto implements Serializable {
         this.logradouroDestinatario = obj.getLogradouroDestinatario();
         this.numeroEnderecoDestinatario = obj.getNumeroEnderecoDestinatario();
         this.ufDestinatario = obj.getUfDestinatario();
+        this.emailDestinatario = obj.getEmailDestinatario();
+        this.codigoPaisDestinatario = String.valueOf(obj.getCodigoPaisDestinatario());
+        this.paisDestinatario = obj.getPaisDestinatario();
         this.valorBaseCalculo = obj.getValorBaseCalculo();
         this.valorIcms = obj.getValorIcms();
         this.valorIcmsDesonerado = obj.getValorIcmsDesonerado();
