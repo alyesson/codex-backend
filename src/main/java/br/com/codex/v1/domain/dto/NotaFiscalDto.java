@@ -96,7 +96,6 @@ public class NotaFiscalDto implements Serializable {
     private String numeroProtocolo;
     private String dataHoraProtocolo;
     private String motivoProtocolo;
-    private Date dataImportacao;
 
     /* ------------ RELACIONAMENTO ------------ */
     private List<NotaFiscalItemDto> itens;
@@ -185,7 +184,6 @@ public class NotaFiscalDto implements Serializable {
         this.numeroProtocolo = obj.getNumeroProtocolo();
         this.dataHoraProtocolo = obj.getDataHoraProtocolo();
         this.motivoProtocolo = obj.getMotivoProtocolo();
-        this.dataImportacao = obj.getDataImportacao();
 
         // Convertendo itens da nota fiscal para DTO
         this.itens = obj.getItens() != null ? obj.getItens().stream().map(NotaFiscalItemDto::new).toList() : null;

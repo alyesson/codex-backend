@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -210,9 +209,6 @@ public class NotaFiscal implements Serializable {
     @Column(length = 45)
     private String motivoProtocolo;
 
-    @Column(length = 15)
-    private Date dataImportacao;
-
     /* ------------ RELACIONAMENTO ------------ */
     @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NotaFiscalItem> itens;
@@ -236,7 +232,7 @@ public class NotaFiscal implements Serializable {
                       BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal,
                       String modalidadeFrete, String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura,
                       BigDecimal valorOriginalFatura, BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte,
-                      String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo, Date dataImportacao) {
+                      String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo) {
         this.id = id;
         this.codigoUf = codigoUf;
         this.codigoNf = codigoNf;
@@ -315,7 +311,6 @@ public class NotaFiscal implements Serializable {
         this.numeroProtocolo = numeroProtocolo;
         this.dataHoraProtocolo = dataHoraProtocolo;
         this.motivoProtocolo = motivoProtocolo;
-        this.dataImportacao = dataImportacao;
     }
 
     public NotaFiscal(NotaFiscalDto obj) {
@@ -397,7 +392,6 @@ public class NotaFiscal implements Serializable {
         this.numeroProtocolo = obj.getNumeroProtocolo();
         this.dataHoraProtocolo = obj.getDataHoraProtocolo();
         this.motivoProtocolo = obj.getMotivoProtocolo();
-        this.dataImportacao = obj.getDataImportacao();
         this.itens = obj.getItens() != null ? obj.getItens().stream().map(itemDto -> {
                     NotaFiscalItem item = new NotaFiscalItem(itemDto);
                     item.setNotaFiscal(this);
