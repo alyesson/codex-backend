@@ -26,9 +26,9 @@ public class ProdutoDto implements Serializable {
     protected String descricao;
     protected String grupo;
     protected String subGrupo;
-    @NotBlank(message = "Quantidade mínima não pode ficar em branco")
+    @NotNull(message = "Quantidade mínima não pode ficar em branco")
     protected Integer minimo;
-    @NotBlank(message = "Quantidade máxima não pode ficar em branco")
+    @NotNull(message = "Quantidade máxima não pode ficar em branco")
     protected Integer maximo;
     @NotBlank(message = "A unidade comercial não pode ficar em branco")
     protected String unidadeComercial;
@@ -46,10 +46,10 @@ public class ProdutoDto implements Serializable {
     protected String ean;
     protected String extipi;
     @NotBlank(message = "O tipo de depósito não pode ficar em branco")
-    protected  String tipoDeposito;
+    protected String tipoDeposito;
     protected String codigoSituacaoTributaria;
     protected String peso;
-    @NotBlank(message = "O preço de venda não pode ficar em branco")
+    @NotNull(message = "O preço de venda não pode ficar em branco")
     protected BigDecimal precoVenda;
     protected BigDecimal precoCusto;
     protected BigDecimal margemLucro;
@@ -62,7 +62,7 @@ public class ProdutoDto implements Serializable {
     protected BigDecimal percentualPis;
     protected BigDecimal percentualCofinsCst;
     protected BigDecimal percentualCofins;
-    @NotBlank(message = "O campo produto produzido pode ficar em branco")
+    @NotNull(message = "O campo produto produzido pode ficar em branco")
     protected boolean produtoProduzido;
 
     public ProdutoDto() {
