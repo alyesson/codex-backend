@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.estoque.Produto;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,36 +20,36 @@ public class ProdutoDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected Integer id;
-    @NotNull(message = "Código do produto não pode ficar em branco")
+    @NotBlank(message = "Código do produto não pode ficar em branco")
     protected String codigo;
-    @NotNull(message = "O nome do produto não pode ficar em branco")
+    @NotBlank(message = "O nome do produto não pode ficar em branco")
     protected String descricao;
     protected String grupo;
     protected String subGrupo;
-    @NotNull(message = "Quantidade mínima não pode ficar em branco")
+    @NotBlank(message = "Quantidade mínima não pode ficar em branco")
     protected Integer minimo;
-    @NotNull(message = "Quantidade máxima não pode ficar em branco")
+    @NotBlank(message = "Quantidade máxima não pode ficar em branco")
     protected Integer maximo;
-    @NotNull(message = "A unidade comercial não pode ficar em branco")
+    @NotBlank(message = "A unidade comercial não pode ficar em branco")
     protected String unidadeComercial;
     protected String local;
-    @NotNull(message = "O código ncm não pode ficar em branco")
+    @NotBlank(message = "O código ncm não pode ficar em branco")
     protected String codigoNcm;
-    @NotNull(message = "A descrição do ncm não pode ficar em branco")
+    @NotBlank(message = "A descrição do ncm não pode ficar em branco")
     protected String descricaoNcm;
     protected String codigoCest;
     protected String descricaoCest;
-    @NotNull(message = "A origem do produto não pode ficar em branco")
+    @NotBlank(message = "A origem do produto não pode ficar em branco")
     protected String origemProduto;
-    @NotNull(message = "A categoria do produto não pode ficar em branco")
+    @NotBlank(message = "A categoria do produto não pode ficar em branco")
     protected String categoriaProduto;
     protected String ean;
     protected String extipi;
-    @NotNull(message = "O tipo de depósito não pode ficar em branco")
+    @NotBlank(message = "O tipo de depósito não pode ficar em branco")
     protected  String tipoDeposito;
     protected String codigoSituacaoTributaria;
     protected String peso;
-    @NotNull(message = "O preço de venda não pode ficar em branco")
+    @NotBlank(message = "O preço de venda não pode ficar em branco")
     protected BigDecimal precoVenda;
     protected BigDecimal precoCusto;
     protected BigDecimal margemLucro;
@@ -61,7 +62,7 @@ public class ProdutoDto implements Serializable {
     protected BigDecimal percentualPis;
     protected BigDecimal percentualCofinsCst;
     protected BigDecimal percentualCofins;
-    @NotNull(message = "O campo produto produzido pode ficar em branco")
+    @NotBlank(message = "O campo produto produzido pode ficar em branco")
     protected boolean produtoProduzido;
 
     public ProdutoDto() {
