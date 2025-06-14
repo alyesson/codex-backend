@@ -1,13 +1,18 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.estoque.Produto;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
+@Getter
+@Setter
 public class ProdutoDto implements Serializable {
 
     @Serial
@@ -27,6 +32,37 @@ public class ProdutoDto implements Serializable {
     @NotNull(message = "A unidade comercial não pode ficar em branco")
     protected String unidadeComercial;
     protected String local;
+    @NotNull(message = "O código ncm não pode ficar em branco")
+    protected String codigoNcm;
+    @NotNull(message = "A descrição do ncm não pode ficar em branco")
+    protected String descricaoNcm;
+    protected String codigoCest;
+    protected String descricaoCest;
+    @NotNull(message = "A origem do produto não pode ficar em branco")
+    protected String origemProduto;
+    @NotNull(message = "A categoria do produto não pode ficar em branco")
+    protected String categoriaProduto;
+    protected String ean;
+    protected String extipi;
+    @NotNull(message = "O tipo de depósito não pode ficar em branco")
+    protected  String tipoDeposito;
+    protected String codigoSituacaoTributaria;
+    protected String peso;
+    @NotNull(message = "O preço de venda não pode ficar em branco")
+    protected BigDecimal precoVenda;
+    protected BigDecimal precoCusto;
+    protected BigDecimal margemLucro;
+    protected BigDecimal percentualIcmsCst;
+    protected BigDecimal percentualIcms;
+    protected BigDecimal percentualIcmsRed;
+    protected BigDecimal percentualIpiCst;
+    protected BigDecimal percentualIpi;
+    protected BigDecimal percentualPisCst;
+    protected BigDecimal percentualPis;
+    protected BigDecimal percentualCofinsCst;
+    protected BigDecimal percentualCofins;
+    @NotNull(message = "O campo produto produzido pode ficar em branco")
+    protected boolean produtoProduzido;
 
     public ProdutoDto() {
         super();
@@ -42,77 +78,33 @@ public class ProdutoDto implements Serializable {
         this.maximo = obj.getMaximo();
         this.unidadeComercial = obj.getUnidadeComercial();
         this.local = obj.getLocal();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getDescricao() {
-        return descricao;
+        this.codigoNcm = obj.getCodigoNcm();
+        this.descricaoNcm = obj.getDescricaoNcm();
+        this.codigoCest = obj.getCodigoCest();
+        this.descricaoCest = obj.getDescricaoCest();
+        this.origemProduto = obj.getOrigemProduto();
+        this.categoriaProduto = obj.getCategoriaProduto();
+        this.ean = obj.getEan();
+        this.extipi = obj.getExtipi();
+        this.tipoDeposito = obj.getTipoDeposito();
+        this.codigoSituacaoTributaria = obj.getCodigoSituacaoTributaria();
+        this.peso = obj.getPeso();
+        this.precoVenda = obj.getPrecoVenda();
+        this.precoCusto = obj.getPrecoCusto();
+        this.margemLucro = obj.getMargemLucro();
+        this.percentualIcmsCst = obj.getPercentualIcmsCst();
+        this.percentualIcms = obj.getPercentualIcms();
+        this.percentualIcmsRed = obj.getPercentualIcmsRed();
+        this.percentualIpiCst = obj.getPercentualIpiCst();
+        this.percentualIpi = obj.getPercentualIpi();
+        this.percentualPisCst = obj.getPercentualPisCst();
+        this.percentualPis = obj.getPercentualPis();
+        this.percentualCofinsCst = obj.getPercentualCofinsCst();
+        this.percentualCofins = obj.getPercentualCofins();
+        this.produtoProduzido = obj.isProdutoProduzido();
     }
 
     public void setDescricao(String descricao) {
         this.descricao = capitalizarPalavras(descricao);
-    }
-
-    public String getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
-    }
-
-    public String getSubGrupo() {
-        return subGrupo;
-    }
-
-    public void setSubGrupo(String subGrupo) {
-        this.subGrupo = subGrupo;
-    }
-
-    public Integer getMinimo() {
-        return minimo;
-    }
-
-    public void setMinimo(Integer minimo) {
-        this.minimo = minimo;
-    }
-
-    public Integer getMaximo() {
-        return maximo;
-    }
-
-    public void setMaximo(Integer maximo) {
-        this.maximo = maximo;
-    }
-
-    public String getUnidadeComercial() {
-        return unidadeComercial;
-    }
-
-    public void setUnidadeComercial(String unidadeComercial) {
-        this.unidadeComercial = unidadeComercial;
-    }
-
-    public String getLocal() {
-        return local;
-    }
-
-    public void setLocal(String local) {
-        this.local = local;
     }
 }
