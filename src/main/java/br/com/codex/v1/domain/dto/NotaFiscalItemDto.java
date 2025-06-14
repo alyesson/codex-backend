@@ -199,5 +199,13 @@ public class NotaFiscalItemDto implements Serializable {
         this.valorUniIpi = obj.getValorUniIpi();
         this.pedidoCompra = obj.getPedidoCompra();
     }
+
+    public void setNcmSh(String ncmSh) {
+        this.ncmSh = ncmSh.replace(".", "");
+    }
+
+    public void setCest(String cest) {
+        this.cest = cest.replace(".", "");;
+    }
 }
 
