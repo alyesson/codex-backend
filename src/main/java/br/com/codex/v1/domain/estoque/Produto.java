@@ -43,7 +43,7 @@ public class Produto implements Serializable {
     protected String categoriaProduto;
     protected String ean;
     protected String extipi;
-    protected  String tipoDeposito;
+    protected String tipoDeposito;
     protected String codigoSituacaoTributaria;
     protected String peso;
     protected BigDecimal precoVenda;

@@ -108,4 +108,6 @@ public class ProdutoDto implements Serializable {
     public void setDescricao(String descricao) {
         this.descricao = capitalizarPalavras(descricao);
     }
+
+    public void setDescricaoCest(String descricaoCest) { this.descricaoCest = capitalizarPalavras(descricaoCest); }
 }

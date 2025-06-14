@@ -63,4 +63,10 @@ public class ProdutoResource {
         Produto objProd = produtoService.findByDescricao(produto);
         return ResponseEntity.ok().body(new ProdutoDto(objProd));
     }
+
+    @GetMapping(value = "/codigo/{codigo}")
+    public ResponseEntity<ProdutoDto> findCodigo(@PathVariable String codigo){
+        Produto objProd = produtoService.findByCodigo(codigo);
+        return ResponseEntity.ok().body(new ProdutoDto(objProd));
+    }
 }
