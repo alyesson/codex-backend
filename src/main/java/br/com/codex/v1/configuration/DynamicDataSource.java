@@ -5,10 +5,6 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import javax.sql.DataSource;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
-    /*@Override -----> Funcionava antes aqui
-    protected Object determineCurrentLookupKey() {
-        return DatabaseContextHolder.getCurrentDb();
-    }*/
 
     @Override
     protected Object determineCurrentLookupKey() {

@@ -3,11 +3,14 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.configuration.PersistenceUnitInfoAdapter;
 import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.Empresa;
+import br.com.codex.v1.domain.cadastros.TabelaCfop;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.enums.Perfil;
 import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
+import br.com.codex.v1.domain.repository.TabelaCfopRepository;
 import br.com.codex.v1.domain.repository.UsuarioRepository;
+import br.com.codex.v1.utilitario.ImportaTabelaCfop;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +21,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -33,6 +37,9 @@ public class DBService {
     private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
 
     @Autowired
+    private ImportaTabelaCfop importaTabelaCfop;
+
+    @Autowired
     private BCryptPasswordEncoder encoder;
 
     public void criaOutrasBases(DataSource dataSource) {
@@ -45,22 +52,19 @@ public class DBService {
 
         // Datasource não transacional
         props.put("javax.persistence.nonJtaDataSource", dataSource);
-
         PersistenceUnitInfoAdapter info = new PersistenceUnitInfoAdapter("dynamicUnit", dataSource);
-
-        EntityManagerFactory emf = new HibernatePersistenceProvider()
-                .createContainerEntityManagerFactory(info, props);
-
+        EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(info, props);
         EntityManager em = emf.createEntityManager();
-
         em.getTransaction().begin();
         try {
-            Usuario pessoa = new Usuario(null, "Administrador", "80374841063",
-                    Date.valueOf("2024-01-07"), "Neutro", "19974061119",
-                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP",
-                    "13185-421", "suporte@codexsolucoes.com.br",
+            Usuario pessoa = new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
+                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2024!"), "Sistema", "00000");
             pessoa.addPerfil(Perfil.ADMINISTRADOR);
+
+            // Importa CFOPs
+            importaTabelaCfop.importarCfops();
+
             em.persist(pessoa);
 
             em.getTransaction().commit();
@@ -87,7 +91,10 @@ public class DBService {
                     "Ativo", "Ótimo", "codex", "----", true);
             empresaRepository.save(empresa);
 
-        AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
-        ambienteNotaFiscalRepository.save(ambienteNotaFiscal);
+            AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
+            ambienteNotaFiscalRepository.save(ambienteNotaFiscal);
+
+            // Importa CFOPs
+            importaTabelaCfop.importarCfops();
     }
 }

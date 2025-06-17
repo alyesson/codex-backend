@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TabelaCfopRepository extends JpaRepository<TabelaCfop, Integer> {
 
-    @Query("SELECT c FROM TabelaCfop c WHERE c.tipoCfop = :tipoCfop")
-    List<TabelaCfop> findByTipoCfop(@Param("tipoCfop") String tipoCfop);
+    @Query("SELECT c FROM TabelaCfop c WHERE c.fluxo = :fluxo")
+    List<TabelaCfop> findByFluxo(@Param("fluxo") String fluxo);
 
 }

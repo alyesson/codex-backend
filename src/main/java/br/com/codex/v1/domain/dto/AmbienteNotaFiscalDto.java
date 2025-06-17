@@ -1,14 +1,12 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
-import jdk.jfr.Enabled;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Getter
 @Setter

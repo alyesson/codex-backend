@@ -9,6 +9,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
 @Getter
 @Setter
 public class TabelaCfopDto implements Serializable {
@@ -16,10 +18,10 @@ public class TabelaCfopDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private Integer tipoCfop; //determina se é entrada, saída
-    private String movimentacao; //determina de é interno, interestadual ou exterior
-    private String codigo;
+    private Integer codigo;
     private String descricao;
+    private String movimentacao; //determina de é interno, interestadual ou exterior
+    private String fluxo; //determina se é entrada, saída
 
     public TabelaCfopDto() {
         super();
@@ -27,9 +29,13 @@ public class TabelaCfopDto implements Serializable {
 
     public TabelaCfopDto(TabelaCfop obj) {
         this.id = obj.getId();
-        this.tipoCfop = obj.getTipoCfop();
+        this.codigo = obj.getCodigo();
+        this.descricao = obj.getDescricao();
         this.movimentacao = obj.getMovimentacao();
-        this.codigo = obj.getCodigo().replace(",","").replace(".","");
-        this.descricao = descricao;
+        this.fluxo = obj.getFluxo();
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = capitalizarPalavras(descricao);
     }
 }

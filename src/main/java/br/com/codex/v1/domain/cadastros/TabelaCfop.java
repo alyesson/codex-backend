@@ -22,35 +22,34 @@ public class TabelaCfop implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank(message = "Tipo do cfop não pode estar vazio")
-    private Integer tipoCfop; //determina se é entrada, saída
+    private Integer codigo;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String descricao;
     @NotBlank(message = "Movimentação do cfop não pode estar vazio")
     private String movimentacao; //determina de é interno, interestadual ou exterior
-    private String codigo;
-    private String descricao;
+    @NotBlank(message = "O fluxo não pode estar vazio")
+    private String fluxo; //determina se é entrada, saída
 
     public TabelaCfop() {
         super();
     }
 
-    public TabelaCfop(Integer id, Integer tipoCfop, String movimentacao, String codigo, String descricao) {
+    public TabelaCfop(Integer id, Integer codigo, String descricao, String movimentacao, String fluxo) {
         this.id = id;
-        this.tipoCfop = tipoCfop;
-        this.movimentacao = movimentacao;
         this.codigo = codigo;
         this.descricao = descricao;
+        this.movimentacao = movimentacao;
+        this.fluxo = fluxo;
     }
 
     public TabelaCfop(TabelaCfopDto obj) {
         this.id = obj.getId();
-        this.tipoCfop = obj.getTipoCfop();
+        this.codigo = obj.getCodigo();
+        this.descricao = obj.getDescricao();
         this.movimentacao = obj.getMovimentacao();
-        this.codigo = obj.getCodigo().replace(",","").replace(".","");
-        this.descricao = descricao;
-    }
+        this.fluxo = obj.getFluxo();
 
-    public void setDescricao(String descricao) {
-        this.descricao = capitalizarPalavras(descricao);
     }
 
     @Override

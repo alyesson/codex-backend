@@ -2,7 +2,6 @@ package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.cadastros.TabelaCfop;
 import br.com.codex.v1.domain.dto.TabelaCfopDto;
-import br.com.codex.v1.domain.financeiro.CentroCusto;
 import br.com.codex.v1.service.TabelaCfopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +18,8 @@ public class TabelaCfopResource {
     @Autowired
     private TabelaCfopService tabelaCfopService;
 
-    public ResponseEntity<List<TabelaCfopDto>> findByTipoCfop(String tipoCfop) {
-        List<TabelaCfop> list = tabelaCfopService.findByTipoCfop(tipoCfop);
+    public ResponseEntity<List<TabelaCfopDto>> findByFluxo(String tipoCfop) {
+        List<TabelaCfop> list = tabelaCfopService.findByFluxo(tipoCfop);
         List<TabelaCfopDto> listDto = list.stream().map(TabelaCfopDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }

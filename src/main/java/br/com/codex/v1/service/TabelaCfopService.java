@@ -13,7 +13,7 @@ public class TabelaCfopService {
     @Autowired
     private TabelaCfopRepository tabelaCfopRepository;
 
-    public List<TabelaCfop> findByTipoCfop(String tipoCfop) {
-        return tabelaCfopRepository.findByTipoCfop(tipoCfop);
+    public List<TabelaCfop> findByFluxo(String tipoCfop) {
+        return tabelaCfopRepository.findByFluxo(tipoCfop);
     }
 }
