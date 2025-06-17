@@ -18,13 +18,13 @@ public class AmbienteNotaFiscalService {
     private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
 
     @Transactional
-    public AmbienteNotaFiscal update(Integer id, AmbienteNotaFiscalDto dto) {
+    public AmbienteNotaFiscal update(Long id, AmbienteNotaFiscalDto dto) {
 
         if (dto == null || dto.getCodigoAmbiente() == null) {
             throw new IllegalArgumentException("Dados do ambiente não podem ser nulos");
         }
 
-        AmbienteNotaFiscal ambienteExistente = ambienteNotaFiscalRepository.findById(1)
+        AmbienteNotaFiscal ambienteExistente = ambienteNotaFiscalRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("Ambiente não encontrado com o ID: " + id));
 
         // 3. Valida o código do ambiente (1-Produção ou 2-Homologação)
@@ -37,7 +37,7 @@ public class AmbienteNotaFiscalService {
         return ambienteNotaFiscalRepository.save(ambienteExistente);
     }
 
-    public AmbienteNotaFiscal findById(Integer id) {
+    public AmbienteNotaFiscal findById(Long id) {
         Optional<AmbienteNotaFiscal> obj = ambienteNotaFiscalRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Ambiente não encontrado"));
     }

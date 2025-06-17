@@ -24,12 +24,12 @@ public class ContaBancariaService {
         return contaBancariaRepository.save(grupo);
     }
 
-    public ContaBancaria findById(Integer id) {
+    public ContaBancaria findById(Long id) {
         Optional<ContaBancaria> obj = contaBancariaRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Conta contábil não encontrada"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         contaBancariaRepository.deleteById(id);
     }
 

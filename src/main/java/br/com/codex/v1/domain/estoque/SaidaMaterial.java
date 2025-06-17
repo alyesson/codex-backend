@@ -18,7 +18,7 @@ public class SaidaMaterial implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String produto;
     protected String lote;
@@ -32,7 +32,7 @@ public class SaidaMaterial implements Serializable {
         super();
     }
 
-    public SaidaMaterial(Integer id, String codigoProduto, String produto, String motivoAcerto, String lote, Date dataSaida, Integer quantidade, String autor, String solicitante) {
+    public SaidaMaterial(Long id, String codigoProduto, String produto, String motivoAcerto, String lote, Date dataSaida, Integer quantidade, String autor, String solicitante) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.motivoAcerto = motivoAcerto;
@@ -56,11 +56,11 @@ public class SaidaMaterial implements Serializable {
         this.solicitante = obj.getSolicitante();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

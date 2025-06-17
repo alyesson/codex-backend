@@ -677,7 +677,7 @@ public class ImportarXmlService {
         return itensNotaFiscalRepository.saveAll(importarXmlItensList);
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         itensNotaFiscalRepository.deleteById(id);
     }
 
@@ -733,8 +733,8 @@ public class ImportarXmlService {
         return lancamentoContabilRepository.save(lancamento);
     }
 
-    public Integer findByNumeroAndRazaoSocialEmitente(String numero, String razaoSocialEmitente) {
-        Optional<Integer> objNotaId = importarXmlRepository.findIdByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+    public Long findByNumeroAndRazaoSocialEmitente(String numero, String razaoSocialEmitente) {
+        Optional<Long> objNotaId = importarXmlRepository.findIdByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
         return objNotaId.orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada para o emissor "+razaoSocialEmitente));
     }
 

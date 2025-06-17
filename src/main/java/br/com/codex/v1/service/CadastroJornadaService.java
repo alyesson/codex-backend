@@ -23,14 +23,14 @@ public class CadastroJornadaService {
             return cadastroJornadaRepository.save(objJornada);
         }
 
-        public CadastroJornada update(Integer id, CadastroJornadaDto CadastroJornadaDto) {
+        public CadastroJornada update(Long id, CadastroJornadaDto CadastroJornadaDto) {
             CadastroJornadaDto.setId(id);
             CadastroJornada obj = findById(id);
             obj = new CadastroJornada(CadastroJornadaDto);
             return cadastroJornadaRepository.save(obj);
         }
 
-        public CadastroJornada findById(Integer id) {
+        public CadastroJornada findById(Long id) {
             Optional<CadastroJornada> obj = cadastroJornadaRepository.findById(id);
             return obj.orElseThrow(() -> new ObjectNotFoundException("Jornada não encontrada"));
         }

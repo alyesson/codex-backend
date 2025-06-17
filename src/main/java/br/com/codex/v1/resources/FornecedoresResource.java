@@ -31,21 +31,21 @@ public class FornecedoresResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<FornecedoresDto> update(@PathVariable Integer id, @Valid @RequestBody FornecedoresDto fornecedoresDto){
+    public ResponseEntity<FornecedoresDto> update(@PathVariable Long id, @Valid @RequestBody FornecedoresDto fornecedoresDto){
         Fornecedores objFornec = fornecedoresService.update(id, fornecedoresDto);
         return ResponseEntity.ok().body(new FornecedoresDto(objFornec));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<FornecedoresDto> delete(@PathVariable Integer id){
+    public ResponseEntity<FornecedoresDto> delete(@PathVariable Long id){
         fornecedoresService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<FornecedoresDto> findById(@PathVariable Integer id){
+    public ResponseEntity<FornecedoresDto> findById(@PathVariable Long id){
         Fornecedores objFornec = fornecedoresService.findById(id);
         return ResponseEntity.ok().body(new FornecedoresDto(objFornec));
     }

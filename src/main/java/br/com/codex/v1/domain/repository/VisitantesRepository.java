@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface VisitantesRepository extends JpaRepository<Visitantes, Integer> {
+public interface VisitantesRepository extends JpaRepository<Visitantes, Long> {
     Optional<Visitantes> findByCpf(String cpf);
 
     @Query("SELECT v FROM Visitantes v WHERE v.dataCadastro BETWEEN :dataInicial AND :dataFinal")

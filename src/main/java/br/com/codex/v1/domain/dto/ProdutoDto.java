@@ -19,7 +19,7 @@ public class ProdutoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotBlank(message = "Código do produto não pode ficar em branco")
     protected String codigo;
     @NotBlank(message = "O nome do produto não pode ficar em branco")

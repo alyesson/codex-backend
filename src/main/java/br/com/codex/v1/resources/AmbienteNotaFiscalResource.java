@@ -15,13 +15,13 @@ public class AmbienteNotaFiscalResource {
     private AmbienteNotaFiscalService ambienteNotaFiscalService;
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<AmbienteNotaFiscalDto> updateAmbiente(@PathVariable Integer id, @RequestBody AmbienteNotaFiscalDto dto) {
+    public ResponseEntity<AmbienteNotaFiscalDto> updateAmbiente(@PathVariable Long id, @RequestBody AmbienteNotaFiscalDto dto) {
         AmbienteNotaFiscal ambienteAtualizado = ambienteNotaFiscalService.update(id, dto);
         return ResponseEntity.ok(new AmbienteNotaFiscalDto(ambienteAtualizado));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AmbienteNotaFiscalDto> getAmbienteNotaFiscal(@PathVariable Integer id) {
+    public ResponseEntity<AmbienteNotaFiscalDto> getAmbienteNotaFiscal(@PathVariable Long id) {
         AmbienteNotaFiscal ambiente = ambienteNotaFiscalService.findById(id);
         return ResponseEntity.ok().body(new AmbienteNotaFiscalDto(ambiente));
     }

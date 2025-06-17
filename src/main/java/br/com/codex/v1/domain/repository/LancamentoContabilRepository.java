@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.sql.Date;
 import java.util.List;
 
-public interface LancamentoContabilRepository extends JpaRepository<LancamentoContabil, Integer> {
+public interface LancamentoContabilRepository extends JpaRepository<LancamentoContabil, Long> {
 
     @Query("SELECT l FROM LancamentoContabil l WHERE YEAR(l.dataLancamento) = :ano AND MONTH(l.dataLancamento) = :mes")
     List<LancamentoContabil> findAllByYearAndMonth(@Param("ano") Integer ano, @Param("mes") Integer mes);

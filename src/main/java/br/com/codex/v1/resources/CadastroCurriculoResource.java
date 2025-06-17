@@ -68,21 +68,21 @@ public class CadastroCurriculoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CadastroCurriculosDto> update(@PathVariable Integer id, @Valid @RequestBody CadastroCurriculosDto cadastroCurriculosDto){
+    public ResponseEntity<CadastroCurriculosDto> update(@PathVariable Long id, @Valid @RequestBody CadastroCurriculosDto cadastroCurriculosDto){
         CadastroCurriculos objCadastroCurriculos = cadastroCurriculosService.update(id, cadastroCurriculosDto);
         return ResponseEntity.ok().body(new CadastroCurriculosDto((objCadastroCurriculos)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CadastroCurriculosDto> delete(@PathVariable Integer id){
+    public ResponseEntity<CadastroCurriculosDto> delete(@PathVariable Long id){
         cadastroCurriculosService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CadastroCurriculosDto> findById(@PathVariable Integer id){
+    public ResponseEntity<CadastroCurriculosDto> findById(@PathVariable Long id){
         CadastroCurriculos objCadastroCurriculos = cadastroCurriculosService.findById(id);
         return ResponseEntity.ok().body(new CadastroCurriculosDto(objCadastroCurriculos));
     }
@@ -97,7 +97,7 @@ public class CadastroCurriculoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping(value = "/downloads/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) {
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long id) {
         CadastroCurriculos objDoc = cadastroCurriculosService.findById(id);
         byte[] fileBytes = objDoc.getArquivo();
 

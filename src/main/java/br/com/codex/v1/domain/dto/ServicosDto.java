@@ -15,7 +15,7 @@ public class ServicosDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String nome;
     protected String descricao;
@@ -66,11 +66,11 @@ public class ServicosDto implements Serializable {
     }
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

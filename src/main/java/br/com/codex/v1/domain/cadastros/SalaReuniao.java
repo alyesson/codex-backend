@@ -17,7 +17,7 @@ public class SalaReuniao implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nome;
     protected String localizacao;
 
@@ -25,7 +25,7 @@ public class SalaReuniao implements Serializable {
         super();
     }
 
-    public SalaReuniao(Integer id, String nome, String localizacao) {
+    public SalaReuniao(Long id, String nome, String localizacao) {
         this.id = id;
         this.nome = nome;
         this.localizacao = localizacao;
@@ -37,11 +37,11 @@ public class SalaReuniao implements Serializable {
         this.localizacao = obj.getLocalizacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

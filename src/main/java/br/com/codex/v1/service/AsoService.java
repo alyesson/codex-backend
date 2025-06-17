@@ -23,19 +23,19 @@ public class AsoService {
         return asoRepository.save(aso);
     }
 
-    public Aso update(Integer id, AsoDto asoDto) {
+    public Aso update(Long id, AsoDto asoDto) {
         asoDto.setId(id);
         Aso obj = findById(id);
         obj = new Aso(asoDto);
         return asoRepository.save(obj);
     }
 
-    public Aso findById(Integer id) {
+    public Aso findById(Long id) {
         Optional<Aso> obj = asoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Aso não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         asoRepository.deleteById(id);
     }
 

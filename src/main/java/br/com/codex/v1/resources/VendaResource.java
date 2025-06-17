@@ -32,7 +32,7 @@ public class VendaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<VendaDto> findById(@PathVariable Integer id){
+    public ResponseEntity<VendaDto> findById(@PathVariable Long id){
         Venda objVenda = vendaService.findById(id);
         return ResponseEntity.ok().body(new VendaDto(objVenda));
     }

@@ -18,7 +18,7 @@ public class SubGrupo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoGrupo;
     protected String codigoSubGrupo;
     protected String descricao;
@@ -27,7 +27,7 @@ public class SubGrupo implements Serializable {
         super();
     }
 
-    public SubGrupo(Integer id, String codigoGrupo, String codigoSubGrupo, String descricao) {
+    public SubGrupo(Long id, String codigoGrupo, String codigoSubGrupo, String descricao) {
         this.id = id;
         this.codigoGrupo = codigoGrupo;
         this.codigoSubGrupo = codigoSubGrupo;
@@ -41,11 +41,11 @@ public class SubGrupo implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

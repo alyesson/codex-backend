@@ -31,20 +31,20 @@ public class ControleCarrosColaboradoresResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'ADMINISTRATIVO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ControleCarrosColaboradoresDto> update(@PathVariable Integer id, @Valid @RequestBody ControleCarrosColaboradoresDto controleCarrosColaboradoresDto){
+    public ResponseEntity<ControleCarrosColaboradoresDto> update(@PathVariable Long id, @Valid @RequestBody ControleCarrosColaboradoresDto controleCarrosColaboradoresDto){
         ControleCarrosColaboradores obj = controleCarrosColaboradoresService.update(id, controleCarrosColaboradoresDto);
         return ResponseEntity.ok().body(new ControleCarrosColaboradoresDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO','GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ControleCarrosColaboradoresDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ControleCarrosColaboradoresDto> delete(@PathVariable Long id){
         controleCarrosColaboradoresService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ControleCarrosColaboradoresDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ControleCarrosColaboradoresDto> findById(@PathVariable Long id){
         ControleCarrosColaboradores objGrupo = controleCarrosColaboradoresService.findById(id);
         return ResponseEntity.ok().body(new ControleCarrosColaboradoresDto(objGrupo));
     }

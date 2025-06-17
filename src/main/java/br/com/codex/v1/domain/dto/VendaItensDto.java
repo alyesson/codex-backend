@@ -11,7 +11,7 @@ public class VendaItensDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String cpf;
     protected String codigoProduto;
     protected String descricaoProduto;
@@ -33,11 +33,11 @@ public class VendaItensDto implements Serializable {
         this.valorTotal = objItens.getValorTotal();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

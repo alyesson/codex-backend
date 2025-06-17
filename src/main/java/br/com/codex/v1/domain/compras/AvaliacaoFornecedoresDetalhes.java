@@ -12,7 +12,7 @@ public class AvaliacaoFornecedoresDetalhes implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String criterio;
     protected float peso;
     protected float nota;
@@ -24,7 +24,7 @@ public class AvaliacaoFornecedoresDetalhes implements Serializable {
         super();
     }
 
-    public AvaliacaoFornecedoresDetalhes(Integer id, String criterio, float peso, float nota, AvaliacaoFornecedores avaliacaoFornecedores) {
+    public AvaliacaoFornecedoresDetalhes(Long id, String criterio, float peso, float nota, AvaliacaoFornecedores avaliacaoFornecedores) {
         this.id = id;
         this.criterio = criterio;
         this.peso = peso;
@@ -32,11 +32,11 @@ public class AvaliacaoFornecedoresDetalhes implements Serializable {
         this.avaliacaoFornecedores = avaliacaoFornecedores;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -41,7 +41,7 @@ public class ImportarXmlResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ImportarXmlDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ImportarXmlDto> delete(@PathVariable Long id){
         importarXmlService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -67,8 +67,8 @@ public class ImportarXmlResource {
     //Pesquisa Nota Fiscal Por Meio do Número e Do Emitente (razão Social)
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ROLE_GERENTE_ADMINISTRATIVO','ADMINISTRATIVO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/id_nota_emissor")
-    public ResponseEntity<Integer> findIdByNumeroAndRazaoSocialEmitente(@RequestParam("numero") String numero, @RequestParam("razaoSocialEmitente") String razaoSocialEmitente) {
-        Integer idNota = importarXmlService.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
+    public ResponseEntity<Long> findIdByNumeroAndRazaoSocialEmitente(@RequestParam("numero") String numero, @RequestParam("razaoSocialEmitente") String razaoSocialEmitente) {
+        Long idNota = importarXmlService.findByNumeroAndRazaoSocialEmitente(numero, razaoSocialEmitente);
         return ResponseEntity.ok().body(idNota);
     }
 }

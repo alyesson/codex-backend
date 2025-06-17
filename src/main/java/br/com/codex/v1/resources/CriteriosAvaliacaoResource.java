@@ -31,21 +31,21 @@ public class CriteriosAvaliacaoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CriteriosAvaliacaoDto> update(@PathVariable Integer id, @Valid @RequestBody CriteriosAvaliacaoDto critoerioavaliacaoDto){
+    public ResponseEntity<CriteriosAvaliacaoDto> update(@PathVariable Long id, @Valid @RequestBody CriteriosAvaliacaoDto critoerioavaliacaoDto){
         CriteriosAvaliacao obj = criteriosAvaliacaoService.update(id, critoerioavaliacaoDto);
         return ResponseEntity.ok().body(new CriteriosAvaliacaoDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CriteriosAvaliacaoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<CriteriosAvaliacaoDto> delete(@PathVariable Long id){
         criteriosAvaliacaoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CriteriosAvaliacaoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<CriteriosAvaliacaoDto> findById(@PathVariable Long id){
         CriteriosAvaliacao objCriterios = criteriosAvaliacaoService.findById(id);
         return ResponseEntity.ok().body(new CriteriosAvaliacaoDto(objCriterios));
     }

@@ -12,7 +12,7 @@ public class CadastroCurriculosDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String nome;
     protected String sexo;
     protected String contato;
@@ -41,11 +41,11 @@ public class CadastroCurriculosDto implements Serializable {
         this.arquivo = obj.getArquivo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -31,21 +31,21 @@ public class AsoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<AsoDto> update(@PathVariable Integer id, @Valid @RequestBody AsoDto asoDto){
+    public ResponseEntity<AsoDto> update(@PathVariable Long id, @Valid @RequestBody AsoDto asoDto){
         Aso objAso = asoService.update(id, asoDto);
         return ResponseEntity.ok().body(new AsoDto((objAso)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<AsoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<AsoDto> delete(@PathVariable Long id){
         asoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AsoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<AsoDto> findById(@PathVariable Long id){
         Aso objAso = asoService.findById(id);
         return ResponseEntity.ok().body(new AsoDto(objAso));
     }

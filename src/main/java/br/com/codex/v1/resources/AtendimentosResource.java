@@ -95,20 +95,20 @@ public class AtendimentosResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE_TI', 'TI')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<AtendimentosDto> update(@PathVariable Integer id, @Valid @RequestBody AtendimentosDto atendimentosDto){
+    public ResponseEntity<AtendimentosDto> update(@PathVariable Long id, @Valid @RequestBody AtendimentosDto atendimentosDto){
         Atendimentos obj = atendimentosService.update(id, atendimentosDto);
         return ResponseEntity.ok().body(new AtendimentosDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<AtendimentosDto> delete(@PathVariable Integer id){
+    public ResponseEntity<AtendimentosDto> delete(@PathVariable Long id){
         atendimentosService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AtendimentosDto> findById(@PathVariable Integer id){
+    public ResponseEntity<AtendimentosDto> findById(@PathVariable Long id){
         Atendimentos objAtendimento = atendimentosService.findById(id);
         return ResponseEntity.ok().body(new AtendimentosDto(objAtendimento));
     }

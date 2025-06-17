@@ -10,7 +10,7 @@ import java.util.List;
 public class PedidoCompraDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected Integer numeroCotacao;
     protected String solicitante;
     protected Date dataSolicitacao;
@@ -47,11 +47,11 @@ public class PedidoCompraDto implements Serializable {
         this.valorPedido = obj.getValorPedido();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class ImportarXmlItensDto {
 
-    private Integer id;
+    private Long id;
     private String numeroNotaFiscal;
     private String nomeProduto;
     private String codigoProduto;
@@ -182,11 +182,11 @@ public class ImportarXmlItensDto {
         this.valorUniIpi = obj.getValorUniIpi();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

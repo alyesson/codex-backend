@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface EntradaMaterialRepository extends JpaRepository<EntradaMaterial, Integer> {
+public interface EntradaMaterialRepository extends JpaRepository<EntradaMaterial, Long> {
     boolean existsByNotaFiscalAndCodigoProduto(Integer notaFiscal,String codigoProduto);
     Optional<EntradaMaterial> findByLote(String lote);
 

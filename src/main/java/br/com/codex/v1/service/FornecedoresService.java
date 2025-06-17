@@ -24,18 +24,18 @@ public class FornecedoresService {
         return fornecedoresRepository.save(objFornec);
     }
 
-    public Fornecedores update(Integer id, FornecedoresDto fornecedoresDto) {
+    public Fornecedores update(Long id, FornecedoresDto fornecedoresDto) {
         fornecedoresDto.setId(id);
         Fornecedores objFornec = findById(id);
         objFornec = new Fornecedores(fornecedoresDto);
         return fornecedoresRepository.save(objFornec);
     }
 
-    public void delete( Integer id){
+    public void delete( Long id){
         fornecedoresRepository.deleteById(id);
     }
 
-    public Fornecedores findById(Integer id){
+    public Fornecedores findById(Long id){
         Optional<Fornecedores> objFornec = fornecedoresRepository.findById(id);
         return objFornec.orElseThrow(() -> new ObjectNotFoundException("Fornecedor não encontrado"));
     }

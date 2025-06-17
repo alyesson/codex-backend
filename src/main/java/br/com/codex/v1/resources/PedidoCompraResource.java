@@ -33,14 +33,14 @@ public class PedidoCompraResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PedidoCompraDto> update(@PathVariable Integer id, @RequestParam String situacao){
+    public ResponseEntity<PedidoCompraDto> update(@PathVariable Long id, @RequestParam String situacao){
         pedidoCompraService.update(id, situacao);
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping("/{id}/itens")
-    public ResponseEntity<List<PedidoItensCompraDto>> findAllItens(@PathVariable Integer id) {
+    public ResponseEntity<List<PedidoItensCompraDto>> findAllItens(@PathVariable Long id) {
         List<PedidoItensCompra> itens = pedidoCompraService.findAllItensByPedidoId(id);
         List<PedidoItensCompraDto> listDto = itens.stream().map(PedidoItensCompraDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
@@ -55,7 +55,7 @@ public class PedidoCompraResource {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PedidoCompraDto> findById(@PathVariable Integer id){
+    public ResponseEntity<PedidoCompraDto> findById(@PathVariable Long id){
         PedidoCompra obj = pedidoCompraService.findById(id);
         return ResponseEntity.ok().body(new PedidoCompraDto(obj));
     }

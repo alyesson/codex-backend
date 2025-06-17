@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 
-public interface PedidoCompraRepository extends JpaRepository<PedidoCompra, Integer> {
+public interface PedidoCompraRepository extends JpaRepository<PedidoCompra, Long> {
 
     //List<PedidoCompra> findAll();
 
     @Modifying
     @Transactional
     @Query("UPDATE PedidoCompra u SET u.situacao = :situacao WHERE u.id = :id")
-    void saveSituacao(@Param("id") Integer id, @Param("situacao") String situacao);
+    void saveSituacao(@Param("id") Long id, @Param("situacao") String situacao);
 }

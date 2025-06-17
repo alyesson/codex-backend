@@ -31,21 +31,21 @@ public class ContasResource {
 
     /*@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ContasDto> update(@PathVariable Integer id, @Valid @RequestBody ContasDto contasDto){
+    public ResponseEntity<ContasDto> update(@PathVariable Long id, @Valid @RequestBody ContasDto contasDto){
         Contas obj = contasService.update(id, contasDto);
         return ResponseEntity.ok().body(new ContasDto((obj)));
     }*/
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ContasDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ContasDto> delete(@PathVariable Long id){
         contasService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ContasDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ContasDto> findById(@PathVariable Long id){
         Contas objGrupo = contasService.findById(id);
         return ResponseEntity.ok().body(new ContasDto(objGrupo));
     }

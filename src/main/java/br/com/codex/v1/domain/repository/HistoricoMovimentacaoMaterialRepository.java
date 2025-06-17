@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface HistoricoMovimentacaoMaterialRepository extends JpaRepository<HistoricoMovimentacaoMaterial, Integer> {
+public interface HistoricoMovimentacaoMaterialRepository extends JpaRepository<HistoricoMovimentacaoMaterial, Long> {
 
     List<HistoricoMovimentacaoMaterial> findAllByOrderByIdDesc();
 

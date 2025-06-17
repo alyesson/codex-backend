@@ -17,7 +17,7 @@ public class MotivoAcerto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String descricao;
 
@@ -25,7 +25,7 @@ public class MotivoAcerto implements Serializable {
         super();
     }
 
-    public MotivoAcerto(Integer id, String codigo, String descricao) {
+    public MotivoAcerto(Long id, String codigo, String descricao) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -37,11 +37,11 @@ public class MotivoAcerto implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

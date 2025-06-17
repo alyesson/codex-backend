@@ -17,7 +17,7 @@ public class Departamento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String descricao;
     protected String centroCusto;
@@ -26,7 +26,7 @@ public class Departamento implements Serializable {
         super();
     }
 
-    public Departamento(Integer id, String codigo, String descricao, String centroCusto) {
+    public Departamento(Long id, String codigo, String descricao, String centroCusto) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -40,11 +40,11 @@ public class Departamento implements Serializable {
         this.centroCusto = obj.getCentroCusto();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

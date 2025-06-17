@@ -37,20 +37,20 @@ public class EmpresaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<EmpresaDto> update(@PathVariable Integer id, @Valid @RequestBody EmpresaDto empresaDto){
+    public ResponseEntity<EmpresaDto> update(@PathVariable Long id, @Valid @RequestBody EmpresaDto empresaDto){
         Empresa obj = empresaService.update(id, empresaDto);
         return ResponseEntity.ok().body(new EmpresaDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<EmpresaDto> delete(@PathVariable Integer id){
+    public ResponseEntity<EmpresaDto> delete(@PathVariable Long id){
         empresaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<EmpresaDto> findById(@PathVariable Integer id){
+    public ResponseEntity<EmpresaDto> findById(@PathVariable Long id){
         Empresa objEmpresa = empresaService.findById(id);
         return ResponseEntity.ok().body(new EmpresaDto(objEmpresa));
     }

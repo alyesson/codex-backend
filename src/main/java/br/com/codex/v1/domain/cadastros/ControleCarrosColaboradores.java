@@ -17,7 +17,7 @@ public class ControleCarrosColaboradores implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nomeColaborador;
     protected String departamento;
     protected String veiculo;
@@ -32,7 +32,7 @@ public class ControleCarrosColaboradores implements Serializable {
         super();
     }
 
-    public ControleCarrosColaboradores(Integer id, String nomeColaborador, String departamento, String veiculo, String corVeiculo, String anoVeiculo, String marcaVeiculo, String placaVeiculo, String contatoColaborador, String ultimaModificacao) {
+    public ControleCarrosColaboradores(Long id, String nomeColaborador, String departamento, String veiculo, String corVeiculo, String anoVeiculo, String marcaVeiculo, String placaVeiculo, String contatoColaborador, String ultimaModificacao) {
         this.id = id;
         this.nomeColaborador = nomeColaborador;
         this.departamento = departamento;
@@ -58,11 +58,11 @@ public class ControleCarrosColaboradores implements Serializable {
         this.ultimaModificacao = obj.getUltimaModificacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

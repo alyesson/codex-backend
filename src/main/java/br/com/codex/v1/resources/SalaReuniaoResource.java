@@ -31,21 +31,21 @@ public class SalaReuniaoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SalaReuniaoDto> update(@PathVariable Integer id, @Valid @RequestBody SalaReuniaoDto salaReuniaoDto){
+    public ResponseEntity<SalaReuniaoDto> update(@PathVariable Long id, @Valid @RequestBody SalaReuniaoDto salaReuniaoDto){
         SalaReuniao objSalaReuniao = salaReuniaoService.update(id, salaReuniaoDto);
         return ResponseEntity.ok().body(new SalaReuniaoDto((objSalaReuniao)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SalaReuniaoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<SalaReuniaoDto> delete(@PathVariable Long id){
         salaReuniaoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SalaReuniaoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<SalaReuniaoDto> findById(@PathVariable Long id){
         SalaReuniao objSalaReuniao = salaReuniaoService.findById(id);
         return ResponseEntity.ok().body(new SalaReuniaoDto(objSalaReuniao));
     }

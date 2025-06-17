@@ -31,19 +31,19 @@ public class AgendaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<AgendaDto> update(@PathVariable Integer id, @Valid @RequestBody AgendaDto agendaDto){
+    public ResponseEntity<AgendaDto> update(@PathVariable Long id, @Valid @RequestBody AgendaDto agendaDto){
         Agenda objAgenda = agendaService.update(id, agendaDto);
         return ResponseEntity.ok().body(new AgendaDto((objAgenda)));
     }
 
     @DeleteMapping(value = "/remove_sala")
-    public ResponseEntity<AgendaDto> delete(@RequestParam("nomeReserva") String nomeReserva, @RequestParam("id") Integer id){
+    public ResponseEntity<AgendaDto> delete(@RequestParam("nomeReserva") String nomeReserva, @RequestParam("id") Long id){
         agendaService.delete(nomeReserva, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AgendaDto> findById(@PathVariable Integer id){
+    public ResponseEntity<AgendaDto> findById(@PathVariable Long id){
         Agenda objAgenda = agendaService.findById(id);
         return ResponseEntity.ok().body(new AgendaDto(objAgenda));
     }

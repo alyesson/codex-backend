@@ -33,21 +33,21 @@ public class CadastroColaboradoresResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CadastroColaboradoresDto> update (@PathVariable Integer id, @Valid @RequestBody CadastroColaboradoresDto cadastroColaboradoresDto){
+    public ResponseEntity<CadastroColaboradoresDto> update (@PathVariable Long id, @Valid @RequestBody CadastroColaboradoresDto cadastroColaboradoresDto){
         CadastroColaboradores obj = cadastroColaboradoresService.update(id, cadastroColaboradoresDto);
         return ResponseEntity.ok().body(new CadastroColaboradoresDto(obj));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CadastroColaboradoresDto> delete(@PathVariable Integer id){
+    public ResponseEntity<CadastroColaboradoresDto> delete(@PathVariable Long id){
         cadastroColaboradoresService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CadastroColaboradoresDto> findById(@PathVariable Integer id){
+    public ResponseEntity<CadastroColaboradoresDto> findById(@PathVariable Long id){
         CadastroColaboradores objColaborador = cadastroColaboradoresService.findById(id);
         return ResponseEntity.ok().body(new CadastroColaboradoresDto(objColaborador));
     }

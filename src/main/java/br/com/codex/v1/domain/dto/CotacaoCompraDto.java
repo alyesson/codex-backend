@@ -12,7 +12,7 @@ public class CotacaoCompraDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected Integer numeroSolicitacao;
     protected String solicitante;
     protected Date dataSolicitacao;
@@ -54,11 +54,11 @@ public class CotacaoCompraDto implements Serializable {
         this.link = obj.getLink();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

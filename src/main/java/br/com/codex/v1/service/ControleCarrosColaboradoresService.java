@@ -24,19 +24,19 @@ public class ControleCarrosColaboradoresService {
         ControleCarrosColaboradores centroDeCusto = new ControleCarrosColaboradores(controleCarrosDto);
         return controleCarrosColaboradoresRepository.save(centroDeCusto);
     }
-    public ControleCarrosColaboradores update(Integer id, ControleCarrosColaboradoresDto controleCarrosDto) {
+    public ControleCarrosColaboradores update(Long id, ControleCarrosColaboradoresDto controleCarrosDto) {
         controleCarrosDto.setId(id);
         ControleCarrosColaboradores obj = findById(id);
         obj = new ControleCarrosColaboradores(controleCarrosDto);
         return controleCarrosColaboradoresRepository.save(obj);
     }
 
-    public ControleCarrosColaboradores findById(Integer id) {
+    public ControleCarrosColaboradores findById(Long id) {
         Optional<ControleCarrosColaboradores> obj = controleCarrosColaboradoresRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Veículo não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         controleCarrosColaboradoresRepository.deleteById(id);
     }
 

@@ -21,7 +21,7 @@ public class CriteriosAvaliacaoService {
         return criteriosAvaliacaoRepository.findAll();
     }
 
-    public CriteriosAvaliacao findById(Integer id) {
+    public CriteriosAvaliacao findById(Long id) {
         Optional<CriteriosAvaliacao> objCriterio = criteriosAvaliacaoRepository.findById(id);
         return objCriterio.orElseThrow(() -> new ObjectNotFoundException("Critério de avaliação não encontrado"));
     }
@@ -40,7 +40,7 @@ public class CriteriosAvaliacaoService {
             return criteriosAvaliacaoRepository.save(objCriterio);
     }
 
-    public CriteriosAvaliacao update(Integer id,CriteriosAvaliacaoDto criteriosAvaliacaoDto) {
+    public CriteriosAvaliacao update(Long id,CriteriosAvaliacaoDto criteriosAvaliacaoDto) {
 
         if(criteriosAvaliacaoDto.getCriterio().isEmpty()){
             throw new DataIntegrityViolationException("O nome do critério não pode ficar em branco");
@@ -56,7 +56,7 @@ public class CriteriosAvaliacaoService {
         return criteriosAvaliacaoRepository.save(objCriterio);
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         criteriosAvaliacaoRepository.deleteById(id);
     }
 }

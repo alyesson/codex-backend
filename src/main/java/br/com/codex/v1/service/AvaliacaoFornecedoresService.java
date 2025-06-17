@@ -39,7 +39,7 @@ public class AvaliacaoFornecedoresService {
         return objAvaliacaoFornecedores;
     }
 
-    public List<AvaliacaoFornecedoresDetalhes> findAllItensByAvaliacaoId(Integer avaliacaoId) {
+    public List<AvaliacaoFornecedoresDetalhes> findAllItensByAvaliacaoId(Long avaliacaoId) {
         return avaliacaoFornecedoresItensRepository.findByAvaliacaoFornecedoresId(avaliacaoId);
     }
 
@@ -47,12 +47,12 @@ public class AvaliacaoFornecedoresService {
         return avaliacaoFornecedoresRepository.findAll();
     }
 
-    public AvaliacaoFornecedores findById(Integer id) {
+    public AvaliacaoFornecedores findById(Long id) {
         Optional<AvaliacaoFornecedores> objAvaliacaoFornecedores = avaliacaoFornecedoresRepository.findById(id);
         return objAvaliacaoFornecedores.orElseThrow(() -> new ObjectNotFoundException("Avaliação não encontrada"));
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         avaliacaoFornecedoresRepository.deleteById(id);
     }
 }

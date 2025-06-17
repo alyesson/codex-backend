@@ -17,7 +17,7 @@ public class CriteriosAvaliacao implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String criterio;
     protected float peso;
     protected String descricao;
@@ -26,7 +26,7 @@ public class CriteriosAvaliacao implements Serializable {
         super();
     }
 
-    public CriteriosAvaliacao(Integer id, String criterio, float peso, String descricao) {
+    public CriteriosAvaliacao(Long id, String criterio, float peso, String descricao) {
         this.id = id;
         this.criterio = criterio;
         this.peso = peso;
@@ -40,11 +40,11 @@ public class CriteriosAvaliacao implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

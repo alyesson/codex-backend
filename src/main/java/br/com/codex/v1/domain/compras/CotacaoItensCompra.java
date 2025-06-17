@@ -13,7 +13,7 @@ public class CotacaoItensCompra implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String descricaoProduto;
     protected Integer quantidade;
@@ -33,7 +33,7 @@ public class CotacaoItensCompra implements Serializable {
         super();
     }
 
-    public CotacaoItensCompra(Integer id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, BigDecimal ipi, BigDecimal pis, BigDecimal icms, BigDecimal cofins, BigDecimal desconto, BigDecimal precoTotal, CotacaoCompra cotacaoCompra) {
+    public CotacaoItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, BigDecimal ipi, BigDecimal pis, BigDecimal icms, BigDecimal cofins, BigDecimal desconto, BigDecimal precoTotal, CotacaoCompra cotacaoCompra) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.descricaoProduto = descricaoProduto;
@@ -49,11 +49,11 @@ public class CotacaoItensCompra implements Serializable {
         this.cotacaoCompra = cotacaoCompra;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

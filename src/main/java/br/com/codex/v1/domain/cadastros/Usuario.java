@@ -17,7 +17,7 @@ public class Usuario extends Pessoa {
         super();
     }
 
-    public Usuario(Integer id, String nome, String cpf, Date nascimento, String sexo, String telefone, String endereco, String bairro, String cidade, String uf, String cep, String email, String senha, String departamento, String centroCusto) {
+    public Usuario(Long id, String nome, String cpf, Date nascimento, String sexo, String telefone, String endereco, String bairro, String cidade, String uf, String cep, String email, String senha, String departamento, String centroCusto) {
         super(id, nome, cpf, nascimento, sexo, telefone, endereco, bairro, cidade, uf, cep, email, senha, departamento, centroCusto);
     }
 

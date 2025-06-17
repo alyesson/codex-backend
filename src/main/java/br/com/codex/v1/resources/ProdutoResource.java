@@ -31,21 +31,21 @@ public class ProdutoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_COMPRAS', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @Valid @RequestBody ProdutoDto produtoDto){
+    public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @Valid @RequestBody ProdutoDto produtoDto){
         Produto objProd = produtoService.update(id, produtoDto);
         return ResponseEntity.ok().body(new ProdutoDto(objProd));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ProdutoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ProdutoDto> delete(@PathVariable Long id){
         produtoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProdutoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ProdutoDto> findById(@PathVariable Long id){
         Produto objProd = produtoService.findById(id);
         return ResponseEntity.ok().body(new ProdutoDto(objProd));
     }

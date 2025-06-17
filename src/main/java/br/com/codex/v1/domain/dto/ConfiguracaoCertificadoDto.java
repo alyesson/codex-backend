@@ -20,7 +20,7 @@ public class ConfiguracaoCertificadoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "O nome do certificado não pode estar em branco")
     private String nome;

@@ -14,7 +14,7 @@ public class EntradaMaterialDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "Código do produto não pode estar em branco")
     protected String codigoProduto;
     @NotNull(message = "Descrição do produto não pode estar em branco")
@@ -57,11 +57,11 @@ public class EntradaMaterialDto implements Serializable {
         this.unidadeComercial = obj.getUnidadeComercial();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

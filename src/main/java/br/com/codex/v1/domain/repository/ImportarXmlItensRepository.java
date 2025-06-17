@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ImportarXmlItensRepository extends JpaRepository<ImportarXmlItens, Integer> {
+public interface ImportarXmlItensRepository extends JpaRepository<ImportarXmlItens, Long> {
 
     @Query("SELECT i FROM ImportarXmlItens i WHERE i.numeroNotaFiscal = :numeroNotaFiscal")
     List<ImportarXmlItens> findByNumero(@Param("numeroNotaFiscal") String numeroNotaFiscal);

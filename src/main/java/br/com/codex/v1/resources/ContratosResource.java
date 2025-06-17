@@ -29,7 +29,7 @@ public class ContratosResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ContratosDto> findById(@PathVariable Integer id) {
+    public ResponseEntity<ContratosDto> findById(@PathVariable Long id) {
         Contratos obj = contratosService.findById(id);
         return ResponseEntity.ok().body(new ContratosDto(obj));
     }
@@ -108,7 +108,7 @@ public class ContratosResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<String> update(@Valid @PathVariable Integer id,
+    public ResponseEntity<String> update(@Valid @PathVariable Long id,
                                          @RequestParam("nomeContrato") String nomeContrato,
                                          @RequestParam("inicioContrato") Date inicioContrato,
                                          @RequestParam("terminoContrato") Date terminoContrato,
@@ -173,14 +173,14 @@ public class ContratosResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         contratosService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/downloads/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) {
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long id) {
         Contratos objDoc = contratosService.findById(id);
         byte[] fileBytes = objDoc.getArquivo();
 

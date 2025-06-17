@@ -76,20 +76,20 @@ public class ControlePortariaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'PORTARIA')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ControlePortariaDto> update(@PathVariable Integer id, @Valid @RequestBody ControlePortariaDto controlePortariaDto){
+    public ResponseEntity<ControlePortariaDto> update(@PathVariable Long id, @Valid @RequestBody ControlePortariaDto controlePortariaDto){
         ControlePortaria obj = controlePortariaService.update(id, controlePortariaDto);
         return ResponseEntity.ok().body(new ControlePortariaDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ControlePortariaDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ControlePortariaDto> delete(@PathVariable Long id){
         controlePortariaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ControlePortariaDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ControlePortariaDto> findById(@PathVariable Long id){
         ControlePortaria objGrupo = controlePortariaService.findById(id);
         return ResponseEntity.ok().body(new ControlePortariaDto(objGrupo));
     }

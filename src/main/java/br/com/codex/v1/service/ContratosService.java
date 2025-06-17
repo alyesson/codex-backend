@@ -16,7 +16,7 @@ public class ContratosService {
     @Autowired
     private ContratosRepository contratosRepository;
 
-    public Contratos findById(Integer id) {
+    public Contratos findById(Long id) {
         Optional<Contratos> obj = contratosRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Contrato não encontrado!"));
     }
@@ -38,7 +38,7 @@ public class ContratosService {
         return contratosRepository.save(objContrato);
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         findById(id);
         contratosRepository.deleteById(id);
     }

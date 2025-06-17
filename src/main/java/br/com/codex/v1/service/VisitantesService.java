@@ -30,19 +30,19 @@ public class VisitantesService {
         return visitantesRepository.save(visitantes);
     }
 
-    public Visitantes update(Integer id, VisitantesDto visitantesDto) {
+    public Visitantes update(Long id, VisitantesDto visitantesDto) {
         visitantesDto.setId(id);
         Visitantes obj = findById(id);
         obj = new Visitantes(visitantesDto);
         return visitantesRepository.save(obj);
     }
 
-    public Visitantes findById(Integer id) {
+    public Visitantes findById(Long id) {
         Optional<Visitantes> obj = visitantesRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Centro de custo não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         visitantesRepository.deleteById(id);
     }
 

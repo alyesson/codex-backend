@@ -23,19 +23,19 @@ public class DepartamentoService {
         Departamento grupo = new Departamento(subgrupoDto);
         return departamentoRepository.save(grupo);
     }
-    public Departamento update(Integer id, DepartamentoDto subgrupoDto) {
+    public Departamento update(Long id, DepartamentoDto subgrupoDto) {
         subgrupoDto.setId(id);
         Departamento obj = findById(id);
         obj = new Departamento(subgrupoDto);
         return departamentoRepository.save(obj);
     }
 
-    public Departamento findById(Integer id) {
+    public Departamento findById(Long id) {
         Optional<Departamento> obj = departamentoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Departamento não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         departamentoRepository.deleteById(id);
     }
 

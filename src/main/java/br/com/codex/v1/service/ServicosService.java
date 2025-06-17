@@ -25,14 +25,14 @@ public class ServicosService {
         return servicosRepository.save(servicos);
     }
 
-    public Servicos update(Integer id, ServicosDto servicosDto) {
+    public Servicos update(Long id, ServicosDto servicosDto) {
         servicosDto.setId(id);
         Servicos obj = findById(id);
         obj = new Servicos(servicosDto);
         return servicosRepository.save(obj);
     }
 
-    public Servicos findById(Integer id) {
+    public Servicos findById(Long id) {
         Optional<Servicos> obj = servicosRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Serviço não encontrado"));
     }
@@ -42,7 +42,7 @@ public class ServicosService {
         return objServico.orElseThrow(() -> new ObjectNotFoundException("Não foi encontrado nenhum serviço de nome " +codigo));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         servicosRepository.deleteById(id);
     }
 

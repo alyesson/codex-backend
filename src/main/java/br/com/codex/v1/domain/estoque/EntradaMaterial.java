@@ -21,7 +21,7 @@ public class EntradaMaterial implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String produto;
     protected Date dataEntrada;
@@ -42,7 +42,7 @@ public class EntradaMaterial implements Serializable {
         super();
     }
 
-    public EntradaMaterial(Integer id, String codigoProduto, String produto, Date dataEntrada, String fornecedor, String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota, BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade, String autor, String motivoAcerto, String unidadeComercial) {
+    public EntradaMaterial(Long id, String codigoProduto, String produto, Date dataEntrada, String fornecedor, String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota, BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade, String autor, String motivoAcerto, String unidadeComercial) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.produto = produto;

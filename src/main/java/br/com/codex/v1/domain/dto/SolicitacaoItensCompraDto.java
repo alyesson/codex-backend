@@ -10,7 +10,7 @@ public class SolicitacaoItensCompraDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String descricaoProduto;
     protected Integer quantidade;
@@ -32,11 +32,11 @@ public class SolicitacaoItensCompraDto implements Serializable {
         this.precoUnitario = obj.getPrecoUnitario();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

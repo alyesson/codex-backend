@@ -18,7 +18,7 @@ public class Agenda implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String tituloAgenda;
     protected String nomeReserva;
     protected String sala;
@@ -30,7 +30,7 @@ public class Agenda implements Serializable {
         super();
     }
 
-    public Agenda(Integer id, String tituloAgenda, String nomeReserva, String sala, String cor, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+    public Agenda(Long id, String tituloAgenda, String nomeReserva, String sala, String cor, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
         this.id = id;
         this.tituloAgenda = tituloAgenda;
         this.nomeReserva = nomeReserva;
@@ -50,11 +50,11 @@ public class Agenda implements Serializable {
         this.dataHoraFim = obj.getDataHoraFim();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

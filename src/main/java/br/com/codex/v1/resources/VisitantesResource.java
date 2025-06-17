@@ -32,13 +32,13 @@ public class VisitantesResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<VisitantesDto> delete(@PathVariable Integer id){
+    public ResponseEntity<VisitantesDto> delete(@PathVariable Long id){
         visitantesService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<VisitantesDto> findById(@PathVariable Integer id){
+    public ResponseEntity<VisitantesDto> findById(@PathVariable Long id){
         Visitantes objVisitante = visitantesService.findById(id);
         return ResponseEntity.ok().body(new VisitantesDto(objVisitante));
     }

@@ -25,14 +25,14 @@ public class CadastroColaboradoresService {
         return cadastroColaboradoresRepository.save(centroDeCusto);
     }
 
-    public CadastroColaboradores update(Integer id, CadastroColaboradoresDto cadastroColaboradoresDto) {
+    public CadastroColaboradores update(Long id, CadastroColaboradoresDto cadastroColaboradoresDto) {
         cadastroColaboradoresDto.setId(id);
         CadastroColaboradores obj = findById(id);
         obj = new CadastroColaboradores(cadastroColaboradoresDto);
         return cadastroColaboradoresRepository.save(obj);
     }
 
-    public CadastroColaboradores findById(Integer id) {
+    public CadastroColaboradores findById(Long id) {
         Optional<CadastroColaboradores> obj = cadastroColaboradoresRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Funcionário não encontrado"));
     }
@@ -42,7 +42,7 @@ public class CadastroColaboradoresService {
         return obj.orElseThrow(() -> new ObjectNotFoundException("Funcionário não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         cadastroColaboradoresRepository.deleteById(id);
     }
 

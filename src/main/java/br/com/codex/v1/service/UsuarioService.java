@@ -46,7 +46,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario update(Integer id, UsuarioDto usuariodto) {
+    public Usuario update(Long id, UsuarioDto usuariodto) {
         usuariodto.setId(id);
         Usuario objUsuario = findById(id); // Recupera o usuário atual do banco de dados
 
@@ -58,11 +58,11 @@ public class UsuarioService {
         return usuarioRepository.save(objUsuario);
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         usuarioRepository.deleteById(id);
     }
 
-    public Usuario findById(Integer id){
+    public Usuario findById(Long id){
         Optional<Usuario> objId = usuarioRepository.findById(id);
         return objId.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
     }

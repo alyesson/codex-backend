@@ -15,7 +15,7 @@ public class ImportarXmlItens implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String numeroNotaFiscal;
     private String nomeProduto;
     private String codigoProduto;
@@ -104,7 +104,7 @@ public class ImportarXmlItens implements Serializable {
         super();
     }
 
-    public ImportarXmlItens(Integer id, String numeroNotaFiscal, String nomeProduto, String codigoProduto, String ncmSh, String cfop, String item, String unidadeComercial, BigDecimal quantidadeComercial, BigDecimal valorUnitarioComercial, BigDecimal valorTotalProdutos, String unidadeTributacao, BigDecimal quantidadeTributacao, BigDecimal valorUnitarioTributacao, BigDecimal valorDesconto, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorOutro, String informacaoAdicional, String validadeLote, String fabricacaoLote, String numeroLote, String cstIcms, String modBc, String origIcms, BigDecimal aliqIcms, BigDecimal bcIcms, BigDecimal valorIcms, BigDecimal aliqFcp, BigDecimal valorFcp, String modBcSt, String motDesIcms, BigDecimal valorIcmsDesonerado, BigDecimal aliqFcpSt, BigDecimal aliqIcmsSt, BigDecimal percentMargemIcmsSt, BigDecimal percentRedBc, BigDecimal percentRedBcSt, BigDecimal valorIcmsSt, BigDecimal valorFcpSt, BigDecimal bcIcmsSt, BigDecimal bcFcp, BigDecimal bcFcpSt, BigDecimal aliqIcmsDiferido, BigDecimal valorIcmsDiferido, BigDecimal valorIcmsOperacao, BigDecimal aliqFcpStRetido, BigDecimal aliqIcmsEfetivo, BigDecimal percentRedBcEfetivo, BigDecimal bcIcmsEfetivo, BigDecimal bcFcpStRetido, BigDecimal valorIcmsEfetivo, BigDecimal valorIcmsSubstituto, BigDecimal valorFcpStRetido, String csoSn, BigDecimal pstIcms, BigDecimal aliqCredSn, BigDecimal valorCredIcmsSn, BigDecimal bcIcmsStRetido, BigDecimal bcIcmsStDestino, BigDecimal valorIcmsStRetido, BigDecimal valorIcmsStDestino, BigDecimal percentBcOperacao, String ufIcmsSt, String cstPis, BigDecimal aliqPis, BigDecimal bcPis, BigDecimal valorPis, String cstCofins, BigDecimal aliqCofins, BigDecimal quantVendidaCofins, BigDecimal valorAliqCofinsRs, BigDecimal bcCofins, BigDecimal valorCofins, String enquadramentoIpi, String cnpjProdIpi, String codigoSeloIpi, BigDecimal quantidadeSeloIpi, String cstIpi, BigDecimal aliqIpi, BigDecimal quantUniIpi, BigDecimal bcIpi, BigDecimal valorIpi, BigDecimal valorUniIpi) {
+    public ImportarXmlItens(Long id, String numeroNotaFiscal, String nomeProduto, String codigoProduto, String ncmSh, String cfop, String item, String unidadeComercial, BigDecimal quantidadeComercial, BigDecimal valorUnitarioComercial, BigDecimal valorTotalProdutos, String unidadeTributacao, BigDecimal quantidadeTributacao, BigDecimal valorUnitarioTributacao, BigDecimal valorDesconto, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorOutro, String informacaoAdicional, String validadeLote, String fabricacaoLote, String numeroLote, String cstIcms, String modBc, String origIcms, BigDecimal aliqIcms, BigDecimal bcIcms, BigDecimal valorIcms, BigDecimal aliqFcp, BigDecimal valorFcp, String modBcSt, String motDesIcms, BigDecimal valorIcmsDesonerado, BigDecimal aliqFcpSt, BigDecimal aliqIcmsSt, BigDecimal percentMargemIcmsSt, BigDecimal percentRedBc, BigDecimal percentRedBcSt, BigDecimal valorIcmsSt, BigDecimal valorFcpSt, BigDecimal bcIcmsSt, BigDecimal bcFcp, BigDecimal bcFcpSt, BigDecimal aliqIcmsDiferido, BigDecimal valorIcmsDiferido, BigDecimal valorIcmsOperacao, BigDecimal aliqFcpStRetido, BigDecimal aliqIcmsEfetivo, BigDecimal percentRedBcEfetivo, BigDecimal bcIcmsEfetivo, BigDecimal bcFcpStRetido, BigDecimal valorIcmsEfetivo, BigDecimal valorIcmsSubstituto, BigDecimal valorFcpStRetido, String csoSn, BigDecimal pstIcms, BigDecimal aliqCredSn, BigDecimal valorCredIcmsSn, BigDecimal bcIcmsStRetido, BigDecimal bcIcmsStDestino, BigDecimal valorIcmsStRetido, BigDecimal valorIcmsStDestino, BigDecimal percentBcOperacao, String ufIcmsSt, String cstPis, BigDecimal aliqPis, BigDecimal bcPis, BigDecimal valorPis, String cstCofins, BigDecimal aliqCofins, BigDecimal quantVendidaCofins, BigDecimal valorAliqCofinsRs, BigDecimal bcCofins, BigDecimal valorCofins, String enquadramentoIpi, String cnpjProdIpi, String codigoSeloIpi, BigDecimal quantidadeSeloIpi, String cstIpi, BigDecimal aliqIpi, BigDecimal quantUniIpi, BigDecimal bcIpi, BigDecimal valorIpi, BigDecimal valorUniIpi) {
         this.id = id;
         this.numeroNotaFiscal = numeroNotaFiscal;
         this.nomeProduto = nomeProduto;
@@ -278,11 +278,11 @@ public class ImportarXmlItens implements Serializable {
         this.valorUniIpi = obj.getValorUniIpi();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

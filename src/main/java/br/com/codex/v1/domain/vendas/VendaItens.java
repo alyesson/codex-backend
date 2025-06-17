@@ -16,7 +16,7 @@ public class VendaItens implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String cpf;
     protected String codigoProduto;
     protected String descricaoProduto;
@@ -28,7 +28,7 @@ public class VendaItens implements Serializable {
         super();
     }
 
-    public VendaItens(Integer id, String cpf, String codigoProduto, String descricaoProduto, Integer quantidade, BigDecimal valorProduto, BigDecimal valorTotal) {
+    public VendaItens(Long id, String cpf, String codigoProduto, String descricaoProduto, Integer quantidade, BigDecimal valorProduto, BigDecimal valorTotal) {
         this.id = id;
         this.cpf = cpf;
         this.codigoProduto = codigoProduto;
@@ -48,11 +48,11 @@ public class VendaItens implements Serializable {
         this.valorTotal = objItens.getValorTotal();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

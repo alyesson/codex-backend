@@ -11,16 +11,16 @@ public class LancamentoContabilDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private Long id;
     private Date dataLancamento;
     private BigDecimal valor;
-    private Integer contaDebitoId;
+    private Long contaDebitoId;
     private String contaDebitoNome;
-    private Integer contaCreditoId;
+    private Long contaCreditoId;
     private String contaCreditoNome;
-    private Integer historicoPadraoId;
+    private Long historicoPadraoId;
     private String historicoPadraoDescricao;
-    private Integer notaFiscalOrigemId;
+    private Long notaFiscalOrigemId;
     private String notaFiscalNumero;
     private String complementoHistorico; // opcional, se quiser adicionar infos extras
 
@@ -42,11 +42,11 @@ public class LancamentoContabilDto implements Serializable {
         this.complementoHistorico = obj.getComplementoHistorico();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -66,27 +66,27 @@ public class LancamentoContabilDto implements Serializable {
         this.valor = valor;
     }
 
-    public Integer getContaDebitoId() {
+    public Long getContaDebitoId() {
         return contaDebitoId;
     }
 
-    public void setContaDebitoId(Integer contaDebitoId) {
+    public void setContaDebitoId(Long contaDebitoId) {
         this.contaDebitoId = contaDebitoId;
     }
 
-    public Integer getContaCreditoId() {
+    public Long getContaCreditoId() {
         return contaCreditoId;
     }
 
-    public void setContaCreditoId(Integer contaCreditoId) {
+    public void setContaCreditoId(Long contaCreditoId) {
         this.contaCreditoId = contaCreditoId;
     }
 
-    public Integer getHistoricoPadraoId() {
+    public Long getHistoricoPadraoId() {
         return historicoPadraoId;
     }
 
-    public void setHistoricoPadraoId(Integer historicoPadraoId) {
+    public void setHistoricoPadraoId(Long historicoPadraoId) {
         this.historicoPadraoId = historicoPadraoId;
     }
 
@@ -98,11 +98,11 @@ public class LancamentoContabilDto implements Serializable {
         this.historicoPadraoDescricao = historicoPadraoDescricao;
     }
 
-    public Integer getNotaFiscalOrigemId() {
+    public Long getNotaFiscalOrigemId() {
         return notaFiscalOrigemId;
     }
 
-    public void setNotaFiscalOrigemId(Integer notaFiscalOrigemId) {
+    public void setNotaFiscalOrigemId(Long notaFiscalOrigemId) {
         this.notaFiscalOrigemId = notaFiscalOrigemId;
     }
 

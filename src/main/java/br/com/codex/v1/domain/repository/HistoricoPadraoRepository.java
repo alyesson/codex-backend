@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface HistoricoPadraoRepository extends JpaRepository<HistoricoPadrao, Integer> {
+public interface HistoricoPadraoRepository extends JpaRepository<HistoricoPadrao, Long> {
 
     Optional<HistoricoPadrao> findByCodigo(String codigo);
     Optional<HistoricoPadrao> findByDescricao(String descricao);

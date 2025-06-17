@@ -17,7 +17,7 @@ public class AtendimentosDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String solicitante;
     @Email
     protected String email;
@@ -69,11 +69,11 @@ public class AtendimentosDto implements Serializable {
         this.situacao = obj.getSituacao().getCodigo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

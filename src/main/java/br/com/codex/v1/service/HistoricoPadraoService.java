@@ -24,19 +24,19 @@ public class HistoricoPadraoService {
         return historicoPadraoRepository.save(historicoPadrao);
     }
 
-    public HistoricoPadrao update(Integer id, HistoricoPadraoDto historicoPadraoDto) {
+    public HistoricoPadrao update(Long id, HistoricoPadraoDto historicoPadraoDto) {
         historicoPadraoDto.setId(id);
         HistoricoPadrao obj = findById(id);
         obj = new HistoricoPadrao(historicoPadraoDto);
         return historicoPadraoRepository.save(obj);
     }
 
-    public HistoricoPadrao findById(Integer id) {
+    public HistoricoPadrao findById(Long id) {
         Optional<HistoricoPadrao> obj = historicoPadraoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Histórico Padrão não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         historicoPadraoRepository.deleteById(id);
     }
 

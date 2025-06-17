@@ -18,7 +18,7 @@ public class Grupo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String descricao;
 
@@ -26,7 +26,7 @@ public class Grupo implements Serializable {
         super();
     }
 
-    public Grupo(Integer id, String codigo, String descricao) {
+    public Grupo(Long id, String codigo, String descricao) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -38,11 +38,11 @@ public class Grupo implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

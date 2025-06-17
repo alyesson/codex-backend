@@ -17,7 +17,7 @@ public class Visitantes implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nome;
     @Column(unique = true)
     protected String cpf;
@@ -36,7 +36,7 @@ public class Visitantes implements Serializable {
         super();
     }
 
-    public Visitantes(Integer id, String nome, String cpf, String empresa, Date nascimento, String sexo, String telefone, String endereco, String bairro, String cidade, String uf, String cep, LocalDate dataCadastro) {
+    public Visitantes(Long id, String nome, String cpf, String empresa, Date nascimento, String sexo, String telefone, String endereco, String bairro, String cidade, String uf, String cep, LocalDate dataCadastro) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -67,11 +67,11 @@ public class Visitantes implements Serializable {
         this.dataCadastro = obj.getDataCadastro();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

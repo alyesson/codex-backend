@@ -34,19 +34,19 @@ public class AtendimentosService {
         return atendimentosRepository.save(novoAtendimento(atendimentosDto));
     }
 
-    public Atendimentos update(Integer id, AtendimentosDto atendimentosDto) {
+    public Atendimentos update(Long id, AtendimentosDto atendimentosDto) {
         atendimentosDto.setId(id);
         Atendimentos obj = findById(id);
         obj = novoAtendimento(atendimentosDto);
         return atendimentosRepository.save(obj);
     }
 
-    public Atendimentos findById(Integer id) {
+    public Atendimentos findById(Long id) {
         Optional<Atendimentos> obj = atendimentosRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Chamado não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         atendimentosRepository.deleteById(id);
     }
 

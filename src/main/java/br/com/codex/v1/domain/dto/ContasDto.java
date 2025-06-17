@@ -7,7 +7,7 @@ import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras
 
 public class ContasDto {
 
-    protected Integer id;
+    protected Long id;
     protected String conta;
     protected String nome;
     protected String reduzido;
@@ -37,11 +37,11 @@ public class ContasDto {
         this.observacao = obj.getObservacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

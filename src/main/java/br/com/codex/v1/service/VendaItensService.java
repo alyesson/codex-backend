@@ -26,7 +26,7 @@ public class VendaItensService {
         return vendaItensList;
     }
 
-    public VendaItens findById(Integer id) {
+    public VendaItens findById(Long id) {
         Optional<VendaItens> optionalVendaItens = vendaItensRepository.findById(id);
         return optionalVendaItens.orElseThrow(() -> new ObjectNotFoundException("Item de venda não encontrado"));
     }

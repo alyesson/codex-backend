@@ -31,21 +31,21 @@ public class ServicosResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ServicosDto> update(@PathVariable Integer id, @Valid @RequestBody ServicosDto servicosDto){
+    public ResponseEntity<ServicosDto> update(@PathVariable Long id, @Valid @RequestBody ServicosDto servicosDto){
         Servicos objServicos = servicosService.update(id, servicosDto);
         return ResponseEntity.ok().body(new ServicosDto((objServicos)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ServicosDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ServicosDto> delete(@PathVariable Long id){
         servicosService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ServicosDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ServicosDto> findById(@PathVariable Long id){
         Servicos objServicos = servicosService.findById(id);
         return ResponseEntity.ok().body(new ServicosDto(objServicos));
     }

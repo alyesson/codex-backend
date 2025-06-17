@@ -14,7 +14,7 @@ public class CadastroColaboradoresDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "Nome do colaborador não pode ficar em branco")
     protected String nomeColaborador;
     @NotNull(message = "Departamento não pode ficar em branco")
@@ -232,11 +232,11 @@ public class CadastroColaboradoresDto implements Serializable {
         this.salarioFamilia = obj.getSalarioFamilia();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

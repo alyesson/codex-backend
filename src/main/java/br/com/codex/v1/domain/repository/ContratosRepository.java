@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ContratosRepository extends JpaRepository<Contratos, Integer> {
+public interface ContratosRepository extends JpaRepository<Contratos, Long> {
 
     List<Contratos> findAllByOrderByIdDesc();
 }

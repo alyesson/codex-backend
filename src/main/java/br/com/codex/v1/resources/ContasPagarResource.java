@@ -31,7 +31,7 @@ public class ContasPagarResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'FINANCEIRO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ContaPagarDto> update(@PathVariable Integer id, @RequestParam String situacao){
+    public ResponseEntity<ContaPagarDto> update(@PathVariable Long id, @RequestParam String situacao){
         contasPagarService.update(id, situacao);
         return ResponseEntity.ok().build();
     }
@@ -45,14 +45,14 @@ public class ContasPagarResource {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ContaPagarDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ContaPagarDto> findById(@PathVariable Long id){
         ContaPagar obj = contasPagarService.findById(id);
         return ResponseEntity.ok().body(new ContaPagarDto(obj));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ContaPagarDto> delete (@PathVariable Integer id){
+    public ResponseEntity<ContaPagarDto> delete (@PathVariable Long id){
         contasPagarService.delete(id);
         return ResponseEntity.noContent().build();
     }

@@ -21,7 +21,7 @@ public class ConfiguracaoCertificadoService {
     @Autowired
     private ConfiguracaoCertificadoRepository configuracaoCertificadoRepository;
 
-    public ConfiguracaoCertificado findById(Integer id){
+    public ConfiguracaoCertificado findById(Long id){
         Optional<ConfiguracaoCertificado> certificado = configuracaoCertificadoRepository.findById(id);
         return certificado.orElseThrow(() -> new ObjectNotFoundException("Certificado não encontrado!"));
     }
@@ -54,7 +54,7 @@ public class ConfiguracaoCertificadoService {
         }
     }
 
-    public void delete(Integer id){
+    public void delete(Long id){
         configuracaoCertificadoRepository.deleteById(id);
     }
 }

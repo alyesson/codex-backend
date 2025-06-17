@@ -24,19 +24,19 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
-    public Agenda update(Integer id, AgendaDto agendaDto) {
+    public Agenda update(Long id, AgendaDto agendaDto) {
         agendaDto.setId(id);
         Agenda obj = findById(id);
         obj = new Agenda(agendaDto);
         return agendaRepository.save(obj);
     }
 
-    public Agenda findById(Integer id) {
+    public Agenda findById(Long id) {
         Optional<Agenda> obj = agendaRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Agenda não encontrada"));
     }
 
-    public void delete(String nomeReserva, Integer id) {
+    public void delete(String nomeReserva, Long id) {
         agendaRepository.deleteByNomeReservaAndId(nomeReserva, id);
     }
 

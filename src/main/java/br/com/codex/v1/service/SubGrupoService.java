@@ -23,19 +23,19 @@ public class SubGrupoService {
         SubGrupo grupo = new SubGrupo(subgrupoDto);
         return subgrupoRepository.save(grupo);
     }
-    public SubGrupo update(Integer id, SubGrupoDto subgrupoDto) {
+    public SubGrupo update(Long id, SubGrupoDto subgrupoDto) {
         subgrupoDto.setId(id);
         SubGrupo obj = findById(id);
         obj = new SubGrupo(subgrupoDto);
         return subgrupoRepository.save(obj);
     }
 
-    public SubGrupo findById(Integer id) {
+    public SubGrupo findById(Long id) {
         Optional<SubGrupo> obj = subgrupoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Subgrupo não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         subgrupoRepository.deleteById(id);
     }
 

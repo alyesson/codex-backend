@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.sql.Date;
 import java.util.List;
 
-public interface VendaRepository extends JpaRepository<Venda,Integer> {
+public interface VendaRepository extends JpaRepository<Venda,Long> {
     @Query("SELECT v FROM Venda v WHERE YEAR(v.dataVenda) = :ano")
     List<Venda> findAllByYear(@Param("ano") Integer ano);
 

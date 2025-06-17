@@ -31,21 +31,21 @@ public class MotivoAcertoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI','GERENTE_ESTOQUE')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<MotivoAcertoDto> update(@PathVariable Integer id, @Valid @RequestBody MotivoAcertoDto motivoacertoDto){
+    public ResponseEntity<MotivoAcertoDto> update(@PathVariable Long id, @Valid @RequestBody MotivoAcertoDto motivoacertoDto){
         MotivoAcerto objMotivoAcerto = motivoAcertoService.update(id, motivoacertoDto);
         return ResponseEntity.ok().body(new MotivoAcertoDto((objMotivoAcerto)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI','GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<MotivoAcertoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<MotivoAcertoDto> delete(@PathVariable Long id){
         motivoAcertoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<MotivoAcertoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<MotivoAcertoDto> findById(@PathVariable Long id){
         MotivoAcerto objMotivoAcerto = motivoAcertoService.findById(id);
         return ResponseEntity.ok().body(new MotivoAcertoDto(objMotivoAcerto));
     }

@@ -15,7 +15,7 @@ public class Aso implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     @Column(length = 60)
     protected String funcionario;
     @Column(length = 15)
@@ -46,7 +46,7 @@ public class Aso implements Serializable {
         super();
     }
 
-    public Aso(Integer id, String funcionario, String cpf,Integer idade, String matricula, String tipoAso, String cargo, String medicoEmitente, String crm, Date dataInicio, Date dataFim, Date dataRealizacao, String situacaoAtual, String observacao) {
+    public Aso(Long id, String funcionario, String cpf,Integer idade, String matricula, String tipoAso, String cargo, String medicoEmitente, String crm, Date dataInicio, Date dataFim, Date dataRealizacao, String situacaoAtual, String observacao) {
         this.id = id;
         this.funcionario = funcionario;
         this.cpf = cpf;
@@ -80,11 +80,11 @@ public class Aso implements Serializable {
         this.observacao = obj.getObservacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -37,13 +37,16 @@ public class NotaFiscal implements Serializable {
     @Column
     private String naturezaOperacao;
 
+    @Column(length = 2)
+    private String localDestino;
+
     @Column(length = 45)
     private String modelo;
 
     @Column(length = 5)
     private String serie;
 
-    @Column(length = 15)
+    @Column(length = 10)
     private String numero;
 
     @Column(length = 15)
@@ -52,7 +55,7 @@ public class NotaFiscal implements Serializable {
     @Column(length = 45)
     private String dhSaidaEntrada;
 
-    @Column(length = 45)
+    @Column(length = 5)
     private String tipo;
 
     @Column(length = 45)
@@ -220,7 +223,7 @@ public class NotaFiscal implements Serializable {
         super();
     }
 
-    public NotaFiscal(Long id, String codigoUf, String codigoNf, String naturezaOperacao, String modelo, String serie, String numero, LocalDate emissao, String dhSaidaEntrada,
+    public NotaFiscal(Long id, String codigoUf, String codigoNf, String naturezaOperacao, String localDestino, String modelo, String serie, String numero, LocalDate emissao, String dhSaidaEntrada,
                       String tipo, String indicadorPresenca, Integer indicadorFinal, String razaoSocialEmitente, String nomeFantasiaEmitente, String documentoEmitente,
                       String inscricaoEstadualEmitente, Integer inscricaoEstadualStEmitente, Integer inscricaoMunicipalEmitente, String cnaeEmitente, Integer regimeTributarioEmitente,
                       String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente, String telefoneEmitente, String logradouroEmitente,
@@ -237,6 +240,7 @@ public class NotaFiscal implements Serializable {
         this.codigoUf = codigoUf;
         this.codigoNf = codigoNf;
         this.naturezaOperacao = naturezaOperacao;
+        this.localDestino = localDestino;
         this.modelo = modelo;
         this.serie = serie;
         this.numero = numero;
@@ -318,6 +322,7 @@ public class NotaFiscal implements Serializable {
         this.codigoUf = obj.getCodigoUf();
         this.codigoNf = obj.getCodigoNf();
         this.naturezaOperacao = obj.getNaturezaOperacao();
+        this.localDestino = obj.getLocalDestino();
         this.modelo = obj.getModelo();
         this.serie = obj.getSerie();
         this.numero = obj.getNumero();

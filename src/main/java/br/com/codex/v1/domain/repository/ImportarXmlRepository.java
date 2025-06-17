@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Integer> {
+public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> {
 
     Optional<ImportarXml> findByChave(String chave);
 
@@ -23,7 +23,7 @@ public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Intege
     List<ImportarXml> findAllEntradaPeriodo(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
 
     @Query("SELECT n.id FROM ImportarXml n WHERE n.numero = :numero AND n.razaoSocialEmitente = :razaoSocialEmitente")
-    Optional<Integer> findIdByNumeroAndRazaoSocialEmitente(@Param("numero") String numero, @Param("razaoSocialEmitente") String razaoSocialEmitente);
+    Optional<Long> findIdByNumeroAndRazaoSocialEmitente(@Param("numero") String numero, @Param("razaoSocialEmitente") String razaoSocialEmitente);
 
     List<ImportarXml> findByEmissaoBetween(LocalDate inicio, LocalDate fim);
 }

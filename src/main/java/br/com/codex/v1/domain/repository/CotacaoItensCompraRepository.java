@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CotacaoItensCompraRepository extends JpaRepository<CotacaoItensCompra, Integer> {
+public interface CotacaoItensCompraRepository extends JpaRepository<CotacaoItensCompra, Long> {
 
-    List<CotacaoItensCompra> findByCotacaoCompraId(Integer solicitacaoId);
+    List<CotacaoItensCompra> findByCotacaoCompraId(Long solicitacaoId);
 }

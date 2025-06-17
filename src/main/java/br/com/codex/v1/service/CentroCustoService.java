@@ -25,19 +25,19 @@ public class CentroCustoService {
         return centroCustoRepository.save(centroDeCusto);
     }
 
-    public CentroCusto update(Integer id, CentroCustoDto centrocustoDto) {
+    public CentroCusto update(Long id, CentroCustoDto centrocustoDto) {
         centrocustoDto.setId(id);
         CentroCusto obj = findById(id);
         obj = new CentroCusto(centrocustoDto);
         return centroCustoRepository.save(obj);
     }
 
-    public CentroCusto findById(Integer id) {
+    public CentroCusto findById(Long id) {
         Optional<CentroCusto> obj = centroCustoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Centro de custo não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         centroCustoRepository.deleteById(id);
     }
 

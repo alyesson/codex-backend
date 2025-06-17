@@ -18,7 +18,7 @@ public class Servicos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String nome;
     protected String descricao;
@@ -44,7 +44,7 @@ public class Servicos implements Serializable {
         super();
     }
 
-    public Servicos(Integer id, String codigo, String nome, String descricao, String nbsCodigo, String nbsNome, String cnaeCodigo, String cnaeNome, BigDecimal valorVista, BigDecimal valorPrazo, BigDecimal baseCalculo, BigDecimal aliquotaPercentual, BigDecimal issPercentual, BigDecimal issValor, BigDecimal pisPercentual, BigDecimal pisValor, BigDecimal cofinsPercentual, BigDecimal cofinsValor, BigDecimal csllPercentual, BigDecimal cssValor, BigDecimal valorTotalServico) {
+    public Servicos(Long id, String codigo, String nome, String descricao, String nbsCodigo, String nbsNome, String cnaeCodigo, String cnaeNome, BigDecimal valorVista, BigDecimal valorPrazo, BigDecimal baseCalculo, BigDecimal aliquotaPercentual, BigDecimal issPercentual, BigDecimal issValor, BigDecimal pisPercentual, BigDecimal pisValor, BigDecimal cofinsPercentual, BigDecimal cofinsValor, BigDecimal csllPercentual, BigDecimal cssValor, BigDecimal valorTotalServico) {
         this.id = id;
         this.codigo = codigo;
         this.nome = nome;
@@ -93,11 +93,11 @@ public class Servicos implements Serializable {
     }
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -14,7 +14,7 @@ public class CidadesDto implements Serializable {
         @Serial
         private static final long serialVersionUID = 1L;
 
-        protected Integer id;
+        protected Long id;
         @NotBlank(message = "Código Uf não pode estar em branco")
         protected Integer codigoUf;
         @NotBlank(message = "Uf não pode estar em branco")

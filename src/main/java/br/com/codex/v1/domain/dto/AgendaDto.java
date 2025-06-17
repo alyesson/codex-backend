@@ -18,7 +18,7 @@ public class AgendaDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String tituloAgenda;
     protected String nomeReserva;
     protected String sala;
@@ -40,11 +40,11 @@ public class AgendaDto implements Serializable {
         this.dataHoraFim = obj.getDataHoraFim();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

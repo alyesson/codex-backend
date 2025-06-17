@@ -14,7 +14,7 @@ public class AmbienteNotaFiscalDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private Long id;
     @NotBlank(message = "Ambiente não pode estar vazio")
     private Integer codigoAmbiente;
 

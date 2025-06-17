@@ -33,7 +33,7 @@ public class AvaliacaoFornecedoresResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRAS')")
     @GetMapping("/{id}/itens")
-    public ResponseEntity<List<AvaliacaoFornecedoresDetalhesDto>> findAllItens(@PathVariable Integer id) {
+    public ResponseEntity<List<AvaliacaoFornecedoresDetalhesDto>> findAllItens(@PathVariable Long id) {
         List<AvaliacaoFornecedoresDetalhes> itens = avaliacaoFornecedoresService.findAllItensByAvaliacaoId(id);
         List<AvaliacaoFornecedoresDetalhesDto> listDto = itens.stream().map(AvaliacaoFornecedoresDetalhesDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
@@ -49,14 +49,14 @@ public class AvaliacaoFornecedoresResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE_COMPRAS', 'COMPRAS')")
     @GetMapping("/{id}")
-    public ResponseEntity <AvaliacaoFornecedoresDto> findById(@PathVariable Integer id){
+    public ResponseEntity <AvaliacaoFornecedoresDto> findById(@PathVariable Long id){
         AvaliacaoFornecedores objCotacao = avaliacaoFornecedoresService.findById(id);
         return ResponseEntity.ok().body(new AvaliacaoFornecedoresDto(objCotacao));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE_COMPRAS', 'COMPRAS')")
     @DeleteMapping("/{id}")
-    public ResponseEntity <AvaliacaoFornecedoresDto> deleteById(@PathVariable Integer id){
+    public ResponseEntity <AvaliacaoFornecedoresDto> deleteById(@PathVariable Long id){
         avaliacaoFornecedoresService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

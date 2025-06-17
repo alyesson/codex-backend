@@ -31,21 +31,21 @@ public class HistoricoPadraoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<HistoricoPadraoDto> update(@PathVariable Integer id, @Valid @RequestBody HistoricoPadraoDto historicopadraoDto){
+    public ResponseEntity<HistoricoPadraoDto> update(@PathVariable Long id, @Valid @RequestBody HistoricoPadraoDto historicopadraoDto){
         HistoricoPadrao obj = historicoPadraoService.update(id, historicopadraoDto);
         return ResponseEntity.ok().body(new HistoricoPadraoDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HistoricoPadraoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<HistoricoPadraoDto> delete(@PathVariable Long id){
         historicoPadraoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<HistoricoPadraoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<HistoricoPadraoDto> findById(@PathVariable Long id){
         HistoricoPadrao objGrupo = historicoPadraoService.findById(id);
         return ResponseEntity.ok().body(new HistoricoPadraoDto(objGrupo));
     }

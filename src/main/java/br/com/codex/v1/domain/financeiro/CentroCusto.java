@@ -17,7 +17,7 @@ public class CentroCusto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String descricao;
 
@@ -25,7 +25,7 @@ public class CentroCusto implements Serializable {
         super();
     }
 
-    public CentroCusto(Integer id, String codigo, String descricao) {
+    public CentroCusto(Long id, String codigo, String descricao) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -37,11 +37,11 @@ public class CentroCusto implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

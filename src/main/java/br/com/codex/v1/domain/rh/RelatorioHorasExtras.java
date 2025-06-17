@@ -15,7 +15,7 @@ public class RelatorioHorasExtras implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     @Column(length = 5)
     protected Integer codigo;
     protected String nome;
@@ -33,7 +33,7 @@ public class RelatorioHorasExtras implements Serializable {
         super();
     }
 
-    public RelatorioHorasExtras(Integer id, Integer codigo, String nome, String referencia, BigDecimal valorInformado, Long quantidadeHoras, Integer tipoHora, String departamento, String unidadeFabril) {
+    public RelatorioHorasExtras(Long id, Integer codigo, String nome, String referencia, BigDecimal valorInformado, Long quantidadeHoras, Integer tipoHora, String departamento, String unidadeFabril) {
         this.id = id;
         this.codigo = codigo;
         this.nome = nome;
@@ -58,11 +58,11 @@ public class RelatorioHorasExtras implements Serializable {
         this.unidadeFabril = obj.getUnidadeFabril();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

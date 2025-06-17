@@ -10,7 +10,7 @@ import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras
 
 public class ImportarXmlDto {
 
-    private Integer id;
+    private Long id;
     private String xml;
     private String codigoUf;
     private String codigoNf;
@@ -160,11 +160,11 @@ public class ImportarXmlDto {
         this.dataImportacao = obj.getDataImportacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

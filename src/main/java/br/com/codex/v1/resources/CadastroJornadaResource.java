@@ -32,7 +32,7 @@ public class CadastroJornadaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CadastroJornadaDto> update(@PathVariable Integer id, @Valid @RequestBody CadastroJornadaDto cadastroJornadaDto){
+    public ResponseEntity<CadastroJornadaDto> update(@PathVariable Long id, @Valid @RequestBody CadastroJornadaDto cadastroJornadaDto){
         CadastroJornada obj = cadastroJornadaService.update(id, cadastroJornadaDto);
         return ResponseEntity.ok().body(new CadastroJornadaDto((obj)));
     }
@@ -46,7 +46,7 @@ public class CadastroJornadaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CadastroJornadaDto> findById(@PathVariable Integer id){
+    public ResponseEntity<CadastroJornadaDto> findById(@PathVariable Long id){
         CadastroJornada objJornadas = cadastroJornadaService.findById(id);
         return ResponseEntity.ok().body(new CadastroJornadaDto(objJornadas));
     }

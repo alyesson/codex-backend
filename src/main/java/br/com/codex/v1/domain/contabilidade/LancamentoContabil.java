@@ -16,7 +16,7 @@ public class LancamentoContabil implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private Date dataLancamento;
 
@@ -44,7 +44,7 @@ public class LancamentoContabil implements Serializable {
     public LancamentoContabil() {
     }
 
-    public LancamentoContabil(Integer id, Date dataLancamento, BigDecimal valor, Contas contaDebito, Contas contaCredito, HistoricoPadrao historicoPadrao, ImportarXml notaFiscalOrigem, String complementoHistorico) {
+    public LancamentoContabil(Long id, Date dataLancamento, BigDecimal valor, Contas contaDebito, Contas contaCredito, HistoricoPadrao historicoPadrao, ImportarXml notaFiscalOrigem, String complementoHistorico) {
         this.id = id;
         this.dataLancamento = dataLancamento;
         this.valor = valor;
@@ -62,11 +62,11 @@ public class LancamentoContabil implements Serializable {
         this.complementoHistorico = obj.getComplementoHistorico();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -32,19 +32,19 @@ public class ControlePortariaService {
         ControlePortaria centroDeCusto = new ControlePortaria(controlePortariaDto);
         return controlePortariaRepository.save(centroDeCusto);
     }
-    public ControlePortaria update(Integer id, ControlePortariaDto controlePortariaDto) {
+    public ControlePortaria update(Long id, ControlePortariaDto controlePortariaDto) {
         controlePortariaDto.setId(id);
         ControlePortaria obj = findById(id);
         obj = new ControlePortaria(controlePortariaDto);
         return controlePortariaRepository.save(obj);
     }
 
-    public ControlePortaria findById(Integer id) {
+    public ControlePortaria findById(Long id) {
         Optional<ControlePortaria> obj = controlePortariaRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Visitante não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         controlePortariaRepository.deleteById(id);
     }
 

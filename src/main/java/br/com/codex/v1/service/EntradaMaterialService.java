@@ -44,12 +44,12 @@ public class EntradaMaterialService {
         return entradaMaterialRepository.save(objEntra);
     }
 
-    public EntradaMaterial findById(Integer id) {
+    public EntradaMaterial findById(Long id) {
         Optional<EntradaMaterial> objEntrada = entradaMaterialRepository.findById(id);
         return objEntrada.orElseThrow(() -> new ObjectNotFoundException("Material não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         entradaMaterialRepository.deleteById(id);
     }
 

@@ -12,7 +12,7 @@ public class CriteriosAvaliacaoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "O nome do critério não pode ficar em branco")
     protected String criterio;
     @NotNull(message = "O peso do critério não pode ficar em branco")
@@ -30,11 +30,11 @@ public class CriteriosAvaliacaoDto implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -24,19 +24,19 @@ public class ProdutoService {
         return produtoRepository.save(grupo);
     }
 
-    public Produto update(Integer id, ProdutoDto produtoDto) {
+    public Produto update(Long id, ProdutoDto produtoDto) {
         produtoDto.setId(id);
         Produto obj = findById(id);
         obj = new Produto(produtoDto);
         return produtoRepository.save(obj);
     }
 
-    public Produto findById(Integer id) {
+    public Produto findById(Long id) {
         Optional<Produto> obj = produtoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         produtoRepository.deleteById(id);
     }
 

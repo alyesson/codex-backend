@@ -31,21 +31,21 @@ public class DepartamentoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<DepartamentoDto> update(@PathVariable Integer id, @Valid @RequestBody DepartamentoDto departamentoDto){
+    public ResponseEntity<DepartamentoDto> update(@PathVariable Long id, @Valid @RequestBody DepartamentoDto departamentoDto){
         Departamento obj = departamentoService.update(id, departamentoDto);
         return ResponseEntity.ok().body(new DepartamentoDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<DepartamentoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<DepartamentoDto> delete(@PathVariable Long id){
         departamentoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<DepartamentoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<DepartamentoDto> findById(@PathVariable Long id){
         Departamento objGrupo = departamentoService.findById(id);
         return ResponseEntity.ok().body(new DepartamentoDto(objGrupo));
     }

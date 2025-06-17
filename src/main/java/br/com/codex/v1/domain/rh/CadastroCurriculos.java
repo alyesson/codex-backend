@@ -15,7 +15,7 @@ public class CadastroCurriculos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nome;
     protected String sexo;
     protected String contato;
@@ -31,7 +31,7 @@ public class CadastroCurriculos implements Serializable {
         super();
     }
 
-    public CadastroCurriculos(Integer id, String nome, String sexo, String contato, String escolaridade, String areaFormacao, String cidade, String situacao, LocalDate dataCadastro, byte[] arquivo) {
+    public CadastroCurriculos(Long id, String nome, String sexo, String contato, String escolaridade, String areaFormacao, String cidade, String situacao, LocalDate dataCadastro, byte[] arquivo) {
         this.id = id;
         this.nome = nome;
         this.sexo = sexo;
@@ -57,11 +57,11 @@ public class CadastroCurriculos implements Serializable {
         this.arquivo = obj.getArquivo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

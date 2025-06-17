@@ -17,7 +17,7 @@ public class Fornecedores implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String razaoSocial;
     protected String nomeFantasia;
     protected String cnpj;
@@ -35,7 +35,7 @@ public class Fornecedores implements Serializable {
         super();
     }
 
-    public Fornecedores(Integer id, String razaoSocial, String nomeFantasia, String cnpj, String ie, String endereco, String bairro, String cidade, String cep, String uf, String email, String telefone, String vendedor) {
+    public Fornecedores(Long id, String razaoSocial, String nomeFantasia, String cnpj, String ie, String endereco, String bairro, String cidade, String cep, String uf, String email, String telefone, String vendedor) {
         this.id = id;
         this.razaoSocial = razaoSocial;
         this.nomeFantasia = nomeFantasia;
@@ -67,11 +67,11 @@ public class Fornecedores implements Serializable {
         this.vendedor = obj.getVendedor();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

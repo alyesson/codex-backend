@@ -26,7 +26,7 @@ public class Produto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String descricao;
     protected String grupo;
@@ -64,7 +64,7 @@ public class Produto implements Serializable {
         super();
     }
 
-    public Produto(Integer id, String codigo, String descricao, String grupo, String subGrupo, Integer minimo,
+    public Produto(Long id, String codigo, String descricao, String grupo, String subGrupo, Integer minimo,
                    Integer maximo, String unidadeComercial, String local, String codigoNcm, String descricaoNcm,
                    String codigoCest, String descricaoCest, String origemProduto, String categoriaProduto, String ean,
                    String extipi, String tipoDeposito, String codigoSituacaoTributaria, String peso, BigDecimal precoVenda,

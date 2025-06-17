@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface AtendimentosRepository extends JpaRepository<Atendimentos, Integer> {
+public interface AtendimentosRepository extends JpaRepository<Atendimentos, Long> {
 
     @Query("SELECT c FROM Atendimentos c WHERE YEAR(c.dataAbertura) = :ano and MONTH(c.dataAbertura) = :mes AND c.solicitante=:solicitante")
     List<Atendimentos> findAllYearAndMonth(@Param("ano") Integer ano, @Param("mes") Integer mes, @Param("solicitante") String solicitante);

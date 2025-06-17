@@ -18,7 +18,7 @@ public class CadastroJornada implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoJornada;
     private String descricaoJornada;
     private TipoJornada tipoJornada;
@@ -37,7 +37,7 @@ public class CadastroJornada implements Serializable {
         super();
     }
 
-    public CadastroJornada(Integer id, String codigoJornada, String descricaoJornada, TipoJornada tipoJornada, String diaJornada, TipoHorario tipoHorario, LocalTime inicioExpediente, LocalTime inicioAlmoco, LocalTime fimAlmoco, LocalTime fimExpediente, String jornadaSemanal, String jornadaMensal, String autorAltera, LocalDate ultimaModificacao) {
+    public CadastroJornada(Long id, String codigoJornada, String descricaoJornada, TipoJornada tipoJornada, String diaJornada, TipoHorario tipoHorario, LocalTime inicioExpediente, LocalTime inicioAlmoco, LocalTime fimAlmoco, LocalTime fimExpediente, String jornadaSemanal, String jornadaMensal, String autorAltera, LocalDate ultimaModificacao) {
         this.id = id;
         this.codigoJornada = codigoJornada;
         this.descricaoJornada = descricaoJornada;
@@ -71,11 +71,11 @@ public class CadastroJornada implements Serializable {
         this.ultimaModificacao = obj.getUltimaModificacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

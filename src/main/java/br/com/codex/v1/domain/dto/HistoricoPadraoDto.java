@@ -14,7 +14,7 @@ public class HistoricoPadraoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String codigo;
     protected String descricao;
 
@@ -28,11 +28,11 @@ public class HistoricoPadraoDto implements Serializable {
         this.descricao = obj.getDescricao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

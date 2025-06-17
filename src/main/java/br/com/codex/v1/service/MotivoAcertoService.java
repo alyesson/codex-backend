@@ -25,19 +25,19 @@ public class MotivoAcertoService {
         return motivoAcertoRepository.save(motivoacerto);
     }
 
-    public MotivoAcerto update(Integer id, MotivoAcertoDto motivoacertodto) {
+    public MotivoAcerto update(Long id, MotivoAcertoDto motivoacertodto) {
         motivoacertodto.setId(id);
         MotivoAcerto obj = findById(id);
         obj = new MotivoAcerto(motivoacertodto);
         return motivoAcertoRepository.save(obj);
     }
 
-    public MotivoAcerto findById(Integer id) {
+    public MotivoAcerto findById(Long id) {
         Optional<MotivoAcerto> obj = motivoAcertoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("MotivoAcerto não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         motivoAcertoRepository.deleteById(id);
     }
 

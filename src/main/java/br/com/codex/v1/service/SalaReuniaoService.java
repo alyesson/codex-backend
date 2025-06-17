@@ -23,19 +23,19 @@ public class SalaReuniaoService {
         return salaReuniaoRepository.save(salaReuniao);
     }
 
-    public SalaReuniao update(Integer id, SalaReuniaoDto salaReuniaoDto) {
+    public SalaReuniao update(Long id, SalaReuniaoDto salaReuniaoDto) {
         salaReuniaoDto.setId(id);
         SalaReuniao obj = findById(id);
         obj = new SalaReuniao(salaReuniaoDto);
         return salaReuniaoRepository.save(obj);
     }
 
-    public SalaReuniao findById(Integer id) {
+    public SalaReuniao findById(Long id) {
         Optional<SalaReuniao> obj = salaReuniaoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Sala de Reuniao não encontrada"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         salaReuniaoRepository.deleteById(id);
     }
 

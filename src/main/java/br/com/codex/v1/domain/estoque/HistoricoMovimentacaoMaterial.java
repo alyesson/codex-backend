@@ -17,7 +17,7 @@ public class HistoricoMovimentacaoMaterial implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String produto;
     protected Date dataEntrada;
@@ -38,7 +38,7 @@ public class HistoricoMovimentacaoMaterial implements Serializable {
         super();
     }
 
-    public HistoricoMovimentacaoMaterial(Integer id, String codigoProduto, String produto, Date dataEntrada, String fornecedor, String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota, BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade, String autor, String motivoAcerto, String unidadeComercial) {
+    public HistoricoMovimentacaoMaterial(Long id, String codigoProduto, String produto, Date dataEntrada, String fornecedor, String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota, BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade, String autor, String motivoAcerto, String unidadeComercial) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.produto = produto;
@@ -76,11 +76,11 @@ public class HistoricoMovimentacaoMaterial implements Serializable {
         this.unidadeComercial = obj.getUnidadeComercial();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

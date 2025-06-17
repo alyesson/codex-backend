@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.sql.Date;
 import java.util.List;
 
-public interface SaidaMaterialRepository extends JpaRepository<SaidaMaterial, Integer> {
+public interface SaidaMaterialRepository extends JpaRepository<SaidaMaterial, Long> {
     @Query(value = "SELECT s FROM SaidaMaterial s WHERE YEAR(s.dataSaida) =:anoAtual")
     List<SaidaMaterial> findAllByYear(@Param("anoAtual") Integer anoAtual);
 

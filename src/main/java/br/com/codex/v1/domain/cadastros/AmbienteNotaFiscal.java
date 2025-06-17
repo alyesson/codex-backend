@@ -18,7 +18,7 @@ public class AmbienteNotaFiscal implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(length = 3, nullable = false)
     private Integer codigoAmbiente;
 
@@ -26,7 +26,7 @@ public class AmbienteNotaFiscal implements Serializable {
         super();
     }
 
-    public AmbienteNotaFiscal(Integer id, Integer codigoAmbiente) {
+    public AmbienteNotaFiscal(Long id, Integer codigoAmbiente) {
         this.id = id;
         this.codigoAmbiente = codigoAmbiente;
     }

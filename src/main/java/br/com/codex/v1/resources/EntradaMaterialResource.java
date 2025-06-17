@@ -39,14 +39,14 @@ public class EntradaMaterialResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<EntradaMaterialDto> delete(@PathVariable Integer id){
+    public ResponseEntity<EntradaMaterialDto> delete(@PathVariable Long id){
         entradaMaterialService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<EntradaMaterialDto> findById(@PathVariable Integer id){
+    public ResponseEntity<EntradaMaterialDto> findById(@PathVariable Long id){
         EntradaMaterial objEntrada = entradaMaterialService.findById(id);
         return ResponseEntity.ok().body(new EntradaMaterialDto(objEntrada));
     }

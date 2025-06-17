@@ -55,7 +55,7 @@ public class SolicitacaoCompraService {
         return objSolicitacaoCompra;
     }
 
-    public List<SolicitacaoItensCompra> findAllItensBySolicitacaoId(Integer solicitacaoId) {
+    public List<SolicitacaoItensCompra> findAllItensBySolicitacaoId(Long solicitacaoId) {
         return solicitacaoItensCompraRepository.findBySolicitacaoCompraId(solicitacaoId);
     }
 
@@ -67,7 +67,7 @@ public class SolicitacaoCompraService {
         return solicitacaoCompraRepository.findAllByYear(ano, centroCustoUsuario);
     }
 
-    public void update(Integer id, String situacao) {
+    public void update(Long id, String situacao) {
         solicitacaoCompraRepository.saveSituacao(id, situacao);
     }
 
@@ -75,7 +75,7 @@ public class SolicitacaoCompraService {
         return solicitacaoCompraRepository.findAllBysituacao(anoAtual);
     }
 
-    public SolicitacaoCompra findById(Integer id){
+    public SolicitacaoCompra findById(Long id){
         Optional<SolicitacaoCompra> objSolicitacaoCompra = solicitacaoCompraRepository.findById(id);
         return objSolicitacaoCompra.orElseThrow(() -> new ObjectNotFoundException("Solicitação não encontrada"));
     }

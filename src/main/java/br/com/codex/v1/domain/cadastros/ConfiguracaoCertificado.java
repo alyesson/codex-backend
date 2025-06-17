@@ -20,7 +20,7 @@ public class ConfiguracaoCertificado implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String nome;
@@ -53,7 +53,7 @@ public class ConfiguracaoCertificado implements Serializable {
         super();
     }
 
-    public ConfiguracaoCertificado(Integer id, String nome, byte[] arquivo, String tipo, Date dataValidade, String razaoSocial, String cnpj, LocalDateTime dataCadastro, boolean ativo, String senha, String uf) {
+    public ConfiguracaoCertificado(Long id, String nome, byte[] arquivo, String tipo, Date dataValidade, String razaoSocial, String cnpj, LocalDateTime dataCadastro, boolean ativo, String senha, String uf) {
         this.id = id;
         this.nome = nome;
         this.arquivo = arquivo;

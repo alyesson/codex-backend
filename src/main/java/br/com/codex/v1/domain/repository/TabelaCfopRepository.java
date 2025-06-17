@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TabelaCfopRepository extends JpaRepository<TabelaCfop, Integer> {
+public interface TabelaCfopRepository extends JpaRepository<TabelaCfop, Long> {
 
     @Query("SELECT c FROM TabelaCfop c WHERE c.fluxo = :fluxo")
     List<TabelaCfop> findByFluxo(@Param("fluxo") String fluxo);

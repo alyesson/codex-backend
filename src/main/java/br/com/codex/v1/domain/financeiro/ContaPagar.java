@@ -19,7 +19,7 @@ public class ContaPagar implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String descricao;
     protected String categoria;
     protected String pagoA;
@@ -39,7 +39,7 @@ public class ContaPagar implements Serializable {
         super();
     }
 
-    public ContaPagar(Integer id, String descricao, String categoria, String pagoA, String numeroDocumento, String repete, Date dataVencimento, Date dataCompetencia, Date dataEmissao, Integer quantidadeParcelas, BigDecimal valor, String metodoPagamento, String situacao, String observacao, String origemDocumento) {
+    public ContaPagar(Long id, String descricao, String categoria, String pagoA, String numeroDocumento, String repete, Date dataVencimento, Date dataCompetencia, Date dataEmissao, Integer quantidadeParcelas, BigDecimal valor, String metodoPagamento, String situacao, String observacao, String origemDocumento) {
         this.id = id;
         this.descricao = descricao;
         this.categoria = categoria;
@@ -75,11 +75,11 @@ public class ContaPagar implements Serializable {
         this.origemDocumento = obj.getOrigemDocumento();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

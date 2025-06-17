@@ -27,7 +27,7 @@ public class ConfiguracaoCertificadoResource {
     URI uri = null;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ConfiguracaoCertificadoDto> findById(@PathVariable Integer id) {
+    public ResponseEntity<ConfiguracaoCertificadoDto> findById(@PathVariable Long id) {
         ConfiguracaoCertificado obj = configuracaoCertificadoService.findById(id);
         return ResponseEntity.ok().body(new ConfiguracaoCertificadoDto(obj));
     }
@@ -65,14 +65,14 @@ public class ConfiguracaoCertificadoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         configuracaoCertificadoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', GERENTE_CONTABILIDADE, CONTABILIDADE)")
     @GetMapping(value = "/downloads/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) {
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long id) {
         ConfiguracaoCertificado objDoc = configuracaoCertificadoService.findById(id);
         byte[] fileBytes = objDoc.getArquivo();
 

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CriteriosAvaliacaoRepository extends JpaRepository<CriteriosAvaliacao, Integer> {
+public interface CriteriosAvaliacaoRepository extends JpaRepository<CriteriosAvaliacao, Long> {
 
     List<CriteriosAvaliacao> findAll();
 }

@@ -20,7 +20,7 @@ public class Pessoa implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nome;
     @Column(unique = true)
     protected String cpf;
@@ -45,7 +45,7 @@ public class Pessoa implements Serializable {
         super();
     }
 
-    public Pessoa(Integer id, String nome, String cpf, Date nascimento, String sexo, String telefone, String endereco, String bairro, String cidade, String uf, String cep, String email, String senha, String departamento, String centroCusto) {
+    public Pessoa(Long id, String nome, String cpf, Date nascimento, String sexo, String telefone, String endereco, String bairro, String cidade, String uf, String cep, String email, String senha, String departamento, String centroCusto) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -63,11 +63,11 @@ public class Pessoa implements Serializable {
         this.centroCusto = centroCusto;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -4,11 +4,9 @@ import br.com.codex.v1.domain.contabilidade.NotaFiscal;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,6 +20,7 @@ public class NotaFiscalDto implements Serializable {
     private String codigoUf;
     private String codigoNf;
     private String naturezaOperacao;
+    private String localDestino;
     private String modelo;
     private String serie;
     private String numero;
@@ -110,6 +109,7 @@ public class NotaFiscalDto implements Serializable {
         this.codigoUf = obj.getCodigoUf();
         this.codigoNf = obj.getCodigoNf();
         this.naturezaOperacao = obj.getNaturezaOperacao();
+        this.localDestino = obj.getLocalDestino();
         this.modelo = obj.getModelo();
         this.serie = obj.getSerie();
         this.numero = obj.getNumero();

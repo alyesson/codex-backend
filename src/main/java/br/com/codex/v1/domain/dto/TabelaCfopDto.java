@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,10 +18,14 @@ public class TabelaCfopDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private Long id;
     private Integer codigo;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String descricao;
+    @NotBlank(message = "Movimentação do cfop não pode estar vazio")
     private String movimentacao; //determina de é interno, interestadual ou exterior
+    @NotBlank(message = "O fluxo não pode estar vazio")
     private String fluxo; //determina se é entrada, saída
 
     public TabelaCfopDto() {

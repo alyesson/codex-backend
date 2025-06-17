@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ControlePortariaRepository extends JpaRepository<ControlePortaria, Integer> {
+public interface ControlePortariaRepository extends JpaRepository<ControlePortaria, Long> {
 
     @Query("SELECT c FROM ControlePortaria c WHERE c.dataEntrada BETWEEN :dataInicial AND :dataFinal")
     List<ControlePortaria> findAllControlePeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);

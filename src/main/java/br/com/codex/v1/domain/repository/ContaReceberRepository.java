@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 
-public interface ContaReceberRepository extends JpaRepository<ContaReceber, Integer> {
+public interface ContaReceberRepository extends JpaRepository<ContaReceber, Long> {
 
     @Modifying
     @Transactional
     @Query("UPDATE ContaReceber c SET c.situacao = :situacao WHERE c.id = :id")
-    void saveSituacao(@Param("id") Integer id, @Param("situacao") String situacao);
+    void saveSituacao(@Param("id") Long id, @Param("situacao") String situacao);
 }

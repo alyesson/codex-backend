@@ -31,19 +31,19 @@ public class EmpresaService {
         return empresaRepository.save(empresa);
     }
 
-    public Empresa update(Integer id, EmpresaDto empresaDto) {
+    public Empresa update(Long id, EmpresaDto empresaDto) {
         empresaDto.setId(id);
         Empresa obj = findById(id);
         obj = new Empresa(empresaDto);
         return empresaRepository.save(obj);
     }
 
-    public Empresa findById(Integer id) {
+    public Empresa findById(Long id) {
         Optional<Empresa> obj = empresaRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Empresa não encontrada"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         empresaRepository.deleteById(id);
     }
 

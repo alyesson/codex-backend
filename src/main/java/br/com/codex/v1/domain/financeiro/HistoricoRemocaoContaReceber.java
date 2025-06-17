@@ -18,7 +18,7 @@ public class HistoricoRemocaoContaReceber implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String motivoRemocao;
     protected Date dataRemocao;
     protected String autor;
@@ -28,7 +28,7 @@ public class HistoricoRemocaoContaReceber implements Serializable {
         super();
     }
 
-    public HistoricoRemocaoContaReceber(Integer id, String motivoRemocao, Date dataRemocao, String autor, Integer numeroLancamento) {
+    public HistoricoRemocaoContaReceber(Long id, String motivoRemocao, Date dataRemocao, String autor, Integer numeroLancamento) {
         this.id = id;
         this.motivoRemocao = motivoRemocao;
         this.dataRemocao = dataRemocao;
@@ -44,11 +44,11 @@ public class HistoricoRemocaoContaReceber implements Serializable {
         this.numeroLancamento = obj.getNumeroLancamento();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -12,7 +12,7 @@ public class ControlePortariaDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "O nome é obrigatório")
     protected String nome;
     @NotNull(message = "O Cpf é obrigatória")
@@ -52,11 +52,11 @@ public class ControlePortariaDto implements Serializable {
         this.imagem = obj.getImagem();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

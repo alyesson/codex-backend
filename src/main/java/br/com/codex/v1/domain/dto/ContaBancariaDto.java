@@ -11,7 +11,7 @@ import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras
 public class ContaBancariaDto implements Serializable {
         private static final long serialVersionUID = 1L;
 
-        protected Integer id;
+        protected Long id;
         @NotNull(message = "Nome da conta não pode ficar em branco")
         protected String nome;
         protected BigDecimal saldo;
@@ -26,11 +26,11 @@ public class ContaBancariaDto implements Serializable {
             this.saldo = obj.getSaldo();
         }
 
-        public Integer getId() {
+        public Long getId() {
             return id;
         }
 
-        public void setId(Integer id) {
+        public void setId(Long id) {
             this.id = id;
         }
 

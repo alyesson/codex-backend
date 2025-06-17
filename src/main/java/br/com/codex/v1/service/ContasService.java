@@ -30,19 +30,19 @@ public class ContasService {
         return contasRepository.save(contas);
     }
 
-    public Contas update(Integer id, ContasDto contasDto) {
+    public Contas update(Long id, ContasDto contasDto) {
         contasDto.setId(id);
         Contas obj = findById(id);
         obj = new Contas(contasDto);
         return contasRepository.save(obj);
     }
 
-    public Contas findById(Integer id) {
+    public Contas findById(Long id) {
         Optional<Contas> obj = contasRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Conta contábil não encontrada"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         contasRepository.deleteById(id);
     }
 

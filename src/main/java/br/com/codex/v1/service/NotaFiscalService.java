@@ -68,7 +68,7 @@ public class NotaFiscalService {
 
     public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws Exception {
         Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getDocumentoEmitente());
-        Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1); //aqui o ID sempre será 1, pois é a únia informação que deve ser mantida.
+        Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1L); //aqui o ID sempre será 1, pois é a únia informação que deve ser mantida.
 
         String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
 

@@ -27,15 +27,15 @@ public class ContasPagarService {
         return contaPagarRepository.save(contaPagar);
     }
 
-    public void update(Integer id, String situacao) {
+    public void update(Long id, String situacao) {
         contaPagarRepository.saveSituacao(id, situacao);
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         contaPagarRepository.deleteById(id);
     }
 
-    public ContaPagar findById(Integer id) {
+    public ContaPagar findById(Long id) {
         Optional<ContaPagar> contaPagarObj = contaPagarRepository.findById(id);
         return contaPagarObj.orElseThrow(() -> new ObjectNotFoundException("Documento não encontrado"));
     }

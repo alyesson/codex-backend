@@ -11,7 +11,7 @@ public class TiposCategoriasDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    protected Integer id;
+    protected Long id;
     protected String descricao;
     protected String categoria;
 
@@ -25,11 +25,11 @@ public class TiposCategoriasDto implements Serializable {
         this.categoria = obj.getCategoria();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

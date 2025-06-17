@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CidadesRepository extends JpaRepository<Cidades, Integer> {
+public interface CidadesRepository extends JpaRepository<Cidades, Long> {
 
     Optional<Cidades>findByCodigoUf(Integer codigo);
 }

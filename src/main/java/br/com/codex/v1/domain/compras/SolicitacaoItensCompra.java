@@ -13,7 +13,7 @@ public class SolicitacaoItensCompra implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String descricaoProduto;
     protected Integer quantidade;
@@ -27,7 +27,7 @@ public class SolicitacaoItensCompra implements Serializable {
         super();
     }
 
-    public SolicitacaoItensCompra(Integer id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, SolicitacaoCompra solicitacaoCompra) {
+    public SolicitacaoItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, SolicitacaoCompra solicitacaoCompra) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.descricaoProduto = descricaoProduto;
@@ -37,11 +37,11 @@ public class SolicitacaoItensCompra implements Serializable {
         this.solicitacaoCompra = solicitacaoCompra;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

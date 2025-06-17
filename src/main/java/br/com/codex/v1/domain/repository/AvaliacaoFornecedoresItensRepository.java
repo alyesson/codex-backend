@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AvaliacaoFornecedoresItensRepository extends JpaRepository<AvaliacaoFornecedoresDetalhes, Integer> {
+public interface AvaliacaoFornecedoresItensRepository extends JpaRepository<AvaliacaoFornecedoresDetalhes, Long> {
 
-    List<AvaliacaoFornecedoresDetalhes> findByAvaliacaoFornecedoresId(Integer fornecedorId);
+    List<AvaliacaoFornecedoresDetalhes> findByAvaliacaoFornecedoresId(Long fornecedorId);
 }

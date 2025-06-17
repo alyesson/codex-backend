@@ -13,7 +13,7 @@ public class AsoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "Nome do funcionário não pode ficar em branco")
     protected String funcionario;
     @NotNull(message = "Cpf não pode ficar em branco")
@@ -53,11 +53,11 @@ public class AsoDto implements Serializable {
         this.observacao = obj.getObservacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

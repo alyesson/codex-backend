@@ -12,7 +12,7 @@ public class HistoricoRemocaoContaReceberDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String motivoRemocao;
     protected Date dataRemocao;
     protected String autor;
@@ -30,11 +30,11 @@ public class HistoricoRemocaoContaReceberDto implements Serializable {
         this.numeroLancamento = obj.getNumeroLancamento();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

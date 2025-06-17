@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DepartamentoRepository extends JpaRepository<Departamento, Integer> {
+public interface DepartamentoRepository extends JpaRepository<Departamento, Long> {
     Optional<Departamento> findByCodigo(String codigo);
 }

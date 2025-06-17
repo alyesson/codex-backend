@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface CadastroColaboradoresRepository extends JpaRepository<CadastroColaboradores, Integer> {
+public interface CadastroColaboradoresRepository extends JpaRepository<CadastroColaboradores, Long> {
 
     Optional<CadastroColaboradores> findByCpf(String cpf);
 

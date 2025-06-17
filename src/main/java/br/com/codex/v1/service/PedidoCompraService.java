@@ -47,7 +47,7 @@ public class PedidoCompraService {
         return objPedidoCompra;
     }
 
-    public List<PedidoItensCompra> findAllItensByPedidoId(Integer pedidoId) {
+    public List<PedidoItensCompra> findAllItensByPedidoId(Long pedidoId) {
         return pedidoItensCompraRepository.findByPedidoCompraId(pedidoId);
     }
 
@@ -55,11 +55,11 @@ public class PedidoCompraService {
         return pedidoCompraRepository.findAll();
     }
 
-    public void update(Integer id, String situacao) {
+    public void update(Long id, String situacao) {
         pedidoCompraRepository.saveSituacao(id, situacao);
     }
 
-    public PedidoCompra findById(Integer id) {
+    public PedidoCompra findById(Long id) {
         Optional<PedidoCompra> objPedidoCompra = pedidoCompraRepository.findById(id);
         return objPedidoCompra.orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado"));
     }

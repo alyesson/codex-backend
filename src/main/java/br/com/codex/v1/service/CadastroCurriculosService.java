@@ -25,19 +25,19 @@ public class CadastroCurriculosService {
         return curriculosRepository.save(curriculos);
     }
 
-    public CadastroCurriculos update(Integer id, CadastroCurriculosDto curriculosDto) {
+    public CadastroCurriculos update(Long id, CadastroCurriculosDto curriculosDto) {
         curriculosDto.setId(id);
         CadastroCurriculos obj = findById(id);
         obj = new CadastroCurriculos(curriculosDto);
         return curriculosRepository.save(obj);
     }
 
-    public CadastroCurriculos findById(Integer id) {
+    public CadastroCurriculos findById(Long id) {
         Optional<CadastroCurriculos> obj = curriculosRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Curriculo não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         curriculosRepository.deleteById(id);
     }
 

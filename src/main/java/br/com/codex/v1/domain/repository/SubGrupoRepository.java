@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface SubGrupoRepository extends JpaRepository<SubGrupo, Integer> {
+public interface SubGrupoRepository extends JpaRepository<SubGrupo, Long> {
     Optional<SubGrupo> findByCodigoSubGrupo(String codigoSubGrupo);
 
     @Query("SELECT g FROM SubGrupo g WHERE g.codigoGrupo = :codigoGrupo")

@@ -13,7 +13,7 @@ public class ConciliacaoContabilDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Integer notaFiscalId;
+    private Long notaFiscalId;
     private String numeroNota;
     private BigDecimal valorNota;
     private BigDecimal valorLancado;

@@ -15,12 +15,12 @@ public class UserSS implements UserDetails {
     @Serial
     private static final long serialVersionUID=1L;
 
-    private final Integer id;
+    private final Long id;
     private final String email;
     private final String senha;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserSS(Integer id, String email, String senha, Set<Perfil> perfis) {
+    public UserSS(Long id, String email, String senha, Set<Perfil> perfis) {
         this.id = id;
         this.email = email;
         this.senha = senha;
@@ -31,7 +31,7 @@ public class UserSS implements UserDetails {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

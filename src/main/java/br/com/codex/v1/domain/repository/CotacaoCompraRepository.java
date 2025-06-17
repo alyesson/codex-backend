@@ -10,14 +10,14 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
-public interface CotacaoCompraRepository extends JpaRepository<CotacaoCompra, Integer> {
+public interface CotacaoCompraRepository extends JpaRepository<CotacaoCompra, Long> {
 
     List<CotacaoCompra> findAll();
 
     @Modifying
     @Transactional
     @Query("UPDATE CotacaoCompra u SET u.situacao = :situacao WHERE u.id = :id")
-    void saveSituacao(@Param("id") Integer id, @Param("situacao")String situacao);
+    void saveSituacao(@Param("id") Long id, @Param("situacao")String situacao);
 
     @Query("SELECT c FROM CotacaoCompra  c WHERE c.dataSolicitacao BETWEEN :dataInicial AND :dataFinal")
     List<CotacaoCompra> findAllCotacoesPeriodo(@Param("dataInicial") java.util.Date dataInicial, @Param("dataFinal") Date dataFinal);

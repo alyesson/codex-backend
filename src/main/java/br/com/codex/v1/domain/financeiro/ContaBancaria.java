@@ -18,7 +18,7 @@ public class ContaBancaria implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nome;
     protected BigDecimal saldo;
 
@@ -26,7 +26,7 @@ public class ContaBancaria implements Serializable {
         super();
     }
 
-    public ContaBancaria(Integer id, String nome, BigDecimal saldo) {
+    public ContaBancaria(Long id, String nome, BigDecimal saldo) {
         this.id = id;
         this.nome = nome;
         this.saldo = saldo;
@@ -38,11 +38,11 @@ public class ContaBancaria implements Serializable {
         this.saldo = obj.getSaldo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

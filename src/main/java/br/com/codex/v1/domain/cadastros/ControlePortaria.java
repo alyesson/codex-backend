@@ -16,7 +16,7 @@ public class ControlePortaria implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nome;
     protected String cpf;
     protected String empresa;
@@ -36,7 +36,7 @@ public class ControlePortaria implements Serializable {
         super();
     }
 
-    public ControlePortaria(Integer id, String nome, String cpf, String empresa, String visitado, String horaEntrada, String veiculo, String marca, String cor, String placa, LocalDate dataEntrada, String observacao, String autorEntrada, byte[] imagem) {
+    public ControlePortaria(Long id, String nome, String cpf, String empresa, String visitado, String horaEntrada, String veiculo, String marca, String cor, String placa, LocalDate dataEntrada, String observacao, String autorEntrada, byte[] imagem) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -70,11 +70,11 @@ public class ControlePortaria implements Serializable {
         this.imagem = obj.getImagem();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

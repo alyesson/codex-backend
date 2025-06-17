@@ -48,7 +48,7 @@ public class CotacaoCompraService {
         return objCotacaoCompra;
     }
 
-    public List<CotacaoItensCompra> findAllItensByCotacaoId(Integer solicitacaoId) {
+    public List<CotacaoItensCompra> findAllItensByCotacaoId(Long solicitacaoId) {
         return cotacaoItensCompraRepository.findByCotacaoCompraId(solicitacaoId);
     }
 
@@ -56,11 +56,11 @@ public class CotacaoCompraService {
         return cotacaoCompraRepository.findAll();
     }
 
-    public void update(Integer id, String situacao) {
+    public void update(Long id, String situacao) {
         cotacaoCompraRepository.saveSituacao(id, situacao);
     }
 
-    public CotacaoCompra findById(Integer id) {
+    public CotacaoCompra findById(Long id) {
         Optional<CotacaoCompra> objCotacaoCompra = cotacaoCompraRepository.findById(id);
         return objCotacaoCompra.orElseThrow(() -> new ObjectNotFoundException("Cotação não encontrada"));
     }

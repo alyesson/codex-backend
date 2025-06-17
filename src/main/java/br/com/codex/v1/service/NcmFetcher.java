@@ -30,19 +30,15 @@ public class NcmFetcher {
     private final ObjectMapper objectMapper;
 
     public NcmFetcher() {
-        this.httpClient = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                .build();
+        this.httpClient = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true).build();
         this.objectMapper = new ObjectMapper();
         this.loadData();
     }
 
     public String downloadJson() throws IOException {
         Request request = new Request.Builder()
-                .url(NCM_URL)
-                .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36")
+                .url(NCM_URL).header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36")
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
@@ -54,12 +50,7 @@ public class NcmFetcher {
     }
 
     public void saveJson(String jsonData) throws IOException {
-        Files.writeString(
-                Path.of(CACHE_FILE),
-                jsonData,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING
-        );
+        Files.writeString(Path.of(CACHE_FILE),jsonData,StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     private boolean isCacheValid() {
@@ -127,7 +118,6 @@ public class NcmFetcher {
                 listNcm.add(entry.getValue());
             }
         }
-
         return new NcmList(listNcm);
     }
 

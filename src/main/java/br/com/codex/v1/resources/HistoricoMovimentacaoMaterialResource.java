@@ -33,13 +33,13 @@ public class HistoricoMovimentacaoMaterialResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HistoricoMovimentacaoMaterialDto> delete(@PathVariable Integer id){
+    public ResponseEntity<HistoricoMovimentacaoMaterialDto> delete(@PathVariable Long id){
         historicoMovimentacaoMaterialService.delete(id);
         return ResponseEntity.noContent().build();
     }
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<HistoricoMovimentacaoMaterialDto> findById(@PathVariable Integer id){
+    public ResponseEntity<HistoricoMovimentacaoMaterialDto> findById(@PathVariable Long id){
         HistoricoMovimentacaoMaterial objHistoricoEntrada = historicoMovimentacaoMaterialService.findById(id);
         return ResponseEntity.ok().body(new HistoricoMovimentacaoMaterialDto(objHistoricoEntrada));
     }

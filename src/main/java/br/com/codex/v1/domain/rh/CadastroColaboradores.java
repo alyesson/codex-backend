@@ -16,7 +16,7 @@ public class CadastroColaboradores implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     @Column(length = 100)
     protected String nomeColaborador;
     @Column(length = 25)
@@ -181,7 +181,7 @@ public class CadastroColaboradores implements Serializable {
         super();
     }
 
-    public CadastroColaboradores(Integer id, String nomeColaborador, String nomeDepartamento, String estadoCivil, String cargo, int numeroMatricula, Date dataContratacao, Date dataDemissao, String situacaoAtual, Date nascimento, String numeroCelular, String email, String unidadeContratante, String codCbo, String descricaoCbo, String logradouro, String bairro, String cidade, String cep, String uf, String complemento, String sexo, String carteiraSus, String deficiencia, String qualDeficiencia, String conjugeNome, int filhos, String habilitacao, String tituloEleitor, String zonaEleitor, String secaoEleitor, String numeroReservista, String numeroCarteiraTrabalho, String serieCarteiraTrabalho, String ufCtps, String expedicaoCtps, String rg, String ufRg, Date expedicaoRg, String orgaoEmissorRg, String cpf, String centroCusto, String numeroPis, BigDecimal ultimoSalario, String nomeBanco, String agenciaBanco, String contaBanco, BigDecimal salarioColaborador, String jornada, String nomePai, String nomeMae, String escolaridade, String tipoCertidao, String emissaoCertidao, String livroCertidao, String cartorioCertidao, String folhaCertidao, String termoCertidao, String ufCertidao, String municipioCertidao, String tipoContrato, String modalidadeContrato, int numeroContrato, String numeroCartaoPonto, String contaFgts, int diasExperiencia, Date terminoContrato, String tipoAdmissao, String nomeSindicato, String contribuicaoSindical, String tipoFolha, String tipoSalario, String formaPagamento, BigDecimal insalubridade, BigDecimal periculosidade, BigDecimal horaMes, BigDecimal horaSemana, BigDecimal salarioHora, BigDecimal valeTransporteCusto, BigDecimal pensaoAlimenticia, BigDecimal salarioFamilia) {
+    public CadastroColaboradores(Long id, String nomeColaborador, String nomeDepartamento, String estadoCivil, String cargo, int numeroMatricula, Date dataContratacao, Date dataDemissao, String situacaoAtual, Date nascimento, String numeroCelular, String email, String unidadeContratante, String codCbo, String descricaoCbo, String logradouro, String bairro, String cidade, String cep, String uf, String complemento, String sexo, String carteiraSus, String deficiencia, String qualDeficiencia, String conjugeNome, int filhos, String habilitacao, String tituloEleitor, String zonaEleitor, String secaoEleitor, String numeroReservista, String numeroCarteiraTrabalho, String serieCarteiraTrabalho, String ufCtps, String expedicaoCtps, String rg, String ufRg, Date expedicaoRg, String orgaoEmissorRg, String cpf, String centroCusto, String numeroPis, BigDecimal ultimoSalario, String nomeBanco, String agenciaBanco, String contaBanco, BigDecimal salarioColaborador, String jornada, String nomePai, String nomeMae, String escolaridade, String tipoCertidao, String emissaoCertidao, String livroCertidao, String cartorioCertidao, String folhaCertidao, String termoCertidao, String ufCertidao, String municipioCertidao, String tipoContrato, String modalidadeContrato, int numeroContrato, String numeroCartaoPonto, String contaFgts, int diasExperiencia, Date terminoContrato, String tipoAdmissao, String nomeSindicato, String contribuicaoSindical, String tipoFolha, String tipoSalario, String formaPagamento, BigDecimal insalubridade, BigDecimal periculosidade, BigDecimal horaMes, BigDecimal horaSemana, BigDecimal salarioHora, BigDecimal valeTransporteCusto, BigDecimal pensaoAlimenticia, BigDecimal salarioFamilia) {
         this.id = id;
         this.nomeColaborador = nomeColaborador;
         this.nomeDepartamento = nomeDepartamento;
@@ -349,11 +349,11 @@ public class CadastroColaboradores implements Serializable {
         this.salarioFamilia = obj.getSalarioFamilia();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

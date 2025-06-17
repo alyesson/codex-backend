@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public interface CadastroJornadaRepository extends JpaRepository<CadastroJornada, Integer> {
+public interface CadastroJornadaRepository extends JpaRepository<CadastroJornada, Long> {
 
     @Query("SELECT j FROM CadastroJornada j WHERE j.codigoJornada = :codigoJornada")
     List<CadastroJornada> findByCodigoJornada(@Param("codigoJornada") String codigoJornada);

@@ -31,14 +31,14 @@ public class ContaBancariaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<ContaBancariaDto> delete(@PathVariable Integer id){
+    public ResponseEntity<ContaBancariaDto> delete(@PathVariable Long id){
         contaBancariaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'FINANCEIRO')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ContaBancariaDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ContaBancariaDto> findById(@PathVariable Long id){
         ContaBancaria objGrupo = contaBancariaService.findById(id);
         return ResponseEntity.ok().body(new ContaBancariaDto(objGrupo));
     }

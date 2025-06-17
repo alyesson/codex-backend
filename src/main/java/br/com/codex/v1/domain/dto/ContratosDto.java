@@ -14,7 +14,7 @@ public class ContratosDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "O nome do contrato não pode ficar em branco")
     protected String nomeContrato;
     @NotNull(message = "A data de início do contrato não pode ficar em branco")
@@ -74,11 +74,11 @@ public class ContratosDto implements Serializable {
         this.arquivo = obj.getArquivo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -33,12 +33,12 @@ public class HistoricoMovimentacaoMaterialService {
         return historicoMovimentacaoMaterialRepository.save(objEntra);
     }
 
-    public HistoricoMovimentacaoMaterial findById(Integer id){
+    public HistoricoMovimentacaoMaterial findById(Long id){
         Optional<HistoricoMovimentacaoMaterial> objEntrada = historicoMovimentacaoMaterialRepository.findById(id);
         return objEntrada.orElseThrow(() -> new ObjectNotFoundException("Material não encontrado"));
     }
 
-    public void delete(Integer id){
+    public void delete(Long id){
         historicoMovimentacaoMaterialRepository.deleteById(id);
     }
 

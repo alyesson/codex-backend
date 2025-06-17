@@ -14,7 +14,7 @@ public class RelatorioHorasExtrasDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "Código do funcionário não pode ficar em branco")
     protected Integer codigo;
     @NotNull(message = "Nome do funcionário não pode ficar em branco")
@@ -47,11 +47,11 @@ public class RelatorioHorasExtrasDto implements Serializable {
         this.unidadeFabril = obj.getUnidadeFabril();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

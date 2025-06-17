@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CadastroCurriculosRepository extends JpaRepository<CadastroCurriculos, Integer> {
+public interface CadastroCurriculosRepository extends JpaRepository<CadastroCurriculos, Long> {
 
     Optional<CadastroCurriculos> findByContato(String contato);
 }

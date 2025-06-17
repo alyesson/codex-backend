@@ -16,7 +16,7 @@ public class Contratos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String nomeContrato;
     protected Date inicioContrato;
     protected Date terminoContrato;
@@ -45,7 +45,7 @@ public class Contratos implements Serializable {
         super();
     }
 
-    public Contratos(Integer id, String nomeContrato, Date inicioContrato, Date terminoContrato, String tipoPessoa, String numeroCnpj, String relacao, String razaoSocial, String diaVenceParcela, String tipoContrato, BigDecimal valorContrato, BigDecimal pis, BigDecimal ipi, BigDecimal icms, BigDecimal cofins, BigDecimal iss, BigDecimal frete, BigDecimal valorDesconto, BigDecimal valorLiquido, String renegociado, String dataRenegociacao, String observacao, byte[] arquivo) {
+    public Contratos(Long id, String nomeContrato, Date inicioContrato, Date terminoContrato, String tipoPessoa, String numeroCnpj, String relacao, String razaoSocial, String diaVenceParcela, String tipoContrato, BigDecimal valorContrato, BigDecimal pis, BigDecimal ipi, BigDecimal icms, BigDecimal cofins, BigDecimal iss, BigDecimal frete, BigDecimal valorDesconto, BigDecimal valorLiquido, String renegociado, String dataRenegociacao, String observacao, byte[] arquivo) {
         this.id = id;
         this.nomeContrato = nomeContrato;
         this.inicioContrato = inicioContrato;
@@ -97,11 +97,11 @@ public class Contratos implements Serializable {
         this.arquivo = obj.getArquivo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

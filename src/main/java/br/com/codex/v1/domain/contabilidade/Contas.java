@@ -15,7 +15,7 @@ public class Contas implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String conta;
     protected String nome;
 
@@ -33,7 +33,7 @@ public class Contas implements Serializable {
         super();
     }
 
-    public Contas(Integer id, String conta, String nome, String reduzido, String utilidade, String saldo, String tipo, String natureza, Date inclusao, String situacao, String observacao) {
+    public Contas(Long id, String conta, String nome, String reduzido, String utilidade, String saldo, String tipo, String natureza, Date inclusao, String situacao, String observacao) {
         this.id = id;
         this.conta = conta;
         this.nome = nome;
@@ -61,11 +61,11 @@ public class Contas implements Serializable {
         this.observacao = obj.getObservacao();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

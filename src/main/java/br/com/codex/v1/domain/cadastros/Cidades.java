@@ -18,7 +18,7 @@ public class Cidades implements Serializable {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        protected Integer id;
+        protected Long id;
         @Column(length = 7)
         protected Integer codigoUf;
         @Column(length = 2)
@@ -34,7 +34,7 @@ public class Cidades implements Serializable {
         super();
     }
 
-    public Cidades(Integer id, Integer codigoUf, String uf, String nomeUf, String codigoMunicipio, String municipio) {
+    public Cidades(Long id, Integer codigoUf, String uf, String nomeUf, String codigoMunicipio, String municipio) {
         this.id = id;
         this.codigoUf = codigoUf;
         this.uf = uf;

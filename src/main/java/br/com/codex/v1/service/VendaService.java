@@ -23,7 +23,7 @@ public class VendaService {
         return vendaRepository.save(objVenda);
     }
 
-    public Venda findById(Integer id){
+    public Venda findById(Long id){
         Optional<Venda> objVenda = vendaRepository.findById(id);
         return objVenda.orElseThrow(() -> new ObjectNotFoundException("Venda não encontrada"));
     }

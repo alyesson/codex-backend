@@ -25,19 +25,19 @@ public class GrupoService {
         return grupoRepository.save(grupo);
     }
 
-    public Grupo update(Integer id, GrupoDto grupoDto) {
+    public Grupo update(Long id, GrupoDto grupoDto) {
         grupoDto.setId(id);
         Grupo obj = findById(id);
         obj = new Grupo(grupoDto);
         return grupoRepository.save(obj);
     }
 
-    public Grupo findById(Integer id) {
+    public Grupo findById(Long id) {
         Optional<Grupo> obj = grupoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Grupo não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         grupoRepository.deleteById(id);
     }
 

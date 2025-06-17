@@ -41,12 +41,12 @@ public class LancamentoContabilService {
         return lancamentoContabilRepository.findAllByYearRange(anoInicio, anoFim);
     }
 
-    public LancamentoContabil findById(Integer id) {
+    public LancamentoContabil findById(Long id) {
         Optional<LancamentoContabil> objLancamento = lancamentoContabilRepository.findById(id);
         return objLancamento.orElseThrow(() -> new ObjectNotFoundException("Lançamento não encontrado"));
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         lancamentoContabilRepository.deleteById(id);
     }
 
@@ -80,7 +80,7 @@ public class LancamentoContabilService {
         return lancamentoContabilRepository.save(lancamento);
     }
 
-    public LancamentoContabil update(Integer id, LancamentoContabilDto lancamentoContabilDto) {
+    public LancamentoContabil update(Long id, LancamentoContabilDto lancamentoContabilDto) {
         LancamentoContabil lancamento = findById(id);
         lancamentoContabilDto.setId(id);
         lancamento.setValor(lancamentoContabilDto.getValor());

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class PedidoItensCompraDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String descricaoProduto;
     protected Integer quantidade;
@@ -42,11 +42,11 @@ public class PedidoItensCompraDto implements Serializable {
         this.pedidoCompra = new PedidoCompraDto(obj.getPedidoCompra());
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

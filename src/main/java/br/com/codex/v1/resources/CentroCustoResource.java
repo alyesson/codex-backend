@@ -31,20 +31,20 @@ public class CentroCustoResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CentroCustoDto> update(@PathVariable Integer id, @Valid @RequestBody CentroCustoDto centrocustoDto){
+    public ResponseEntity<CentroCustoDto> update(@PathVariable Long id, @Valid @RequestBody CentroCustoDto centrocustoDto){
         CentroCusto obj = centrocustoService.update(id, centrocustoDto);
         return ResponseEntity.ok().body(new CentroCustoDto((obj)));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CentroCustoDto> delete(@PathVariable Integer id){
+    public ResponseEntity<CentroCustoDto> delete(@PathVariable Long id){
         centrocustoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CentroCustoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<CentroCustoDto> findById(@PathVariable Long id){
         CentroCusto objGrupo = centrocustoService.findById(id);
         return ResponseEntity.ok().body(new CentroCustoDto(objGrupo));
     }

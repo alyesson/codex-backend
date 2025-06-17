@@ -13,7 +13,7 @@ public class FornecedoresDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     @NotNull(message = "A razão social não pode estar em branco")
     protected String razaoSocial;
     protected String nomeFantasia;
@@ -53,11 +53,11 @@ public class FornecedoresDto implements Serializable {
         this.vendedor = obj.getVendedor();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

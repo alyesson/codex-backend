@@ -9,7 +9,7 @@ public class AvaliacaoFornecedoresDetalhesDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String criterio;
     protected float peso;
     protected float nota;
@@ -27,11 +27,11 @@ public class AvaliacaoFornecedoresDetalhesDto implements Serializable {
         this.avaliacaoFornecedores = new AvaliacaoFornecedoresDto(obj.getAvaliacaoFornecedores());
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

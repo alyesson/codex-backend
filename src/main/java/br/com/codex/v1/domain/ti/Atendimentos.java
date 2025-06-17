@@ -18,7 +18,7 @@ public class Atendimentos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String solicitante;
     protected String email;
     protected String telefone;
@@ -43,7 +43,7 @@ public class Atendimentos implements Serializable {
         super();
     }
 
-    public Atendimentos(Integer id, String solicitante, String email, String telefone, String departamento, String titulo, String problema, String categoria, String tipo, Prioridade prioridade, LocalDate dataAbertura, LocalDate dataFechamento, String diasAtuacao, String horaInicio, String horaFim, String resolucao, byte[] imagem, String nomeTecnico, Situacao situacao) {
+    public Atendimentos(Long id, String solicitante, String email, String telefone, String departamento, String titulo, String problema, String categoria, String tipo, Prioridade prioridade, LocalDate dataAbertura, LocalDate dataFechamento, String diasAtuacao, String horaInicio, String horaFim, String resolucao, byte[] imagem, String nomeTecnico, Situacao situacao) {
         super();
         this.id = id;
         this.solicitante = solicitante;
@@ -66,11 +66,11 @@ public class Atendimentos implements Serializable {
         this.situacao = situacao;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

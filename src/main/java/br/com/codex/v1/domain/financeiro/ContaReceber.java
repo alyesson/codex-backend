@@ -19,7 +19,7 @@ public class ContaReceber implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String descricao;
     protected String categoria;
     protected String recebidoDe;
@@ -39,7 +39,7 @@ public class ContaReceber implements Serializable {
         super();
     }
 
-    public ContaReceber(Integer id, String descricao, String categoria, String recebidoDe, String numeroDocumento, String repete, Date dataVencimento, Date dataCompetencia, Date dataEmissao, Integer quantidadeParcelas, BigDecimal valor, String metodoRecebimento, String situacao, String observacao, String origemDocumento) {
+    public ContaReceber(Long id, String descricao, String categoria, String recebidoDe, String numeroDocumento, String repete, Date dataVencimento, Date dataCompetencia, Date dataEmissao, Integer quantidadeParcelas, BigDecimal valor, String metodoRecebimento, String situacao, String observacao, String origemDocumento) {
         this.id = id;
         this.descricao = descricao;
         this.categoria = categoria;
@@ -75,11 +75,11 @@ public class ContaReceber implements Serializable {
         this.origemDocumento = obj.getOrigemDocumento();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

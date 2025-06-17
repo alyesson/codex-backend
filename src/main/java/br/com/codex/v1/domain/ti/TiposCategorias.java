@@ -17,7 +17,7 @@ public class TiposCategorias implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
     protected String descricao;
     protected String categoria;
 
@@ -25,7 +25,7 @@ public class TiposCategorias implements Serializable {
         super();
     }
 
-    public TiposCategorias(Integer id, String descricao, String categoria) {
+    public TiposCategorias(Long id, String descricao, String categoria) {
         this.id = id;
         this.descricao = descricao;
         this.categoria = categoria;
@@ -37,11 +37,11 @@ public class TiposCategorias implements Serializable {
         this.categoria = obj.getCategoria();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

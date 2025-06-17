@@ -21,21 +21,17 @@ public class TabelaCfop implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private Integer codigo;
-    @Lob
-    @Column(columnDefinition = "TEXT")
     private String descricao;
-    @NotBlank(message = "Movimentação do cfop não pode estar vazio")
     private String movimentacao; //determina de é interno, interestadual ou exterior
-    @NotBlank(message = "O fluxo não pode estar vazio")
     private String fluxo; //determina se é entrada, saída
 
     public TabelaCfop() {
         super();
     }
 
-    public TabelaCfop(Integer id, Integer codigo, String descricao, String movimentacao, String fluxo) {
+    public TabelaCfop(Long id, Integer codigo, String descricao, String movimentacao, String fluxo) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;

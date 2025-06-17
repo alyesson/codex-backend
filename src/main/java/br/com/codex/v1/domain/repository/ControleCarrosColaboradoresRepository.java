@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ControleCarrosColaboradoresRepository extends JpaRepository<ControleCarrosColaboradores, Integer> {
+public interface ControleCarrosColaboradoresRepository extends JpaRepository<ControleCarrosColaboradores, Long> {
 
     Optional<ControleCarrosColaboradores>findByNomeColaborador(String nomeColaborador);
 

@@ -10,7 +10,7 @@ public class SaidaMaterialDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Integer id;
+    protected Long id;
     protected String codigoProduto;
     protected String produto;
     protected String lote;
@@ -36,11 +36,11 @@ public class SaidaMaterialDto implements Serializable {
         this.solicitante = obj.getSolicitante();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

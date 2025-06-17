@@ -34,7 +34,7 @@ public class LancamentoContabilResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<LancamentoContabilDto> update(@PathVariable Integer id, @Valid @RequestBody LancamentoContabilDto lancamentoContabilDto){
+    public ResponseEntity<LancamentoContabilDto> update(@PathVariable Long id, @Valid @RequestBody LancamentoContabilDto lancamentoContabilDto){
         LancamentoContabil obj = lancamentoContabilService.update(id, lancamentoContabilDto);
         return ResponseEntity.ok().body(new LancamentoContabilDto(obj));
     }
@@ -60,14 +60,14 @@ public class LancamentoContabilResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<LancamentoContabilDto> findById(@PathVariable Integer id){
+    public ResponseEntity<LancamentoContabilDto> findById(@PathVariable Long id){
         LancamentoContabil obj = lancamentoContabilService.findById(id);
         return ResponseEntity.ok().body(new LancamentoContabilDto(obj));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<LancamentoContabilDto> delete(@PathVariable Integer id){
+    public ResponseEntity<LancamentoContabilDto> delete(@PathVariable Long id){
         lancamentoContabilService.delete(id);
         return ResponseEntity.noContent().build();
     }
