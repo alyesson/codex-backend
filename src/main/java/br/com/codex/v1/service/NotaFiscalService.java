@@ -3,9 +3,11 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
 import br.com.codex.v1.domain.contabilidade.NotaFiscal;
+import br.com.codex.v1.domain.contabilidade.XmlNotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
-import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
+import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.mapper.NotaFiscalMapper;
+import br.com.codex.v1.service.exceptions.NfeCustomException;
 import br.com.codex.v1.utilitario.Base64Util;
 import br.com.swconsultoria.certificado.Certificado;
 import br.com.swconsultoria.certificado.CertificadoService;
@@ -24,12 +26,12 @@ import br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEvento;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TEnviNFe;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TNFe;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TRetEnviNFe;
+import br.com.swconsultoria.nfe.schema_4.retConsStatServ.TRetConsStatServ;
 import br.com.swconsultoria.nfe.util.CancelamentoUtil;
 import br.com.swconsultoria.nfe.util.XmlNfeUtil;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
-import br.com.codex.v1.domain.repository.ConfiguracaoCertificadoRepository;
-import br.com.codex.v1.domain.repository.NotaFiscalDuplicatasRepository;
-import br.com.codex.v1.domain.repository.NotaFiscalItemRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -46,113 +48,78 @@ import java.util.Optional;
 
 @Service
 public class NotaFiscalService {
+        private static final Logger logger = LoggerFactory.getLogger(NotaFiscalService.class);
 
-    String host = null;
+        @Autowired
+        private ConfiguracaoCertificadoRepository certificadoRepository;
 
-    @Value("${spring.datasource.url}")
-    private String datasourceUrl;
+        @Autowired
+        private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
 
-    @Autowired
-    private NotaFiscalDuplicatasRepository notaFiscalDuplicatasRepository;
+        public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws Exception {
+            logger.info("Iniciando configuração para NF-e, CNPJ: {}", notaFiscalDto.getDocumentoEmitente());
+            Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getDocumentoEmitente());
+            Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1L);
 
-    @Autowired
-    private NotaFiscalItemRepository notaFiscalItemRepository;
+            if (cert.isEmpty()) {
+                throw new NfeException("Certificado não encontrado para CNPJ: " + notaFiscalDto.getDocumentoEmitente());
+            }
+            if (ambienteNotaFiscal.isEmpty()) {
+                throw new NfeException("Configuração de ambiente não encontrada");
+            }
 
-    @Autowired
-    private ConfiguracaoCertificadoRepository certificadoRepository;
-
-    @Autowired
-    private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
-
-    private static final String CAMINHO_SCHEMAS = "src/main/resources/schemas";
-
-    public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws Exception {
-        Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(notaFiscalDto.getDocumentoEmitente());
-        Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1L); //aqui o ID sempre será 1, pois é a únia informação que deve ser mantida.
-
-        String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
-
-        Certificado certificado = CertificadoService.certificadoPfxBytes(cert.get().getArquivo(), senhaDecodificada);
-        return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), AmbienteEnum.valueOf(String.valueOf(ambienteNotaFiscal.get().getCodigoAmbiente()))/*AmbienteEnum.HOMOLOGACAO*/, certificado,"schemas");
-    }
-
-    public TEnviNFe montarNotaFiscal(NotaFiscalDto nota) throws Exception {
-        TNFe tnfe = NotaFiscalMapper.paraTNFe(nota);
-
-        TEnviNFe enviNFe = new TEnviNFe();
-        enviNFe.setIdLote("001");
-        enviNFe.setVersao(ConstantesUtil.VERSAO.NFE);
-        enviNFe.setIndSinc("1");
-        enviNFe.getNFe().add(tnfe);
-        return enviNFe;
-    }
-
-    public TEnviNFe assinarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws Exception {
-        String xml = XmlNfeUtil.objectToXml(enviNFe);
-        String xmlAssinado = Assinar.assinaNfe(configuracoes, xml, AssinaturaEnum.NFE);  // <--- Usar enum
-        return XmlNfeUtil.xmlToObject(xmlAssinado, TEnviNFe.class);
-    }
-
-    public void validarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException, JAXBException {
-        String xml = XmlNfeUtil.objectToXml(enviNFe);
-        Validar validador = new Validar();
-
-        boolean valido = validador.isValidXml(configuracoes, xml, ServicosEnum.ENVIO);
-        if (!valido) {
-            throw new NfeValidacaoException("Erro na validação do XML da Nota Fiscal.");
+            String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
+            Certificado certificado = CertificadoService.certificadoPfxBytes(cert.get().getArquivo(), senhaDecodificada);
+            return ConfiguracoesNfe.criarConfiguracoes(
+                    br.com.swconsultoria.nfe.dom.enuns.EstadosEnum.valueOf(cert.get().getUf()),
+                    br.com.swconsultoria.nfe.dom.enuns.AmbienteEnum.valueOf(String.valueOf(ambienteNotaFiscal.get().getCodigoAmbiente())),
+                    certificado,
+                    "schemas"
+            );
         }
-    }
 
-    public TRetEnviNFe enviarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException {
-        return Nfe.enviarNfe(configuracoes, enviNFe, DocumentoEnum.NFE);
-    }
-
-    public void salvarXmlNotaFiscal(String chaveAcesso, String xml) throws IOException {
-
-        host = extrairHostDoJdbcUrl(datasourceUrl);
-        String CAMINHO_SAIDA_XML = "//" + host + "/tmp/xml/saidas/";
-
-        Path caminhoArquivo = Paths.get(CAMINHO_SAIDA_XML + chaveAcesso + "-nfe.xml");
-        Files.createDirectories(caminhoArquivo.getParent());
-        Files.writeString(caminhoArquivo, xml, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-    }
-
-    public void cancelarNotaFiscal(String chaveAcesso, String protocolo, String motivo, String cnpjEmitente, ConfiguracoesNfe config) throws Exception {
-        // Monta os dados do evento de cancelamento
-        Evento evento = new Evento();
-        evento.setChave(chaveAcesso);
-        evento.setProtocolo(protocolo);
-        evento.setCnpj(cnpjEmitente);
-        evento.setMotivo(motivo);
-        evento.setDataEvento(LocalDateTime.now());
-
-        // Gera o objeto TEnvEvento
-        TEnvEvento eventoCancelamento = CancelamentoUtil.montaCancelamento(evento, config);
-
-        // Assina o XML do evento
-        String xmlEvento = XmlNfeUtil.objectToXml(eventoCancelamento, config.getEncode());
-        String xmlEventoAssinado = Assinar.assinaNfe(config, xmlEvento, AssinaturaEnum.EVENTO);
-
-        // Reconverte o XML assinado em objeto TEnvEvento
-        eventoCancelamento = XmlNfeUtil.xmlToObject(xmlEventoAssinado, TEnvEvento.class);
-
-        // Envia o evento para a SEFAZ
-        TRetEnvEvento retorno = Nfe.cancelarNfe(config, eventoCancelamento, true, DocumentoEnum.NFE);
-
-        // Gera o XML do cancelamento processado
-        String xmlCancelado = CancelamentoUtil.criaProcEventoCancelamento(config, eventoCancelamento, retorno.getRetEvento().get(0));
-
-        // Salva o XML processado (implementação personalizada sua)
-        salvarXmlNotaFiscal(chaveAcesso + "-cancelamento", xmlCancelado);
-    }
-
-    private String extrairHostDoJdbcUrl(String jdbcUrl) {
-        // Exemplo: jdbc:mysql://vps55189.publiccloud.com.br:3306/codex
-        try {
-            URI uri = new URI(jdbcUrl.replaceFirst("^jdbc:", ""));
-            return uri.getHost();
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao extrair host da URL do banco de dados", e);
+        public TEnviNFe montarNotaFiscal(NotaFiscalDto nota) throws Exception {
+            logger.info("Montando NF-e para número: {} série: {}", nota.getNumero(), nota.getSerie());
+            TNFe tnfe = NotaFiscalMapper.paraTNFe(nota);
+            TEnviNFe enviNFe = new TEnviNFe();
+            enviNFe.setIdLote("001");
+            enviNFe.setVersao(ConstantesUtil.VERSAO.NFE);
+            enviNFe.setIndSinc("1"); // Síncrono
+            enviNFe.getNFe().add(tnfe);
+            return enviNFe;
         }
-    }
+
+        public TEnviNFe assinarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException, JAXBException {
+            logger.info("Assinando NF-e, ID Lote: {}", enviNFe.getIdLote());
+            String xml = XmlNfeUtil.objectToXml(enviNFe);
+            String xmlAssinado = Assinar.assinaNfe(configuracoes, xml, AssinaturaEnum.NFE);
+            return XmlNfeUtil.xmlToObject(xmlAssinado, TEnviNFe.class);
+        }
+
+        public void validarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException, JAXBException {
+            logger.info("Validando NF-e, ID Lote: {}", enviNFe.getIdLote());
+            String xml = XmlNfeUtil.objectToXml(enviNFe);
+            Validar validador = new Validar();
+            boolean valido = validador.isValidXml(configuracoes, xml, ServicosEnum.ENVIO);
+            if (!valido) {
+                throw new NfeException("Erro na validação do XML da NF-e: " + validador.getErros());
+            }
+        }
+
+        public TRetEnviNFe enviarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException {
+            logger.info("Enviando NF-e, ID Lote: {}", enviNFe.getIdLote());
+            TRetEnviNFe retorno = Nfe.enviarNfe(configuracoes, enviNFe, DocumentoEnum.NFE);
+            if (!"100".equals(retorno.getProtNFe().getInfProt().getCStat())) {
+                throw new NfeException("Erro ao enviar NF-e: " + retorno.getProtNFe().getInfProt().getXMotivo());
+            }
+            return retorno;
+        }
+
+        public void salvarXmlNotaFiscal(String chaveAcesso, String xml) throws NfeException {
+            logger.info("Salvando XML da NF-e, chave: {}", chaveAcesso);
+            // Implementar armazenamento (ex.: banco de dados ou sistema de arquivos)
+            // Exemplo: salvar em banco
+            // XmlNotaFiscal xmlNotaFiscal = new XmlNotaFiscal(chaveAcesso, xml, LocalDateTime.now());
+            // xmlNotaFiscalRepository.save(xmlNotaFiscal);
+        }
 }

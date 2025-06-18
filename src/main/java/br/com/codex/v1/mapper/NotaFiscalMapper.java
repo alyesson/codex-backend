@@ -21,22 +21,26 @@ public class NotaFiscalMapper {
         infNFe.setVersao(ConstantesUtil.VERSAO.NFE);
         infNFe.setId("NFe" + dto.getChave());
 
-        // Identificação
+        // Identificação (IDE)
         TNFe.InfNFe.Ide ide = new TNFe.InfNFe.Ide();
         ide.setCUF(dto.getCodigoUf());
         ide.setNatOp(dto.getNaturezaOperacao());
-        ide.setSerie(String.valueOf(dto.getSerie()));
-        ide.setNNF(String.valueOf(dto.getNumero()));
+        ide.setMod(dto.getModelo());
+        ide.setSerie(dto.getSerie());
+        ide.setNNF(dto.getNumero());
         ide.setDhEmi(dto.getEmissao().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         ide.setDhSaiEnt(dto.getDhSaidaEntrada());
         ide.setTpNF(dto.getTipo());
-        ide.setIdDest(dto.getIndicadorPresenca());
+        ide.setIdDest(dto.getLocalDestino());
         ide.setCMunFG(dto.getCodigoMunicipioEmitente());
-        ide.setFinNFe(dto.getCodigoNf());
-        ide.setIndFinal(dto.getIndicadorFinal().toString());
+        ide.setFinNFe(dto.getIndicadorFinal().toString());
         ide.setIndPres(dto.getIndicadorPresenca());
-        ide.setProcEmi("0");
+        ide.setProcEmi("0"); // Emissão própria
         ide.setVerProc("1.0");
+        if ("65".equals(dto.getModelo())) {
+            ide.setIndPres("1"); // Operação presencial para NFC-e
+            ide.setIndFinal("1"); // Consumidor final
+        }
         infNFe.setIde(ide);
 
         // Emitente
@@ -45,53 +49,49 @@ public class NotaFiscalMapper {
         emit.setXNome(dto.getRazaoSocialEmitente());
         emit.setXFant(dto.getNomeFantasiaEmitente());
         emit.setIE(dto.getInscricaoEstadualEmitente());
-        emit.setIEST(String.valueOf(dto.getInscricaoEstadualStEmitente()));
-        emit.setIM(String.valueOf(dto.getInscricaoMunicipalEmitente()));
+        emit.setIEST(dto.getInscricaoEstadualStEmitente() != null ? dto.getInscricaoEstadualStEmitente().toString() : null);
+        emit.setIM(dto.getInscricaoMunicipalEmitente() != null ? dto.getInscricaoMunicipalEmitente().toString() : null);
         emit.setCNAE(dto.getCnaeEmitente());
-        emit.setCRT(String.valueOf(dto.getRegimeTributarioEmitente()));
+        emit.setCRT(dto.getRegimeTributarioEmitente().toString());
         TEnderEmi enderEmit = new TEnderEmi();
         enderEmit.setXLgr(dto.getLogradouroEmitente());
         enderEmit.setNro(dto.getNumeroEnderecoEmitente());
-        enderEmit.setXCpl("");
         enderEmit.setXBairro(dto.getBairroEmitente());
         enderEmit.setCMun(dto.getCodigoMunicipioEmitente());
-        enderEmit.setXMun(dto.getCodigoMunicipioEmitente());
-        enderEmit.setUF(TUfEmi.fromValue(dto.getUfEmitente())); // Certifique-se de passar "SP", "RJ", etc.
+        enderEmit.setXMun(dto.getNomeMunicipioEmitente());
+        enderEmit.setUF(TUfEmi.fromValue(dto.getUfEmitente()));
         enderEmit.setCEP(dto.getCepEmitente());
         enderEmit.setFone(dto.getTelefoneEmitente());
         emit.setEnderEmit(enderEmit);
         infNFe.setEmit(emit);
 
+        // Destinatário (opcional para NFC-e)
+        if (!"65".equals(dto.getModelo()) || dto.getDocumentoDestinatario() != null) {
+            TNFe.InfNFe.Dest dest = new TNFe.InfNFe.Dest();
+            dest.setCNPJ(dto.getDocumentoDestinatario());
+            dest.setXNome(dto.getRazaoSocialDestinatario());
+            dest.setIE(dto.getInscricaoEstadualDestinatario());
+            dest.setIndIEDest(dto.getIndicadorInscricaoEstadualDestinatario().toString());
+            dest.setEmail(dto.getEmailDestinatario());
+            TEndereco enderDest = new TEndereco();
+            enderDest.setXLgr(dto.getLogradouroDestinatario());
+            enderDest.setNro(dto.getNumeroEnderecoDestinatario());
+            enderDest.setXBairro(dto.getBairroDestinatario());
+            enderDest.setCMun(dto.getCodigoMunicipioDestinatario());
+            enderDest.setXMun(dto.getNomeMunicipioDestinatario());
+            enderDest.setUF(TUf.fromValue(dto.getUfDestinatario()));
+            enderDest.setCEP(dto.getCepDestinatario());
+            enderDest.setCPais(dto.getCodigoPaisDestinatario());
+            enderDest.setXPais(dto.getPaisDestinatario());
+            enderDest.setFone(dto.getTelefoneDestinatario());
+            dest.setEnderDest(enderDest);
+            infNFe.setDest(dest);
+        }
 
-        // Destinatário
-        TNFe.InfNFe.Dest dest = new TNFe.InfNFe.Dest();
-        dest.setCNPJ(dto.getDocumentoDestinatario());
-        dest.setCPF(dto.getDocumentoDestinatario());
-        dest.setXNome(dto.getRazaoSocialDestinatario());
-        dest.setIE(dto.getInscricaoEstadualDestinatario());
-        dest.setIndIEDest(String.valueOf(dto.getIndicadorInscricaoEstadualDestinatario()));
-        dest.setEmail(dto.getEmailDestinatario());
-        TEndereco enderDest = new TEndereco();
-        enderDest.setXLgr(dto.getLogradouroDestinatario());
-        enderDest.setNro(dto.getNumeroEnderecoDestinatario());
-        enderDest.setXCpl("");
-        enderDest.setXBairro(dto.getBairroDestinatario());
-        enderDest.setCMun(dto.getCodigoMunicipioDestinatario());
-        enderDest.setXMun(dto.getNomeMunicipioDestinatario());
-        enderDest.setUF(TUf.valueOf(dto.getUfDestinatario())); // "SP", "MG", etc.
-        ufDestinatario = TUf.valueOf(dto.getUfDestinatario());
-        enderDest.setCEP(dto.getCepDestinatario());
-        enderDest.setCPais(dto.getCodigoPaisDestinatario());
-        enderDest.setXPais(dto.getPaisDestinatario());
-        enderDest.setFone(dto.getTelefoneDestinatario());
-
-        dest.setEnderDest(enderDest);
-
-        // Produtos / Itens
+        // Produtos/Itens
         List<NotaFiscalItemDto> itens = dto.getItens();
         for (int i = 0; i < itens.size(); i++) {
             NotaFiscalItemDto item = itens.get(i);
-
             TNFe.InfNFe.Det det = new TNFe.InfNFe.Det();
             det.setNItem(String.valueOf(i + 1));
 
@@ -99,37 +99,26 @@ public class NotaFiscalMapper {
             prod.setCProd(item.getCodigoProduto());
             prod.setXProd(item.getNomeProduto());
             prod.setCEAN(item.getCEAN());
-            prod.setCBarra("");
             prod.setNCM(item.getNcmSh());
-            prod.setCEST(String.valueOf(item.getCest()));
-            prod.setIndEscala("");
-            prod.setCNPJFab("");
-            prod.setCBenef("");
-            prod.setEXTIPI(item.getExtipi());
+            prod.setCEST(item.getCest());
             prod.setCFOP(item.getCfop());
             prod.setUCom(item.getUnidadeComercial());
-            prod.setQCom(String.valueOf(item.getQuantidadeComercial()));
-            prod.setVUnCom(String.valueOf(item.getValorUnitarioComercial()));
-            prod.setVProd(String.valueOf(item.getValorUnitarioComercial()));
-            prod.setCEANTrib(item.getCEAN());
-            prod.setCBarraTrib("");
-            prod.setUTrib(item.getUnidadeComercial());
-            prod.setQTrib(String.valueOf(item.getQuantidadeComercial()));
-            prod.setVUnTrib(String.valueOf(item.getValorUnitarioComercial()));
-            prod.setVFrete(String.valueOf(item.getValorFrete()));
-            prod.setVSeg(String.valueOf(item.getValorSeguro()));
-            prod.setVDesc(String.valueOf(item.getValorDesconto()));
-            prod.setVOutro("0.00");
+            prod.setQCom(item.getQuantidadeComercial().toString());
+            prod.setVUnCom(item.getValorUnitarioComercial().toString());
+            prod.setVProd(item.getValorTotalProdutos().toString());
+            prod.setUTrib(item.getUnidadeTributacao());
+            prod.setQTrib(item.getQuantidadeTributacao().toString());
+            prod.setVUnTrib(item.getValorUnitarioTributacao().toString());
+            prod.setVFrete(item.getValorFrete() != null ? item.getValorFrete().toString() : "0.00");
+            prod.setVSeg(item.getValorSeguro() != null ? item.getValorSeguro().toString() : "0.00");
+            prod.setVDesc(item.getValorDesconto() != null ? item.getValorDesconto().toString() : "0.00");
+            prod.setVOutro(item.getValorOutro() != null ? item.getValorOutro().toString() : "0.00");
             prod.setIndTot("1");
             prod.setXPed(item.getPedidoCompra());
-            prod.setNItemPed("");
-            prod.setNFCI("");
             det.setProd(prod);
 
             // Impostos
             TNFe.InfNFe.Det.Imposto imposto = new TNFe.InfNFe.Det.Imposto();
-
-            // === ICMS ===
             TNFe.InfNFe.Det.Imposto.ICMS icms = new TNFe.InfNFe.Det.Imposto.ICMS();
             String cst = item.getCstIcms();
             switch (cst) {
@@ -495,24 +484,23 @@ public class NotaFiscalMapper {
             // === PIS ===
             TNFe.InfNFe.Det.Imposto.PIS pis = new TNFe.InfNFe.Det.Imposto.PIS();
             TNFe.InfNFe.Det.Imposto.PIS.PISAliq pisAliq = new TNFe.InfNFe.Det.Imposto.PIS.PISAliq();
-            pisAliq.setCST(String.valueOf(item.getCstPis()));
+            pisAliq.setCST(item.getCstPis());
             pisAliq.setVBC(item.getBcPis().toString());
             pisAliq.setPPIS(item.getAliqPis().toString());
             pisAliq.setVPIS(item.getValorPis().toString());
             pis.setPISAliq(pisAliq);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoPIS(pis));
 
-            // === COFINS ===
+            // === Cofins ===
             TNFe.InfNFe.Det.Imposto.COFINS cofins = new TNFe.InfNFe.Det.Imposto.COFINS();
             TNFe.InfNFe.Det.Imposto.COFINS.COFINSAliq cofinsAliq = new TNFe.InfNFe.Det.Imposto.COFINS.COFINSAliq();
-            cofinsAliq.setCST(String.valueOf(item.getCstCofins()));
+            cofinsAliq.setCST(item.getCstCofins());
             cofinsAliq.setVBC(item.getBcCofins().toString());
             cofinsAliq.setPCOFINS(item.getAliqCofins().toString());
             cofinsAliq.setVCOFINS(item.getValorCofins().toString());
             cofins.setCOFINSAliq(cofinsAliq);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoCOFINS(cofins));
 
-            // Atribui o bloco imposto ao item
             det.setImposto(imposto);
             infNFe.getDet().add(det);
         }
@@ -520,38 +508,39 @@ public class NotaFiscalMapper {
         // Totais
         TNFe.InfNFe.Total total = new TNFe.InfNFe.Total();
         TNFe.InfNFe.Total.ICMSTot icmsTot = new TNFe.InfNFe.Total.ICMSTot();
-        icmsTot.setVProd(String.valueOf(dto.getValorProdutos()));
-        icmsTot.setVNF(String.valueOf(dto.getValorTotal()));
-        icmsTot.setVDesc(String.valueOf(dto.getValorDesconto()));
-        icmsTot.setVFrete(String.valueOf(dto.getValorFrete()));
-        icmsTot.setVSeg(String.valueOf(dto.getValorSeguro()));
-        icmsTot.setVII(String.valueOf(dto.getValorIi()));
-        icmsTot.setVIPI(String.valueOf(dto.getValorIpi()));
-        icmsTot.setVPIS(String.valueOf(dto.getValorPis()));
-        icmsTot.setVCOFINS(String.valueOf(dto.getValorCofins()));
+        icmsTot.setVBC(dto.getValorBaseCalculo().toString());
+        icmsTot.setVICMS(dto.getValorIcms().toString());
+        icmsTot.setVProd(dto.getValorProdutos().toString());
+        icmsTot.setVNF(dto.getValorTotal().toString());
+        icmsTot.setVDesc(dto.getValorDesconto() != null ? dto.getValorDesconto().toString() : "0.00");
+        icmsTot.setVFrete(dto.getValorFrete() != null ? dto.getValorFrete().toString() : "0.00");
+        icmsTot.setVSeg(dto.getValorSeguro() != null ? dto.getValorSeguro().toString() : "0.00");
+        icmsTot.setVIPI(dto.getValorIpi() != null ? dto.getValorIpi().toString() : "0.00");
+        icmsTot.setVPIS(dto.getValorPis() != null ? dto.getValorPis().toString() : "0.00");
+        icmsTot.setVCOFINS(dto.getValorCofins() != null ? dto.getValorCofins().toString() : "0.00");
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
 
         // Transporte
         TNFe.InfNFe.Transp transp = new TNFe.InfNFe.Transp();
-        transp.setModFrete(dto.getModalidadeFrete().toString());
+        transp.setModFrete(dto.getModalidadeFrete());
         infNFe.setTransp(transp);
 
-        // Fatura / Duplicatas
+        // Fatura/Duplicatas
         TNFe.InfNFe.Cobr cobr = new TNFe.InfNFe.Cobr();
         for (NotaFiscalDuplicatasDto dup : dto.getDuplicatas()) {
             TNFe.InfNFe.Cobr.Dup dupXml = new TNFe.InfNFe.Cobr.Dup();
             dupXml.setNDup(dup.getNumeroDuplicata());
             dupXml.setDVenc(dup.getDataVencimento().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            dupXml.setVDup(String.valueOf(dup.getValorDuplicata()));
+            dupXml.setVDup(dup.getValorDuplicata().toString());
             cobr.getDup().add(dupXml);
         }
         infNFe.setCobr(cobr);
 
-        // Info adicional
+        // Informações adicionais
         TNFe.InfNFe.InfAdic infAdic = new TNFe.InfNFe.InfAdic();
-        infAdic.setInfAdFisco(dto.getInformacaoAdicionalFisco().toString());
-        infAdic.setInfCpl(dto.getInformacaoAdicionalContribuinte().toString());
+        infAdic.setInfAdFisco(dto.getInformacaoAdicionalFisco());
+        infAdic.setInfCpl(dto.getInformacaoAdicionalContribuinte());
         infNFe.setInfAdic(infAdic);
 
         tnFe.setInfNFe(infNFe);
