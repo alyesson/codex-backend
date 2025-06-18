@@ -58,9 +58,6 @@ public class NotaFiscalService {
     private XmlNotaFiscalRepository xmlNotaFiscalRepository;
 
     @Autowired
-    private ControleNsuRepository controleNsuRepository;
-
-    @Autowired
     private ControleNsuService controleNsuService;
 
     Integer ambienteNota;

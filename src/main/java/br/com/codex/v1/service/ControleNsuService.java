@@ -34,7 +34,7 @@ public class ControleNsuService {
      */
     public BigInteger consultarUltimoNSU(String cnpj) {
         logger.info("Consultando último NSU para CNPJ: {}", cnpj);
-        return controleNsuRepository.findUltimoNSUPorCnpj(cnpj).orElse(BigInteger.ZERO);
+        return controleNsuRepository.findTopByCnpjOrderByUltimoNsuDesc(cnpj).orElse(BigInteger.ZERO);
     }
 
     /**
