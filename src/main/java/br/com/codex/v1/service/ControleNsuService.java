@@ -26,8 +26,8 @@ public class ControleNsuService {
     @Autowired
     private ControleNsuRepository controleNsuRepository;
 
-    @Autowired
-    private NotaFiscalService notaFiscalService;
+    //@Autowired
+    //private NotaFiscalService notaFiscalService;
 
     /**
      * Consulta o último NSU registrado para um CNPJ.
