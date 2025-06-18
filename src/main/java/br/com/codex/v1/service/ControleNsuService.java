@@ -1,12 +1,20 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
+import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
 import br.com.codex.v1.domain.contabilidade.ControleNsu;
+import br.com.codex.v1.domain.contabilidade.XmlNotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
+import br.com.codex.v1.domain.repository.ConfiguracaoCertificadoRepository;
 import br.com.codex.v1.domain.repository.ControleNsuRepository;
+import br.com.codex.v1.domain.repository.XmlNotaFiscalRepository;
+import br.com.codex.v1.utilitario.Base64Util;
+import br.com.swconsultoria.certificado.Certificado;
+import br.com.swconsultoria.certificado.CertificadoService;
 import br.com.swconsultoria.nfe.Nfe;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
-import br.com.swconsultoria.nfe.dom.enuns.ConsultaDFeEnum;
-import br.com.swconsultoria.nfe.dom.enuns.PessoaEnum;
+import br.com.swconsultoria.nfe.dom.enuns.*;
 import br.com.swconsultoria.nfe.exception.NfeException;
 import br.com.swconsultoria.nfe.schema.retdistdfeint.RetDistDFeInt;
 import org.slf4j.Logger;
@@ -26,15 +34,23 @@ public class ControleNsuService {
     @Autowired
     private ControleNsuRepository controleNsuRepository;
 
-    //@Autowired
-    //private NotaFiscalService notaFiscalService;
+    @Autowired
+    private ConfiguracaoCertificadoRepository certificadoRepository;
+
+    @Autowired
+    private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
+
+    @Autowired
+    private XmlNotaFiscalRepository xmlNotaFiscalRepository;
 
     /**
      * Consulta o último NSU registrado para um CNPJ.
      */
     public BigInteger consultarUltimoNSU(String cnpj) {
         logger.info("Consultando último NSU para CNPJ: {}", cnpj);
-        return controleNsuRepository.findTopByCnpjOrderByUltimoNsuDesc(cnpj).orElse(BigInteger.ZERO);
+        return controleNsuRepository.findUltimoNsuByCnpj(cnpj)
+                .map(BigInteger::valueOf)
+                .orElse(BigInteger.ZERO);
     }
 
     /**
@@ -55,10 +71,8 @@ public class ControleNsuService {
             return novo;
         });
 
-        // Configurações da SEFAZ - corrigindo a criação do DTO
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(cnpj);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        // Configurações da SEFAZ
+        ConfiguracoesNfe config = obterConfiguracoesNfe(cnpj);
 
         String nsu = String.format("%015d", controleNsu.getUltimoNsu());
 
@@ -75,10 +89,51 @@ public class ControleNsuService {
         if (retorno.getLoteDistDFeInt() != null) {
             for (RetDistDFeInt.LoteDistDFeInt.DocZip doc : retorno.getLoteDistDFeInt().getDocZip()) {
                 String xmlContent = new String(doc.getValue());
-                // Extrai a chave do XML ou usa um fallback
                 String chave = extrairChaveDoXml(xmlContent);
-                notaFiscalService.salvarXmlNotaFiscal(chave, xmlContent);
+                salvarXmlNotaFiscal(chave, xmlContent);
             }
+        }
+    }
+
+    private ConfiguracoesNfe obterConfiguracoesNfe(String cnpj) throws NfeException {
+        Optional<ConfiguracaoCertificado> cert = certificadoRepository.findByCnpj(cnpj);
+        Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1L);
+
+        if (ambienteNotaFiscal.isEmpty()) {
+            throw new NfeException("O ambiente da nota fiscal não está parametrizado");
+        }
+
+        if (cert.isEmpty()) {
+            throw new NfeException("Certificado não encontrado para CNPJ: " + cnpj);
+        }
+
+        try {
+            String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
+            Certificado certificado = CertificadoService.certificadoPfxBytes(cert.get().getArquivo(), senhaDecodificada);
+            return ConfiguracoesNfe.criarConfiguracoes(
+                    EstadosEnum.valueOf(cert.get().getUf()),
+                    AmbienteEnum.valueOf(String.valueOf(ambienteNotaFiscal.get().getCodigoAmbiente())),
+                    certificado,
+                    "schemas"
+            );
+        } catch (Exception e) {
+            logger.error("Erro ao configurar certificado", e);
+            throw new NfeException("Falha na configuração do certificado", e);
+        }
+    }
+
+    @Transactional
+    public void salvarXmlNotaFiscal(String chaveAcesso, String xml) throws NfeException {
+        try {
+            XmlNotaFiscal xmlNotaFiscal = new XmlNotaFiscal();
+            xmlNotaFiscal.setChaveAcesso(chaveAcesso);
+            xmlNotaFiscal.setXmlContent(xml);
+            xmlNotaFiscal.setDataCriacao(LocalDateTime.now());
+            xmlNotaFiscal.setTipoDocumento(DocumentoEnum.NFE.getTipo());
+            xmlNotaFiscalRepository.save(xmlNotaFiscal);
+            logger.info("XML salvo com sucesso para a chave: {}", chaveAcesso);
+        } catch (Exception e) {
+            throw new NfeException("Erro ao salvar XML no banco de dados: " + e.getMessage(), e);
         }
     }
 
