@@ -15,10 +15,11 @@ public class XmlNotaFiscalDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private String chaveAcesso;
-    private String xmlContent;
-    private LocalDateTime dataCriacao;
+    protected Long id;
+    protected String chaveAcesso;
+    protected String xmlContent;
+    protected LocalDateTime dataCriacao;
+    protected String tipoDocumento;
 
     public XmlNotaFiscalDto() {
         super();
@@ -29,5 +30,6 @@ public class XmlNotaFiscalDto implements Serializable {
         this.xmlContent = obj.getXmlContent();
         this.chaveAcesso = obj.getChaveAcesso();
         this.id = obj.getId();
+        this.tipoDocumento = obj.getTipoDocumento();
     }
 }

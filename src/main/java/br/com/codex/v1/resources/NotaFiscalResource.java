@@ -1,20 +1,21 @@
 package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
-import br.com.codex.v1.service.DistribuicaoDfeService;
 import br.com.codex.v1.service.NotaFiscalService;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
-import br.com.swconsultoria.nfe.dom.enuns.DocumentoEnum;
-import br.com.swconsultoria.nfe.exception.NfeException;
+import br.com.swconsultoria.nfe.dom.enuns.ServicosEnum;
+import br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento;
 import br.com.swconsultoria.nfe.schema_4.consSitNFe.TRetConsSitNFe;
-import br.com.swconsultoria.nfe.schema_4.enviNFe.TEnviNFe;
-import br.com.swconsultoria.nfe.schema_4.enviNFe.TRetEnviNFe;
-import br.com.swconsultoria.nfe.util.XmlNfeUtil;
+import br.com.swconsultoria.nfe.schema_4.inutNFe.TRetInutNFe;
+import br.com.swconsultoria.nfe.schema_4.retConsStatServ.TRetConsStatServ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.xml.bind.JAXBException;
+import java.math.BigInteger;
 
 @RestController
 @RequestMapping(value = "v1/api/nota_fiscal")
@@ -23,49 +24,136 @@ public class NotaFiscalResource {
     @Autowired
     private NotaFiscalService notaFiscalService;
 
-    @Autowired
-    private DistribuicaoDfeService distribuicaoDfeService;
-
+    /**
+     * Emite uma nova NF-e.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public NotaFiscalDto emitirNotaFiscal(@Valid @RequestBody NotaFiscalDto dto) throws Exception {
-        TEnviNFe enviNFe = notaFiscalService.montarNotaFiscal(dto);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
-        enviNFe = notaFiscalService.assinarNotaFiscal(enviNFe, config);
-        notaFiscalService.validarNotaFiscal(enviNFe, config);
-        TRetEnviNFe retorno = notaFiscalService.enviarNotaFiscal(enviNFe, config);
-
-        dto.setChave(retorno.getProtNFe().getInfProt().getChNFe());
-        dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
-        dto.setNumeroProtocolo(retorno.getProtNFe().getInfProt().getNProt());
-
-        String xml = XmlNfeUtil.objectToXml(enviNFe);
-        notaFiscalService.salvarXmlNotaFiscal(dto.getChave(), xml);
-
-        return dto;
+    public ResponseEntity<NotaFiscalDto> emitirNotaFiscal(@Valid @RequestBody NotaFiscalDto dto) throws Exception {
+        NotaFiscalDto resultado = notaFiscalService.emitirNotaFiscal(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
     }
 
-    @PostMapping("/distribuicao")
-    public void consultarDocumentos(@RequestParam String cnpj, @RequestParam String ambiente) throws Exception {
-        distribuicaoDfeService.consultarDocumentos(cnpj, ambiente);
-    }
-
+    /**
+     * Consulta o status de uma NF-e.
+     */
     @GetMapping("/{chave}")
-    public NotaFiscalDto consultarNotaFiscal(@PathVariable String chave) throws Exception {
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(new NotaFiscalDto());
-        TRetConsSitNFe retorno = Nfe.consultaNfe(config, chave, DocumentoEnum.NFE);
-        // Mapear retorno para DTO
+    public ResponseEntity<NotaFiscalDto> consultarNotaFiscal(@PathVariable String chave, @RequestParam String cnpj) throws Exception {
+
         NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setChave(chave);
-        dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
-        dto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
-        return dto;
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        br.com.swconsultoria.nfe.schema_4.retConsSitNFe.TRetConsSitNFe retorno = notaFiscalService.consultarNotaFiscal(chave, config);
+
+        NotaFiscalDto responseDto = new NotaFiscalDto();
+        responseDto.setChave(chave);
+
+        if (retorno.getProtNFe() != null && retorno.getProtNFe().getInfProt() != null) {
+            responseDto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
+            responseDto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
+        } else {
+            responseDto.setCstat(retorno.getCStat());
+            responseDto.setMotivoProtocolo(retorno.getXMotivo());
+        }
+        return ResponseEntity.ok(responseDto);
     }
 
+    /**
+     * Cancela uma NF-e.
+     */
     @PostMapping("/{chave}/cancelar")
-    public void cancelarNotaFiscal(@PathVariable String chave, @RequestParam String protocolo,
-                                   @RequestParam String motivo, @RequestParam String cnpj) throws Exception {
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(new NotaFiscalDto().setDocumentoEmitente(cnpj));
-        notaFiscalService.cancelarNotaFiscal(chave, protocolo, motivo, cnpj, config);
+    public ResponseEntity<br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento> cancelarNotaFiscal(
+            @PathVariable String chave, @RequestParam String protocolo, @RequestParam String motivo, @RequestParam String cnpj) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento retorno = notaFiscalService.cancelarNotaFiscal(chave, protocolo, motivo, cnpj, config);
+
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Emite uma Carta de Correção para uma NF-e.
+     */
+    @PostMapping("/{chave}/carta_correcao")
+    public ResponseEntity<TRetEnvEvento> cartaCorrecao(@PathVariable String chave, @RequestParam String correcao, @RequestParam String cnpj) throws Exception {
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        TRetEnvEvento retorno = notaFiscalService.cartaCorrecao(chave, cnpj, correcao, config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Inutiliza uma faixa de numeração de NF-e.
+     */
+    @PostMapping("/inutilizar")
+    public ResponseEntity<TRetInutNFe> inutilizarNotaFiscal(
+            @RequestParam String cnpj,
+            @RequestParam String justificativa,
+            @RequestParam String ano,
+            @RequestParam String serie,
+            @RequestParam String numInicial,
+            @RequestParam String numFinal) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        TRetInutNFe retorno = notaFiscalService.inutilizarNotaFiscal(cnpj, justificativa, ano, serie, numInicial, numFinal, config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Consulta o status de serviço da SEFAZ.
+     */
+    @GetMapping("/status")
+    public ResponseEntity<TRetConsStatServ> consultarStatusServico(
+            @RequestParam String cnpj) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        TRetConsStatServ retorno = notaFiscalService.consultarStatusServico(config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Envia um evento manual.
+     */
+    @PostMapping("/evento")
+    public ResponseEntity<String> enviarEventoManual(
+            @RequestBody String xmlEvento,
+            @RequestParam String tipoEvento,
+            @RequestParam boolean valida,
+            @RequestParam boolean assina,
+            @RequestParam String cnpj) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        String retorno = notaFiscalService.enviarEventoManual(
+                xmlEvento,
+                ServicosEnum.valueOf(tipoEvento),
+                valida,
+                assina,
+                config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Consulta documentos fiscais por NSU.
+     */
+    @GetMapping("/distribuicao")
+    public ResponseEntity<BigInteger> consultarDocumentos(
+            @RequestParam String cnpj,
+            @RequestParam String ambiente) throws Exception {
+
+        BigInteger ultimoNsu = notaFiscalService.consultarNSU(cnpj, ambiente);
+        return ResponseEntity.ok(ultimoNsu);
     }
 }

@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -360,7 +359,7 @@ public class NotaFiscal implements Serializable {
         this.numeroEnderecoDestinatario = obj.getNumeroEnderecoDestinatario();
         this.ufDestinatario = obj.getUfDestinatario();
         this.emailDestinatario = obj.getEmailDestinatario();
-        this.codigoPaisDestinatario = Integer.valueOf(obj.getCodigoPaisDestinatario());
+        this.codigoPaisDestinatario = obj.getCodigoPaisDestinatario() != null ? Integer.valueOf(obj.getCodigoPaisDestinatario()) : null;
         this.paisDestinatario = obj.getPaisDestinatario();
         this.valorBaseCalculo = obj.getValorBaseCalculo();
         this.valorIcms = obj.getValorIcms();

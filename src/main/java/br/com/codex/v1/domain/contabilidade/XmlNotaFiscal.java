@@ -19,26 +19,30 @@ public class XmlNotaFiscal implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(nullable = false)
-    private String chaveAcesso;
+    protected String chaveAcesso;
 
     @Lob
-    private String xmlContent;
+    protected String xmlContent;
 
     @Column(nullable = false)
-    private LocalDateTime dataCriacao;
+    protected LocalDateTime dataCriacao;
+
+    @Column(length = 3)
+    protected String tipoDocumento;
 
     public XmlNotaFiscal() {
         super();
     }
 
-    public XmlNotaFiscal(LocalDateTime dataCriacao, String xmlContent, String chaveAcesso, Long id) {
+    public XmlNotaFiscal(LocalDateTime dataCriacao, String xmlContent, String chaveAcesso, Long id, String tipoDocumento) {
         this.dataCriacao = dataCriacao;
         this.xmlContent = xmlContent;
         this.chaveAcesso = chaveAcesso;
         this.id = id;
+        this.tipoDocumento = tipoDocumento;
     }
 
     public XmlNotaFiscal(XmlNotaFiscalDto obj) {
@@ -46,6 +50,7 @@ public class XmlNotaFiscal implements Serializable {
         this.xmlContent = obj.getXmlContent();
         this.chaveAcesso = obj.getChaveAcesso();
         this.id = obj.getId();
+        this.tipoDocumento = obj.getTipoDocumento();
     }
 
     @Override

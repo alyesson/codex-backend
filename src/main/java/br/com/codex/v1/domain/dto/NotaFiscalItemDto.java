@@ -205,7 +205,7 @@ public class NotaFiscalItemDto implements Serializable {
     }
 
     public void setCest(String cest) {
-        this.cest = cest.replace(".", "");;
+        this.cest = cest.replace(".", "");
     }
 }
 
