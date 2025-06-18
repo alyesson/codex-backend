@@ -19,10 +19,11 @@ public class NotaFiscalMapper {
 
         TNFe.InfNFe infNFe = new TNFe.InfNFe();
         infNFe.setVersao(ConstantesUtil.VERSAO.NFE);
-        infNFe.setId("NFe" + dto.getId());
+        infNFe.setId("NFe" + dto.getChave());
 
         // Identificação
         TNFe.InfNFe.Ide ide = new TNFe.InfNFe.Ide();
+        ide.setCUF(dto.getCodigoUf());
         ide.setNatOp(dto.getNaturezaOperacao());
         ide.setSerie(String.valueOf(dto.getSerie()));
         ide.setNNF(String.valueOf(dto.getNumero()));
