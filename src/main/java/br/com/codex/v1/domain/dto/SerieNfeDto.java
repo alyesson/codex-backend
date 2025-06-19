@@ -24,6 +24,9 @@ public class SerieNfeDto implements Serializable {
     @Size(max = 3, message = "Número da série deve ter até 3 caracteres")
     protected String numeroSerie;
 
+    @NotBlank(message = "Nome da série não pode estar em branco")
+    protected String nome;
+
     @NotBlank(message = "Tipo de documento é obrigatório")
     protected String tipoDocumento;
 
@@ -51,6 +54,7 @@ public class SerieNfeDto implements Serializable {
     public SerieNfeDto(SerieNfe obj) {
         this.id = obj.getId();
         this.numeroSerie = obj.getNumeroSerie();
+        this.nome = obj.getNome();
         this.tipoDocumento = obj.getTipoDocumento();
         this.ultimoNumero = obj.getUltimoNumero();
         this.cnpj = obj.getCnpj();

@@ -22,6 +22,8 @@ public class SerieNfe implements Serializable {
     private Long id;
     @Column(length = 3)
     private String numeroSerie;
+    @Column(length = 50)
+    private String nome;
     @Column(length = 15)
     private String tipoDocumento;
     @Column(length = 25)
@@ -39,9 +41,10 @@ public class SerieNfe implements Serializable {
         super();
     }
 
-    public SerieNfe(Long id, String numeroSerie, String tipoDocumento, Integer ultimoNumero, String cnpj, String ambiente, String status, LocalDateTime dataCriacao) {
+    public SerieNfe(Long id, String numeroSerie,String nome, String tipoDocumento, Integer ultimoNumero, String cnpj, String ambiente, String status, LocalDateTime dataCriacao) {
         this.id = id;
         this.numeroSerie = numeroSerie;
+        this.nome = nome;
         this.tipoDocumento = tipoDocumento;
         this.ultimoNumero = ultimoNumero;
         this.cnpj = cnpj;
@@ -53,6 +56,7 @@ public class SerieNfe implements Serializable {
     public SerieNfe(SerieNfeDto obj) {
         this.id = obj.getId();
         this.numeroSerie = obj.getNumeroSerie();
+        this.nome = obj.getNome();
         this.tipoDocumento = obj.getTipoDocumento();
         this.ultimoNumero = obj.getUltimoNumero();
         this.cnpj = obj.getCnpj();

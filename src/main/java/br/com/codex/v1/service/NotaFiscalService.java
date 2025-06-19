@@ -63,6 +63,29 @@ public class NotaFiscalService {
     Integer ambienteNota;
 
     /**
+     * Executa o processo completo de emissão da NF-e.
+     */
+    @Transactional
+    public NotaFiscalDto emitirNotaFiscal(NotaFiscalDto dto) throws Exception {
+        logger.info("Iniciando emissão da NF-e para CNPJ: {}", dto.getDocumentoEmitente());
+        ConfiguracoesNfe config = iniciarConfiguracao(dto);
+        TEnviNFe enviNFe = montarNotaFiscal(dto);
+        enviNFe = assinarNotaFiscal(enviNFe, config);
+        validarNotaFiscal(enviNFe, config);
+        TRetEnviNFe retorno = enviarNotaFiscal(enviNFe, config);
+
+        dto.setChave(retorno.getProtNFe().getInfProt().getChNFe());
+        dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
+        dto.setNumeroProtocolo(retorno.getProtNFe().getInfProt().getNProt());
+        dto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
+
+        String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
+        salvarXmlNotaFiscal(dto.getChave(), xml);
+
+        return dto;
+    }
+
+    /**
      * Inicializa as configurações da NF-e com certificado e ambiente.
      */
     public ConfiguracoesNfe iniciarConfiguracao(NotaFiscalDto notaFiscalDto) throws NfeException {
@@ -178,29 +201,6 @@ public class NotaFiscalService {
         } catch (Exception e) {
             throw new NfeException("Erro ao salvar XML no banco de dados: " + e.getMessage(), e);
         }
-    }
-
-    /**
-     * Executa o processo completo de emissão da NF-e.
-     */
-    @Transactional
-    public NotaFiscalDto emitirNotaFiscal(NotaFiscalDto dto) throws Exception {
-        logger.info("Iniciando emissão da NF-e para CNPJ: {}", dto.getDocumentoEmitente());
-        ConfiguracoesNfe config = iniciarConfiguracao(dto);
-        TEnviNFe enviNFe = montarNotaFiscal(dto);
-        enviNFe = assinarNotaFiscal(enviNFe, config);
-        validarNotaFiscal(enviNFe, config);
-        TRetEnviNFe retorno = enviarNotaFiscal(enviNFe, config);
-
-        dto.setChave(retorno.getProtNFe().getInfProt().getChNFe());
-        dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
-        dto.setNumeroProtocolo(retorno.getProtNFe().getInfProt().getNProt());
-        dto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
-
-        String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
-        salvarXmlNotaFiscal(dto.getChave(), xml);
-
-        return dto;
     }
 
     /**
@@ -439,7 +439,7 @@ public class NotaFiscalService {
     }
 
     /**
-     * Extrai a chave de evento do XML (método auxiliar).
+     * Extrai a chave de evento do XML (métudo auxiliar).
      */
     private String extrairChaveEvento(String xml) {
         // Implementação simplificada para extrair chNFe do XML
