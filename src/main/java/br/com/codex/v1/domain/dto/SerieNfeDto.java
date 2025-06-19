@@ -43,8 +43,6 @@ public class SerieNfeDto implements Serializable {
 
     @NotNull(message = "Status é obrigatório")
     protected String status;
-
-    @NotNull(message = "Data de criação é obrigatória")
     protected LocalDateTime dataCriacao = LocalDateTime.now();
 
     public SerieNfeDto() {
