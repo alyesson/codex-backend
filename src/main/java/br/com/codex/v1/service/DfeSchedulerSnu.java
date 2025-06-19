@@ -23,9 +23,7 @@ public class DfeSchedulerSnu {
     private final ConfiguracaoCertificadoRepository certificadoRepository;
 
     @Autowired
-    public DfeSchedulerSnu(NotaFiscalService notaFiscalService,
-                           AmbienteNotaFiscalRepository ambienteNotaFiscalRepository,
-                           ConfiguracaoCertificadoRepository certificadoRepository) {
+    public DfeSchedulerSnu(NotaFiscalService notaFiscalService, AmbienteNotaFiscalRepository ambienteNotaFiscalRepository, ConfiguracaoCertificadoRepository certificadoRepository) {
         this.notaFiscalService = notaFiscalService;
         this.ambienteNotaFiscalRepository = ambienteNotaFiscalRepository;
         this.certificadoRepository = certificadoRepository;
