@@ -91,4 +91,9 @@ public class EmpresaService {
     public List<Empresa> findAllByDataBase() {
         return empresaRepository.findAllByDataBase();
     }
+
+    public Empresa findByCnpj(String cnpj){
+        Optional<Empresa> objCnpj = empresaRepository.findByCnpj(cnpj);
+        return objCnpj.orElseThrow(() -> new ObjectNotFoundException("Nenhuma empresa encontrada com o CNPJ "+ objCnpj));
+    }
 }

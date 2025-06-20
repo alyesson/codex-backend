@@ -88,7 +88,7 @@ public class DBService {
 
             Empresa empresa = new Empresa(null, "37025579000157", "", "", "", "", "",
                     "Codex Soluções Em TI", "", "", "", "", "", "", "", "", "", "", "",
-                    "Ativo", "Ótimo", "codex", "----", true);
+                    "Ativo", "Ótimo", "codex", "----", true, "");
             empresaRepository.save(empresa);
 
             AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);

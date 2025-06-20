@@ -55,6 +55,12 @@ public class EmpresaResource {
         return ResponseEntity.ok().body(new EmpresaDto(objEmpresa));
     }
 
+    @GetMapping(value = "/cnpj/{cnpj}")
+    public ResponseEntity<EmpresaDto> findByCnpj(@PathVariable String cnpj){
+        Empresa objEmpresa = empresaService.findByCnpj(cnpj);
+        return ResponseEntity.ok().body(new EmpresaDto(objEmpresa));
+    }
+
     @GetMapping
     public ResponseEntity<List<EmpresaDto>> findAll(){
         List<Empresa> list = empresaService.findAll();
