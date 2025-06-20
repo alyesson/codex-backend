@@ -34,7 +34,10 @@ public class Empresa implements Serializable {
     private String nomeFantasia;
     @Column(length = 150)
     private String razaoSocial;
+    @Column(length = 200)
     private String endereco;
+    @Column(length = 6)
+    private String numero;
     private String complemento;
     @Column(length = 60)
     private String bairro;
@@ -66,7 +69,7 @@ public class Empresa implements Serializable {
         super();
     }
 
-    public Empresa(Long id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa, Boolean possuiBase, String codigoCidade) {
+    public Empresa(Long id, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String inscricaoEstadualSt, String suframa, String cnae, String nomeFantasia, String razaoSocial, String endereco, String numero, String complemento, String bairro, String cidade, String cep, String uf, String regimeTributario, String telefone, String celular, String emailContato, String situacao, String classificacaoFinanceira, String jdbcUrl, String tipoEmpresa, Boolean possuiBase, String codigoCidade) {
         this.id = id;
         this.cnpj = cnpj;
         this.inscricaoEstadual = inscricaoEstadual;
@@ -77,6 +80,7 @@ public class Empresa implements Serializable {
         this.nomeFantasia = nomeFantasia;
         this.razaoSocial = razaoSocial;
         this.endereco = endereco;
+        this.numero = numero;
         this.complemento = complemento;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -105,6 +109,7 @@ public class Empresa implements Serializable {
         this.nomeFantasia = obj.getNomeFantasia();
         this.razaoSocial = obj.getRazaoSocial();
         this.endereco = obj.getEndereco();
+        this.numero = obj.getNumero();
         this.complemento = obj.getComplemento();
         this.bairro = obj.getBairro();
         this.cidade = obj.getCidade();

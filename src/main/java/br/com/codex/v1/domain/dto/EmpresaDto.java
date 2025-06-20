@@ -32,6 +32,7 @@ public class EmpresaDto implements Serializable {
     private String razaoSocial;
     @NotBlank(message = "Endereço não pode estar em branco")
     private String endereco;
+    private String numero;
     private String complemento;
     private String bairro;
     @NotBlank(message = "Cidade não pode estar em branco")
@@ -71,6 +72,7 @@ public class EmpresaDto implements Serializable {
         this.nomeFantasia = obj.getNomeFantasia();
         this.razaoSocial = obj.getRazaoSocial();
         this.endereco = obj.getEndereco();
+        this.numero = obj.getNumero();
         this.complemento = obj.getComplemento();
         this.bairro = obj.getBairro();
         this.cidade = obj.getCidade();

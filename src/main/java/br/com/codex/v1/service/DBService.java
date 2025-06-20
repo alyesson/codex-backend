@@ -80,14 +80,14 @@ public class DBService {
     public void criaBaseCodex() {
             Usuario pessoa = new Usuario(null, "Administrador", "80374841063",
                     Date.valueOf("2024-01-07"), "Neutro", "19974061119",
-                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP",
+                    "Rua Indefinida", "Indefinido", "Hortolândia", "SP",
                     "13185-421", "suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2024!"), "Sistema", "00000");
             pessoa.addPerfil(Perfil.ADMINISTRADOR);
             usuarioRepository.save(pessoa);
 
             Empresa empresa = new Empresa(null, "37025579000157", "", "", "", "", "",
-                    "Codex Soluções Em TI", "", "", "", "", "", "", "", "", "", "", "",
+                    "Codex Soluções Em TI", "", "", "", "","", "", "", "", "", "", "", "",
                     "Ativo", "Ótimo", "codex", "----", true, "");
             empresaRepository.save(empresa);
 
