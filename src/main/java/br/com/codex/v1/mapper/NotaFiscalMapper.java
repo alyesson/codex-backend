@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.*;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -29,7 +30,12 @@ public class NotaFiscalMapper {
         ide.setSerie(dto.getSerie());
         ide.setNNF(dto.getNumero());
         ide.setDhEmi(dto.getEmissao().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        ide.setDhSaiEnt(dto.getDhSaidaEntrada());
+
+        // Gera a data/hora ATUAL no formato desejado
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String dataHoraAtualFormatada = LocalDateTime.now().format(formatter);
+        ide.setDhSaiEnt(dataHoraAtualFormatada);
+
         ide.setTpNF(dto.getTipo());
         ide.setIdDest(dto.getLocalDestino());
         ide.setCMunFG(dto.getCodigoMunicipioEmitente());

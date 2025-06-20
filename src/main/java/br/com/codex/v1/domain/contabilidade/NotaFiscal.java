@@ -27,14 +27,39 @@ public class NotaFiscal implements Serializable {
     private Long id;
 
     // ------------ GRUPO IDE (Identificação) ------------
+
+    @Column(length = 15)
+    private String cepEmitente;
+
     @Column(length = 8)
     private String codigoUf;
 
     @Column(length = 8)
     private String codigoNf;
 
-    @Column
-    private String naturezaOperacao;
+    @Column(length = 175)
+    private String cnaeEmitente;
+
+    @Column(length = 8)
+    private String codigoMunicipioEmitente;
+
+    @Column(length = 45)
+    private String dhSaidaEntrada;
+
+    @Column(length = 45)
+    private String documentoEmitente;
+
+    @Column(length = 15)
+    private LocalDate emissao;
+
+    @Column(length = 4)
+    private Integer finalidadeEmissao;
+
+    @Column(length = 4)
+    private Integer consumidorFinal;
+
+    @Column(length = 4)
+    private String presencaComprador;
 
     @Column(length = 2)
     private String localDestino;
@@ -42,17 +67,14 @@ public class NotaFiscal implements Serializable {
     @Column(length = 45)
     private String modelo;
 
-    @Column(length = 5)
-    private String serie;
+    @Column (length = 200)
+    private String naturezaOperacao;
 
     @Column(length = 10)
     private String numero;
 
-    @Column(length = 15)
-    private LocalDate emissao;
-
-    @Column(length = 45)
-    private String dhSaidaEntrada;
+    @Column(length = 5)
+    private String serie;
 
     @Column(length = 5)
     private String tipo;
@@ -63,15 +85,6 @@ public class NotaFiscal implements Serializable {
     @Column(length = 2)
     private Integer indicadorFinal;
 
-    @Column(length = 150)
-    private String razaoSocialEmitente;
-
-    @Column(length = 150)
-    private String nomeFantasiaEmitente;
-
-    @Column(length = 45)
-    private String documentoEmitente;
-
     @Column(length = 45)
     private String inscricaoEstadualEmitente;
 
@@ -81,17 +94,14 @@ public class NotaFiscal implements Serializable {
     @Column(length = 15)
     private Integer inscricaoMunicipalEmitente;
 
-    @Column(length = 175)
-    private String cnaeEmitente;
+    @Column(length = 150)
+    private String razaoSocialEmitente;
+
+    @Column(length = 150)
+    private String nomeFantasiaEmitente;
 
     @Column(length = 4)
     private Integer regimeTributarioEmitente;
-
-    @Column(length = 15)
-    private String cepEmitente;
-
-    @Column(length = 8)
-    private String codigoMunicipioEmitente;
 
     @Column(length = 45)
     private String nomeMunicipioEmitente;
@@ -102,7 +112,7 @@ public class NotaFiscal implements Serializable {
     @Column(length = 45)
     private String telefoneEmitente;
 
-    @Column
+    @Column (length = 200)
     private String logradouroEmitente;
 
     @Column(length = 15)
@@ -222,19 +232,20 @@ public class NotaFiscal implements Serializable {
         super();
     }
 
-    public NotaFiscal(Long id, String codigoUf, String codigoNf, String naturezaOperacao, String localDestino, String modelo, String serie, String numero, LocalDate emissao, String dhSaidaEntrada,
-                      String tipo, String indicadorPresenca, Integer indicadorFinal, String razaoSocialEmitente, String nomeFantasiaEmitente, String documentoEmitente,
-                      String inscricaoEstadualEmitente, Integer inscricaoEstadualStEmitente, Integer inscricaoMunicipalEmitente, String cnaeEmitente, Integer regimeTributarioEmitente,
-                      String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente, String telefoneEmitente, String logradouroEmitente,
-                      String numeroEnderecoEmitente, String ufEmitente, String razaoSocialDestinatario, String documentoDestinatario, Integer indicadorInscricaoEstadualDestinatario,
-                      String inscricaoEstadualDestinatario, String cepDestinatario, String codigoMunicipioDestinatario, String nomeMunicipioDestinatario, String bairroDestinatario,
-                      String telefoneDestinatario, String logradouroDestinatario, String numeroEnderecoDestinatario, String ufDestinatario, String emailDestinatario, Integer codigoPaisDestinatario ,
-                      String paisDestinatario, BigDecimal valorBaseCalculo, BigDecimal valorIcms, BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt,
-                      BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido, BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto,
-                      BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal,
-                      String modalidadeFrete, String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura,
-                      BigDecimal valorOriginalFatura, BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte,
-                      String chave, String cstat, String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo) {
+    public NotaFiscal(Long id, String codigoUf, String codigoNf, String naturezaOperacao, String localDestino, String modelo, String serie, String numero, LocalDate emissao,
+                      Integer finalidadeEmissao, Integer consumidorFinal, String presencaComprador, String dhSaidaEntrada, String tipo, String indicadorPresenca, Integer indicadorFinal, String razaoSocialEmitente,
+                      String nomeFantasiaEmitente, String documentoEmitente, String inscricaoEstadualEmitente, Integer inscricaoEstadualStEmitente, Integer inscricaoMunicipalEmitente,
+                      String cnaeEmitente, Integer regimeTributarioEmitente, String cepEmitente, String codigoMunicipioEmitente, String nomeMunicipioEmitente, String bairroEmitente,
+                      String telefoneEmitente, String logradouroEmitente, String numeroEnderecoEmitente, String ufEmitente, String razaoSocialDestinatario, String documentoDestinatario,
+                      Integer indicadorInscricaoEstadualDestinatario, String inscricaoEstadualDestinatario, String cepDestinatario, String codigoMunicipioDestinatario,
+                      String nomeMunicipioDestinatario, String bairroDestinatario, String telefoneDestinatario, String logradouroDestinatario, String numeroEnderecoDestinatario,
+                      String ufDestinatario, String emailDestinatario, Integer codigoPaisDestinatario , String paisDestinatario, BigDecimal valorBaseCalculo, BigDecimal valorIcms,
+                      BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt, BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido,
+                      BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto, BigDecimal valorIi, BigDecimal valorIpi,
+                      BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal, String modalidadeFrete,
+                      String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura, BigDecimal valorOriginalFatura,
+                      BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte, String chave, String cstat,
+                      String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo) {
         this.id = id;
         this.codigoUf = codigoUf;
         this.codigoNf = codigoNf;
@@ -244,6 +255,9 @@ public class NotaFiscal implements Serializable {
         this.serie = serie;
         this.numero = numero;
         this.emissao = emissao;
+        this.finalidadeEmissao = finalidadeEmissao;
+        this.consumidorFinal = consumidorFinal;
+        this.presencaComprador = presencaComprador;
         this.dhSaidaEntrada = dhSaidaEntrada;
         this.tipo = tipo;
         this.indicadorPresenca = indicadorPresenca;
@@ -326,6 +340,9 @@ public class NotaFiscal implements Serializable {
         this.serie = obj.getSerie();
         this.numero = obj.getNumero();
         this.emissao = obj.getEmissao();
+        this.finalidadeEmissao = obj.getFinalidadeEmissao();
+        this.consumidorFinal = obj.getConsumidorFinal();
+        this.presencaComprador = obj.getPresencaComprador();
         this.dhSaidaEntrada = obj.getDhSaidaEntrada();
         this.tipo = obj.getTipo();
         this.indicadorPresenca = obj.getIndicadorPresenca();

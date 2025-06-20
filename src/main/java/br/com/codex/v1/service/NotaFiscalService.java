@@ -133,7 +133,7 @@ public class NotaFiscalService {
             serie.setAmbiente(String.valueOf(ambienteNota));
             serie.setTipoDocumento(DocumentoEnum.NFE.name());
             serie.setUltimoNumero(Integer.valueOf(nota.getNumero()));
-            serie.setStatus("ATIVO");
+            serie.setStatus("Ativo");
             serie.setDataCriacao(LocalDateTime.now());
         } else {
             serie = serieOpt.get();
