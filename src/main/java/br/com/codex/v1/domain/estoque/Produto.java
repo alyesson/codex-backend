@@ -40,6 +40,7 @@ public class Produto implements Serializable {
     protected String codigoCest;
     protected String descricaoCest;
     protected String origemProduto;
+    protected String icmsSituacaoTributaria;
     protected String categoriaProduto;
     protected String ean;
     protected String extipi;
@@ -66,7 +67,7 @@ public class Produto implements Serializable {
 
     public Produto(Long id, String codigo, String descricao, String grupo, String subGrupo, Integer minimo,
                    Integer maximo, String unidadeComercial, String local, String codigoNcm, String descricaoNcm,
-                   String codigoCest, String descricaoCest, String origemProduto, String categoriaProduto, String ean,
+                   String codigoCest, String descricaoCest, String origemProduto, String icmsSituacaoTributaria, String categoriaProduto, String ean,
                    String extipi, String tipoDeposito, String codigoSituacaoTributaria, String peso, BigDecimal precoVenda,
                    BigDecimal precoCusto, BigDecimal margemLucro, BigDecimal percentualIcmsCst, BigDecimal percentualIcms,
                    BigDecimal percentualIcmsRed, BigDecimal percentualIpiCst, BigDecimal percentualIpi, BigDecimal percentualPisCst,
@@ -85,6 +86,7 @@ public class Produto implements Serializable {
         this.codigoCest = codigoCest;
         this.descricaoCest = descricaoCest;
         this.origemProduto = origemProduto;
+        this.icmsSituacaoTributaria = icmsSituacaoTributaria;
         this.categoriaProduto = categoriaProduto;
         this.ean = ean;
         this.extipi = extipi;
@@ -121,6 +123,7 @@ public class Produto implements Serializable {
         this.codigoCest = obj.getCodigoCest();
         this.descricaoCest = obj.getDescricaoCest();
         this.origemProduto = obj.getOrigemProduto();
+        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
         this.categoriaProduto = obj.getCategoriaProduto();
         this.ean = obj.getEan();
         this.extipi = obj.getExtipi();

@@ -41,6 +41,8 @@ public class ProdutoDto implements Serializable {
     protected String descricaoCest;
     @NotBlank(message = "A origem do produto não pode ficar em branco")
     protected String origemProduto;
+    @NotBlank(message = "O ICMS situação tributária não pode ficar em branco")
+    protected String icmsSituacaoTributaria;
     @NotBlank(message = "A categoria do produto não pode ficar em branco")
     protected String categoriaProduto;
     protected String ean;
@@ -84,6 +86,7 @@ public class ProdutoDto implements Serializable {
         this.codigoCest = obj.getCodigoCest();
         this.descricaoCest = obj.getDescricaoCest();
         this.origemProduto = obj.getOrigemProduto();
+        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
         this.categoriaProduto = obj.getCategoriaProduto();
         this.ean = obj.getEan();
         this.extipi = obj.getExtipi();
