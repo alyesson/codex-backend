@@ -10,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+import static br.com.codex.v1.utilitario.RemoveCaracteresEspeciais.removerCaracteresEspeciais;
 
 @Getter
 @Setter
@@ -114,4 +115,11 @@ public class EmpresaDto implements Serializable {
         this.cidade = capitalizarPalavras(cidade);
     }
 
+    public  void setCnpj(String cnpj) { this.cnpj = removerCaracteresEspeciais(cnpj); }
+
+    public void setInscricaoEstadual(String inscricaoEstadual) { this.inscricaoEstadual = removerCaracteresEspeciais(inscricaoEstadual); }
+
+    public void setInscricaoMunicipal(String inscricaoMunicipal) { this.inscricaoMunicipal = removerCaracteresEspeciais(inscricaoMunicipal); }
+
+    public void setInscricaoEstadualSt(String inscricaoEstadualSt) { this.inscricaoEstadualSt = removerCaracteresEspeciais(inscricaoEstadualSt); }
 }
