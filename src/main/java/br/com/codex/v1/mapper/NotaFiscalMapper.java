@@ -522,8 +522,11 @@ public class NotaFiscalMapper {
         icmsTot.setVFrete(dto.getValorFrete() != null ? dto.getValorFrete().toString() : "0.00");
         icmsTot.setVSeg(dto.getValorSeguro() != null ? dto.getValorSeguro().toString() : "0.00");
         icmsTot.setVIPI(dto.getValorIpi() != null ? dto.getValorIpi().toString() : "0.00");
+        icmsTot.setVIPIDevol(dto.getValorIpiDevolucao() != null ? dto.getValorCofins().toString() : "0.00");
         icmsTot.setVPIS(dto.getValorPis() != null ? dto.getValorPis().toString() : "0.00");
         icmsTot.setVCOFINS(dto.getValorCofins() != null ? dto.getValorCofins().toString() : "0.00");
+        icmsTot.setVII(dto.getValorIi() != null ? dto.getValorCofins().toString() : "0.00");
+        icmsTot.setVOutro(dto.getValorOutros() != null ? dto.getValorCofins().toString() : "0.00");
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
 
