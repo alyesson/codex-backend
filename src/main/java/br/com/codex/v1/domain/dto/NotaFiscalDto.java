@@ -40,6 +40,7 @@ public class NotaFiscalDto implements Serializable {
     private Integer finalidadeEmissao;
     private	Long	id;
     private	Integer	indicadorFinal;
+    private String  indicadorIntermediario;
     private	Integer	indicadorInscricaoEstadualDestinatario;
     private	String	indicadorPresenca;
     private	String	informacaoAdicionalContribuinte;
@@ -132,6 +133,7 @@ public class NotaFiscalDto implements Serializable {
         this.finalidadeEmissao = obj.getFinalidadeEmissao();
         this.id = obj.getId();
         this.indicadorFinal = obj.getIndicadorFinal();
+        this.indicadorIntermediario = obj.getIndicadorIntermediario();
         this.indicadorInscricaoEstadualDestinatario = obj.getIndicadorInscricaoEstadualDestinatario();
         this.indicadorPresenca = obj.getIndicadorPresenca();
         this.informacaoAdicionalContribuinte = obj.getInformacaoAdicionalContribuinte();

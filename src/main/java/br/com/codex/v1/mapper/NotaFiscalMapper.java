@@ -41,6 +41,7 @@ public class NotaFiscalMapper {
         ide.setCMunFG(dto.getCodigoMunicipioEmitente());
         ide.setFinNFe(dto.getIndicadorFinal().toString());
         ide.setIndPres(dto.getIndicadorPresenca());
+        ide.setIndIntermed(dto.getIndicadorIntermediario());
         ide.setProcEmi("0"); // Emissão própria
         ide.setVerProc("1.0");
         if ("65".equals(dto.getModelo())) {
