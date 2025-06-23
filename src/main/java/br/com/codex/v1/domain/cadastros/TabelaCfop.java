@@ -22,9 +22,14 @@ public class TabelaCfop implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 9)
     private Integer codigo;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String descricao;
+    @Column(length = 20)
     private String movimentacao; //determina de é interno, interestadual ou exterior
+    @Column(length = 10)
     private String fluxo; //determina se é entrada, saída
 
     public TabelaCfop() {
