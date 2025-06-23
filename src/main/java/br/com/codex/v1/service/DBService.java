@@ -55,11 +55,16 @@ public class DBService {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
+            //Adiciona o usuário administrador padrão
             Usuario pessoa = new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                     "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2025!"), "Sistema", "00000");
             pessoa.addPerfil(Perfil.ADMINISTRADOR);
             em.persist(pessoa);
+
+            //Adiciona o ambiente de nota fiscal padrão
+            AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
+            em.persist(ambienteNotaFiscal);
 
             List<TabelaCfop> cfops = criarListaCfopCompleta(); // Métudo que retorna todos CFOPs
             for (TabelaCfop cfop : cfops) {
