@@ -49,21 +49,35 @@ public class ProdutoDto implements Serializable {
     protected String extipi;
     @NotBlank(message = "O tipo de depósito não pode ficar em branco")
     protected String tipoDeposito;
-    protected String codigoSituacaoTributaria;
     protected String peso;
     @NotNull(message = "O preço de venda não pode ficar em branco")
     protected BigDecimal precoVenda;
     protected BigDecimal precoCusto;
     protected BigDecimal margemLucro;
-    protected BigDecimal percentualIcmsCst;
+    protected BigDecimal creditoIcms;
     protected BigDecimal percentualIcms;
     protected BigDecimal percentualIcmsRed;
-    protected BigDecimal percentualIpiCst;
+    protected String ipiSituacaotributaria;
+    protected BigDecimal ipiBaseCalculo;
     protected BigDecimal percentualIpi;
-    protected BigDecimal percentualPisCst;
+    protected BigDecimal quantidadeTotalIpi; // Alterado para BigDecimal
+    protected BigDecimal valorUnidTributavelIpi; // Alterado para BigDecimal
+    protected BigDecimal valorIpi; // Alterado para BigDecimal
+    protected String cnpjProdutorIpi;
+    protected String codigoSeloControle;
+    protected String quantidadeSeloControle;
+    protected String classeEnquadramentoIpi;
+    @NotBlank(message = "A situação tributária do PIS não pode ficar em branco")
+    protected String pisSituacaoTributaria;
     protected BigDecimal percentualPis;
-    protected BigDecimal percentualCofinsCst;
+    protected BigDecimal pisBaseCalculo; // Alterado para BigDecimal
+    protected BigDecimal valorPis; // Alterado para BigDecimal
+    protected BigDecimal pisValorAliquota;
+    protected String cofinsSituacaotributaria; // Alterado para String
     protected BigDecimal percentualCofins;
+    protected BigDecimal cofinsBaseCalculo;
+    protected BigDecimal valorAliquotaCofins;
+    protected BigDecimal valorCofins;
     @NotNull(message = "O campo produto produzido pode ficar em branco")
     protected boolean produtoProduzido;
 
@@ -85,26 +99,39 @@ public class ProdutoDto implements Serializable {
         this.descricaoNcm = obj.getDescricaoNcm();
         this.codigoCest = obj.getCodigoCest();
         this.descricaoCest = obj.getDescricaoCest();
-        this.origemProduto = obj.getOrigemProduto();
-        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
         this.categoriaProduto = obj.getCategoriaProduto();
         this.ean = obj.getEan();
         this.extipi = obj.getExtipi();
         this.tipoDeposito = obj.getTipoDeposito();
-        this.codigoSituacaoTributaria = obj.getCodigoSituacaoTributaria();
         this.peso = obj.getPeso();
         this.precoVenda = obj.getPrecoVenda();
         this.precoCusto = obj.getPrecoCusto();
         this.margemLucro = obj.getMargemLucro();
-        this.percentualIcmsCst = obj.getPercentualIcmsCst();
+        this.origemProduto = obj.getOrigemProduto();
+        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
+        this.creditoIcms = obj.getCreditoIcms();
         this.percentualIcms = obj.getPercentualIcms();
         this.percentualIcmsRed = obj.getPercentualIcmsRed();
-        this.percentualIpiCst = obj.getPercentualIpiCst();
+        this.ipiSituacaotributaria = obj.getIpiSituacaotributaria();
+        this.ipiBaseCalculo = obj.getIpiBaseCalculo();
         this.percentualIpi = obj.getPercentualIpi();
-        this.percentualPisCst = obj.getPercentualPisCst();
+        this.quantidadeTotalIpi = obj.getQuantidadeTotalIpi();
+        this.valorUnidTributavelIpi = obj.getValorUnidTributavelIpi();
+        this.valorIpi = obj.getValorIpi();
+        this.cnpjProdutorIpi = obj.getCnpjProdutorIpi();
+        this.codigoSeloControle = obj.getCodigoSeloControle();
+        this.quantidadeSeloControle = obj.getQuantidadeSeloControle();
+        this.classeEnquadramentoIpi = obj.getClasseEnquadramentoIpi();
+        this.pisSituacaoTributaria = obj.getPisSituacaoTributaria();
         this.percentualPis = obj.getPercentualPis();
-        this.percentualCofinsCst = obj.getPercentualCofinsCst();
+        this.pisBaseCalculo = obj.getPisBaseCalculo();
+        this.valorPis = obj.getValorPis();
+        this.pisValorAliquota = obj.getPisValorAliquota();
+        this.cofinsSituacaotributaria = obj.getCofinsSituacaotributaria();
         this.percentualCofins = obj.getPercentualCofins();
+        this.cofinsBaseCalculo = obj.getCofinsBaseCalculo();
+        this.valorAliquotaCofins = obj.getValorAliquotaCofins();
+        this.valorCofins = obj.getValorCofins();
         this.produtoProduzido = obj.isProdutoProduzido();
     }
 

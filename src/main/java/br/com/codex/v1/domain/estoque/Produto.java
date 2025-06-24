@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -39,39 +40,57 @@ public class Produto implements Serializable {
     protected String descricaoNcm;
     protected String codigoCest;
     protected String descricaoCest;
-    protected String origemProduto;
-    protected String icmsSituacaoTributaria;
     protected String categoriaProduto;
     protected String ean;
     protected String extipi;
     protected String tipoDeposito;
-    protected String codigoSituacaoTributaria;
     protected String peso;
     protected BigDecimal precoVenda;
     protected BigDecimal precoCusto;
     protected BigDecimal margemLucro;
-    protected BigDecimal percentualIcmsCst;
+
+    protected String origemProduto;
+    protected String icmsSituacaoTributaria;
+    protected BigDecimal creditoIcms;
     protected BigDecimal percentualIcms;
     protected BigDecimal percentualIcmsRed;
-    protected BigDecimal percentualIpiCst;
+
+    protected String ipiSituacaotributaria;
+    protected BigDecimal ipiBaseCalculo;
     protected BigDecimal percentualIpi;
-    protected BigDecimal percentualPisCst;
+    protected BigDecimal quantidadeTotalIpi;
+    protected BigDecimal valorUnidTributavelIpi;
+    protected BigDecimal valorIpi;
+    protected String cnpjProdutorIpi;
+    protected String codigoSeloControle;
+    protected String quantidadeSeloControle;
+    protected String classeEnquadramentoIpi;
+
+    protected String pisSituacaoTributaria;
     protected BigDecimal percentualPis;
-    protected BigDecimal percentualCofinsCst;
+    protected BigDecimal pisBaseCalculo;
+    protected BigDecimal valorPis;
+    protected BigDecimal pisValorAliquota;
+
+    protected String cofinsSituacaotributaria;
     protected BigDecimal percentualCofins;
+    protected BigDecimal cofinsBaseCalculo;
+    protected BigDecimal valorAliquotaCofins;
+    protected BigDecimal valorCofins;
     protected boolean produtoProduzido;
+
 
     public Produto() {
         super();
     }
 
-    public Produto(Long id, String codigo, String descricao, String grupo, String subGrupo, Integer minimo,
-                   Integer maximo, String unidadeComercial, String local, String codigoNcm, String descricaoNcm,
-                   String codigoCest, String descricaoCest, String origemProduto, String icmsSituacaoTributaria, String categoriaProduto, String ean,
-                   String extipi, String tipoDeposito, String codigoSituacaoTributaria, String peso, BigDecimal precoVenda,
-                   BigDecimal precoCusto, BigDecimal margemLucro, BigDecimal percentualIcmsCst, BigDecimal percentualIcms,
-                   BigDecimal percentualIcmsRed, BigDecimal percentualIpiCst, BigDecimal percentualIpi, BigDecimal percentualPisCst,
-                   BigDecimal percentualPis, BigDecimal percentualCofinsCst, BigDecimal percentualCofins, boolean produtoProduzido) {
+    public Produto(Long id, String codigo, String descricao, String grupo, String subGrupo, Integer minimo, Integer maximo, String unidadeComercial, String local, String codigoNcm,
+                   String descricaoNcm, String codigoCest, String descricaoCest, String categoriaProduto, String ean, String extipi, String tipoDeposito, String peso, BigDecimal precoVenda,
+                   BigDecimal precoCusto, BigDecimal margemLucro, String origemProduto, String icmsSituacaoTributaria, BigDecimal creditoIcms, BigDecimal percentualIcms,
+                   BigDecimal percentualIcmsRed, String ipiSituacaotributaria, BigDecimal ipiBaseCalculo, BigDecimal percentualIpi, BigDecimal quantidadeTotalIpi, BigDecimal valorUnidTributavelIpi,
+                   BigDecimal valorIpi, String cnpjProdutorIpi, String codigoSeloControle, String quantidadeSeloControle, String classeEnquadramentoIpi, String pisSituacaoTributaria,
+                   BigDecimal percentualPis, BigDecimal pisBaseCalculo, BigDecimal valorPis, BigDecimal pisValorAliquota, String cofinsSituacaotributaria, BigDecimal percentualCofins,
+                   BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -85,26 +104,39 @@ public class Produto implements Serializable {
         this.descricaoNcm = descricaoNcm;
         this.codigoCest = codigoCest;
         this.descricaoCest = descricaoCest;
-        this.origemProduto = origemProduto;
-        this.icmsSituacaoTributaria = icmsSituacaoTributaria;
         this.categoriaProduto = categoriaProduto;
         this.ean = ean;
         this.extipi = extipi;
         this.tipoDeposito = tipoDeposito;
-        this.codigoSituacaoTributaria = codigoSituacaoTributaria;
         this.peso = peso;
         this.precoVenda = precoVenda;
         this.precoCusto = precoCusto;
         this.margemLucro = margemLucro;
-        this.percentualIcmsCst = percentualIcmsCst;
+        this.origemProduto = origemProduto;
+        this.icmsSituacaoTributaria = icmsSituacaoTributaria;
+        this.creditoIcms = creditoIcms;
         this.percentualIcms = percentualIcms;
         this.percentualIcmsRed = percentualIcmsRed;
-        this.percentualIpiCst = percentualIpiCst;
+        this.ipiSituacaotributaria = ipiSituacaotributaria;
+        this.ipiBaseCalculo = ipiBaseCalculo;
         this.percentualIpi = percentualIpi;
-        this.percentualPisCst = percentualPisCst;
+        this.quantidadeTotalIpi = quantidadeTotalIpi;
+        this.valorUnidTributavelIpi = valorUnidTributavelIpi;
+        this.valorIpi = valorIpi;
+        this.cnpjProdutorIpi = cnpjProdutorIpi;
+        this.codigoSeloControle = codigoSeloControle;
+        this.quantidadeSeloControle = quantidadeSeloControle;
+        this.classeEnquadramentoIpi = classeEnquadramentoIpi;
+        this.pisSituacaoTributaria = pisSituacaoTributaria;
         this.percentualPis = percentualPis;
-        this.percentualCofinsCst = percentualCofinsCst;
+        this.pisBaseCalculo = pisBaseCalculo;
+        this.valorPis = valorPis;
+        this.pisValorAliquota = pisValorAliquota;
+        this.cofinsSituacaotributaria = cofinsSituacaotributaria;
         this.percentualCofins = percentualCofins;
+        this.cofinsBaseCalculo = cofinsBaseCalculo;
+        this.valorAliquotaCofins = valorAliquotaCofins;
+        this.valorCofins = valorCofins;
         this.produtoProduzido = produtoProduzido;
     }
 
@@ -122,26 +154,39 @@ public class Produto implements Serializable {
         this.descricaoNcm = obj.getDescricaoNcm();
         this.codigoCest = obj.getCodigoCest();
         this.descricaoCest = obj.getDescricaoCest();
-        this.origemProduto = obj.getOrigemProduto();
-        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
         this.categoriaProduto = obj.getCategoriaProduto();
         this.ean = obj.getEan();
         this.extipi = obj.getExtipi();
         this.tipoDeposito = obj.getTipoDeposito();
-        this.codigoSituacaoTributaria = obj.getCodigoSituacaoTributaria();
         this.peso = obj.getPeso();
         this.precoVenda = obj.getPrecoVenda();
         this.precoCusto = obj.getPrecoCusto();
         this.margemLucro = obj.getMargemLucro();
-        this.percentualIcmsCst = obj.getPercentualIcmsCst();
+        this.origemProduto = obj.getOrigemProduto();
+        this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
+        this.creditoIcms = obj.getCreditoIcms();
         this.percentualIcms = obj.getPercentualIcms();
         this.percentualIcmsRed = obj.getPercentualIcmsRed();
-        this.percentualIpiCst = obj.getPercentualIpiCst();
+        this.ipiSituacaotributaria = obj.getIpiSituacaotributaria();
+        this.ipiBaseCalculo = obj.getIpiBaseCalculo();
         this.percentualIpi = obj.getPercentualIpi();
-        this.percentualPisCst = obj.getPercentualPisCst();
+        this.quantidadeTotalIpi = obj.getQuantidadeTotalIpi();
+        this.valorUnidTributavelIpi = obj.getValorUnidTributavelIpi();
+        this.valorIpi = obj.getValorIpi();
+        this.cnpjProdutorIpi = obj.getCnpjProdutorIpi();
+        this.codigoSeloControle = obj.getCodigoSeloControle();
+        this.quantidadeSeloControle = obj.getQuantidadeSeloControle();
+        this.classeEnquadramentoIpi = obj.getClasseEnquadramentoIpi();
+        this.pisSituacaoTributaria = obj.getPisSituacaoTributaria();
         this.percentualPis = obj.getPercentualPis();
-        this.percentualCofinsCst = obj.getPercentualCofinsCst();
+        this.pisValorAliquota = obj.getPisValorAliquota();
+        this.pisBaseCalculo = obj.getPisBaseCalculo();
+        this.valorPis = obj.getValorPis();
+        this.cofinsSituacaotributaria = obj.getCofinsSituacaotributaria();
         this.percentualCofins = obj.getPercentualCofins();
+        this.cofinsBaseCalculo = obj.getCofinsBaseCalculo();
+        this.valorAliquotaCofins = obj.getValorAliquotaCofins();
+        this.valorCofins = obj.getValorCofins();
         this.produtoProduzido = obj.isProdutoProduzido();
     }
 
@@ -157,4 +202,5 @@ public class Produto implements Serializable {
     public int hashCode() {
         return Objects.hash(id, codigo);
     }
+
 }
