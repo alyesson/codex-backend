@@ -16,6 +16,7 @@
       <w>avaliacao</w>
       <w>azerbaijao</w>
       <w>ação</w>
+      <w>bairro</w>
       <w>basedados</w>
       <w>belgica</w>
       <w>birmania</w>
@@ -44,6 +45,7 @@
       <w>conexão</w>
       <w>configuracao</w>
       <w>configuracoes</w>
+      <w>consumidor</w>
       <w>contabil</w>
       <w>contate</w>
       <w>contém</w>
@@ -72,6 +74,7 @@
       <w>desonerado</w>
       <w>dest</w>
       <w>destinatario</w>
+      <w>destino</w>
       <w>detectar</w>
       <w>detecte</w>
       <w>deve</w>
@@ -82,10 +85,16 @@
       <w>djibuti</w>
       <w>dígitos</w>
       <w>eletrônica</w>
+      <w>emissao</w>
+      <w>emitente</w>
+      <w>encontrado</w>
+      <w>endereco</w>
       <w>erro</w>
       <w>eslovenia</w>
       <w>espaços</w>
       <w>especiais</w>
+      <w>estadual</w>
+      <w>estar</w>
       <w>etiopia</w>
       <w>existe</w>
       <w>expiração</w>
@@ -94,19 +103,24 @@
       <w>fechar</w>
       <w>federacao</w>
       <w>feroe</w>
+      <w>finalidade</w>
       <w>finlandia</w>
       <w>fone</w>
       <w>gabao</w>
       <w>grecia</w>
       <w>groenlandia</w>
+      <w>grupo</w>
       <w>homologacao</w>
       <w>hortolândia</w>
+      <w>identificação</w>
       <w>iemen</w>
       <w>ignorando</w>
       <w>importacao</w>
+      <w>impostos</w>
       <w>inclusao</w>
       <w>indefinida</w>
       <w>indefinido</w>
+      <w>indicador</w>
       <w>informacao</w>
       <w>informacoes</w>
       <w>iniciais</w>
@@ -134,6 +148,7 @@
       <w>listadas</w>
       <w>liste</w>
       <w>lituania</w>
+      <w>logradouro</w>
       <w>malasia</w>
       <w>mayern</w>
       <w>metodo</w>
@@ -141,7 +156,9 @@
       <w>milissegundos</w>
       <w>minimo</w>
       <w>mocambique</w>
+      <w>modelo</w>
       <w>métudo</w>
+      <w>natureza</w>
       <w>navidad</w>
       <w>negativo</w>
       <w>nenhuma</w>
@@ -181,6 +198,7 @@
       <w>salomao</w>
       <w>sefaz</w>
       <w>senha</w>
+      <w>serie</w>
       <w>servico</w>
       <w>servicos</w>
       <w>servidor</w>
@@ -195,12 +213,14 @@
       <w>suframa</w>
       <w>suica</w>
       <w>suporte</w>
+      <w>série</w>
       <w>tabela</w>
       <w>tabelas</w>
       <w>tadjiquistao</w>
       <w>tailandia</w>
       <w>também</w>
       <w>tcheca</w>
+      <w>telefone</w>
       <w>telelefone</w>
       <w>territorio</w>
       <w>tnfe</w>
