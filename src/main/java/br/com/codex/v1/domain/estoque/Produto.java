@@ -48,13 +48,13 @@ public class Produto implements Serializable {
     protected BigDecimal precoVenda;
     protected BigDecimal precoCusto;
     protected BigDecimal margemLucro;
-
     protected String origemProduto;
     protected String icmsSituacaoTributaria;
     protected BigDecimal creditoIcms;
     protected BigDecimal percentualIcms;
+    protected BigDecimal percentualDiferimento;
+    protected BigDecimal percentualFcp;
     protected BigDecimal percentualIcmsRed;
-
     protected String ipiSituacaotributaria;
     protected BigDecimal ipiBaseCalculo;
     protected BigDecimal percentualIpi;
@@ -65,13 +65,11 @@ public class Produto implements Serializable {
     protected String codigoSeloControle;
     protected String quantidadeSeloControle;
     protected String classeEnquadramentoIpi;
-
     protected String pisSituacaoTributaria;
     protected BigDecimal percentualPis;
     protected BigDecimal pisBaseCalculo;
     protected BigDecimal valorPis;
     protected BigDecimal pisValorAliquota;
-
     protected String cofinsSituacaotributaria;
     protected BigDecimal percentualCofins;
     protected BigDecimal cofinsBaseCalculo;
@@ -86,8 +84,8 @@ public class Produto implements Serializable {
 
     public Produto(Long id, String codigo, String descricao, String grupo, String subGrupo, Integer minimo, Integer maximo, String unidadeComercial, String local, String codigoNcm,
                    String descricaoNcm, String codigoCest, String descricaoCest, String categoriaProduto, String ean, String extipi, String tipoDeposito, String peso, BigDecimal precoVenda,
-                   BigDecimal precoCusto, BigDecimal margemLucro, String origemProduto, String icmsSituacaoTributaria, BigDecimal creditoIcms, BigDecimal percentualIcms,
-                   BigDecimal percentualIcmsRed, String ipiSituacaotributaria, BigDecimal ipiBaseCalculo, BigDecimal percentualIpi, BigDecimal quantidadeTotalIpi, BigDecimal valorUnidTributavelIpi,
+                   BigDecimal precoCusto, BigDecimal margemLucro, String origemProduto, String icmsSituacaoTributaria, BigDecimal creditoIcms, BigDecimal percentualIcms, BigDecimal percentualDiferimento,
+                   BigDecimal percentualFcp, BigDecimal percentualIcmsRed, String ipiSituacaotributaria, BigDecimal ipiBaseCalculo, BigDecimal percentualIpi, BigDecimal quantidadeTotalIpi, BigDecimal valorUnidTributavelIpi,
                    BigDecimal valorIpi, String cnpjProdutorIpi, String codigoSeloControle, String quantidadeSeloControle, String classeEnquadramentoIpi, String pisSituacaoTributaria,
                    BigDecimal percentualPis, BigDecimal pisBaseCalculo, BigDecimal valorPis, BigDecimal pisValorAliquota, String cofinsSituacaotributaria, BigDecimal percentualCofins,
                    BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido) {
@@ -116,6 +114,8 @@ public class Produto implements Serializable {
         this.icmsSituacaoTributaria = icmsSituacaoTributaria;
         this.creditoIcms = creditoIcms;
         this.percentualIcms = percentualIcms;
+        this.percentualDiferimento = percentualDiferimento;
+        this.percentualFcp = percentualFcp;
         this.percentualIcmsRed = percentualIcmsRed;
         this.ipiSituacaotributaria = ipiSituacaotributaria;
         this.ipiBaseCalculo = ipiBaseCalculo;
@@ -166,6 +166,8 @@ public class Produto implements Serializable {
         this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
         this.creditoIcms = obj.getCreditoIcms();
         this.percentualIcms = obj.getPercentualIcms();
+        this.percentualDiferimento = obj.getPercentualDiferimento();
+        this.percentualFcp = obj.getPercentualFcp();
         this.percentualIcmsRed = obj.getPercentualIcmsRed();
         this.ipiSituacaotributaria = obj.getIpiSituacaotributaria();
         this.ipiBaseCalculo = obj.getIpiBaseCalculo();

@@ -56,6 +56,8 @@ public class ProdutoDto implements Serializable {
     protected BigDecimal margemLucro;
     protected BigDecimal creditoIcms;
     protected BigDecimal percentualIcms;
+    protected BigDecimal percentualDiferimento;
+    protected BigDecimal percentualFcp;
     protected BigDecimal percentualIcmsRed;
     protected String ipiSituacaotributaria;
     protected BigDecimal ipiBaseCalculo;
@@ -111,6 +113,8 @@ public class ProdutoDto implements Serializable {
         this.icmsSituacaoTributaria = obj.getIcmsSituacaoTributaria();
         this.creditoIcms = obj.getCreditoIcms();
         this.percentualIcms = obj.getPercentualIcms();
+        this.percentualDiferimento = obj.getPercentualDiferimento();
+        this.percentualFcp = obj.getPercentualFcp();
         this.percentualIcmsRed = obj.getPercentualIcmsRed();
         this.ipiSituacaotributaria = obj.getIpiSituacaotributaria();
         this.ipiBaseCalculo = obj.getIpiBaseCalculo();

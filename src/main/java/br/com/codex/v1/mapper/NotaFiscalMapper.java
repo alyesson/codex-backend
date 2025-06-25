@@ -293,7 +293,41 @@ public class NotaFiscalMapper {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS51 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS51();
                     obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms().toString() : "0.00");
                     obj.setCST(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getModBc() : "0.00");
+
+                    // Modalidade de determinação da BC (0-Margem Valor Agregado, 1-Pauta, 2-Valor Operação)
+                    obj.setModBC(item.getModBc() != null ? item.getModBc() : "0");
+
+                    // 2. CÁLCULO DO FCP (independente do diferimento)
+                    if(item.getBcFcp() != null && item.getAliqFcp() != null) {
+                        valorFcp = item.getBcFcp().multiply(item.getAliqFcp()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                    }
+
+                    // 3. CÁLCULOS DE ICMS (quando houver BC e alíquota)
+                    BigDecimal valorIcmsOperacao = BigDecimal.ZERO;
+                    BigDecimal valorIcmsDiferido = BigDecimal.ZERO;
+                    BigDecimal valorIcms = BigDecimal.ZERO;
+
+                    // Cálculo do ICMS (considerando que os valores já vêm calculados do DTO)
+                    valorIcms = item.getValorIcms() != null ? item.getValorIcms() : BigDecimal.ZERO;
+                    valorIcmsDiferido = item.getValorIcmsDiferido() != null ? item.getValorIcmsDiferido() : BigDecimal.ZERO;
+                    valorIcmsOperacao = item.getValorIcmsOperacao() != null ? item.getValorIcmsOperacao() : BigDecimal.ZERO;
+
+                    if(item.getBcIcms() != null && item.getAliqIcms() != null) {
+                        // 3.1. Valor total do ICMS (antes do diferimento)
+                        valorIcmsOperacao = item.getBcIcms().multiply(item.getAliqIcms())
+                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+                        // 3.2. Calcula diferimento com base no valor parcial (se existir)
+                        if(item.getValorIcmsDiferido() != null) {
+                            // Se o DTO já trouxer o valor diferido, usa esse valor
+                            valorIcmsDiferido = item.getValorIcmsDiferido();
+                            valorIcms = valorIcmsOperacao.subtract(valorIcmsDiferido);
+                        } else {
+                            // Caso contrário, considera ICMS integral (sem diferimento)
+                            valorIcms = valorIcmsOperacao;
+                        }
+                    }
+
                     obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
                     obj.setPFCP(String.valueOf(item.getAliqFcp()) != null ? item.getAliqFcp().toString() : "0.00");
                     obj.setCBenefRBC(null);
@@ -301,13 +335,13 @@ public class NotaFiscalMapper {
                     obj.setPFCPDif(null);
                     obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
                     obj.setVBC(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setVFCP(String.valueOf(item.getValorFcp()) != null ? item.getValorFcp().toString() : "0.00");
+                    obj.setVFCP(valorFcp.toString() != null ? item.getValorFcp().toString() : "0.00");
                     obj.setVBCFCP(String.valueOf(item.getBcFcp()) != null ? item.getBcFcp().toString() : "0.00");
                     obj.setVFCPDif(null);
                     obj.setVFCPEfet(null);
-                    obj.setVICMS(String.valueOf(item.getValorIcms()) != null ? item.getValorIcms().toString() : "0.00");
-                    obj.setVICMSDif(String.valueOf(item.getValorIcmsDiferido()) != null ? item.getValorIcmsDiferido().toString() : "0.00");
-                    obj.setVICMSOp(String.valueOf(item.getValorIcmsOperacao()) != null ? item.getValorIcmsOperacao().toString() : "0.00");
+                    obj.setVICMS(valorIcms.toString() != null ? item.getValorIcms().toString() : "0.00");
+                    obj.setVICMSDif(valorIcmsDiferido.toString() != null ? item.getValorIcmsDiferido().toString() : "0.00");
+                    obj.setVICMSOp(valorIcmsOperacao.toString() != null ? item.getValorIcmsOperacao().toString() : "0.00");
                     icms.setICMS51(obj);
                 }
 
