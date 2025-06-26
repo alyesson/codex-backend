@@ -1,14 +1,11 @@
 package br.com.codex.v1.domain.repository;
 
 import br.com.codex.v1.domain.contabilidade.NotaFiscal;
-import br.com.codex.v1.domain.ti.Atendimentos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
