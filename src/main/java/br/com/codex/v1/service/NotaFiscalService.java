@@ -2,10 +2,12 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
+import br.com.codex.v1.domain.contabilidade.NotaFiscal;
 import br.com.codex.v1.domain.contabilidade.SerieNfe;
 import br.com.codex.v1.domain.contabilidade.XmlNotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.domain.repository.*;
+import br.com.codex.v1.domain.ti.Atendimentos;
 import br.com.codex.v1.mapper.NotaFiscalMapper;
 import br.com.codex.v1.utilitario.Base64Util;
 import br.com.swconsultoria.certificado.Certificado;
@@ -36,10 +38,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigInteger;
+import java.util.stream.Collectors;
 
 @Service
 public class NotaFiscalService {
@@ -59,6 +64,9 @@ public class NotaFiscalService {
 
     @Autowired
     private ControleNsuService controleNsuService;
+
+    @Autowired
+    private NotaFiscalRepository notaFiscalRepository;
 
     Integer ambienteNota;
 
@@ -466,4 +474,17 @@ public class NotaFiscalService {
         }
         return String.format("%02d", proximoSequencial);
     }
+
+    public List<NotaFiscal> consultarNotasMesCorrente(String documentoEmitente) {
+        YearMonth anoMesAtual = YearMonth.now();
+        int ano = anoMesAtual.getYear();
+        int mes = anoMesAtual.getMonthValue();
+
+        return notaFiscalRepository.consultarNotasMesCorrente(ano, mes, documentoEmitente);
+    }
+
+    public List<NotaFiscal> consultarNotasPorPeriodo(String documentoEmitente, LocalDate dataInicial, LocalDate dataFinal) {
+        return notaFiscalRepository.consultarNotasPorPeriodo(dataInicial, dataFinal, documentoEmitente);
+    }
+
 }

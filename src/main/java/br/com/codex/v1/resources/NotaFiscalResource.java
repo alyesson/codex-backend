@@ -1,6 +1,9 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.contabilidade.NotaFiscal;
+import br.com.codex.v1.domain.dto.AtendimentosDto;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.ti.Atendimentos;
 import br.com.codex.v1.service.NotaFiscalService;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
 import br.com.swconsultoria.nfe.dom.enuns.ServicosEnum;
@@ -9,12 +12,16 @@ import br.com.swconsultoria.nfe.schema_4.consSitNFe.TRetConsSitNFe;
 import br.com.swconsultoria.nfe.schema_4.inutNFe.TRetInutNFe;
 import br.com.swconsultoria.nfe.schema_4.retConsStatServ.TRetConsStatServ;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "v1/api/nota_fiscal")
@@ -31,6 +38,29 @@ public class NotaFiscalResource {
     public ResponseEntity<NotaFiscalDto> emitirNotaFiscal(@Valid @RequestBody NotaFiscalDto dto) throws Exception {
         NotaFiscalDto resultado = notaFiscalService.emitirNotaFiscal(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+    }
+
+    /**
+     * Visualiza as notas emitidas no mês corrente.
+     */
+    @GetMapping("/mes_corrente")
+    public ResponseEntity<List<NotaFiscalDto>> consultarNotasMesCorrente(@RequestParam String documentoEmitente) {
+        List<NotaFiscal> list = notaFiscalService.consultarNotasMesCorrente(documentoEmitente);
+        List<NotaFiscalDto> listDto = list.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    /**
+     * Consulta notas fiscais por período
+     */
+    @GetMapping("/por_periodo")
+    public ResponseEntity<List<NotaFiscalDto>> consultarNotasPorPeriodo(@RequestParam String documentoEmitente,
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        List<NotaFiscal> list = notaFiscalService.consultarNotasPorPeriodo(documentoEmitente, dataInicial, dataFinal);
+        List<NotaFiscalDto> listDto = list.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
     }
 
     /**
