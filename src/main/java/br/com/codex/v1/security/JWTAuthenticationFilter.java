@@ -72,7 +72,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     private String extractDatabaseName(String jdbcUrl) {
-        // Exemplo: jdbc:mysql://localhost:3306/barbearia_mourao?params
         String[] parts = jdbcUrl.split("/");
         return parts[parts.length - 1].split("\\?")[0];
     }
