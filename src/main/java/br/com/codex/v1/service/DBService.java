@@ -54,6 +54,7 @@ public class DBService {
         EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(info, props);
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
+
         try {
             //Adiciona o usuário administrador padrão
             Usuario pessoa = new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",

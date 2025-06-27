@@ -20,9 +20,8 @@ public class EmpresaService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
-
-   @Autowired
-   private DatabaseConfig databaseConfig;
+    @Autowired
+    private DatabaseConfig databaseConfig;
 
     public Empresa create(EmpresaDto empresaDto) {
         empresaDto.setId(null);
