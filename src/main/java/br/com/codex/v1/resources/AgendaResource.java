@@ -29,7 +29,7 @@ public class AgendaResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA','SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<AgendaDto> update(@PathVariable Long id, @Valid @RequestBody AgendaDto agendaDto){
         Agenda objAgenda = agendaService.update(id, agendaDto);

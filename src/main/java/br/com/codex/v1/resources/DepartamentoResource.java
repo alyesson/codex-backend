@@ -21,7 +21,7 @@ public class DepartamentoResource {
     @Autowired
     private DepartamentoService departamentoService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @PostMapping
     public ResponseEntity<DepartamentoDto> create(@Valid @RequestBody DepartamentoDto departamentoDto){
         Departamento obj = departamentoService.create(departamentoDto);
@@ -29,21 +29,21 @@ public class DepartamentoResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<DepartamentoDto> update(@PathVariable Long id, @Valid @RequestBody DepartamentoDto departamentoDto){
         Departamento obj = departamentoService.update(id, departamentoDto);
         return ResponseEntity.ok().body(new DepartamentoDto((obj)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<DepartamentoDto> delete(@PathVariable Long id){
         departamentoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<DepartamentoDto> findById(@PathVariable Long id){
         Departamento objGrupo = departamentoService.findById(id);

@@ -21,7 +21,7 @@ public class MotivoAcertoResource {
     @Autowired
     private MotivoAcertoService motivoAcertoService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE')")
     @PostMapping
     public ResponseEntity<MotivoAcertoDto> create(@Valid @RequestBody MotivoAcertoDto motivoacertoDto){
         MotivoAcerto objMotivoAcerto = motivoAcertoService.create(motivoacertoDto);
@@ -29,28 +29,28 @@ public class MotivoAcertoResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI','GERENTE_ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI','GERENTE_ESTOQUE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<MotivoAcertoDto> update(@PathVariable Long id, @Valid @RequestBody MotivoAcertoDto motivoacertoDto){
         MotivoAcerto objMotivoAcerto = motivoAcertoService.update(id, motivoacertoDto);
         return ResponseEntity.ok().body(new MotivoAcertoDto((objMotivoAcerto)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI','GERENTE_ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI','GERENTE_ESTOQUE')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<MotivoAcertoDto> delete(@PathVariable Long id){
         motivoAcertoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<MotivoAcertoDto> findById(@PathVariable Long id){
         MotivoAcerto objMotivoAcerto = motivoAcertoService.findById(id);
         return ResponseEntity.ok().body(new MotivoAcertoDto(objMotivoAcerto));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'GERENTE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
     @GetMapping
     public ResponseEntity<List<MotivoAcertoDto>> findAll(){
         List<MotivoAcerto> list = motivoAcertoService.findAll();

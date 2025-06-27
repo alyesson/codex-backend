@@ -21,6 +21,7 @@ public class EmpresaResource {
     @Autowired
     private EmpresaService empresaService;
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @PostMapping
     public ResponseEntity<EmpresaDto> create(@Valid @RequestBody EmpresaDto empresaDto){
         Empresa obj = empresaService.create(empresaDto);
@@ -28,6 +29,7 @@ public class EmpresaResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_CONTABILIDADE')")
     @PostMapping("/cria_basedados")
     public ResponseEntity<EmpresaDto> createWithDatabase(@Valid @RequestBody EmpresaDto empresaDto) {
         Empresa obj = empresaService.cadastrarNovaEmpresa(empresaDto);
@@ -35,7 +37,7 @@ public class EmpresaResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<EmpresaDto> update(@PathVariable Long id, @Valid @RequestBody EmpresaDto empresaDto){
         Empresa obj = empresaService.update(id, empresaDto);

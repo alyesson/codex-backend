@@ -21,7 +21,7 @@ public class FornecedoresResource {
     @Autowired
     private FornecedoresService fornecedoresService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PostMapping
     public ResponseEntity<FornecedoresDto> create(@Valid @RequestBody FornecedoresDto fornecedoresDto){
         Fornecedores objFornec = fornecedoresService.create(fornecedoresDto);
@@ -29,28 +29,28 @@ public class FornecedoresResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<FornecedoresDto> update(@PathVariable Long id, @Valid @RequestBody FornecedoresDto fornecedoresDto){
         Fornecedores objFornec = fornecedoresService.update(id, fornecedoresDto);
         return ResponseEntity.ok().body(new FornecedoresDto(objFornec));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<FornecedoresDto> delete(@PathVariable Long id){
         fornecedoresService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<FornecedoresDto> findById(@PathVariable Long id){
         Fornecedores objFornec = fornecedoresService.findById(id);
         return ResponseEntity.ok().body(new FornecedoresDto(objFornec));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @GetMapping
     public ResponseEntity<List<FornecedoresDto>> findAll(){
         List<Fornecedores> list = fornecedoresService.findAll();

@@ -21,7 +21,7 @@ public class CentroCustoResource {
     @Autowired
     private CentroCustoService centrocustoService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @PostMapping
     public ResponseEntity<CentroCustoDto> create(@Valid @RequestBody CentroCustoDto centrocustoDto){
         CentroCusto obj = centrocustoService.create(centrocustoDto);
@@ -29,14 +29,14 @@ public class CentroCustoResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<CentroCustoDto> update(@PathVariable Long id, @Valid @RequestBody CentroCustoDto centrocustoDto){
         CentroCusto obj = centrocustoService.update(id, centrocustoDto);
         return ResponseEntity.ok().body(new CentroCustoDto((obj)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CentroCustoDto> delete(@PathVariable Long id){
         centrocustoService.delete(id);

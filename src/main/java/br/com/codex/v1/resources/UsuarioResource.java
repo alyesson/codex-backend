@@ -21,7 +21,7 @@ public class UsuarioResource {
     @Autowired
     UsuarioService usuarioService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_TI', 'TI')")
     @PostMapping
     public ResponseEntity<UsuarioDto> create (@Valid @RequestBody UsuarioDto usuariodto){
         Usuario objUser = usuarioService.create(usuariodto);
@@ -29,21 +29,21 @@ public class UsuarioResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_TI', 'TI')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<UsuarioDto> update(@PathVariable Long id, @Valid @RequestBody UsuarioDto usuariodto){
         Usuario objUser = usuarioService.update(id, usuariodto);
         return ResponseEntity.ok().body(new UsuarioDto(objUser));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_TI', 'TI')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<UsuarioDto>delete(@PathVariable Long id){
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_TI', 'TI')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<UsuarioDto>findById(@PathVariable Long id){
         Usuario objUser = usuarioService.findById(id);
@@ -56,7 +56,7 @@ public class UsuarioResource {
         return ResponseEntity.ok().body(new UsuarioDto(objUser));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_TI', 'TI')")
     @GetMapping
     public ResponseEntity<List<UsuarioDto>> findAll(){
         List<Usuario> list = usuarioService.findAll();

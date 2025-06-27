@@ -21,7 +21,7 @@ public class ProdutoResource {
     @Autowired
     private ProdutoService produtoService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_COMPRAS', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_COMPRAS', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PostMapping
     public ResponseEntity<ProdutoDto> create(@Valid @RequestBody ProdutoDto produtoDto){
         Produto objProd = produtoService.create(produtoDto);
@@ -29,21 +29,21 @@ public class ProdutoResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_COMPRAS', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_COMPRAS', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @Valid @RequestBody ProdutoDto produtoDto){
         Produto objProd = produtoService.update(id, produtoDto);
         return ResponseEntity.ok().body(new ProdutoDto(objProd));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ProdutoDto> delete(@PathVariable Long id){
         produtoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProdutoDto> findById(@PathVariable Long id){
         Produto objProd = produtoService.findById(id);
@@ -57,7 +57,7 @@ public class ProdutoResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_VENDAS', 'VENDEDOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_VENDAS', 'VENDEDOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/descricao/{produto}")
     public ResponseEntity<ProdutoDto> findProduto(@PathVariable String produto){
         Produto objProd = produtoService.findByDescricao(produto);

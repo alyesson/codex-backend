@@ -21,7 +21,7 @@ public class SalaReuniaoResource {
     @Autowired
     private SalaReuniaoService salaReuniaoService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PostMapping
     public ResponseEntity<SalaReuniaoDto> create(@Valid @RequestBody SalaReuniaoDto salaReuniaoDto){
         SalaReuniao objSalaReuniao = salaReuniaoService.create(salaReuniaoDto);
@@ -29,21 +29,21 @@ public class SalaReuniaoResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<SalaReuniaoDto> update(@PathVariable Long id, @Valid @RequestBody SalaReuniaoDto salaReuniaoDto){
         SalaReuniao objSalaReuniao = salaReuniaoService.update(id, salaReuniaoDto);
         return ResponseEntity.ok().body(new SalaReuniaoDto((objSalaReuniao)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SalaReuniaoDto> delete(@PathVariable Long id){
         salaReuniaoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<SalaReuniaoDto> findById(@PathVariable Long id){
         SalaReuniao objSalaReuniao = salaReuniaoService.findById(id);
