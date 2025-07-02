@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -41,17 +42,18 @@ public class Empresa implements Serializable {
     private String complemento;
     @Column(length = 60)
     private String bairro;
-    @Column(length = 50)
+    @Column(length = 60)
     private String cidade;
     private String cep;
     @Column(length = 3)
     private String uf;
-    @Column(length = 20)
+    @Column(length = 70)
     private String regimeTributario;
     @Column(length = 25)
     private String telefone;
     @Column(length = 25)
     private String celular;
+    @Email
     @Column(length = 40)
     private String emailContato;
     @Column(length = 10)
