@@ -80,7 +80,7 @@ public class NotaFiscalService {
         TEnviNFe enviNFe = montarNotaFiscal(dto);
         enviNFe = assinarNotaFiscal(enviNFe, config);
         validarNotaFiscal(enviNFe, config);
-        TRetEnviNFe retorno = enviarNotaFiscal(enviNFe, config);
+        TRetEnviNFe retorno = transmiteNotaFiscal(enviNFe, config);
 
         dto.setChave(retorno.getProtNFe().getInfProt().getChNFe());
         dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
@@ -184,7 +184,7 @@ public class NotaFiscalService {
     /**
      * Transmite a NF-e para a SEFAZ.
      */
-    public TRetEnviNFe enviarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException {
+    public TRetEnviNFe transmiteNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException {
         logger.info("Enviando NF-e, ID Lote: {}", enviNFe.getIdLote());
         TRetEnviNFe retorno = Nfe.enviarNfe(configuracoes, enviNFe, DocumentoEnum.NFE);
         if (!"100".equals(retorno.getProtNFe().getInfProt().getCStat())) {
