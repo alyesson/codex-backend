@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
 public class CentroCustoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -47,6 +49,6 @@ public class CentroCustoDto implements Serializable {
     }
 
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        this.descricao = capitalizarPalavras(descricao);
     }
 }

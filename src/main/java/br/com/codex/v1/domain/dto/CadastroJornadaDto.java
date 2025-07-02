@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
 public class CadastroJornadaDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -69,7 +71,7 @@ public class CadastroJornadaDto implements Serializable {
     }
 
     public void setDescricaoJornada(String descricaoJornada) {
-        this.descricaoJornada = descricaoJornada;
+        this.descricaoJornada = capitalizarPalavras(descricaoJornada);
     }
 
     public Integer getTipoJornada() {
