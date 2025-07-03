@@ -72,12 +72,6 @@ public class DBService {
                         em.persist(usuario);
                     }
 
-            /*Usuario pessoa = new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
-                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
-                    encoder.encode("Admin@2025!"), "Sistema", "00000");
-            pessoa.addPerfil(Perfil.ADMINISTRADOR);
-            em.persist(pessoa);*/
-
             //Adiciona o ambiente de nota fiscal padrão
             AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
             em.persist(ambienteNotaFiscal);
@@ -123,14 +117,6 @@ public class DBService {
 
         // Salva todos os usuários
         usuarioRepository.saveAll(usuariosPadrao);
-
-            /*Usuario pessoa = new Usuario(null, "Administrador", "80374841063",
-                    Date.valueOf("2024-01-07"), "Neutro", "19974061119",
-                    "Rua Indefinida", "Indefinido", "Hortolândia", "SP",
-                    "13185-421", "suporte@codexsolucoes.com.br",
-                    encoder.encode("Admin@2026!"), "Sistema", "00000");
-            pessoa.addPerfil(Perfil.ADMINISTRADOR);
-            usuarioRepository.save(pessoa);*/
 
             Empresa empresa = new Empresa(null, "37025579000157", "", "", "", "", "",
                     "Codex Soluções Em TI", "", "", "", "","", "", "", "", "", "", "", "",
@@ -213,7 +199,7 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 145,"SISTEMAS DE INTEGRAÇÃO", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1451,"Retorno de animal do estabelecimento produtor", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1452,"Retorno de insumo não utilizado na produção", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 15,"Entrada  DE  MERCADORIAS  REMETIDAS  PARA FORMAÇÃO DE LOTE OU COM FIM ESPECÍFICO DE EXPORTAÇÃO E EVENTUAIS DEVOLUÇÕES", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 15,"Entrada de mercadorias  remetidas  para formação de lote ou com fim específico de exportação e eventuais devoluções", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1501,"Entrada de mercadoria recebida com fim específico de exportação", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1503,"Entrada decorrente de devolução de produto remetido com fim específico de exportação, de produção do estabelecimento", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1504,"Entrada decorrente de devolução de mercadoria remetida com fim específico de exportação, adquirida ou recebida de terceiros", "Interno", "Entrada"));
@@ -227,13 +213,13 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 1555,"Entrada de bem do ativo imobilizado de terceiro, remetido para uso no estabelecimento", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1556,"Compra de material para uso ou consumo", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1557,"Transferência de material para uso ou consumo", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 16,"CRÉDITOS E RESSARCIMENTOS DE ICMS", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 16,"Créditos E Ressarcimento DE ICMS", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1601,"Recebimento, por transferência, de crédito de ICMS", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1602,"Recebimento, por transferência, de saldo credor de ICMS de outro estabelecimento da mesma empresa, para compensação de saldo devedor de ICMS", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1603,"Ressarcimento de ICMS retido por substituição tributária", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1604,"Lançamento do crédito relativo à compra de bem para o ativo imobilizado", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1605,"Recebimento, por transferência, de saldo devedor de ICMS de outro estabelecimento da mesma empresa", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 165,"Entrada DE COMBUSTÍVEIS, DERIVADOS OU NÃO DE PETRÓLEO E LUBRIFICANTES", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 165,"Entrada de combustíveis, derivados ou não de petróleo e lubrificantes", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1651,"Compra de combustível ou lubrificante para industrialização subsequente", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1652,"Compra de combustível ou lubrificante para comercialização", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1653,"Compra de combustível ou lubrificante por consumidor ou usuário final", "Interno", "Entrada"));
