@@ -31,9 +31,9 @@ public class StartupInitializerDev {
         try {
             // Verifica se a tabela pessoa (usuários) está vazia
             if (usuarioRepository.count() == 0) {
-                System.out.println("🟢 Banco 'codex' está vazio. Populando com dados iniciais...");
+                System.out.println("🟢 Banco 'codex-dev' está vazio. Populando com dados iniciais...");
 
-                dbService.criaBaseCodex();
+                dbService.criaBaseCodexDev();
 
                 System.out.println("✅ Dados iniciais inseridos com sucesso.");
                 logger.info("✅ Dados iniciais inseridos com sucesso.");

@@ -130,6 +130,42 @@ public class DBService {
             importaTabelaCfop.importarCfops();
     }
 
+    public void criaBaseCodexDev() {
+
+        // Cria usuários iniciais
+        List<Usuario> usuariosPadrao = Arrays.asList(
+                new Usuario(null, "Administrador", "80374841063",
+                        Date.valueOf("2024-01-07"), "Neutro", "19974061119",
+                        "Rua Indefinida", "Indefinido", "Hortolândia", "SP",
+                        "13185-421", "suporte@codexsolucoes.com.br",
+                        encoder.encode("Admin@2026!"), "Sistema", "00000"),
+
+                new Usuario(null, "Sistema", "13784744141",
+                        Date.valueOf("2024-01-07"), "Neutro", "19999999999",
+                        "Rua Indefinida 05", "Indefinido", "Hortolândia", "SP",
+                        "13185-421", "sistema@sistema.com.br",
+                        encoder.encode("Sistema@2026!"), "Sistema", "00001")
+        );
+
+        // Atribui perfis
+        usuariosPadrao.get(0).addPerfil(Perfil.ADMINISTRADOR);
+        usuariosPadrao.get(1).addPerfil(Perfil.SISTEMA);
+
+        // Salva todos os usuários
+        usuarioRepository.saveAll(usuariosPadrao);
+
+        Empresa empresa = new Empresa(null, "37025579000157", "", "", "", "", "",
+                "Codex Soluções Em TI", "", "", "", "","", "", "", "", "", "", "", "",
+                "Ativo", "Ótimo", "codex-dev", "----", true, "");
+        empresaRepository.save(empresa);
+
+        AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
+        ambienteNotaFiscalRepository.save(ambienteNotaFiscal);
+
+        // Importa CFOPs
+        importaTabelaCfop.importarCfops();
+    }
+
     private List<TabelaCfop> criarListaCfopCompleta() {
         List<TabelaCfop> listaCfops = new ArrayList<>();
         listaCfops.add(new TabelaCfop(null, 11,"COMPRA PARA INDUSTRIALIZAÇÃO, PRODUÇÃO RURAL, COMERCIALIZAÇÃO OU PRESTAÇÃO DE SERVIÇO", "Interno", "Entrada"));
@@ -755,4 +791,5 @@ public class DBService {
 
         return listaCfops;
     }
+
 }
