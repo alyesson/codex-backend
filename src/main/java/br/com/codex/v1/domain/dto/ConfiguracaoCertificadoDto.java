@@ -4,13 +4,11 @@ import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 

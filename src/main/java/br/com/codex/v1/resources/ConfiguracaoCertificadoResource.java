@@ -39,7 +39,7 @@ public class ConfiguracaoCertificadoResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'SISTEMA','GERENTE_CONTABILIDADE')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> create(
             @RequestParam("file") MultipartFile file,
