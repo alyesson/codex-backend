@@ -165,12 +165,7 @@ public class NotaFiscalResource {
         dto.setDocumentoEmitente(cnpj);
 
         ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
-        String retorno = notaFiscalService.enviarEventoManual(
-                xmlEvento,
-                ServicosEnum.valueOf(tipoEvento),
-                valida,
-                assina,
-                config);
+        String retorno = notaFiscalService.enviarEventoManual(xmlEvento,ServicosEnum.valueOf(tipoEvento), valida, assina, config);
         return ResponseEntity.ok(retorno);
     }
 
