@@ -7,6 +7,7 @@ import br.com.codex.v1.domain.ti.Atendimentos;
 import br.com.codex.v1.service.NotaFiscalService;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
 import br.com.swconsultoria.nfe.dom.enuns.ServicosEnum;
+import br.com.swconsultoria.nfe.exception.NfeException;
 import br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento;
 import br.com.swconsultoria.nfe.schema_4.consSitNFe.TRetConsSitNFe;
 import br.com.swconsultoria.nfe.schema_4.inutNFe.TRetInutNFe;
@@ -29,6 +30,23 @@ public class NotaFiscalResource {
 
     @Autowired
     private NotaFiscalService notaFiscalService;
+
+
+    /**
+     * Gera configuraçòes iniciais da nota fiscal.
+     */
+    @GetMapping("/status_servico/{cnpj}")
+    public ResponseEntity<?> verificaStatusServicoSefaz(@PathVariable String cnpj) {
+        try {
+            // Cria um DTO mínimo apenas com o CNPJ
+            NotaFiscalDto dto = new NotaFiscalDto();
+            dto.setDocumentoEmitente(cnpj);
+            ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+            return ResponseEntity.ok(config);
+        } catch (NfeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     /**
      * Emite uma nova NF-e.
