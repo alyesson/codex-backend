@@ -2,12 +2,12 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
-import br.com.codex.v1.domain.contabilidade.NotaFiscal;
+import br.com.codex.v1.domain.fiscal.LoteNfe;
+import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import br.com.codex.v1.domain.contabilidade.SerieNfe;
 import br.com.codex.v1.domain.contabilidade.XmlNotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.domain.repository.*;
-import br.com.codex.v1.domain.ti.Atendimentos;
 import br.com.codex.v1.mapper.NotaFiscalMapper;
 import br.com.codex.v1.utilitario.Base64Util;
 import br.com.swconsultoria.certificado.Certificado;
@@ -44,7 +44,6 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigInteger;
-import java.util.stream.Collectors;
 
 @Service
 public class NotaFiscalService {
@@ -67,6 +66,9 @@ public class NotaFiscalService {
 
     @Autowired
     private NotaFiscalRepository notaFiscalRepository;
+
+    @Autowired
+    private LoteNfeRepository loteRepository;
 
     Integer ambienteNota;
 
@@ -144,31 +146,40 @@ public class NotaFiscalService {
             nota.setCodigoUf(ufCertificado); // Ou converte para código se necessário
         }
 
-        // Valida e atualiza a série
-        Optional<SerieNfe> serieOpt = serieNfeRepository.findByNumeroSerieAndCnpjAndAmbiente(nota.getSerie(), nota.getDocumentoEmitente(), String.valueOf(ambienteNota));
-        SerieNfe serie;
-        if (serieOpt.isEmpty()) {
-            serie = new SerieNfe();
-            serie.setNumeroSerie(nota.getSerie());
-            serie.setCnpj(nota.getDocumentoEmitente());
-            serie.setAmbiente(String.valueOf(ambienteNota));
-            serie.setTipoDocumento(DocumentoEnum.NFE.name());
+        // Valida e atualiza o lote
+        Optional<LoteNfe> loteOpt = loteRepository.findByIdLoteAndCnpjAndAmbiente(nota.getSerie(), nota.getDocumentoEmitente(), Integer.valueOf(String.valueOf(ambienteNota)));
+        LoteNfe lote;
+        if (loteOpt.isEmpty()) {
+            lote = new LoteNfe();
+            lote.setCnpjEmitente(nota.getDocumentoEmitente());
+            lote.setAmbiente(ambienteNota);
+            //lote.setTipoDocumento(DocumentoEnum.NFE.name());
 
-            if(nota.getNumero() == null || nota.getNumero().isEmpty()){
-                serie.setUltimoNumero(1);
-            }else {
-                serie.setUltimoNumero(Integer.valueOf(nota.getNumero()));
+            // Tratamento para número da nota
+            int numeroNota;
+            if (nota.getNumero() == null || nota.getNumero().isEmpty()) {
+                numeroNota = 1;
+            } else {
+                try {
+                    numeroNota = Integer.parseInt(nota.getNumero());
+                } catch (NumberFormatException e) {
+                    throw new NfeException("Número da NF-e inválido: " + nota.getNumero());
+                }
             }
-            serie.setStatus("Ativo");
-            serie.setDataCriacao(LocalDateTime.now());
+            lote.setUltimoNumero(String.valueOf(numeroNota));
+            lote.setStatus("Ativo");
+            lote.setDataEnvio(LocalDateTime.now());
         } else {
-            serie = serieOpt.get();
-            if (Integer.parseInt(nota.getNumero()) <= serie.getUltimoNumero()) {
-                throw new NfeException("Número da NF-e já utilizado para a série: " + nota.getSerie());
+            lote = loteOpt.get();
+            int numeroNotaAtual = Integer.parseInt(nota.getNumero());
+            int ultimoNumero = Integer.parseInt(lote.getUltimoNumero());
+
+            if (numeroNotaAtual <= ultimoNumero) {
+                throw new NfeException("Número da NF-e já utilizado para o lote: " + nota.getSerie());
             }
-            serie.setUltimoNumero(Integer.valueOf(nota.getNumero()));
+            lote.setUltimoNumero(String.valueOf(numeroNotaAtual));
         }
-        serieNfeRepository.save(serie);
+        loteRepository.save(lote);
 
         TNFe tnfe = NotaFiscalMapper.paraTNFe(nota);
         TEnviNFe enviNFe = new TEnviNFe();
@@ -434,13 +445,13 @@ public class NotaFiscalService {
                 // Para Cancelamento
                 br.com.swconsultoria.nfe.schema.envEventoCancNFe.TEnvEvento envCanc =
                         XmlNfeUtil.xmlToObject(xmlParaEnvio, br.com.swconsultoria.nfe.schema.envEventoCancNFe.TEnvEvento.class);
-                // Agora usando o método correto com 4 parâmetros
+                // Agora usando o métudo correto com 4 parâmetros
                 br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento retCanc =
                         Nfe.cancelarNfe(config, envCanc, false, DocumentoEnum.NFE);
                 xmlRetorno = XmlNfeUtil.objectToXml(retCanc, config.getEncode());
             }
             else {
-                // Para outros tipos de evento, usar o método genérico
+                // Para outros tipos de evento, usar o métudo genérico
                 xmlRetorno = Nfe.enviarEnventoManual(config, xmlParaEnvio, tipoEvento, false, false, DocumentoEnum.NFE);
             }
         } catch (JAXBException e) {
@@ -491,6 +502,37 @@ public class NotaFiscalService {
             throw new NfeException("Limite de 20 CC-e por NF-e atingido para a chave: " + chave);
         }
         return String.format("%02d", proximoSequencial);
+    }
+
+    @Transactional
+    public TRetEnviNFe salvaLoteNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException {
+        // 1. Salva o lote antes do envio
+        LoteNfe lote = new LoteNfe();
+        lote.setIdLote(enviNFe.getIdLote());
+        lote.setCnpjEmitente(config.getCertificado().getCnpjCpf());
+        lote.setAmbiente(Integer.valueOf(config.getAmbiente().getCodigo()));
+        lote.setDataEnvio(LocalDateTime.now());
+        lote.setStatus("ENVIANDO");
+        lote.setQuantidadeNotas(enviNFe.getNFe().size());
+        loteRepository.save(lote);
+
+        try {
+            // 2. Envia para SEFAZ
+            TRetEnviNFe retorno = Nfe.enviarNfe(config, enviNFe, DocumentoEnum.NFE);
+
+            // 3. Atualiza o lote com a resposta
+            lote.setStatus("PROCESSADO");
+            lote.setProtocolo(retorno.getProtNFe().getInfProt().getNProt());
+            lote.setDataEnvio(LocalDateTime.now());
+            lote.setXmlResposta(XmlNfeUtil.objectToXml(retorno, config.getEncode()));
+
+            return retorno;
+        } catch (Exception e) {
+            // 4. Registra falha
+            lote.setStatus("ERRO");
+            lote.setXmlResposta(e.getMessage());
+            throw new NfeException("Erro ao transmitir nota fiscal: " + e);
+        }
     }
 
     public List<NotaFiscal> consultarNotasMesCorrente(String documentoEmitente) {

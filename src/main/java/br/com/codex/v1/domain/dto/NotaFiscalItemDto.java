@@ -1,7 +1,7 @@
 package br.com.codex.v1.domain.dto;
 
 
-import br.com.codex.v1.domain.contabilidade.NotaFiscalItem;
+import br.com.codex.v1.domain.fiscal.NotaFiscalItem;
 import lombok.Getter;
 import lombok.Setter;
 

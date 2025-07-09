@@ -1,15 +1,12 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.contabilidade.NotaFiscal;
-import br.com.codex.v1.domain.dto.AtendimentosDto;
+import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
-import br.com.codex.v1.domain.ti.Atendimentos;
 import br.com.codex.v1.service.NotaFiscalService;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
 import br.com.swconsultoria.nfe.dom.enuns.ServicosEnum;
 import br.com.swconsultoria.nfe.exception.NfeException;
 import br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento;
-import br.com.swconsultoria.nfe.schema_4.consSitNFe.TRetConsSitNFe;
 import br.com.swconsultoria.nfe.schema_4.inutNFe.TRetInutNFe;
 import br.com.swconsultoria.nfe.schema_4.retConsStatServ.TRetConsStatServ;
 import org.springframework.beans.factory.annotation.Autowired;

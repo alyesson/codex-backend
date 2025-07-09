@@ -1,9 +1,6 @@
-package br.com.codex.v1.domain.contabilidade;
+package br.com.codex.v1.domain.fiscal;
 
-import br.com.codex.v1.domain.dto.ImportarXmlDto;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
-import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
-import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import lombok.Getter;
 import lombok.Setter;
 
