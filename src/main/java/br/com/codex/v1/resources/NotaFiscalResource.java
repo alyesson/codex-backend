@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,15 +38,27 @@ public class NotaFiscalResource {
      * Gera configuraçòes iniciais da nota fiscal.
      */
     @GetMapping("/status_servico/{cnpj}")
-    public ResponseEntity<?> verificaStatusServicoSefaz(@PathVariable String cnpj) {
+    public ResponseEntity<?> verificarStatusServico(@PathVariable String cnpj) {
         try {
             // Cria um DTO mínimo apenas com o CNPJ
             NotaFiscalDto dto = new NotaFiscalDto();
             dto.setDocumentoEmitente(cnpj);
+
+            // Obtém as configurações
             ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
-            return ResponseEntity.ok(config);
+
+            // Consulta o status
+            TRetConsStatServ status = notaFiscalService.consultarStatusServico(config);
+
+            // Retorna um objeto simplificado para o frontend
+            Map<String, String> response = new HashMap<>();
+            response.put("status", status.getCStat() + " - " + status.getXMotivo());
+            response.put("dataHora", status.getDhRecbto() != null ? status.getDhRecbto().toString() : "");
+
+            return ResponseEntity.ok(response);
         } catch (NfeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "Erro", "message", e.getMessage()));
         }
     }
 

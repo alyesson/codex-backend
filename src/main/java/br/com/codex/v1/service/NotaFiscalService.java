@@ -114,8 +114,12 @@ public class NotaFiscalService {
         try {
             String senhaDecodificada = Base64Util.decode(cert.get().getSenha());
             Certificado certificado = CertificadoService.certificadoPfxBytes(cert.get().getArquivo(), senhaDecodificada);
+
+            int codigoAmbiente = ambienteNotaFiscal.get().getCodigoAmbiente();
+            AmbienteEnum ambienteEnum = converterCodigoParaAmbienteEnum(codigoAmbiente);
+
             return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()),
-                    AmbienteEnum.valueOf(String.valueOf(ambienteNotaFiscal.get().getCodigoAmbiente())),
+                    ambienteEnum,
                     certificado, "schemas"
             );
         } catch (Exception e) {
@@ -487,4 +491,13 @@ public class NotaFiscalService {
         return notaFiscalRepository.consultarNotasPorPeriodo(dataInicial, dataFinal, documentoEmitente);
     }
 
+    // Métudo auxiliar para converter código numérico para AmbienteEnum
+    private AmbienteEnum converterCodigoParaAmbienteEnum(int codigo) throws NfeException {
+        for (AmbienteEnum ambiente : AmbienteEnum.values()) {
+            if (Integer.parseInt(ambiente.getCodigo()) == codigo) {
+                return ambiente;
+            }
+        }
+        throw new NfeException("Código de ambiente inválido: " + codigo);
+    }
 }
