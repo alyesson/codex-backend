@@ -119,8 +119,7 @@ public class NotaFiscalService {
             AmbienteEnum ambienteEnum = converterCodigoParaAmbienteEnum(codigoAmbiente);
 
             return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()),
-                    ambienteEnum,
-                    certificado, "schemas"
+                    ambienteEnum, certificado, "schemas"
             );
         } catch (Exception e) {
             logger.error("Erro ao configurar certificado", e);
