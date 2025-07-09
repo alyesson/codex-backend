@@ -134,6 +134,16 @@ public class NotaFiscalService {
     public TEnviNFe montarNotaFiscal(NotaFiscalDto nota) throws NfeException {
         logger.info("Montando NF-e para número: {} série: {}", nota.getNumero(), nota.getSerie());
 
+        // Obtém a UF do certificado (adicionado este trecho)
+        String ufCertificado = certificadoRepository.findByCnpj(nota.getDocumentoEmitente())
+                .map(ConfiguracaoCertificado::getUf)
+                .orElseThrow(() -> new NfeException("Certificado não encontrado"));
+
+        // Seta a UF no DTO (se ainda não estiver preenchida)
+        if (nota.getCodigoUf() == null) {
+            nota.setCodigoUf(ufCertificado); // Ou converte para código se necessário
+        }
+
         // Valida e atualiza a série
         Optional<SerieNfe> serieOpt = serieNfeRepository.findByNumeroSerieAndCnpjAndAmbiente(nota.getSerie(), nota.getDocumentoEmitente(), String.valueOf(ambienteNota));
         SerieNfe serie;
@@ -143,7 +153,12 @@ public class NotaFiscalService {
             serie.setCnpj(nota.getDocumentoEmitente());
             serie.setAmbiente(String.valueOf(ambienteNota));
             serie.setTipoDocumento(DocumentoEnum.NFE.name());
-            serie.setUltimoNumero(Integer.valueOf(nota.getNumero()));
+
+            if(nota.getNumero() == null || nota.getNumero().isEmpty()){
+                serie.setUltimoNumero(1);
+            }else {
+                serie.setUltimoNumero(Integer.valueOf(nota.getNumero()));
+            }
             serie.setStatus("Ativo");
             serie.setDataCriacao(LocalDateTime.now());
         } else {
@@ -191,7 +206,7 @@ public class NotaFiscalService {
         logger.info("Enviando NF-e, ID Lote: {}", enviNFe.getIdLote());
         TRetEnviNFe retorno = Nfe.enviarNfe(configuracoes, enviNFe, DocumentoEnum.NFE);
         if (!"100".equals(retorno.getProtNFe().getInfProt().getCStat())) {
-            throw new NfeException("Erro ao enviar NF-e: " + retorno.getProtNFe().getInfProt().getXMotivo());
+            throw new NfeException("Erro ao enviar NF-e- " + retorno.getProtNFe().getInfProt().getXMotivo());
         }
         return retorno;
     }

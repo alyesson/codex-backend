@@ -9,6 +9,8 @@ import br.com.swconsultoria.nfe.util.ConstantesUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -17,6 +19,13 @@ public class NotaFiscalMapper {
     static TUf ufDestinatario = null;
 
     public static TNFe paraTNFe(NotaFiscalDto dto) {
+
+        ZoneId zoneId = getZoneIdPorUF(dto.getCodigoUf());
+        OffsetDateTime dataAtual = OffsetDateTime.now(zoneId);
+        String dataFormatada = dataAtual.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        System.out.println("Data e Hora:" + dataFormatada);
+
         ObjectFactory factory = new ObjectFactory();
         TNFe tnFe = factory.createTNFe();
 
@@ -31,7 +40,7 @@ public class NotaFiscalMapper {
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
         ide.setNNF(dto.getNumero());
-        ide.setDhEmi(dto.getEmissao().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        ide.setDhEmi(dataFormatada);
 
         // Gera a data/hora ATUAL no formato desejado
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -41,7 +50,7 @@ public class NotaFiscalMapper {
         ide.setTpNF(dto.getTipo());
         ide.setIdDest(dto.getLocalDestino());
         ide.setCMunFG(dto.getCodigoMunicipioEmitente());
-        ide.setFinNFe(dto.getIndicadorFinal().toString());
+        ide.setFinNFe(dto.getFinalidadeEmissao().toString());
         ide.setIndPres(dto.getIndicadorPresenca());
         ide.setIndIntermed(dto.getIndicadorIntermediario());
         ide.setProcEmi("0"); // Emissão própria
@@ -116,7 +125,7 @@ public class NotaFiscalMapper {
             prod.setVUnCom(item.getValorUnitarioComercial().toString());
             prod.setVProd(item.getValorTotalProdutos().toString());
             prod.setUTrib(item.getUnidadeTributacao());
-            prod.setQTrib(item.getQuantidadeTributacao().toString());
+            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "");
             prod.setVUnTrib(item.getValorUnitarioTributacao().toString());
             prod.setVFrete(item.getValorFrete() != null ? item.getValorFrete().toString() : "0.00");
             prod.setVSeg(item.getValorSeguro() != null ? item.getValorSeguro().toString() : "0.00");
@@ -869,5 +878,15 @@ public class NotaFiscalMapper {
 
         tnFe.setInfNFe(infNFe);
         return tnFe;
+    }
+
+    private static ZoneId getZoneIdPorUF(String codigoUF) {
+        // Mapeamento de UF para ZoneId (fuso horário)
+        return switch (codigoUF) { // Acre
+            case "AC", "AM" -> // Alguns municípios do Amazonas
+                    ZoneId.of("America/Rio_Branco"); // UTC-5
+            default -> // Demais estados (SP, RJ, DF, etc.)
+                    ZoneId.of("America/Sao_Paulo"); // UTC-3
+        };
     }
 }
