@@ -115,8 +115,15 @@ public class NotaFiscalService {
 
         if (ambienteNotaFiscal.isPresent()) {
             ambienteNota = ambienteNotaFiscal.get().getCodigoAmbiente();
+            notaFiscalDto.setTipoAmbiente(String.valueOf(ambienteNota));
         } else {
             throw new NfeException("O ambiente da nota fiscal não está parametrizado");
+        }
+
+        if(cert.isPresent()){
+            notaFiscalDto.setCodigoUf(cert.get().getUf());
+        }else{
+            throw new NfeException("A sigla do estado não está parametrizado na tabela 'configuracao_certificado'");
         }
 
         if (cert.isEmpty()) {
@@ -145,16 +152,6 @@ public class NotaFiscalService {
     @Transactional
     public TEnviNFe montarNotaFiscal(NotaFiscalDto nota) throws NfeException {
         logger.info("Montando NF-e para número: {} série: {}", nota.getNumero(), nota.getSerie());
-
-        // Obtém a UF do certificado (adicionado este trecho)
-        String ufCertificado = certificadoRepository.findByCnpj(nota.getDocumentoEmitente())
-                .map(ConfiguracaoCertificado::getUf)
-                .orElseThrow(() -> new NfeException("Certificado não encontrado"));
-
-        // Seta a UF no DTO (se ainda não estiver preenchida)
-        if (nota.getCodigoUf() == null) {
-            nota.setCodigoUf(ufCertificado); // Ou converte para código se necessário
-        }
 
         // Valida e atualiza o lote
         Optional<LoteNfe> loteOpt = loteRepository.findByIdLoteAndCnpjAndAmbiente(nota.getSerie(), nota.getDocumentoEmitente(), ambienteNota);

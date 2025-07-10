@@ -75,6 +75,7 @@ public class NotaFiscalDto implements Serializable {
     private	String	telefoneDestinatario;
     private	String	telefoneEmitente;
     private	String	tipo;
+    private String tipoAmbiente;
     private	String	ufDestinatario;
     private	String	ufEmitente;
     private	BigDecimal	valorBaseCalculo;
@@ -168,6 +169,7 @@ public class NotaFiscalDto implements Serializable {
         this.telefoneDestinatario = obj.getTelefoneDestinatario();
         this.telefoneEmitente = obj.getTelefoneEmitente();
         this.tipo = obj.getTipo();
+        this.tipoAmbiente = obj.getTipoAmbiente();
         this.ufDestinatario = obj.getUfDestinatario();
         this.ufEmitente = obj.getUfEmitente();
         this.valorBaseCalculo = obj.getValorBaseCalculo();

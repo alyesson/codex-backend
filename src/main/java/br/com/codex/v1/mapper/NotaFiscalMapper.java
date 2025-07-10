@@ -3,15 +3,16 @@ package br.com.codex.v1.mapper;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
 import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
+import br.com.swconsultoria.nfe.dom.enuns.EstadosEnum;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.*;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 
 public class NotaFiscalMapper {
@@ -22,9 +23,8 @@ public class NotaFiscalMapper {
 
         ZoneId zoneId = getZoneIdPorUF(dto.getCodigoUf());
         OffsetDateTime dataAtual = OffsetDateTime.now(zoneId);
-        String dataFormatada = dataAtual.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-
-        System.out.println("Data e Hora:" + dataFormatada);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        String dataFormatada = dataAtual.format(formatter);
 
         ObjectFactory factory = new ObjectFactory();
         TNFe tnFe = factory.createTNFe();
@@ -35,22 +35,23 @@ public class NotaFiscalMapper {
 
         // Identificação (IDE)
         TNFe.InfNFe.Ide ide = new TNFe.InfNFe.Ide();
+
         ide.setCUF(dto.getCodigoUf());
         ide.setNatOp(dto.getNaturezaOperacao());
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
-        ide.setNNF(dto.getNumero());
+        ide.setNNF(String.valueOf(dto.getNumero()));
         ide.setDhEmi(dataFormatada);
-
-        // Gera a data/hora ATUAL no formato desejado
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String dataHoraAtualFormatada = LocalDateTime.now().format(formatter);
-        ide.setDhSaiEnt(dataHoraAtualFormatada);
-
+        ide.setDhSaiEnt(dataFormatada);
         ide.setTpNF(dto.getTipo());
         ide.setIdDest(dto.getLocalDestino());
         ide.setCMunFG(dto.getCodigoMunicipioEmitente());
-        ide.setFinNFe(dto.getFinalidadeEmissao().toString());
+        ide.setTpImp("2");
+        ide.setTpEmis("1");
+        ide.setCDV(calcularDigitoVerificador(dto.getChave()));
+        ide.setTpAmb(dto.getTipoAmbiente());
+        ide.setFinNFe(String.valueOf(dto.getFinalidadeEmissao()));
+        ide.setIndFinal(String.valueOf(dto.getConsumidorFinal()));
         ide.setIndPres(dto.getIndicadorPresenca());
         ide.setIndIntermed(dto.getIndicadorIntermediario());
         ide.setProcEmi("0"); // Emissão própria
@@ -859,6 +860,7 @@ public class NotaFiscalMapper {
         transp.setModFrete(dto.getModalidadeFrete());
         infNFe.setTransp(transp);
 
+
         // Fatura/Duplicatas
         TNFe.InfNFe.Cobr cobr = new TNFe.InfNFe.Cobr();
         for (NotaFiscalDuplicatasDto dup : dto.getDuplicatas()) {
@@ -877,9 +879,29 @@ public class NotaFiscalMapper {
         infNFe.setInfAdic(infAdic);
 
         tnFe.setInfNFe(infNFe);
+
+        // Informações do Protocolo
+        TProtNFe protNfe = new TProtNFe();
+        protNfe.setVersao("4.00"); // Versão do protocolo
+
+        // Cria e configura as informações do protocolo (InfProt)
+        TProtNFe.InfProt infProt = new TProtNFe.InfProt();
+        infProt.setId("ID" + dto.getNumeroProtocolo()); // ID do protocolo (ex.: "ID135251857425711")
+        infProt.setTpAmb(dto.getTipoAmbiente()); // Tipo de ambiente (1 = Produção, 2 = Homologação)
+        infProt.setVerAplic("SP_NFE_PL009_V4"); // Versão do aplicativo que processou a NF-e
+        infProt.setChNFe(dto.getChave()); // Chave da NF-e
+        infProt.setDhRecbto(String.format(String.valueOf(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")))); // Data/hora de recebimento
+        infProt.setNProt(dto.getNumeroProtocolo()); // Número do protocolo
+        //infProt.setDigVal("".getBytes()); // Digest Value em Base64
+        infProt.setCStat(dto.getCstat()); // Código do status (ex.: "100" = Autorizado)
+        infProt.setXMotivo(dto.getMotivoProtocolo()); // Motivo da resposta (ex.: "Autorizado o uso da NF-e")
+
+        protNfe.setInfProt(infProt);
+
         return tnFe;
     }
 
+    //Obtém o Estado pela zona do fuso horário
     private static ZoneId getZoneIdPorUF(String codigoUF) {
         // Mapeamento de UF para ZoneId (fuso horário)
         return switch (codigoUF) { // Acre
@@ -888,5 +910,17 @@ public class NotaFiscalMapper {
             default -> // Demais estados (SP, RJ, DF, etc.)
                     ZoneId.of("America/Sao_Paulo"); // UTC-3
         };
+    }
+
+    private static String calcularDigitoVerificador(String chave) {
+        int[] pesos = {2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4};
+        int soma = 0;
+
+        for (int i = 0; i < 43; i++) {
+            soma += Character.getNumericValue(chave.charAt(i)) * pesos[i];
+        }
+
+        int resto = soma % 11;
+        return (resto == 0 || resto == 1) ? "0" : String.valueOf(11 - resto);
     }
 }
