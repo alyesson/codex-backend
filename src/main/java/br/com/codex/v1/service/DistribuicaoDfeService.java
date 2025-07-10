@@ -1,7 +1,11 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
+import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
 import br.com.codex.v1.domain.contabilidade.ControleNsu;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
+import br.com.codex.v1.domain.repository.ConfiguracaoCertificadoRepository;
 import br.com.codex.v1.domain.repository.ControleNsuRepository;
 import br.com.swconsultoria.nfe.Nfe;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
@@ -12,13 +16,17 @@ import br.com.swconsultoria.nfe.schema.retdistdfeint.RetDistDFeInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import static br.com.swconsultoria.nfe.dom.enuns.PessoaEnum.JURIDICA;
@@ -34,56 +42,94 @@ public class DistribuicaoDfeService {
     @Autowired
     private NotaFiscalService notaFiscalService;
 
-    @Transactional
-    public void consultarDocumentos(String documento, String ambiente) throws Exception {
-        // Remove caracteres não numéricos
-        String documentoLimpo = documento.replaceAll("[^0-9]", "");
+    @Autowired
+    private ImportarXmlService importarXmlService;
 
-        // Validação do documento
-        if (documentoLimpo.length() != 11 && documentoLimpo.length() != 14) {
-            throw new IllegalArgumentException("Documento inválido. Deve conter 11 (CPF) ou 14 (CNPJ) dígitos.");
-        }
+    @Autowired
+    private AmbienteNotaFiscalRepository ambienteNotaFiscalRepository;
 
-        // Determina o tipo de pessoa
-        PessoaEnum tipoPessoa = documentoLimpo.length() == 11 ? PessoaEnum.FISICA : JURIDICA;
-        logger.info("Consultando DF-e para {}: {}, ambiente: {}",tipoPessoa.name(), documentoLimpo, ambiente);
+    @Autowired
+    private ConfiguracaoCertificadoRepository certificadoRepository;
 
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(documentoLimpo); // Usa o documento limpo
+    @Scheduled(fixedRate = 3600000) // A cada hora
+    public void consultarDocumentos() {
+        try {
+            Optional<AmbienteNotaFiscal> ambienteOpt = ambienteNotaFiscalRepository.findById(1L);
+            String ambiente = ambienteOpt.map(amb -> amb.getCodigoAmbiente() == 1 ? "PRODUCAO" : "HOMOLOGACAO")
+                    .orElseThrow(() -> new IllegalStateException("Ambiente não configurado"));
 
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+            List<ConfiguracaoCertificado> certificados = certificadoRepository.findAll();
 
-        Optional<ControleNsu> controleNsuOpt = controleNsuRepository.findByCnpjAndAmbiente(documentoLimpo, ambiente);
-        ControleNsu controleNsu = controleNsuOpt.orElseGet(() -> new ControleNsu(ambiente, LocalDateTime.now(), 0L, documentoLimpo, null));
-
-        // Chama o métudo de distribuição DFe com os parâmetros corretos
-        RetDistDFeInt retorno = Nfe.distribuicaoDfe(config, tipoPessoa, documentoLimpo, ConsultaDFeEnum.NSU, String.valueOf(controleNsu.getUltimoNsu()));
-        Long maxNSU = Long.parseLong(retorno.getMaxNSU());
-
-        if (retorno.getLoteDistDFeInt() == null || retorno.getLoteDistDFeInt().getDocZip().isEmpty()) {
-            logger.info("Nenhum novo documento encontrado");
-            return;
-        }
-
-        if (retorno.getLoteDistDFeInt() != null) {
-            for (RetDistDFeInt.LoteDistDFeInt.DocZip doc : retorno.getLoteDistDFeInt().getDocZip()) {
+            for (ConfiguracaoCertificado cert : certificados) {
                 try {
-                    String xml = decompressGzip(doc.getValue());
-                    logger.info("Documento NSU {} processado: {}", doc.getNSU(), xml.substring(0, Math.min(xml.length(), 100)));
-                    // Salvar ou processar XML
-                } catch (IOException e) {
-                    logger.error("Erro ao descomprimir documento NSU {}: {}", doc.getNSU(), e.getMessage());
+                    String cnpj = cert.getCnpj();
+                    logger.info("Processando DFe para CNPJ: {}", cnpj);
+
+                    // 1. Busca os documentos na SEFAZ
+                    List<byte[]> documentos = buscarDocumentosPendentes(cnpj, ambiente);
+
+                    // 2. Processa cada XML
+                    for (byte[] docZip : documentos) {
+                        String xml = decompressGzip(docZip); // Métudo do DistribuicaoDfeService
+                        importarXmlService.obterXmlCompletoAutomatico(xml); // Novo métudo
+                    }
+
+                } catch (Exception e) {
+                    logger.error("Falha no CNPJ " + cert.getCnpj(), e);
                 }
             }
+        } catch (Exception e) {
+            logger.error("Erro no scheduler", e);
         }
-
-        controleNsu.setUltimoNsu(maxNSU);
-        controleNsu.setDataUltimaConsulta(LocalDateTime.now());
-        controleNsuRepository.save(controleNsu);
-        logger.info("Consulta concluída, último NSU: {}", maxNSU);
     }
 
     private String decompressGzip(byte[] compressed) throws IOException {
         return new String(new GZIPInputStream(new ByteArrayInputStream(compressed)).readAllBytes());
+    }
+
+    /**
+     * Busca documentos pendentes na SEFAZ e retorna os XMLs compactados para processamento
+     * @return Lista de documentos no formato byte[] (GZIP)
+     */
+    public List<byte[]> buscarDocumentosPendentes(String cnpj, String ambiente) throws Exception {
+        // Validação do CNPJ
+        String cnpjLimpo = cnpj.replaceAll("[^0-9]", "");
+        if (cnpjLimpo.length() != 14) {
+            throw new IllegalArgumentException("CNPJ inválido");
+        }
+
+        logger.info("Buscando documentos pendentes para CNPJ: {}, ambiente: {}", cnpjLimpo, ambiente);
+
+        // Configuração e consulta do último NSU
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpjLimpo);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+
+        Optional<ControleNsu> controleNsuOpt = controleNsuRepository.findByCnpjAndAmbiente(cnpjLimpo, ambiente);
+        String ultimoNsu = controleNsuOpt.map(c -> String.valueOf(c.getUltimoNsu())).orElse("0");
+
+        // Consulta à SEFAZ
+        RetDistDFeInt retorno = Nfe.distribuicaoDfe(config, PessoaEnum.JURIDICA, cnpjLimpo, ConsultaDFeEnum.NSU, ultimoNsu);
+
+        // Atualiza o NSU no banco
+        if (controleNsuOpt.isPresent()) {
+            ControleNsu controleNsu = controleNsuOpt.get();
+            controleNsu.setUltimoNsu(Long.parseLong(retorno.getMaxNSU()));
+            controleNsu.setDataUltimaConsulta(LocalDateTime.now());
+            controleNsuRepository.save(controleNsu);
+        } else {
+            controleNsuRepository.save(
+                    new ControleNsu(ambiente, LocalDateTime.now(), Long.parseLong(retorno.getMaxNSU()), cnpjLimpo, null));
+        }
+
+        // Retorna os documentos compactados (GZIP)
+        if (retorno.getLoteDistDFeInt() == null || retorno.getLoteDistDFeInt().getDocZip().isEmpty()) {
+            logger.info("Nenhum novo documento encontrado para CNPJ {}", cnpjLimpo);
+            return Collections.emptyList();
+        }
+
+        return retorno.getLoteDistDFeInt().getDocZip().stream()
+                .map(RetDistDFeInt.LoteDistDFeInt.DocZip::getValue)
+                .collect(Collectors.toList());
     }
 }

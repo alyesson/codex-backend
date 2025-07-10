@@ -38,9 +38,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigInteger;
@@ -79,7 +84,10 @@ public class NotaFiscalService {
     public NotaFiscalDto emitirNotaFiscal(NotaFiscalDto dto) throws Exception {
         logger.info("Iniciando emissão da NF-e para CNPJ: {}", dto.getDocumentoEmitente());
         ConfiguracoesNfe config = iniciarConfiguracao(dto);
+
         TEnviNFe enviNFe = montarNotaFiscal(dto);
+        salvaLoteNotaFiscal(enviNFe, config);
+
         enviNFe = assinarNotaFiscal(enviNFe, config);
         validarNotaFiscal(enviNFe, config);
         TRetEnviNFe retorno = transmiteNotaFiscal(enviNFe, config);
@@ -90,8 +98,10 @@ public class NotaFiscalService {
         dto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
 
         String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
-        salvarXmlNotaFiscal(dto.getChave(), xml);
 
+        if (retorno.getProtNFe().getInfProt().getCStat().equals("100")) {
+            salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
+        }
         return dto;
     }
 
@@ -104,7 +114,7 @@ public class NotaFiscalService {
         Optional<AmbienteNotaFiscal> ambienteNotaFiscal = ambienteNotaFiscalRepository.findById(1L);
 
         if (ambienteNotaFiscal.isPresent()) {
-            ambienteNota = ambienteNotaFiscal.get().getCodigoAmbiente();;
+            ambienteNota = ambienteNotaFiscal.get().getCodigoAmbiente();
         } else {
             throw new NfeException("O ambiente da nota fiscal não está parametrizado");
         }
@@ -147,13 +157,13 @@ public class NotaFiscalService {
         }
 
         // Valida e atualiza o lote
-        Optional<LoteNfe> loteOpt = loteRepository.findByIdLoteAndCnpjAndAmbiente(nota.getSerie(), nota.getDocumentoEmitente(), Integer.valueOf(String.valueOf(ambienteNota)));
+        Optional<LoteNfe> loteOpt = loteRepository.findByIdLoteAndCnpjAndAmbiente(nota.getSerie(), nota.getDocumentoEmitente(), ambienteNota);
         LoteNfe lote;
         if (loteOpt.isEmpty()) {
             lote = new LoteNfe();
             lote.setCnpjEmitente(nota.getDocumentoEmitente());
             lote.setAmbiente(ambienteNota);
-            //lote.setTipoDocumento(DocumentoEnum.NFE.name());
+            lote.setTipoDocumento(DocumentoEnum.NFE.name());
 
             // Tratamento para número da nota
             int numeroNota;
@@ -203,10 +213,26 @@ public class NotaFiscalService {
     /**
      * Valida o XML da NF-e contra os schemas da SEFAZ.
      */
-    public void validarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException, JAXBException {
+    public void validarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
+        String dataFormatada = LocalDate.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy"));
+        Path diretorio = Paths.get("/tmp/xml_notas_" + dataFormatada);
+
         logger.info("Validando NF-e, ID Lote: {}", enviNFe.getIdLote());
-        String xml = XmlNfeUtil.objectToXml(enviNFe, configuracoes.getEncode());
-        String xmlAssinado = Assinar.assinaNfe(configuracoes, xml, AssinaturaEnum.NFE);
+        String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
+
+        /*if (!Files.exists(diretorio)) {
+            Files.createDirectories(diretorio);
+            System.out.println("Diretório criado: " + diretorio);
+        }
+        Path arquivo = diretorio.resolve("nota.xml");
+        Files.write(arquivo, xml.getBytes());*/
+        Files.write(Paths.get("nota.xml"), xml.getBytes()); // Salva para análise
+
+        if (!new Validar().isValidXml(config, xml, ServicosEnum.CONSULTA_RECIBO)) {
+            throw new NfeException("XML inválido segundo schemas da SEFAZ");
+        }
+
+        String xmlAssinado = Assinar.assinaNfe(config, xml, AssinaturaEnum.NFE);
         XmlNfeUtil.xmlToObject(xmlAssinado, TEnviNFe.class);
     }
 
@@ -215,6 +241,11 @@ public class NotaFiscalService {
      */
     public TRetEnviNFe transmiteNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe configuracoes) throws NfeException {
         logger.info("Enviando NF-e, ID Lote: {}", enviNFe.getIdLote());
+        TRetConsStatServ status = consultarStatusServico(configuracoes);
+        if (!status.getCStat().equals("107")) { // Serviço em operação
+            throw new NfeException("SEFAZ offline - Ativar contingência");
+        }
+
         TRetEnviNFe retorno = Nfe.enviarNfe(configuracoes, enviNFe, DocumentoEnum.NFE);
         if (!"100".equals(retorno.getProtNFe().getInfProt().getCStat())) {
             throw new NfeException("Erro ao enviar NF-e- " + retorno.getProtNFe().getInfProt().getXMotivo());
@@ -504,6 +535,9 @@ public class NotaFiscalService {
         return String.format("%02d", proximoSequencial);
     }
 
+    /**
+     * Salva a nota fiscal no banco
+     */
     @Transactional
     public TRetEnviNFe salvaLoteNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException {
         // 1. Salva o lote antes do envio
@@ -547,7 +581,6 @@ public class NotaFiscalService {
         return notaFiscalRepository.consultarNotasPorPeriodo(dataInicial, dataFinal, documentoEmitente);
     }
 
-    // Métudo auxiliar para converter código numérico para AmbienteEnum
     private AmbienteEnum converterCodigoParaAmbienteEnum(int codigo) throws NfeException {
         for (AmbienteEnum ambiente : AmbienteEnum.values()) {
             if (Integer.parseInt(ambiente.getCodigo()) == codigo) {

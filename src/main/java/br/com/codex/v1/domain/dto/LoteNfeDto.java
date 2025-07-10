@@ -25,6 +25,7 @@ public class LoteNfeDto implements Serializable {
     private Integer quantidadeNotas;
     private String protocolo;
     private String ultimoNumero;
+    private String tipoDocumento;
     @Lob
     private String xmlResposta;
 
@@ -42,6 +43,7 @@ public class LoteNfeDto implements Serializable {
         this.quantidadeNotas = obj.getQuantidadeNotas();
         this.protocolo = obj.getProtocolo();
         this.ultimoNumero = obj.getUltimoNumero();
+        this.tipoDocumento = obj.getTipoDocumento();
         this.xmlResposta = obj.getXmlResposta();
     }
 }

@@ -8,6 +8,8 @@ import br.com.swconsultoria.nfe.schema_4.enviNFe.TIpi;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TNFe;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TNfeProc;
 import br.com.swconsultoria.nfe.util.XmlNfeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import java.util.Optional;
 
 @Service
 public class ImportarXmlService {
+    private static final Logger logger = LoggerFactory.getLogger(ImportarXmlService.class);
 
     @Autowired
     private ImportarXmlRepository importarXmlRepository;
@@ -54,6 +57,208 @@ public class ImportarXmlService {
         }else {
             System.out.println(nota.get());
             return nota.get();
+        }
+    }
+
+    public void obterXmlCompletoAutomatico(String xml) {
+
+        try {
+            TNfeProc nfe = XmlNfeUtil.xmlToObject(xml, TNfeProc.class);
+
+            // Verifica se a nota já existe para evitar duplicatas
+            if (importarXmlRepository.existsByChave(nfe.getNFe().getInfNFe().getId())) {
+                logger.warn("NF-e já importada: {}", nfe.getNFe().getInfNFe().getId());
+                return;
+            }
+
+            ImportarXml nota = new ImportarXml();
+            String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+            nota.setDataImportacao(java.sql.Date.valueOf(dataAtual));
+            nota.setXml(xml);
+
+            /*
+             * Dados do cabeçalho nota
+             */
+            nota.setCodigoUf(nfe.getNFe().getInfNFe().getIde().getCUF());
+            nota.setCodigoNf(nfe.getNFe().getInfNFe().getIde().getCNF());
+            nota.setNaturezaOperacao(nfe.getNFe().getInfNFe().getIde().getNatOp());
+            nota.setModelo(nfe.getNFe().getInfNFe().getIde().getMod());
+            nota.setSerie(nfe.getNFe().getInfNFe().getIde().getSerie());
+            nota.setNumero(nfe.getNFe().getInfNFe().getIde().getNNF());
+            dataEmissaoNota = nfe.getNFe().getInfNFe().getIde().getDhEmi().substring(0, 10);
+            LocalDate dataEmissao = LocalDate.parse(dataEmissaoNota);
+            nota.setEmissao(dataEmissao);
+            nota.setDhSaidaEntrada(nfe.getNFe().getInfNFe().getIde().getDhSaiEnt() != null ? nfe.getNFe().getInfNFe().getIde().getDhSaiEnt() : null);
+            nota.setTipo(nfe.getNFe().getInfNFe().getIde().getTpNF());
+            nota.setIndicadorPresenca(nfe.getNFe().getInfNFe().getIde().getIndPres() != null ? nfe.getNFe().getInfNFe().getIde().getIndPres() : "");
+
+            numeroDaNota = nfe.getNFe().getInfNFe().getIde().getNNF();
+
+            /*
+             * Dados de emitente;
+             */
+            if (nfe.getNFe().getInfNFe().getEmit().getXNome() != null)
+                nota.setRazaoSocialEmitente(nfe.getNFe().getInfNFe().getEmit().getXNome().toUpperCase());
+            if (nfe.getNFe().getInfNFe().getEmit().getXFant() != null)
+                nota.setNomeFantasiaEmitente(nfe.getNFe().getInfNFe().getEmit().getXFant().toUpperCase());
+            if (nfe.getNFe().getInfNFe().getEmit().getCNPJ() != null) {
+                nota.setDocumentoEmitente(nfe.getNFe().getInfNFe().getEmit().getCNPJ());
+            } else {
+                nota.setDocumentoEmitente(nfe.getNFe().getInfNFe().getEmit().getCPF());
+            }
+            if (nfe.getNFe().getInfNFe().getEmit().getIE() != null)
+                nota.setInscricaoEstadualEmitente(nfe.getNFe().getInfNFe().getEmit().getIE());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getCEP() != null)
+                nota.setCepEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getCEP());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getCMun() != null)
+                nota.setCodigoMunicipioEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getCMun());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getXMun() != null)
+                nota.setNomeMunicipioEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getXMun());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getXBairro() != null)
+                nota.setBairroEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getXBairro());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getFone() != null)
+                nota.setTelefoneEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getFone());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getXLgr() != null)
+                nota.setLogradouroEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getXLgr());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getNro() != null)
+                nota.setNumeroEnderecoEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getNro());
+            if (nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getUF() != null)
+                nota.setUfEmitente(nfe.getNFe().getInfNFe().getEmit().getEnderEmit().getUF().value());
+
+            /*
+             * Dados destinatário
+             */
+            if (nfe.getNFe().getInfNFe().getDest().getXNome() != null)
+                nota.setRazaoSocialDestinatario(nfe.getNFe().getInfNFe().getDest().getXNome().toUpperCase());
+            if (nfe.getNFe().getInfNFe().getDest().getCNPJ() != null) {
+                nota.setDocumentoDestinatario(nfe.getNFe().getInfNFe().getDest().getCNPJ());
+            } else {
+                nota.setDocumentoDestinatario(nfe.getNFe().getInfNFe().getDest().getCPF());
+            }
+            if (nfe.getNFe().getInfNFe().getDest().getIE() != null)
+                nota.setInscricaoEstadualDestinatario(nfe.getNFe().getInfNFe().getDest().getIE());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getCEP() != null)
+                nota.setCepDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getCEP());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getCMun() != null)
+                nota.setCodigoMunicipioDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getCMun());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getXMun() != null)
+                nota.setNomeMunicipioDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getXMun());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getXBairro() != null)
+                nota.setBairroDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getXBairro());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getFone() != null)
+                nota.setTelefoneDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getFone());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getXLgr() != null)
+                nota.setLogradouroDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getXLgr());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getNro() != null)
+                nota.setNumeroEnderecoDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getNro());
+            if (nfe.getNFe().getInfNFe().getDest().getEnderDest().getUF() != null)
+                nota.setUfDestinatario(nfe.getNFe().getInfNFe().getDest().getEnderDest().getUF().value());
+
+            /*
+             * Valores da nota
+             */
+
+            if (nfe.getNFe().getInfNFe().getTotal().getICMSTot() != null) {
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVBC() != null)
+                    nota.setValorBaseCalculo(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVBC()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVICMS() != null)
+                    nota.setValorIcms(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVICMS()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVICMSDeson() != null)
+                    nota.setValorIcmsDesonerado(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVICMSDeson()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFCP() != null)
+                    nota.setValorFcp(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFCP()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVBCST() != null)
+                    nota.setValorBaseCalculoSt(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVBCST()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVST() != null)
+                    nota.setValorSt(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVST()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFCPST() != null)
+                    nota.setValorFcpSt(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFCPST()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFCPSTRet() != null)
+                    nota.setValorFcpStRetido(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFCPSTRet()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVProd() != null)
+                    nota.setValorProdutos(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVProd()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFrete() != null)
+                    nota.setValorFrete(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVFrete()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVSeg() != null)
+                    nota.setValorSeguro(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVSeg()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVDesc() != null)
+                    nota.setValorDesconto(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVDesc()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVII() != null)
+                    nota.setValorIi(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVII()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVIPI() != null)
+                    nota.setValorIpi(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVIPI()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVIPIDevol() != null)
+                    nota.setValorIpiDevolucao(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVIPIDevol()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVPIS() != null)
+                    nota.setValorPis(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVPIS()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVCOFINS() != null)
+                    nota.setValorCofins(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVCOFINS()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVOutro() != null)
+                    nota.setValorOutros(new BigDecimal(nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVOutro()));
+                if (nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVNF() != null)
+                    nota.setValorTotal(new BigDecimal((nfe.getNFe().getInfNFe().getTotal().getICMSTot().getVNF())));
+            }
+
+            /*
+             * Dados transporte
+             */
+            if (nfe.getNFe().getInfNFe().getTransp() != null) {
+                if (nfe.getNFe().getInfNFe().getTransp().getModFrete() != null)
+                    nota.setModalidadeFrete(nfe.getNFe().getInfNFe().getTransp().getModFrete());
+                if (nfe.getNFe().getInfNFe().getTransp().getTransporta() != null) {
+                    if (nfe.getNFe().getInfNFe().getTransp().getTransporta().getCNPJ() != null)
+                        nota.setCnpjTransportador(nfe.getNFe().getInfNFe().getTransp().getTransporta().getCNPJ());
+                    if (nfe.getNFe().getInfNFe().getTransp().getTransporta().getXNome() != null)
+                        nota.setNomeTransportador(nfe.getNFe().getInfNFe().getTransp().getTransporta().getXNome());
+                    if (nfe.getNFe().getInfNFe().getTransp().getTransporta().getXEnder() != null)
+                        nota.setEnderecoTransportador(nfe.getNFe().getInfNFe().getTransp().getTransporta().getXEnder());
+                    if (nfe.getNFe().getInfNFe().getTransp().getTransporta().getXMun() != null)
+                        nota.setMunicipioTransportador(nfe.getNFe().getInfNFe().getTransp().getTransporta().getXMun());
+                }
+            }
+
+            /*
+             * Dados cobrança/fatura
+             */
+            if (nfe.getNFe().getInfNFe().getCobr() != null) {
+                if (nfe.getNFe().getInfNFe().getCobr().getFat() != null) {
+                    if (nfe.getNFe().getInfNFe().getCobr().getFat().getNFat() != null)
+                        nota.setNumeroFatura(nfe.getNFe().getInfNFe().getCobr().getFat().getNFat());
+                    if (nfe.getNFe().getInfNFe().getCobr().getFat().getVOrig() != null)
+                        nota.setValorOriginalFatura(new BigDecimal(nfe.getNFe().getInfNFe().getCobr().getFat().getVOrig()));
+                    if (nfe.getNFe().getInfNFe().getCobr().getFat().getVDesc() != null)
+                        nota.setValorDescontoFatura(new BigDecimal(nfe.getNFe().getInfNFe().getCobr().getFat().getVDesc()));
+                    if (nfe.getNFe().getInfNFe().getCobr().getFat().getVLiq() != null)
+                        nota.setValorLiquidoFatura(new BigDecimal(nfe.getNFe().getInfNFe().getCobr().getFat().getVLiq()));
+                }
+            }
+
+            /*
+             * Informações adicionais....
+             */
+            if (nfe.getNFe().getInfNFe().getInfAdic() != null) {
+                if (nfe.getNFe().getInfNFe().getInfAdic().getInfAdFisco() != null)
+                    nota.setInformacaoAdicionalFisco(nfe.getNFe().getInfNFe().getInfAdic().getInfAdFisco());
+                if (nfe.getNFe().getInfNFe().getInfAdic().getInfCpl() != null)
+                    nota.setInformacaoAdicionalContribuinte(nfe.getNFe().getInfNFe().getInfAdic().getInfCpl());
+            }
+            /*
+             * Dados protocolo;...
+             */
+            nota.setChave(nfe.getProtNFe().getInfProt().getChNFe());
+            nota.setCstat(nfe.getProtNFe().getInfProt().getCStat());
+            nota.setNumeroProtocolo(nfe.getProtNFe().getInfProt().getNProt());
+            nota.setDataHoraProtocolo(nfe.getProtNFe().getInfProt().getDhRecbto());
+            nota.setMotivoProtocolo(nfe.getProtNFe().getInfProt().getXMotivo());
+
+            List<ImportarXmlItens> itens = obterItensXmlCompleto(nota);
+
+            salvarNotaFiscal(nota);
+            salvarNotaFiscalItens(itens);
+            lancamentoContabil(nota);
+            logger.info("NF-e {} importada com sucesso", nota.getChave());
+        } catch (JAXBException e) {
+            logger.error("Erro ao parsear XML", e);
         }
     }
 

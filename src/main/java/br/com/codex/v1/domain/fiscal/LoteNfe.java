@@ -30,6 +30,7 @@ public class LoteNfe implements Serializable {
     private Integer quantidadeNotas;
     private String protocolo;
     private String ultimoNumero;
+    private String tipoDocumento;
 
     @Lob
     @Column(columnDefinition = "TEXT")
@@ -39,7 +40,8 @@ public class LoteNfe implements Serializable {
         super();
     }
 
-    public LoteNfe(Long id, String idLote, String cnpjEmitente, Integer ambiente, LocalDateTime dataEnvio, String status, Integer quantidadeNotas, String protocolo, String ultimoNumero, String xmlResposta) {
+    public LoteNfe(Long id, String idLote, String cnpjEmitente, Integer ambiente, LocalDateTime dataEnvio, String status,
+                   Integer quantidadeNotas, String protocolo, String ultimoNumero, String tipoDocumento, String xmlResposta) {
         this.id = id;
         this.idLote = idLote != null ? idLote : "";
         this.cnpjEmitente = cnpjEmitente != null ? cnpjEmitente : "";
@@ -49,6 +51,7 @@ public class LoteNfe implements Serializable {
         this.quantidadeNotas = quantidadeNotas != null ? quantidadeNotas : 0;
         this.protocolo = protocolo != null ? protocolo : "";
         this.ultimoNumero = ultimoNumero != null ? ultimoNumero : "0";
+        this.tipoDocumento = tipoDocumento != null ? tipoDocumento : "NFE";
         this.xmlResposta = xmlResposta != null ? xmlResposta : "";
     }
 
@@ -62,6 +65,7 @@ public class LoteNfe implements Serializable {
         this.quantidadeNotas = obj.getQuantidadeNotas();
         this.protocolo = obj.getProtocolo();
         this.ultimoNumero = obj.getUltimoNumero();
+        this.tipoDocumento = obj.getTipoDocumento();
         this.xmlResposta = obj.getXmlResposta();
     }
 
