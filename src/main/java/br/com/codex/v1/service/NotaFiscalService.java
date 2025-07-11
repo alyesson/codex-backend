@@ -98,6 +98,7 @@ public class NotaFiscalService {
 
         SerieNfe serie = serieOpt.get();
         String numeroNota = String.valueOf(serie.getUltimoNumero() + 1); // Incrementa o último número
+        dto.setNumero(numeroNota);
 
         // 2. Atualiza o último número usado na série
         serie.setUltimoNumero(serie.getUltimoNumero() + 1);

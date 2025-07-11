@@ -49,7 +49,8 @@ public class NotaFiscalMapper {
         ide.setNatOp(dto.getNaturezaOperacao());
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
-        ide.setNNF(String.valueOf(dto.getNumero()));
+        String numeroFormatado = String.format("%09d", Long.parseLong(dto.getNumero()));
+        ide.setNNF(numeroFormatado);
         ide.setDhEmi(dataFormatada);
         ide.setDhSaiEnt(dataFormatada);
         ide.setTpNF(dto.getTipo());
