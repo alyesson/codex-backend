@@ -847,25 +847,25 @@ public class NotaFiscalMapper {
         // Totais
         TNFe.InfNFe.Total total = new TNFe.InfNFe.Total();
         TNFe.InfNFe.Total.ICMSTot icmsTot = new TNFe.InfNFe.Total.ICMSTot();
-        icmsTot.setVBC(dto.getValorBaseCalculo().toString());
-        icmsTot.setVICMS(dto.getValorIcms().toString());
+        icmsTot.setVBC(dto.getValorBaseCalculo()!= null ? dto.getValorBaseCalculo().toString() : "0.00");
+        icmsTot.setVICMS(dto.getValorIcms()!= null ? dto.getValorIcms().toString() : "0.00");
         icmsTot.setVICMSDeson(dto.getValorIcmsDesonerado()!= null ? dto.getValorIcmsDesonerado().toString() : "0.00");
         icmsTot.setVFCP(dto.getValorFcp()!= null ? dto.getValorFcp().toString() : "0.00");
         icmsTot.setVBCST(dto.getValorBaseCalculoSt()!= null ? dto.getValorBaseCalculoSt().toString() : "0.00");
         icmsTot.setVST(dto.getValorSt()!= null ? dto.getValorSt().toString() : "0.00");
         icmsTot.setVFCPST(dto.getValorFcpSt()!= null ? dto.getValorFcpSt().toString() : "0.00");
         icmsTot.setVFCPSTRet(dto.getValorFcpStRetido()!= null ? dto.getValorFcpStRetido().toString() : "0.00");
-        icmsTot.setVProd(dto.getValorProdutos().toString());
+        icmsTot.setVProd(dto.getValorProdutos() != null ? dto.getValorProdutos().toString() : "0.00");
         icmsTot.setVFrete(dto.getValorFrete() != null ? dto.getValorFrete().toString() : "0.00");
         icmsTot.setVSeg(dto.getValorSeguro() != null ? dto.getValorSeguro().toString() : "0.00");
         icmsTot.setVDesc(dto.getValorDesconto() != null ? dto.getValorDesconto().toString() : "0.00");
         icmsTot.setVII(dto.getValorIi() != null ? dto.getValorIi().toString() : "0.00");
         icmsTot.setVIPI(dto.getValorIpi() != null ? dto.getValorIpi().toString() : "0.00");
-        icmsTot.setVIPIDevol(dto.getValorIpiDevolucao() != null ? dto.getValorCofins().toString() : "0.00");
+        icmsTot.setVIPIDevol(dto.getValorIpiDevolucao() != null ? dto.getValorIpiDevolucao().toString() : "0.00");
         icmsTot.setVPIS(dto.getValorPis() != null ? dto.getValorPis().toString() : "0.00");
         icmsTot.setVCOFINS(dto.getValorCofins() != null ? dto.getValorCofins().toString() : "0.00");
-        icmsTot.setVOutro(dto.getValorOutros() != null ? dto.getValorCofins().toString() : "0.00");
-        icmsTot.setVNF(dto.getValorTotal().toString());
+        icmsTot.setVOutro(dto.getValorOutros() != null ? dto.getValorOutros().toString() : "0.00");
+        icmsTot.setVNF(dto.getValorTotal() != null ? dto.getValorTotal().toString() : "0.00");
 
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
