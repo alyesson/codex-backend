@@ -847,6 +847,7 @@ public class NotaFiscalMapper {
         // Totais
         TNFe.InfNFe.Total total = new TNFe.InfNFe.Total();
         TNFe.InfNFe.Total.ICMSTot icmsTot = new TNFe.InfNFe.Total.ICMSTot();
+
         icmsTot.setVBC(dto.getValorBaseCalculo()!= null ? dto.getValorBaseCalculo().toString() : "0.00");
         icmsTot.setVICMS(dto.getValorIcms()!= null ? dto.getValorIcms().toString() : "0.00");
         icmsTot.setVICMSDeson(dto.getValorIcmsDesonerado()!= null ? dto.getValorIcmsDesonerado().toString() : "0.00");

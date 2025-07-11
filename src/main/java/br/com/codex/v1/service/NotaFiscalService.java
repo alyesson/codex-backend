@@ -92,10 +92,6 @@ public class NotaFiscalService {
         // 1. Obter o próximo número da série (com tratamento adequado do Optional)
         Optional<SerieNfe> serieOpt = serieNfeRepository.findByNumeroSerieAndCnpjAndAmbiente(dto.getSerie(), dto.getDocumentoEmitente(), dto.getTipoAmbiente());
 
-        System.out.println("Serie: "+dto.getSerie());
-        System.out.println("Documento: "+dto.getDocumentoEmitente());
-        System.out.println("Ambiente: "+dto.getTipoAmbiente());
-
         if (serieOpt.isEmpty()) {
             throw new Exception("Série não encontrada para os parâmetros informados");
         }
