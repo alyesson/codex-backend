@@ -8,12 +8,17 @@ import br.com.swconsultoria.nfe.schema_4.enviNFe.*;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 public class NotaFiscalMapper {
 
@@ -26,6 +31,9 @@ public class NotaFiscalMapper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         String dataFormatada = dataAtual.format(formatter);
 
+        //Geração de código Cnf aleatório (recomendado pela Sefaz)
+        String cnf = String.format("%08d", ThreadLocalRandom.current().nextInt(1_000_000, 100_000_000));
+
         ObjectFactory factory = new ObjectFactory();
         TNFe tnFe = factory.createTNFe();
 
@@ -37,6 +45,7 @@ public class NotaFiscalMapper {
         TNFe.InfNFe.Ide ide = new TNFe.InfNFe.Ide();
 
         ide.setCUF(dto.getCodigoUf());
+        ide.setCNF(cnf);
         ide.setNatOp(dto.getNaturezaOperacao());
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
@@ -48,7 +57,6 @@ public class NotaFiscalMapper {
         ide.setCMunFG(dto.getCodigoMunicipioEmitente());
         ide.setTpImp("2");
         ide.setTpEmis("1");
-        ide.setCDV(calcularDigitoVerificador(dto.getChave()));
         ide.setTpAmb(dto.getTipoAmbiente());
         ide.setFinNFe(String.valueOf(dto.getFinalidadeEmissao()));
         ide.setIndFinal(String.valueOf(dto.getConsumidorFinal()));
@@ -841,17 +849,24 @@ public class NotaFiscalMapper {
         TNFe.InfNFe.Total.ICMSTot icmsTot = new TNFe.InfNFe.Total.ICMSTot();
         icmsTot.setVBC(dto.getValorBaseCalculo().toString());
         icmsTot.setVICMS(dto.getValorIcms().toString());
+        icmsTot.setVICMSDeson(dto.getValorIcmsDesonerado()!= null ? dto.getValorIcmsDesonerado().toString() : "0.00");
+        icmsTot.setVFCP(dto.getValorFcp()!= null ? dto.getValorFcp().toString() : "0.00");
+        icmsTot.setVBCST(dto.getValorBaseCalculoSt()!= null ? dto.getValorBaseCalculoSt().toString() : "0.00");
+        icmsTot.setVST(dto.getValorSt()!= null ? dto.getValorSt().toString() : "0.00");
+        icmsTot.setVFCPST(dto.getValorFcpSt()!= null ? dto.getValorFcpSt().toString() : "0.00");
+        icmsTot.setVFCPSTRet(dto.getValorFcpStRetido()!= null ? dto.getValorFcpStRetido().toString() : "0.00");
         icmsTot.setVProd(dto.getValorProdutos().toString());
-        icmsTot.setVNF(dto.getValorTotal().toString());
-        icmsTot.setVDesc(dto.getValorDesconto() != null ? dto.getValorDesconto().toString() : "0.00");
         icmsTot.setVFrete(dto.getValorFrete() != null ? dto.getValorFrete().toString() : "0.00");
         icmsTot.setVSeg(dto.getValorSeguro() != null ? dto.getValorSeguro().toString() : "0.00");
+        icmsTot.setVDesc(dto.getValorDesconto() != null ? dto.getValorDesconto().toString() : "0.00");
+        icmsTot.setVII(dto.getValorIi() != null ? dto.getValorIi().toString() : "0.00");
         icmsTot.setVIPI(dto.getValorIpi() != null ? dto.getValorIpi().toString() : "0.00");
         icmsTot.setVIPIDevol(dto.getValorIpiDevolucao() != null ? dto.getValorCofins().toString() : "0.00");
         icmsTot.setVPIS(dto.getValorPis() != null ? dto.getValorPis().toString() : "0.00");
         icmsTot.setVCOFINS(dto.getValorCofins() != null ? dto.getValorCofins().toString() : "0.00");
-        icmsTot.setVII(dto.getValorIi() != null ? dto.getValorCofins().toString() : "0.00");
         icmsTot.setVOutro(dto.getValorOutros() != null ? dto.getValorCofins().toString() : "0.00");
+        icmsTot.setVNF(dto.getValorTotal().toString());
+
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
 
@@ -890,7 +905,7 @@ public class NotaFiscalMapper {
         infProt.setTpAmb(dto.getTipoAmbiente()); // Tipo de ambiente (1 = Produção, 2 = Homologação)
         infProt.setVerAplic("SP_NFE_PL009_V4"); // Versão do aplicativo que processou a NF-e
         infProt.setChNFe(dto.getChave()); // Chave da NF-e
-        infProt.setDhRecbto(String.format(String.valueOf(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")))); // Data/hora de recebimento
+        infProt.setDhRecbto(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"))); // Data/hora de recebimento
         infProt.setNProt(dto.getNumeroProtocolo()); // Número do protocolo
         //infProt.setDigVal("".getBytes()); // Digest Value em Base64
         infProt.setCStat(dto.getCstat()); // Código do status (ex.: "100" = Autorizado)
@@ -910,17 +925,5 @@ public class NotaFiscalMapper {
             default -> // Demais estados (SP, RJ, DF, etc.)
                     ZoneId.of("America/Sao_Paulo"); // UTC-3
         };
-    }
-
-    private static String calcularDigitoVerificador(String chave) {
-        int[] pesos = {2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4};
-        int soma = 0;
-
-        for (int i = 0; i < 43; i++) {
-            soma += Character.getNumericValue(chave.charAt(i)) * pesos[i];
-        }
-
-        int resto = soma % 11;
-        return (resto == 0 || resto == 1) ? "0" : String.valueOf(11 - resto);
     }
 }

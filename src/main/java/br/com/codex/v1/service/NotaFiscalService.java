@@ -47,8 +47,11 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.math.BigInteger;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 @Service
 public class NotaFiscalService {
@@ -76,6 +79,7 @@ public class NotaFiscalService {
     private LoteNfeRepository loteRepository;
 
     Integer ambienteNota;
+    String estadoUf;
 
     /**
      * Executa o processo completo de emissão da NF-e.
@@ -84,6 +88,30 @@ public class NotaFiscalService {
     public NotaFiscalDto emitirNotaFiscal(NotaFiscalDto dto) throws Exception {
         logger.info("Iniciando emissão da NF-e para CNPJ: {}", dto.getDocumentoEmitente());
         ConfiguracoesNfe config = iniciarConfiguracao(dto);
+
+        // 1. Obter o próximo número da série (com tratamento adequado do Optional)
+        Optional<SerieNfe> serieOpt = serieNfeRepository.findByNumeroSerieAndCnpjAndAmbiente(dto.getSerie(), dto.getDocumentoEmitente(), dto.getTipoAmbiente());
+
+        System.out.println("Serie: "+dto.getSerie());
+        System.out.println("Documento: "+dto.getDocumentoEmitente());
+        System.out.println("Ambiente: "+dto.getTipoAmbiente());
+
+        if (serieOpt.isEmpty()) {
+            throw new Exception("Série não encontrada para os parâmetros informados");
+        }
+
+        SerieNfe serie = serieOpt.get();
+        String numeroNota = String.valueOf(serie.getUltimoNumero() + 1); // Incrementa o último número
+
+        // 2. Atualiza o último número usado na série
+        serie.setUltimoNumero(serie.getUltimoNumero() + 1);
+        serieNfeRepository.save(serie);
+
+        // 3. Gerar chave de acesso COMPLETA
+        String chaveAcesso = gerarChaveAcessoCompleta(dto.getCodigoUf(), dto.getDocumentoEmitente(),
+                dto.getModelo(), dto.getSerie(), numeroNota, dto.getTipo());
+
+        dto.setChave(chaveAcesso);
 
         TEnviNFe enviNFe = montarNotaFiscal(dto);
         salvaLoteNotaFiscal(enviNFe, config);
@@ -122,6 +150,7 @@ public class NotaFiscalService {
 
         if(cert.isPresent()){
             notaFiscalDto.setCodigoUf(cert.get().getUf());
+            estadoUf = cert.get().getUf();
         }else{
             throw new NfeException("A sigla do estado não está parametrizado na tabela 'configuracao_certificado'");
         }
@@ -585,5 +614,34 @@ public class NotaFiscalService {
             }
         }
         throw new NfeException("Código de ambiente inválido: " + codigo);
+    }
+
+    private String gerarChaveAcessoCompleta(String uf, String cnpj, String modelo,String serie, String numero, String tipoNota) {
+        // Validações
+        Objects.requireNonNull(numero, "Número da nota é obrigatório");
+
+        EstadosEnum estado = EstadosEnum.valueOf(uf);
+        int codigoUf = Integer.parseInt(estado.getCodigoUF());
+
+        // Formatação dos componentes
+        String chaveParcial = String.format("%02d", codigoUf) +
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyMM")) +
+                String.format("%014d", new BigInteger(cnpj.replaceAll("\\D", ""))) +
+                String.format("%02d", Integer.parseInt(modelo)) +
+                String.format("%03d", Integer.parseInt(serie)) +
+                String.format("%09d", Integer.parseInt(numero)) +
+                tipoNota + // Tipo de emissão (1=Normal)
+                String.format("%08d", ThreadLocalRandom.current().nextInt(100000000));
+
+        return chaveParcial + calcularDV(chaveParcial);
+    }
+
+    private String calcularDV(String chave43posicoes) {
+        int[] pesos = {2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9,2,3,4};
+        int soma = IntStream.range(0, 43)
+                .map(i -> Character.getNumericValue(chave43posicoes.charAt(i)) * pesos[i])
+                .sum();
+        int resto = soma % 11;
+        return (resto < 2) ? "0" : String.valueOf(11 - resto);
     }
 }
