@@ -3,22 +3,17 @@ package br.com.codex.v1.mapper;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
 import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
-import br.com.swconsultoria.nfe.dom.enuns.EstadosEnum;
+import br.com.codex.v1.utilitario.FormatadorDecimal;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.*;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
 
 public class NotaFiscalMapper {
 
@@ -867,7 +862,7 @@ public class NotaFiscalMapper {
         icmsTot.setVPIS(dto.getValorPis() != null ? dto.getValorPis().toString() : "0.00");
         icmsTot.setVCOFINS(dto.getValorCofins() != null ? dto.getValorCofins().toString() : "0.00");
         icmsTot.setVOutro(dto.getValorOutros() != null ? dto.getValorOutros().toString() : "0.00");
-        icmsTot.setVNF(dto.getValorTotal() != null ? dto.getValorTotal().toString() : "0.00");
+        icmsTot.setVNF(FormatadorDecimal.formatarComDuasCasas(dto.getValorTotal()));
 
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
