@@ -10,22 +10,33 @@ public class FormatadorDecimal {
     }
 
     /**
-     * Formata um BigDecimal com 2 casas decimais usando arredondamento HALF_UP
-     * @param valor Valor a ser formatado (pode ser nulo)
-     * @return String formatada ou "0.00" se valor for nulo
+     * Formata valores para 2 casas decimais com arredondamento HALF_UP
      */
-    public static String formatarComDuasCasas(BigDecimal valor) {
-        return valor != null ?
-                valor.setScale(2, RoundingMode.HALF_UP).toString() :
-                "0.00";
+    public static String formatar(BigDecimal valor) {
+        if (valor == null) {
+            return "0.00";
+        }
+        return valor.setScale(2, RoundingMode.HALF_UP).toString();
+    }
+
+    public static String formatar(Double valor) {
+        if (valor == null) {
+            return "0.00";
+        }
+        return new BigDecimal(valor.toString()).setScale(2, RoundingMode.HALF_UP).toString();
     }
 
     /**
-     * Versão para valores double
+     * Para valores que podem vir como String
      */
-    public static String formatarComDuasCasas(Double valor) {
-        return valor != null ?
-                new BigDecimal(valor.toString()).setScale(2, RoundingMode.HALF_UP).toString() :
-                "0.00";
+    public static String formatar(String valor) {
+        if (valor == null || valor.isEmpty()) {
+            return "0.00";
+        }
+        try {
+            return new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP).toString();
+        } catch (NumberFormatException e) {
+            return "0.00";
+        }
     }
 }

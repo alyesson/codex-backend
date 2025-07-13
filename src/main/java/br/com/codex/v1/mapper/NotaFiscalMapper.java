@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static br.com.codex.v1.utilitario.FormatadorDecimal.formatar;
+
 public class NotaFiscalMapper {
 
     static TUf ufDestinatario = null;
@@ -122,20 +124,20 @@ public class NotaFiscalMapper {
             prod.setCProd(item.getCodigoProduto());
             prod.setXProd(item.getNomeProduto());
             prod.setCEAN(item.getCEAN());
-            prod.setNCM(item.getNcmSh());
-            prod.setCEST(item.getCest());
+            prod.setNCM(item.getNcmSh().replace(".",""));
+            prod.setCEST(item.getCest().replace(".",""));
             prod.setCFOP(item.getCfop());
             prod.setUCom(item.getUnidadeComercial());
             prod.setQCom(item.getQuantidadeComercial().toString());
-            prod.setVUnCom(item.getValorUnitarioComercial().toString());
-            prod.setVProd(item.getValorTotalProdutos().toString());
+            prod.setVUnCom(formatar(item.getValorUnitarioComercial()));
+            prod.setVProd(formatar(item.getValorTotalProdutos()));
             prod.setUTrib(item.getUnidadeTributacao());
-            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "");
-            prod.setVUnTrib(item.getValorUnitarioTributacao().toString());
-            prod.setVFrete(item.getValorFrete() != null ? item.getValorFrete().toString() : "0.00");
-            prod.setVSeg(item.getValorSeguro() != null ? item.getValorSeguro().toString() : "0.00");
-            prod.setVDesc(item.getValorDesconto() != null ? item.getValorDesconto().toString() : "0.00");
-            prod.setVOutro(item.getValorOutro() != null ? item.getValorOutro().toString() : "0.00");
+            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");
+            prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));
+            prod.setVFrete(formatar(item.getValorFrete()));
+            prod.setVSeg(formatar(item.getValorSeguro() ));
+            prod.setVDesc(formatar(item.getValorDesconto()));
+            prod.setVOutro(formatar(item.getValorOutro()));
             prod.setIndTot("1");
             prod.setXPed(item.getPedidoCompra());
             det.setProd(prod);
@@ -147,47 +149,51 @@ public class NotaFiscalMapper {
 
             // Cálculo do FCP (Fundo de Combate à Pobreza)
             BigDecimal valorFcp = BigDecimal.ZERO;
-            if (item.getAliqFcp() != null && item.getBcFcp() != null) {
-                valorFcp = item.getBcFcp().multiply(item.getAliqFcp()).divide(BigDecimal.valueOf(100));
+            if (item.getAliqFcp() != null && item.getAliqFcp().compareTo(BigDecimal.ZERO) > 0) {
+                // Usa o valor total do produto (vProd) como base, ignorando item.getBcFcp()
+                BigDecimal baseFcp = item.getValorTotalProdutos().setScale(2, RoundingMode.HALF_UP);
+                valorFcp = baseFcp.multiply(item.getAliqFcp()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+                System.out.println("[FIX] FCP Calculado: " + valorFcp + " (Base: " + baseFcp + ", Alíquota: " + item.getAliqFcp() + "%)");
             }
 
             // Cálculo do FCP ST
             BigDecimal valorFcpSt = BigDecimal.ZERO;
             if (item.getAliqFcpSt() != null && item.getBcFcpSt() != null) {
-                valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100));
+                valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
             }
 
             switch (cst) {
                 case "00" -> {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS00 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS00();
-                    obj.setOrig(item.getOrigIcms() != null ? item.getValorOutro().toString() : "0.00");
+                    obj.setOrig(item.getOrigIcms());
                     obj.setCST(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getValorOutro().toString() : "0.00");
+                    obj.setModBC(formatar(item.getModBc()));
 
                     // Cálculo da BC do ICMS
-                    BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
+                    BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                     obj.setVBC(bcIcms.toString());
 
                     // Cálculo do valor do ICMS
                     BigDecimal valorIcms = BigDecimal.ZERO;
                     if (item.getAliqIcms() != null && bcIcms != null) {
-                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100));
+                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString());
-                    obj.setPFCP(item.getAliqFcp() != null ? item.getAliqFcp().toString() : "0.00");
-                    obj.setVFCP(valorFcp.toString());
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setVICMS(formatar(valorIcms.toString()));
+                    obj.setPFCP(formatar(item.getAliqFcp()));
+                    obj.setVFCP(formatar(valorFcp.toString()));
                     icms.setICMS00(obj);
                 }
 
                 case "02" ->{
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS02 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS02();
-                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
+                    obj.setOrig(item.getOrigIcms());
                     obj.setCST(cst);
-                    obj.setAdRemICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setQBCMono(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setVICMSMono(String.valueOf(item.getValorIcms()) != null ? item.getValorIcms().toString() : "0.00");
+                    obj.setAdRemICMS(formatar(item.getAliqIcms()));
+                    obj.setQBCMono(formatar(item.getBcIcms()));
+                    obj.setVICMSMono(formatar(item.getValorIcms()));
                     icms.setICMS02(obj);
                 }
 
@@ -195,49 +201,49 @@ public class NotaFiscalMapper {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS10 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS10();
                     obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCST(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getModBc() : "0.00");
+                    obj.setModBC(formatar(item.getModBc() ));
 
                     // Cálculos para ICMS normal
-                    BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
+                    BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                     BigDecimal valorIcms = BigDecimal.ZERO;
                     if (item.getAliqIcms() != null) {
-                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100));
+                        valorIcms = (bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
                     }
 
                     // Cálculos para ICMS ST
-                    BigDecimal bcIcmsSt = item.getBcIcmsSt() != null ? item.getBcIcmsSt() : BigDecimal.ZERO;
+                    BigDecimal bcIcmsSt = (item.getBcIcmsSt() != null ? item.getBcIcmsSt() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                     BigDecimal valorIcmsSt = BigDecimal.ZERO;
                     if (item.getAliqIcmsSt() != null) {
-                        valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100));
+                        valorIcmsSt = (bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
                     }
 
                     obj.setVBC(bcIcms.toString());
-                    obj.setPICMS(item.getAliqIcms().toString());
-                    obj.setPICMSST(item.getAliqIcmsSt().toString());
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString());
-                    obj.setPFCP(item.getAliqFcp() != null ? item.getAliqFcp().toString() : "0.00");
-                    obj.setPFCPST(null);
-                    obj.setVFCP(valorFcp.toString());
-                    obj.setVBCFCP(item.getBcFcp() != null ? item.getBcFcp().toString() : "0.00");
-                    obj.setVBCFCPST(item.getBcFcpSt() != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setVBCST(bcIcmsSt.toString());
-                    obj.setVFCPST(valorFcpSt.toString());
-                    obj.setVICMSST(valorIcmsSt.toString());
-                    obj.setVICMSSTDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
-                    obj.setModBCST(String.valueOf(item.getModBc()) != null ? item.getModBc() : "0.00");
-                    obj.setMotDesICMSST(String.valueOf(item.getMotDesIcms()) != null ? item.getMotDesIcms() : "0.00");
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt().toString()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVICMS(formatar(valorIcms.toString()));
+                    obj.setPFCP(formatar(item.getAliqFcp()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCP(formatar(valorFcp.toString()));
+                    obj.setVBCFCP(formatar(item.getBcFcp()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setVBCST(formatar(bcIcmsSt.toString()));
+                    obj.setVFCPST(formatar(valorFcpSt.toString()));
+                    obj.setVICMSST(formatar(valorIcmsSt.toString()));
+                    obj.setVICMSSTDeson(formatar(item.getValorIcmsDesonerado()));
+                    obj.setModBCST(formatar(item.getModBc()));
+                    obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
                     icms.setICMS10(obj);
                 }
 
                 case "15" ->{
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS15 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS15();
-                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms().toString() : "0.00");
+                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCST(cst);
-                    obj.setAdRemICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setQBCMono(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setVICMSMono(String.valueOf(item.getValorIcms()) != null ? item.getValorIcms().toString() : "0.00");
+                    obj.setAdRemICMS(formatar(item.getAliqIcms()));
+                    obj.setQBCMono(formatar(item.getBcIcms()));
+                    obj.setVICMSMono(formatar(item.getValorIcms()));
                     obj.setAdRemICMSReten(null);
                     obj.setQBCMonoReten(null);
                     obj.setVICMSMonoReten(null);
@@ -250,25 +256,25 @@ public class NotaFiscalMapper {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS20 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS20();
                     obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms().toString() : "0.00");
                     obj.setCST(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getValorOutro().toString() : "0.00");
+                    obj.setModBC(formatar(item.getModBc()));
 
                     // Cálculo com redução da BC
                     BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
                     BigDecimal valorIcms = BigDecimal.ZERO;
                     if (item.getAliqIcms() != null) {
-                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100));
+                        valorIcms = (bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
                     }
 
                     obj.setVBC(bcIcms.toString());
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setPFCP(String.valueOf(item.getAliqFcp()) != null ? item.getAliqFcp().toString() : "0.00");
-                    obj.setIndDeduzDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
-                    obj.setMotDesICMS(String.valueOf(item.getMotDesIcms()) != null ? item.getMotDesIcms().toString() : "0.00");
-                    obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
-                    obj.setVFCP(valorFcp.toString());
-                    obj.setVBCFCP(String.valueOf(item.getBcFcp()) != null ? item.getBcFcp().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString());
-                    obj.setVICMSDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setPFCP(formatar(item.getAliqFcp()));
+                    obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado()));
+                    obj.setMotDesICMS(formatar(item.getMotDesIcms()));
+                    obj.setPRedBC(formatar(item.getPercentRedBc()));
+                    obj.setVFCP(formatar(valorFcp.toString()));
+                    obj.setVBCFCP(formatar(item.getBcFcp()));
+                    obj.setVICMS(formatar(valorIcms.toString()));
+                    obj.setVICMSDeson(formatar(item.getValorIcmsDesonerado()));
                     icms.setICMS20(obj);
                 }
 
@@ -288,28 +294,28 @@ public class NotaFiscalMapper {
                         valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
                     obj.setModBCST(null);
-                    obj.setIndDeduzDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
-                    obj.setMotDesICMS(String.valueOf(item.getMotDesIcms()) != null ? item.getMotDesIcms().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(String.valueOf(item.getBcIcmsSt()) != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
-                    obj.setIndDeduzDeson(item.getValorIcmsDesonerado() != null && item.getValorIcmsDesonerado().compareTo(BigDecimal.ZERO) > 0 ? "1" : "0");
-                    obj.setVICMSST(valorIcmsSt.toString() != null ? item.getValorIcmsSt().toString() : "0.00");
+                    obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado()));
+                    obj.setMotDesICMS(formatar(item.getMotDesIcms()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(item.getBcIcmsSt()));
+                    obj.setVFCPST(formatar(valorFcpSt));
+                    obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado()).compareTo(String.valueOf(BigDecimal.ZERO)) > 0 ? "1" : "0");
+                    obj.setVICMSST(formatar(valorIcmsSt));
                     icms.setICMS30(obj);
                 }
 
                 case "51" ->{
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS51 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS51();
-                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms().toString() : "0.00");
+                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCST(cst);
 
                     // Modalidade de determinação da BC (0-Margem Valor Agregado, 1-Pauta, 2-Valor Operação)
-                    obj.setModBC(item.getModBc() != null ? item.getModBc() : "0");
+                    obj.setModBC(formatar(item.getModBc()));
 
                     // 2. CÁLCULO DO FCP (independente do diferimento)
                     if(item.getBcFcp() != null && item.getAliqFcp() != null) {
@@ -322,9 +328,9 @@ public class NotaFiscalMapper {
                     BigDecimal valorIcms = BigDecimal.ZERO;
 
                     // Cálculo do ICMS (considerando que os valores já vêm calculados do DTO)
-                    valorIcms = item.getValorIcms() != null ? item.getValorIcms() : BigDecimal.ZERO;
-                    valorIcmsDiferido = item.getValorIcmsDiferido() != null ? item.getValorIcmsDiferido() : BigDecimal.ZERO;
-                    valorIcmsOperacao = item.getValorIcmsOperacao() != null ? item.getValorIcmsOperacao() : BigDecimal.ZERO;
+                    valorIcms = (item.getValorIcms() != null ? item.getValorIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
+                    valorIcmsDiferido = (item.getValorIcmsDiferido() != null ? item.getValorIcmsDiferido() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
+                    valorIcmsOperacao = (item.getValorIcmsOperacao() != null ? item.getValorIcmsOperacao() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
 
                     if(item.getBcIcms() != null && item.getAliqIcms() != null) {
                         // 3.1. Valor total do ICMS (antes do diferimento)
@@ -333,28 +339,28 @@ public class NotaFiscalMapper {
                         // 3.2. Calcula diferimento com base no valor parcial (se existir)
                         if(item.getValorIcmsDiferido() != null) {
                             // Se o DTO já trouxer o valor diferido, usa esse valor
-                            valorIcmsDiferido = item.getValorIcmsDiferido();
-                            valorIcms = valorIcmsOperacao.subtract(valorIcmsDiferido);
+                            valorIcmsDiferido = item.getValorIcmsDiferido().setScale(2, RoundingMode.HALF_UP);
+                            valorIcms = (valorIcmsOperacao.subtract(valorIcmsDiferido)).setScale(2, RoundingMode.HALF_UP);
                         } else {
                             // Caso contrário, considera ICMS integral (sem diferimento)
-                            valorIcms = valorIcmsOperacao;
+                            valorIcms = valorIcmsOperacao.setScale(2, RoundingMode.HALF_UP);
                         }
                     }
 
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setPFCP(String.valueOf(item.getAliqFcp()) != null ? item.getAliqFcp().toString() : "0.00");
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setPFCP(formatar(item.getAliqFcp()));
                     obj.setCBenefRBC(null);
                     obj.setPDif(null);
                     obj.setPFCPDif(null);
-                    obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
-                    obj.setVBC(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setVFCP(valorFcp.toString() != null ? item.getValorFcp().toString() : "0.00");
-                    obj.setVBCFCP(String.valueOf(item.getBcFcp()) != null ? item.getBcFcp().toString() : "0.00");
+                    obj.setPRedBC(formatar(item.getPercentRedBc()));
+                    obj.setVBC(formatar(item.getBcIcms()));
+                    obj.setVFCP(valorFcp.toString());
+                    obj.setVBCFCP(formatar(item.getBcFcp()));
                     obj.setVFCPDif(null);
                     obj.setVFCPEfet(null);
-                    obj.setVICMS(valorIcms.toString() != null ? item.getValorIcms().toString() : "0.00");
-                    obj.setVICMSDif(valorIcmsDiferido.toString() != null ? item.getValorIcmsDiferido().toString() : "0.00");
-                    obj.setVICMSOp(valorIcmsOperacao.toString() != null ? item.getValorIcmsOperacao().toString() : "0.00");
+                    obj.setVICMS(valorIcms.toString());
+                    obj.setVICMSDif(valorIcmsDiferido.toString());
+                    obj.setVICMSOp(valorIcmsOperacao.toString());
                     icms.setICMS51(obj);
                 }
 
@@ -374,12 +380,12 @@ public class NotaFiscalMapper {
                     // Cálculo do valor do ICMS monofásico
                     BigDecimal valorIcmsMono = qtdTributada.multiply(aliqAdRem).setScale(2, RoundingMode.HALF_UP);
 
-                    obj.setAdRemICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
+                    obj.setAdRemICMS(formatar(item.getAliqIcms()));
                     obj.setAdRemICMSDif(null);
-                    obj.setQBCMono(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
+                    obj.setQBCMono(formatar(item.getBcIcms()));
                     obj.setQBCMonoDif(null);
                     obj.setPDif(null);
-                    obj.setVICMSMono(valorIcmsMono.toString() != null ? item.getValorIcms().toString() : "0.00");
+                    obj.setVICMSMono(formatar(valorIcmsMono.toString()));
                     obj.setVICMSMonoDif(null);
                     obj.setVICMSMonoOp(null);
                     icms.setICMS53(obj);
@@ -393,28 +399,26 @@ public class NotaFiscalMapper {
                     // Cálculo do ICMS ST retido
                     BigDecimal valorIcmsStRetido = BigDecimal.ZERO;
                     if(item.getBcIcmsStRetido() != null && item.getAliqIcmsSt() != null) {
-                        valorIcmsStRetido = item.getBcIcmsStRetido().multiply(item.getAliqIcmsSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorIcmsStRetido = item.getBcIcmsStRetido().multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // Cálculo do FCP ST retido
                     BigDecimal valorFcpStRetido = BigDecimal.ZERO;
                     if(item.getBcFcpStRetido() != null && item.getAliqFcpSt() != null) {
-                        valorFcpStRetido = item.getBcFcpStRetido().multiply(item.getAliqFcpSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorFcpStRetido = item.getBcFcpStRetido().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setVBCSTRet(String.valueOf(item.getBcIcmsStRetido()) != null ? item.getBcIcmsStRetido().toString() : "0.00");
-                    obj.setPST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSSubstituto(String.valueOf(item.getValorIcmsSubstituto()) != null ? item.getValorIcmsSubstituto().toString() : "0.00");
-                    obj.setVICMSSTRet(valorIcmsStRetido.toString() != null ? item.getValorIcmsStRetido().toString() : "0.00");
-                    obj.setVBCFCPSTRet(String.valueOf(item.getBcFcpStRetido()) != null ? item.getBcFcpStRetido().toString() : "0.00");
-                    obj.setPFCPSTRet(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPSTRet(valorFcpStRetido.toString() != null ? item.getValorFcpStRetido().toString() : "0.00");
-                    obj.setPRedBCEfet(String.valueOf(item.getPercentRedBcEfetivo()) != null ? item.getPercentRedBcEfetivo().toString() : "0.00");
+                    obj.setVBCSTRet(formatar(item.getBcIcmsStRetido()));
+                    obj.setPST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSSubstituto(formatar(item.getValorIcmsSubstituto()));
+                    obj.setVICMSSTRet(formatar(valorIcmsStRetido));
+                    obj.setVBCFCPSTRet(formatar(item.getBcFcpStRetido()));
+                    obj.setPFCPSTRet(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPSTRet(formatar(valorFcpStRetido));
+                    obj.setPRedBCEfet(formatar(item.getPercentRedBcEfetivo()));
                     obj.setVBCEfet(null);
-                    obj.setPICMSEfet(String.valueOf(item.getAliqIcmsEfetivo()) != null ? item.getAliqIcmsEfetivo().toString() : "0.00");
-                    obj.setVICMSEfet(String.valueOf(item.getValorIcmsEfetivo()) != null ? item.getValorIcmsEfetivo().toString() : "0.00");
+                    obj.setPICMSEfet(formatar(item.getAliqIcmsEfetivo()));
+                    obj.setVICMSEfet(formatar(item.getValorIcmsEfetivo()));
                     icms.setICMS60(obj);
                 }
 
@@ -426,7 +430,7 @@ public class NotaFiscalMapper {
                     // 2. Cálculo alternativo (caso não tenha alíquota específica de retenção)
                     if (item.getValorIcms() != null) {
                         // Se existir valor de ICMS no item, usa como valor retido (ajuste conforme necessidade)
-                        obj.setVICMSMonoRet(item.getValorIcms().toString());
+                        obj.setVICMSMonoRet(formatar(item.getValorIcms()));
 
                         // Campos de quantidade e alíquota retidos (opcionais) - deixamos null
                         obj.setQBCMonoRet(null);
@@ -444,100 +448,96 @@ public class NotaFiscalMapper {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS70 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS70();
                     obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCST(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getModBc().toString() : "0.00");
+                    obj.setModBC(formatar(item.getModBc()));
 
                     // Cálculo com redução da BC
-                    BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
+                    BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                     BigDecimal valorIcms = BigDecimal.ZERO;
                     if (item.getAliqIcms() != null) {
-                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100));
+                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
                     }
 
                     // Cálculo do ICMS ST
                     BigDecimal bcIcmsSt = item.getBcIcmsSt() != null ? item.getBcIcmsSt() : BigDecimal.ZERO;
                     BigDecimal valorIcmsSt = BigDecimal.ZERO;
                     if (item.getAliqIcmsSt() != null) {
-                        valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100));
+                        valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
-                    obj.setVBC(bcIcms.toString() != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString() != null ? item.getValorIcms().toString() : "0.00");
-                    obj.setVBCFCP(String.valueOf(item.getBcFcp()) != null ? item.getBcFcp().toString() : "0.00");
-                    obj.setPFCP(String.valueOf(item.getAliqFcp()) != null ? item.getAliqFcp().toString() : "0.00");
-                    obj.setVFCP(valorFcp.toString() != null ? item.getValorFcp().toString() : "0.00");
-                    obj.setModBCST(item.getModBcSt() != null ? item.getModBcSt() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setVBCST(bcIcmsSt.toString());
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(String.valueOf(item.getBcIcmsSt()) != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSST(String.valueOf(item.getValorIcmsSt()) != null ? item.getValorIcmsSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
-                    obj.setVICMSDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
-                    obj.setMotDesICMS(item.getMotDesIcms() != null ? item.getMotDesIcms() : "0.00");
-                    obj.setIndDeduzDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00"); //Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd).0: Valor do ICMS desonerado (vICMSDeson) não deduz do valor do item (vProd) / total da NF-e 1: Valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd) / total da NF-e.
+                    obj.setPRedBC(formatar(item.getPercentRedBc()));
+                    obj.setVBC(formatar(bcIcms));
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setVICMS(formatar(valorIcms));
+                    obj.setVBCFCP(formatar(item.getBcFcp()));
+                    obj.setPFCP(formatar(item.getAliqFcp()));
+                    obj.setVFCP(valorFcp.toString());
+                    obj.setModBCST(formatar(item.getModBcSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setVBCST(formatar(bcIcmsSt));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(item.getBcIcmsSt()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSST(formatar(item.getValorIcmsSt()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPST(formatar(valorFcpSt));
+                    obj.setVICMSDeson(formatar(item.getValorIcmsDesonerado()));
+                    obj.setMotDesICMS(formatar(item.getMotDesIcms()));
+                    obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado())); //Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd).0: Valor do ICMS desonerado (vICMSDeson) não deduz do valor do item (vProd) / total da NF-e 1: Valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd) / total da NF-e.
                     obj.setVICMSSTDeson(null);
-                    obj.setMotDesICMSST(String.valueOf(item.getMotDesIcms()) != null ? item.getMotDesIcms() : "0.00");
+                    obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
                     icms.setICMS70(obj);
                 }
 
                 case "90" ->{
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMS90 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS90();
-                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms().toString() : "0.00");
+                    obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCST(cst);
 
                     // 2. CÁLCULO DO ICMS PRÓPRIO (quando aplicável)
                     BigDecimal valorIcms = BigDecimal.ZERO;
                     if (item.getBcIcms() != null && item.getAliqIcms() != null) {
-                        valorIcms = item.getBcIcms().multiply(item.getAliqIcms())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorIcms = item.getBcIcms().multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 3. CÁLCULO DO FCP (Fundo de Combate à Pobreza)
                     if (item.getBcFcp() != null && item.getAliqFcp() != null) {
-                        valorFcp = item.getBcFcp().multiply(item.getAliqFcp())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorFcp = item.getBcFcp().multiply(item.getAliqFcp()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 4. CÁLCULO DO ICMS ST (quando aplicável)
                     BigDecimal valorIcmsSt = BigDecimal.ZERO;
                     if (item.getBcIcmsSt() != null && item.getAliqIcmsSt() != null) {
-                        valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 5. CÁLCULO DO FCP ST
                     if (item.getBcFcpSt() != null && item.getAliqFcpSt() != null) {
-                        valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setModBC(item.getModBc() != null ? item.getModBc() : "0");
-                    obj.setVBC(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString() != null ? item.getValorIcms().toString() : "0.00");
-                    obj.setVBCFCP(String.valueOf(item.getBcFcp()) != null ? item.getBcFcp().toString() : "0.00");
-                    obj.setPFCP(String.valueOf(item.getAliqFcp()) != null ? item.getAliqFcp().toString() : "0.00");
-                    obj.setVFCP(valorFcp.toString() != null ? item.getValorFcp().toString() : "0.00");
-                    obj.setModBCST(item.getModBcSt() != null ? item.getModBcSt() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(String.valueOf(item.getBcIcmsSt()) != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSST(valorIcmsSt.toString() != null ? item.getValorIcmsSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
-                    obj.setVICMSDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
-                    obj.setMotDesICMS(item.getMotDesIcms() != null ? item.getMotDesIcms() : "0.00");
-                    obj.setIndDeduzDeson(String.valueOf(item.getValorIcmsDesonerado()) != null ? item.getValorIcmsDesonerado().toString() : "0.00");
+                    obj.setModBC(formatar(item.getModBc()));
+                    obj.setVBC(formatar(item.getBcIcms()));
+                    obj.setPRedBC(formatar(item.getPercentRedBc()));
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setVICMS(formatar(valorIcms.toString()));
+                    obj.setVBCFCP(formatar(item.getBcFcp()));
+                    obj.setPFCP(formatar(item.getAliqFcp()));
+                    obj.setVFCP(formatar(valorFcp.toString()));
+                    obj.setModBCST(formatar(item.getModBcSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(item.getBcIcmsSt()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSST(formatar(valorIcmsSt.toString()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPST(formatar(valorFcpSt.toString()));
+                    obj.setVICMSDeson(formatar(item.getValorIcmsDesonerado()));
+                    obj.setMotDesICMS(formatar(item.getMotDesIcms()));
+                    obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado()));
                     obj.setVICMSSTDeson(null);
-                    obj.setMotDesICMSST(String.valueOf(item.getMotDesIcms()) != null ? item.getMotDesIcms() : "0.00");
+                    obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
                     icms.setICMS90(obj);
                 }
 
@@ -545,7 +545,7 @@ public class NotaFiscalMapper {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMSPart obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSPart();
                     obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCST(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getModBc() : "0");
+                    obj.setModBC(formatar(item.getModBc()));
 
                     // 2. CÁLCULO DO ICMS PRÓPRIO
                     BigDecimal valorIcms = BigDecimal.ZERO;
@@ -564,20 +564,20 @@ public class NotaFiscalMapper {
                         valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setVBC(String.valueOf(item.getBcIcms()) != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString() != null ? item.getValorIcms().toString() : "0.00");
-                    obj.setModBCST(item.getModBcSt() != null ? item.getModBcSt() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(String.valueOf(item.getBcIcmsSt()) != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSST(valorIcmsSt.toString() != null ? item.getValorIcmsSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
-                    obj.setPBCOp(String.valueOf(item.getPercentBcOperacao()) != null ? item.getPercentBcOperacao().toString() : "0.00");
+                    obj.setVBC(formatar(item.getBcIcms()));
+                    obj.setPRedBC(formatar(item.getPercentRedBc()));
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setVICMS(valorIcms.toString());
+                    obj.setModBCST(formatar(item.getModBcSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(item.getBcIcmsSt()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSST(formatar(valorIcmsSt.toString()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPST(formatar(valorFcpSt.toString()));
+                    obj.setPBCOp(formatar(item.getPercentBcOperacao()));
                     obj.setUFST(ufDestinatario); // UF de destino da mercadoria
                     icms.setICMSPart(obj);
                 }
@@ -590,15 +590,13 @@ public class NotaFiscalMapper {
                     // 2. CÁLCULO DO ICMS ST RETIDO
                     BigDecimal valorIcmsStRetido = BigDecimal.ZERO;
                     if (item.getBcIcmsStRetido() != null && item.getAliqIcmsSt() != null) {
-                        valorIcmsStRetido = item.getBcIcmsStRetido().multiply(item.getAliqIcmsSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorIcmsStRetido = item.getBcIcmsStRetido().multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 3. CÁLCULO DO FCP ST RETIDO
                     BigDecimal valorFcpStRetido = BigDecimal.ZERO;
                     if (item.getBcFcpStRetido() != null && item.getAliqFcpSt() != null) {
-                        valorFcpStRetido = item.getBcFcpStRetido().multiply(item.getAliqFcpSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorFcpStRetido = item.getBcFcpStRetido().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 4. CÁLCULO EFETIVO (quando aplicável)
@@ -608,19 +606,19 @@ public class NotaFiscalMapper {
                                 .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setVBCSTRet(String.valueOf(item.getBcIcmsStRetido()) != null ? item.getBcIcmsStRetido().toString() : "0.00");
-                    obj.setPST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSSubstituto(String.valueOf(item.getValorIcmsSubstituto()) != null ? item.getValorIcmsSubstituto().toString() : "0.00");
-                    obj.setVICMSSTRet(valorIcmsStRetido.toString());
-                    obj.setVBCFCPSTRet(String.valueOf(item.getBcFcpStRetido()) != null ? item.getBcFcpStRetido().toString() : "0.00");
-                    obj.setPFCPSTRet(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPSTRet(String.valueOf(item.getValorFcpStRetido()) != null ? item.getValorFcpStRetido().toString() : "0.00");
-                    obj.setVBCSTDest(String.valueOf(item.getBcIcmsStDestino()) != null ? item.getBcIcmsStDestino().toString() : "0.00");
-                    obj.setVICMSSTDest(String.valueOf(item.getValorIcmsStDestino()) != null ? item.getValorIcmsStDestino().toString() : "0.00");
-                    obj.setPRedBCEfet(String.valueOf(item.getPercentRedBcEfetivo()) != null ? item.getPercentRedBcEfetivo().toString() : "0.00");
-                    obj.setVBCEfet(String.valueOf(item.getBcIcmsEfetivo()) != null ? item.getBcIcmsEfetivo().toString() : "0.00");
-                    obj.setPICMSEfet(String.valueOf(item.getAliqIcmsEfetivo()) != null ? item.getAliqIcmsEfetivo().toString() : "0.00");
-                    obj.setVICMSEfet(valorIcmsEfetivo.compareTo(BigDecimal.ZERO) > 0 ? valorIcmsEfetivo.toString() : null);
+                    obj.setVBCSTRet(formatar(item.getBcIcmsStRetido()) != null ? item.getBcIcmsStRetido().toString() : "0.00");
+                    obj.setPST(formatar(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
+                    obj.setVICMSSubstituto(formatar(item.getValorIcmsSubstituto()) != null ? item.getValorIcmsSubstituto().toString() : "0.00");
+                    obj.setVICMSSTRet(formatar(valorIcmsStRetido));
+                    obj.setVBCFCPSTRet(formatar(item.getBcFcpStRetido()) != null ? item.getBcFcpStRetido().toString() : "0.00");
+                    obj.setPFCPSTRet(formatar(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
+                    obj.setVFCPSTRet(formatar(valorFcpStRetido));
+                    obj.setVBCSTDest(formatar(item.getBcIcmsStDestino()) != null ? item.getBcIcmsStDestino().toString() : "0.00");
+                    obj.setVICMSSTDest(formatar(item.getValorIcmsStDestino()) != null ? item.getValorIcmsStDestino().toString() : "0.00");
+                    obj.setPRedBCEfet(formatar(item.getPercentRedBcEfetivo()) != null ? item.getPercentRedBcEfetivo().toString() : "0.00");
+                    obj.setVBCEfet(formatar(item.getBcIcmsEfetivo()) != null ? item.getBcIcmsEfetivo().toString() : "0.00");
+                    obj.setPICMSEfet(formatar(item.getAliqIcmsEfetivo()) != null ? item.getAliqIcmsEfetivo().toString() : "0.00");
+                    obj.setVICMSEfet(formatar(valorIcmsEfetivo.compareTo(BigDecimal.ZERO) > 0 ? valorIcmsEfetivo.toString() : null));
                     icms.setICMSST(obj);
                 }
 
@@ -631,15 +629,16 @@ public class NotaFiscalMapper {
 
                     if (item.getValorCredIcmsSn() != null) {
                         // Se existir valor de crédito diretamente no item
-                        obj.setVCredICMSSN(item.getValorCredIcmsSn().toString());
+                        obj.setVCredICMSSN(formatar(item.getValorCredIcmsSn()));
 
                         // Se tiver alíquota de crédito (opcional)
-                        obj.setPCredSN(item.getAliqCredSn() != null ? item.getAliqCredSn().toString() : null);
+                        obj.setPCredSN(formatar(item.getAliqCredSn()));
                     } else {
                         // Sem crédito (preenche null conforme manual do Simples Nacional)
                         obj.setPCredSN(null);
                         obj.setVCredICMSSN(null);
                     }
+                    System.out.println("[DEBUG] Alíquota FCP: " + item.getAliqFcp() + "% | Base FCP: " + item.getBcFcp());
                     icms.setICMSSN101(obj);
                 }
 
@@ -658,14 +657,12 @@ public class NotaFiscalMapper {
                     // 2. CÁLCULO DO ICMS ST
                     BigDecimal valorIcmsSt = BigDecimal.ZERO;
                     if (item.getBcIcmsSt() != null && item.getAliqIcmsSt() != null) {
-                        valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 3. CÁLCULO DO FCP ST
                     if (item.getBcFcpSt() != null && item.getAliqFcpSt() != null) {
-                        valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 4. CÁLCULO DO CRÉDITO PRESUMIDO (quando houver)
@@ -674,17 +671,17 @@ public class NotaFiscalMapper {
                         valorCredito = item.getValorCredIcmsSn(); // Usa valor direto se existir
                     }
 
-                    obj.setModBCST(item.getModBcSt() != null ? item.getModBcSt() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(String.valueOf(item.getBcIcmsSt()) != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSST(valorIcmsSt.toString() != null ? item.getValorIcmsSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
-                    obj.setPCredSN(String.valueOf(item.getAliqCredSn()) != null ? item.getAliqCredSn().toString() : "0.00");
-                    obj.setVCredICMSSN(valorCredito.compareTo(BigDecimal.ZERO) > 0 ? valorCredito.toString() : null);
+                    obj.setModBCST(formatar(item.getModBcSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(item.getBcIcmsSt()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSST(formatar(valorIcmsSt.toString()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPST(formatar(valorFcpSt.toString()));
+                    obj.setPCredSN(formatar(item.getAliqCredSn()));
+                    obj.setVCredICMSSN(formatar(valorCredito.compareTo(BigDecimal.ZERO) > 0 ? valorCredito.toString() : null));
                     icms.setICMSSN201(obj);
                 }
 
@@ -696,25 +693,23 @@ public class NotaFiscalMapper {
                     // 2. CÁLCULO DO ICMS ST
                     BigDecimal valorIcmsSt = BigDecimal.ZERO;
                     if (item.getBcIcmsSt() != null && item.getAliqIcmsSt() != null) {
-                        valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorIcmsSt = item.getBcIcmsSt().multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
                     // 3. CÁLCULO DO FCP ST
                     if (item.getBcFcpSt() != null && item.getAliqFcpSt() != null) {
-                        valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt())
-                                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                        valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setModBCST(item.getModBcSt() != null ? item.getModBcSt() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(String.valueOf(item.getBcIcmsSt()) != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSST(valorIcmsSt.toString() != null ? item.getValorIcmsSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
+                    obj.setModBCST(formatar(item.getModBcSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(item.getBcIcmsSt()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSST(formatar(valorIcmsSt.toString()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPST(formatar(valorFcpSt.toString()));
                     icms.setICMSSN202(obj);
                 }
 
@@ -747,17 +742,17 @@ public class NotaFiscalMapper {
                                 .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setVBCSTRet(String.valueOf(item.getBcIcmsStRetido()) != null ? item.getBcIcmsStRetido().toString() : "0.00");
-                    obj.setPST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSSubstituto(String.valueOf(item.getValorIcmsSubstituto()) != null ? item.getValorIcmsSubstituto().toString() : "0.00");
-                    obj.setVICMSSTRet(valorIcmsStRetido.toString() != null ? item.getValorIcmsStRetido().toString() : "0.00");
-                    obj.setVBCFCPSTRet(String.valueOf(item.getBcFcpStRetido()) != null ? item.getBcFcpStRetido().toString() : "0.00");
-                    obj.setPFCPSTRet(valorFcpStRetido.toString() != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPSTRet(String.valueOf(item.getValorFcpStRetido()) != null ? item.getValorFcpStRetido().toString() : "0.00");
-                    obj.setPRedBCEfet(String.valueOf(item.getPercentRedBcEfetivo()) != null ? item.getPercentRedBcEfetivo().toString() : "0.00");
-                    obj.setVBCEfet(String.valueOf(item.getBcIcmsEfetivo()) != null ? item.getBcIcmsEfetivo().toString() : "0.00");
-                    obj.setPICMSEfet(String.valueOf(item.getAliqIcmsEfetivo()) != null ? item.getAliqIcmsEfetivo().toString() : "0.00");
-                    obj.setVICMSEfet(valorIcmsEfetivo.compareTo(BigDecimal.ZERO) > 0 ? valorIcmsEfetivo.toString() : null);
+                    obj.setVBCSTRet(formatar(item.getBcIcmsStRetido()));
+                    obj.setPST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSSubstituto(formatar(item.getValorIcmsSubstituto()));
+                    obj.setVICMSSTRet(formatar(valorIcmsStRetido.toString()));
+                    obj.setVBCFCPSTRet(formatar(item.getBcFcpStRetido()));
+                    obj.setPFCPSTRet(formatar(valorFcpStRetido.toString()));
+                    obj.setVFCPSTRet(formatar(item.getValorFcpStRetido()));
+                    obj.setPRedBCEfet(formatar(item.getPercentRedBcEfetivo()));
+                    obj.setVBCEfet(formatar(item.getBcIcmsEfetivo()));
+                    obj.setPICMSEfet(formatar(item.getAliqIcmsEfetivo()));
+                    obj.setVICMSEfet(formatar(valorIcmsEfetivo.compareTo(BigDecimal.ZERO) > 0 ? valorIcmsEfetivo.toString() : null));
                     icms.setICMSSN500(obj);
                 }
 
@@ -765,37 +760,37 @@ public class NotaFiscalMapper {
                     TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN900 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN900();
                     obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                     obj.setCSOSN(cst);
-                    obj.setModBC(item.getModBc() != null ? item.getModBc().toString() : "0.00");
+                    obj.setModBC(formatar(item.getModBc()));
 
                     // Cálculos para ICMS normal
                     BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
                     BigDecimal valorIcms = BigDecimal.ZERO;
                     if (item.getAliqIcms() != null) {
-                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100));
+                        valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                     }
 
                     // Cálculos para ICMS ST
                     BigDecimal bcIcmsSt = item.getBcIcmsSt() != null ? item.getBcIcmsSt() : BigDecimal.ZERO;
                     BigDecimal valorIcmsSt = BigDecimal.ZERO;
                     if (item.getAliqIcmsSt() != null) {
-                        valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100));
+                        valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                     }
 
-                    obj.setVBC(bcIcms.toString() != null ? item.getBcIcms().toString() : "0.00");
-                    obj.setPRedBC(String.valueOf(item.getPercentRedBc()) != null ? item.getPercentRedBc().toString() : "0.00");
-                    obj.setPICMS(String.valueOf(item.getAliqIcms()) != null ? item.getAliqIcms().toString() : "0.00");
-                    obj.setVICMS(valorIcms.toString() != null ? item.getValorIcms().toString() : "0.00");
-                    obj.setModBCST(item.getModBcSt() != null ? item.getModBcSt().toString() : "0.00");
-                    obj.setPMVAST(String.valueOf(item.getPercentMargemIcmsSt()) != null ? item.getPercentMargemIcmsSt().toString() : "0.00");
-                    obj.setPRedBCST(String.valueOf(item.getPercentRedBcSt()) != null ? item.getPercentRedBcSt().toString() : "0.00");
-                    obj.setVBCST(bcIcmsSt.toString() != null ? item.getBcIcmsSt().toString() : "0.00");
-                    obj.setPICMSST(String.valueOf(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                    obj.setVICMSST(valorIcmsSt.toString() != null ? item.getValorIcmsSt().toString() : "0.00");
-                    obj.setVBCFCPST(String.valueOf(item.getBcFcpSt()) != null ? item.getBcFcpSt().toString() : "0.00");
-                    obj.setPFCPST(String.valueOf(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
-                    obj.setVFCPST(valorFcpSt.toString() != null ? item.getValorFcpSt().toString() : "0.00");
-                    obj.setPCredSN(String.valueOf(item.getAliqCredSn()) != null ? item.getAliqCredSn().toString() : "0.00");
-                    obj.setVCredICMSSN(String.valueOf(item.getValorCredIcmsSn()) != null ? item.getValorCredIcmsSn().toString() : "0.00");
+                    obj.setVBC(formatar(bcIcms.toString()));
+                    obj.setPRedBC(formatar(item.getPercentRedBc()));
+                    obj.setPICMS(formatar(item.getAliqIcms()));
+                    obj.setVICMS(formatar(valorIcms.toString()));
+                    obj.setModBCST(formatar(item.getModBcSt()));
+                    obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
+                    obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
+                    obj.setVBCST(formatar(bcIcmsSt.toString()));
+                    obj.setPICMSST(formatar(item.getAliqIcmsSt()));
+                    obj.setVICMSST(formatar(valorIcmsSt.toString()));
+                    obj.setVBCFCPST(formatar(item.getBcFcpSt()));
+                    obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                    obj.setVFCPST(formatar(valorFcpSt.toString()));
+                    obj.setPCredSN(formatar(item.getAliqCredSn()));
+                    obj.setVCredICMSSN(formatar(item.getValorCredIcmsSn()));
                     icms.setICMSSN900(obj);
                 }
             }
@@ -810,12 +805,12 @@ public class NotaFiscalMapper {
             // Cálculo do PIS
             BigDecimal valorPis = BigDecimal.ZERO;
             if (item.getBcPis() != null && item.getAliqPis() != null) {
-                valorPis = item.getBcPis().multiply(item.getAliqPis()).divide(BigDecimal.valueOf(100));
+                valorPis = item.getBcPis().multiply(item.getAliqPis()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
             }
 
-            pisAliq.setVBC(item.getBcPis() != null ? item.getBcPis().toString() : "0.00");
-            pisAliq.setPPIS(item.getAliqPis().toString() != null ? item.getAliqPis().toString() : "0.00");
-            pisAliq.setVPIS(valorPis.toString() != null ? item.getValorPis().toString() : "0.00");
+            pisAliq.setVBC(formatar(item.getBcPis()));
+            pisAliq.setPPIS(formatar(item.getAliqPis().toString()));
+            pisAliq.setVPIS(formatar(valorPis.toString()));
             pis.setPISAliq(pisAliq);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoPIS(pis));
 
@@ -827,12 +822,12 @@ public class NotaFiscalMapper {
             // Cálculo do COFINS
             BigDecimal valorCofins = BigDecimal.ZERO;
             if (item.getBcCofins() != null && item.getAliqCofins() != null) {
-                valorCofins = item.getBcCofins().multiply(item.getAliqCofins()).divide(BigDecimal.valueOf(100));
+                valorCofins = item.getBcCofins().multiply(item.getAliqCofins()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             }
 
-            cofinsAliq.setVBC(item.getBcCofins() != null ? item.getBcCofins().toString() : "0.00");
-            cofinsAliq.setPCOFINS(item.getAliqCofins().toString() != null ? item.getAliqCofins().toString() : "0.00");
-            cofinsAliq.setVCOFINS(valorCofins.toString() != null ? item.getValorCofins().toString() : "0.00");
+            cofinsAliq.setVBC(formatar(item.getBcCofins()));
+            cofinsAliq.setPCOFINS(formatar(item.getAliqCofins().toString()));
+            cofinsAliq.setVCOFINS(formatar(valorCofins.toString()));
             cofins.setCOFINSAliq(cofinsAliq);
             imposto.getContent().add(factory.createTNFeInfNFeDetImpostoCOFINS(cofins));
 
@@ -844,25 +839,26 @@ public class NotaFiscalMapper {
         TNFe.InfNFe.Total total = new TNFe.InfNFe.Total();
         TNFe.InfNFe.Total.ICMSTot icmsTot = new TNFe.InfNFe.Total.ICMSTot();
 
-        icmsTot.setVBC(dto.getValorBaseCalculo()!= null ? dto.getValorBaseCalculo().toString() : "0.00");
-        icmsTot.setVICMS(dto.getValorIcms()!= null ? dto.getValorIcms().toString() : "0.00");
-        icmsTot.setVICMSDeson(dto.getValorIcmsDesonerado()!= null ? dto.getValorIcmsDesonerado().toString() : "0.00");
-        icmsTot.setVFCP(dto.getValorFcp()!= null ? dto.getValorFcp().toString() : "0.00");
-        icmsTot.setVBCST(dto.getValorBaseCalculoSt()!= null ? dto.getValorBaseCalculoSt().toString() : "0.00");
-        icmsTot.setVST(dto.getValorSt()!= null ? dto.getValorSt().toString() : "0.00");
-        icmsTot.setVFCPST(dto.getValorFcpSt()!= null ? dto.getValorFcpSt().toString() : "0.00");
-        icmsTot.setVFCPSTRet(dto.getValorFcpStRetido()!= null ? dto.getValorFcpStRetido().toString() : "0.00");
-        icmsTot.setVProd(dto.getValorProdutos() != null ? dto.getValorProdutos().toString() : "0.00");
-        icmsTot.setVFrete(dto.getValorFrete() != null ? dto.getValorFrete().toString() : "0.00");
-        icmsTot.setVSeg(dto.getValorSeguro() != null ? dto.getValorSeguro().toString() : "0.00");
-        icmsTot.setVDesc(dto.getValorDesconto() != null ? dto.getValorDesconto().toString() : "0.00");
-        icmsTot.setVII(dto.getValorIi() != null ? dto.getValorIi().toString() : "0.00");
-        icmsTot.setVIPI(dto.getValorIpi() != null ? dto.getValorIpi().toString() : "0.00");
-        icmsTot.setVIPIDevol(dto.getValorIpiDevolucao() != null ? dto.getValorIpiDevolucao().toString() : "0.00");
-        icmsTot.setVPIS(dto.getValorPis() != null ? dto.getValorPis().toString() : "0.00");
-        icmsTot.setVCOFINS(dto.getValorCofins() != null ? dto.getValorCofins().toString() : "0.00");
-        icmsTot.setVOutro(dto.getValorOutros() != null ? dto.getValorOutros().toString() : "0.00");
-        icmsTot.setVNF(FormatadorDecimal.formatarComDuasCasas(dto.getValorTotal()));
+        icmsTot.setVBC(formatar(dto.getValorBaseCalculo()));
+        icmsTot.setVICMS(formatar(dto.getValorIcms()));
+        icmsTot.setVICMSDeson(formatar(dto.getValorIcmsDesonerado()));
+        icmsTot.setVFCP(formatar(dto.getValorFcp()));
+        icmsTot.setVBCST(formatar(dto.getValorBaseCalculoSt()));
+        icmsTot.setVST(formatar(dto.getValorSt()));
+        icmsTot.setVFCPST(formatar(dto.getValorFcpSt()));
+        icmsTot.setVFCPSTRet(formatar(dto.getValorFcpStRetido()));
+        icmsTot.setVProd(formatar(dto.getValorProdutos()));
+        icmsTot.setVFrete(formatar(dto.getValorFrete()));
+        icmsTot.setVSeg(formatar(dto.getValorSeguro()));
+        icmsTot.setVDesc(formatar(dto.getValorDesconto()));
+        icmsTot.setVII(formatar(dto.getValorIi()));
+        icmsTot.setVIPI(formatar(dto.getValorIpi()));
+        icmsTot.setVIPIDevol(formatar(dto.getValorIpiDevolucao()));
+        icmsTot.setVPIS(formatar(dto.getValorPis()));
+        icmsTot.setVCOFINS(formatar(dto.getValorCofins()));
+        icmsTot.setVOutro(formatar(dto.getValorOutros()));
+        icmsTot.setVNF(formatar(dto.getValorTotal()));
+        System.out.println("Valor VFCp: "+formatar(dto.getValorFcp()));
 
         total.setICMSTot(icmsTot);
         infNFe.setTotal(total);
@@ -879,7 +875,7 @@ public class NotaFiscalMapper {
             TNFe.InfNFe.Cobr.Dup dupXml = new TNFe.InfNFe.Cobr.Dup();
             dupXml.setNDup(dup.getNumeroDuplicata());
             dupXml.setDVenc(dup.getDataVencimento().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            dupXml.setVDup(dup.getValorDuplicata().toString());
+            dupXml.setVDup(formatar(dup.getValorDuplicata()));
             cobr.getDup().add(dupXml);
         }
         infNFe.setCobr(cobr);
@@ -904,7 +900,7 @@ public class NotaFiscalMapper {
         infProt.setChNFe(dto.getChave()); // Chave da NF-e
         infProt.setDhRecbto(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"))); // Data/hora de recebimento
         infProt.setNProt(dto.getNumeroProtocolo()); // Número do protocolo
-        //infProt.setDigVal("".getBytes()); // Digest Value em Base64
+        //infProt.setDigVal(null); // Digest Value em Base64
         infProt.setCStat(dto.getCstat()); // Código do status (ex.: "100" = Autorizado)
         infProt.setXMotivo(dto.getMotivoProtocolo()); // Motivo da resposta (ex.: "Autorizado o uso da NF-e")
 
