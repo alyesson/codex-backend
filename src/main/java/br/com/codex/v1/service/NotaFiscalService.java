@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -236,6 +237,9 @@ public class NotaFiscalService {
     /**
      * Valida o XML da NF-e contra os schemas da SEFAZ.
      */
+    /**
+     * Valida o XML da NF-e contra os schemas da SEFAZ.
+     */
     public void validarNotaFiscal(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
         String dataFormatada = LocalDate.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy"));
         Path diretorio = Paths.get("/tmp/xml_notas_" + dataFormatada);
@@ -248,8 +252,8 @@ public class NotaFiscalService {
             System.out.println("Diretório criado: " + diretorio);
         }
         Path arquivo = diretorio.resolve("nota.xml");
-        Files.write(arquivo, xml.getBytes());*/
-        Files.write(Paths.get("nota.xml"), xml.getBytes()); // Salva para análise
+        Files.write(arquivo, xml.getBytes())*/;
+        Files.write(Paths.get("xml_nota.xml"), xml.getBytes()); // Salva para análise
 
         if (!new Validar().isValidXml(config, xml, ServicosEnum.CONSULTA_RECIBO)) {
             throw new NfeException("XML inválido segundo schemas da SEFAZ");
