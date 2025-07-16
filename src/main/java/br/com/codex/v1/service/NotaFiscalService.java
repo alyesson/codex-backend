@@ -398,8 +398,8 @@ public class NotaFiscalService {
 
                 // Cálculo do valor do ICMS
                 BigDecimal valorIcms = BigDecimal.ZERO;
-                if (item.getAliqIcms() != null && bcIcms != null) {
-                    valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+                if (item.getAliqIcms() != null) {
+                    valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                 }
 
                 obj.setPICMS(formatar(item.getAliqIcms()));
@@ -429,14 +429,14 @@ public class NotaFiscalService {
                 BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                 BigDecimal valorIcms = BigDecimal.ZERO;
                 if (item.getAliqIcms() != null) {
-                    valorIcms = (bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
+                    valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                 }
 
                 // Cálculos para ICMS ST
                 BigDecimal bcIcmsSt = (item.getBcIcmsSt() != null ? item.getBcIcmsSt() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                 BigDecimal valorIcmsSt = BigDecimal.ZERO;
                 if (item.getAliqIcmsSt() != null) {
-                    valorIcmsSt = (bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
+                    valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                 }
 
                 obj.setVBC(bcIcms.toString());
@@ -476,7 +476,7 @@ public class NotaFiscalService {
 
             case "20" ->{
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMS20 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS20();
-                obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms().toString() : "0.00");
+                obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                 obj.setCST(cst);
                 obj.setModBC(formatar(item.getModBc()));
 
@@ -484,7 +484,7 @@ public class NotaFiscalService {
                 BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
                 BigDecimal valorIcms = BigDecimal.ZERO;
                 if (item.getAliqIcms() != null) {
-                    valorIcms = (bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100))).setScale(2, RoundingMode.HALF_UP);
+                    valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                 }
 
                 obj.setVBC(bcIcms.toString());
@@ -676,14 +676,14 @@ public class NotaFiscalService {
                 BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
                 BigDecimal valorIcms = BigDecimal.ZERO;
                 if (item.getAliqIcms() != null) {
-                    valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+                    valorIcms = bcIcms.multiply(item.getAliqIcms()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                 }
 
                 // Cálculo do ICMS ST
                 BigDecimal bcIcmsSt = item.getBcIcmsSt() != null ? item.getBcIcmsSt() : BigDecimal.ZERO;
                 BigDecimal valorIcmsSt = BigDecimal.ZERO;
                 if (item.getAliqIcmsSt() != null) {
-                    valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+                    valorIcmsSt = bcIcmsSt.multiply(item.getAliqIcmsSt()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
                 }
 
                 obj.setPRedBC(formatar(item.getPercentRedBc()));
@@ -1060,10 +1060,11 @@ public class NotaFiscalService {
      * Preenche os totais da NF-e
      */
     private Total preencherTotais(NotaFiscalDto dto) {
+
         Total total = new Total();
         ICMSTot icmsTot = new ICMSTot();
 
-        icmsTot.setVBC(formatar(dto.getValorBaseCalculo()));
+        icmsTot.setVBC(formatar(dto.getValorTotal()));
         icmsTot.setVICMS(formatar(dto.getValorIcms()));
         icmsTot.setVICMSDeson(formatar(dto.getValorIcmsDesonerado()));
         icmsTot.setVFCP(formatar(dto.getValorFcp()));
