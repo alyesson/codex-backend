@@ -42,7 +42,7 @@ public class NotaFiscalResource {
             dto.setDocumentoEmitente(cnpj);
 
             // Obtém as configurações
-            ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+            ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
 
             // Consulta o status
             TRetConsStatServ status = notaFiscalService.consultarStatusServico(config);
@@ -101,7 +101,7 @@ public class NotaFiscalResource {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
 
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         br.com.swconsultoria.nfe.schema_4.retConsSitNFe.TRetConsSitNFe retorno = notaFiscalService.consultarNotaFiscal(chave, config);
 
         NotaFiscalDto responseDto = new NotaFiscalDto();
@@ -126,7 +126,7 @@ public class NotaFiscalResource {
 
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento retorno = notaFiscalService.cancelarNotaFiscal(chave, protocolo, motivo, cnpj, config);
 
         return ResponseEntity.ok(retorno);
@@ -139,7 +139,7 @@ public class NotaFiscalResource {
     public ResponseEntity<TRetEnvEvento> cartaCorrecao(@PathVariable String chave, @RequestParam String correcao, @RequestParam String cnpj) throws Exception {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         TRetEnvEvento retorno = notaFiscalService.cartaCorrecao(chave, cnpj, correcao, config);
         return ResponseEntity.ok(retorno);
     }
@@ -159,7 +159,7 @@ public class NotaFiscalResource {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
 
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         TRetInutNFe retorno = notaFiscalService.inutilizarNotaFiscal(cnpj, justificativa, ano, serie, numInicial, numFinal, config);
         return ResponseEntity.ok(retorno);
     }
@@ -174,7 +174,7 @@ public class NotaFiscalResource {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
 
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         TRetConsStatServ retorno = notaFiscalService.consultarStatusServico(config);
         return ResponseEntity.ok(retorno);
     }
@@ -193,7 +193,7 @@ public class NotaFiscalResource {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
 
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         String retorno = notaFiscalService.enviarEventoManual(xmlEvento,ServicosEnum.valueOf(tipoEvento), valida, assina, config);
         return ResponseEntity.ok(retorno);
     }

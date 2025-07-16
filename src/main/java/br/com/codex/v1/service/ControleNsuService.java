@@ -137,9 +137,6 @@ public class ControleNsuService {
         }
     }
 
-    /**
-     * Métudo auxiliar para extrair a chave do XML
-     */
     private String extrairChaveDoXml(String xmlContent) {
         try {
             // Extrai a chave do XML (exemplo: busca por <chNFe> ou <chave>)

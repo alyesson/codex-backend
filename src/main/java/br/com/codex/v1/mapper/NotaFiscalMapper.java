@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import br.com.codex.v1.utilitario.FormatadorDecimal;
 import br.com.swconsultoria.nfe.dom.enuns.EstadosEnum;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.*;
+import br.com.swconsultoria.nfe.util.ChaveUtil;
 import br.com.swconsultoria.nfe.util.ConstantesUtil;
 
 import java.math.BigDecimal;
@@ -29,15 +30,18 @@ public class NotaFiscalMapper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         String dataFormatada = dataAtual.format(formatter);
 
+        //Geração Número nota fiscal
+        String numeroFormatado = String.format("%09d", Long.parseLong(dto.getNumero()));
+
         //Geração de código Cnf aleatório (recomendado pela Sefaz)
-        String cnf = String.format("%08d", ThreadLocalRandom.current().nextInt(1_000_000, 100_000_000));
+        String cnf = ChaveUtil.completarComZerosAEsquerda(String.valueOf(numeroFormatado), 8);
 
         ObjectFactory factory = new ObjectFactory();
         TNFe tnFe = factory.createTNFe();
 
         TNFe.InfNFe infNFe = new TNFe.InfNFe();
         infNFe.setVersao(ConstantesUtil.VERSAO.NFE);
-        infNFe.setId("NFe" + dto.getChave());
+        infNFe.setId(dto.getChave());
 
         // Identificação (IDE)
         TNFe.InfNFe.Ide ide = new TNFe.InfNFe.Ide();
@@ -47,7 +51,6 @@ public class NotaFiscalMapper {
         ide.setNatOp(dto.getNaturezaOperacao());
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
-        String numeroFormatado = String.format("%09d", Long.parseLong(dto.getNumero()));
         ide.setNNF(numeroFormatado);
         ide.setDhEmi(dataFormatada);
         ide.setDhSaiEnt(dataFormatada);
@@ -77,7 +80,6 @@ public class NotaFiscalMapper {
         emit.setIE(dto.getInscricaoEstadualEmitente());
         emit.setIEST(dto.getInscricaoEstadualStEmitente() != null ? dto.getInscricaoEstadualStEmitente().toString() : null);
         emit.setIM(dto.getInscricaoMunicipalEmitente() != null ? dto.getInscricaoMunicipalEmitente().toString() : null);
-        //emit.setCNAE(dto.getCnaeEmitente());
         emit.setCRT(dto.getRegimeTributarioEmitente().toString());
         TEnderEmi enderEmit = new TEnderEmi();
         enderEmit.setXLgr(dto.getLogradouroEmitente());
@@ -140,7 +142,6 @@ public class NotaFiscalMapper {
             prod.setVDesc(formatar(item.getValorDesconto()));
             prod.setVOutro(formatar(item.getValorOutro()));
             prod.setIndTot("1");
-            //prod.setXPed(item.getPedidoCompra());
             det.setProd(prod);
 
             // Impostos
@@ -154,8 +155,6 @@ public class NotaFiscalMapper {
                 // Usa o valor total do produto (vProd) como base, ignorando item.getBcFcp()
                 BigDecimal baseFcp = item.getValorTotalProdutos().setScale(2, RoundingMode.HALF_UP);
                 valorFcp = baseFcp.multiply(item.getAliqFcp()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-
-                System.out.println("[FIX] FCP Calculado: " + valorFcp + " (Base: " + baseFcp + ", Alíquota: " + item.getAliqFcp() + "%)");
             }
 
             // Cálculo do FCP ST
@@ -876,18 +875,6 @@ public class NotaFiscalMapper {
         TNFe.InfNFe.Pag pag = new TNFe.InfNFe.Pag();
         pag.getDetPag().add(detPag); // Adiciona o DetPag à lista
         infNFe.setPag(pag);
-
-
-        // Fatura/Duplicatas
-        /*TNFe.InfNFe.Cobr cobr = new TNFe.InfNFe.Cobr();
-        for (NotaFiscalDuplicatasDto dup : dto.getDuplicatas()) {
-            TNFe.InfNFe.Cobr.Dup dupXml = new TNFe.InfNFe.Cobr.Dup();
-            dupXml.setNDup(dup.getNumeroDuplicata());
-            dupXml.setDVenc(dup.getDataVencimento().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            dupXml.setVDup(formatar(dup.getValorDuplicata()));
-            cobr.getDup().add(dupXml);
-        }
-        infNFe.setCobr(cobr);*/
 
         // Informações adicionais
         TNFe.InfNFe.InfAdic infAdic = new TNFe.InfNFe.InfAdic();

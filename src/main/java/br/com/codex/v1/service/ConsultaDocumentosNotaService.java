@@ -11,7 +11,6 @@ import br.com.swconsultoria.nfe.Nfe;
 import br.com.swconsultoria.nfe.dom.ConfiguracoesNfe;
 import br.com.swconsultoria.nfe.dom.enuns.ConsultaDFeEnum;
 import br.com.swconsultoria.nfe.dom.enuns.PessoaEnum;
-import br.com.swconsultoria.nfe.exception.NfeException;
 import br.com.swconsultoria.nfe.schema.retdistdfeint.RetDistDFeInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,12 +27,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-import static br.com.swconsultoria.nfe.dom.enuns.PessoaEnum.JURIDICA;
-
 @Service
-public class DistribuicaoDfeService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DistribuicaoDfeService.class);
+public class ConsultaDocumentosNotaService {
+    private static final Logger logger = LoggerFactory.getLogger(ConsultaDocumentosNotaService.class);
 
     @Autowired
     private ControleNsuRepository controleNsuRepository;
@@ -103,13 +98,18 @@ public class DistribuicaoDfeService {
         // Configuração e consulta do último NSU
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpjLimpo);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracao(dto);
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
 
         Optional<ControleNsu> controleNsuOpt = controleNsuRepository.findByCnpjAndAmbiente(cnpjLimpo, ambiente);
         String ultimoNsu = controleNsuOpt.map(c -> String.valueOf(c.getUltimoNsu())).orElse("0");
 
         // Consulta à SEFAZ
         RetDistDFeInt retorno = Nfe.distribuicaoDfe(config, PessoaEnum.JURIDICA, cnpjLimpo, ConsultaDFeEnum.NSU, ultimoNsu);
+
+        if (!retorno.getCStat().equals("138")) {
+            logger.error("Erro na consulta de NSU para CNPJ {}: cStat={}, xMotivo={}", cnpjLimpo, retorno.getCStat(), retorno.getXMotivo());
+            return Collections.emptyList();
+        }
 
         // Atualiza o NSU no banco
         if (controleNsuOpt.isPresent()) {
