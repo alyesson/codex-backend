@@ -1064,7 +1064,7 @@ public class NotaFiscalService {
         Total total = new Total();
         ICMSTot icmsTot = new ICMSTot();
 
-        icmsTot.setVBC(formatar(dto.getValorTotal()));
+        icmsTot.setVBC(formatar(dto.getValorProdutos()));
         icmsTot.setVICMS(formatar(dto.getValorIcms()));
         icmsTot.setVICMSDeson(formatar(dto.getValorIcmsDesonerado()));
         icmsTot.setVFCP(formatar(dto.getValorFcp()));
