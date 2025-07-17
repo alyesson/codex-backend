@@ -849,6 +849,8 @@ public class NotaFiscalService {
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0");
                 obj.setCSOSN(cst);
 
+                item.setValorFcp(new BigDecimal("0.00"));
+
                 if (item.getValorCredIcmsSn() != null) {
                     // Se existir valor de crédito diretamente no item
                     obj.setVCredICMSSN(formatar(item.getValorCredIcmsSn()));
@@ -856,9 +858,8 @@ public class NotaFiscalService {
                     // Se tiver alíquota de crédito (opcional)
                     obj.setPCredSN(formatar(item.getAliqCredSn()));
                 } else {
-                    // Sem crédito (preenche null conforme manual do Simples Nacional)
-                    obj.setPCredSN(null);
-                    obj.setVCredICMSSN(null);
+                    obj.setPCredSN("0.00");
+                    obj.setVCredICMSSN("0.00");
                 }
                 System.out.println("[DEBUG] Alíquota FCP: " + item.getAliqFcp() + "% | Base FCP: " + item.getBcFcp());
                 icms.setICMSSN101(obj);
@@ -1082,7 +1083,7 @@ public class NotaFiscalService {
         icmsTot.setVPIS(formatar(dto.getValorPis()));
         icmsTot.setVCOFINS(formatar(dto.getValorCofins()));
         icmsTot.setVOutro(formatar(dto.getValorOutros()));
-        icmsTot.setVNF(formatar(dto.getValorTotal()));
+        icmsTot.setVNF(formatar(dto.getValorTotal())+ dto.getValorFrete());
 
         total.setICMSTot(icmsTot);
         return total;
