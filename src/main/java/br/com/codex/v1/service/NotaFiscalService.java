@@ -849,6 +849,7 @@ public class NotaFiscalService {
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0");
                 obj.setCSOSN(cst);
 
+                item.setBcFcp(new BigDecimal("0.00"));
                 item.setValorFcp(new BigDecimal("0.00"));
 
                 if (item.getValorCredIcmsSn() != null) {
@@ -869,6 +870,10 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN102 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN102();
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0");
                 obj.setCSOSN(cst);
+
+                item.setBcFcp(new BigDecimal("0.00"));
+                item.setValorFcp(new BigDecimal("0.00"));
+
                 icms.setICMSSN102(obj);
             }
 
@@ -1083,7 +1088,7 @@ public class NotaFiscalService {
         icmsTot.setVPIS(formatar(dto.getValorPis()));
         icmsTot.setVCOFINS(formatar(dto.getValorCofins()));
         icmsTot.setVOutro(formatar(dto.getValorOutros()));
-        icmsTot.setVNF(formatar(dto.getValorTotal())+ dto.getValorFrete());
+        icmsTot.setVNF(formatar(dto.getValorTotal()));
 
         total.setICMSTot(icmsTot);
         return total;
