@@ -50,11 +50,16 @@ public class FornecedoresResource {
         return ResponseEntity.ok().body(new FornecedoresDto(objFornec));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @GetMapping
     public ResponseEntity<List<FornecedoresDto>> findAll(){
         List<Fornecedores> list = fornecedoresService.findAll();
         List<FornecedoresDto> listDto = list.stream().map(FornecedoresDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
+    }
+
+    @GetMapping(value = "/cnpj/{cnpj}")
+    public ResponseEntity<FornecedoresDto> findByCnpj(@PathVariable String cnpj){
+        Fornecedores objFornec = fornecedoresService.findByCnpj(cnpj);
+        return ResponseEntity.ok().body(new FornecedoresDto(objFornec));
     }
 }

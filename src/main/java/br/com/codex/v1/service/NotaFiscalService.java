@@ -184,16 +184,9 @@ public class NotaFiscalService {
      */
     private String montarChaveAcesso(ConfiguracoesNfe config, NotaFiscalDto dto, String numeroNota) {
         String cnf = ChaveUtil.completarComZerosAEsquerda(numeroNota, 8);
-        ChaveUtil chaveUtil = new ChaveUtil(
-                config.getEstado(),
-                dto.getDocumentoEmitente(),
-                dto.getModelo(),
-                Integer.parseInt(dto.getSerie()),
-                Integer.parseInt(numeroNota),
-                dto.getTipo(),
-                cnf,
-                LocalDateTime.now()
-        );
+        ChaveUtil chaveUtil = new ChaveUtil(config.getEstado(), dto.getDocumentoEmitente(),
+                dto.getModelo(), Integer.parseInt(dto.getSerie()),
+                Integer.parseInt(numeroNota), dto.getTipo(), cnf, LocalDateTime.now());
         return chaveUtil.getChaveNF();
     }
 
@@ -382,7 +375,7 @@ public class NotaFiscalService {
         // Cálculo do FCP ST
         BigDecimal valorFcpSt = BigDecimal.ZERO;
         if (item.getAliqFcpSt() != null && item.getBcFcpSt() != null) {
-            valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+            valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP);
         }
 
         switch (cst) {
@@ -862,7 +855,6 @@ public class NotaFiscalService {
                     obj.setPCredSN("0.00");
                     obj.setVCredICMSSN("0.00");
                 }
-                System.out.println("[DEBUG] Alíquota FCP: " + item.getAliqFcp() + "% | Base FCP: " + item.getBcFcp());
                 icms.setICMSSN101(obj);
             }
 
@@ -1099,7 +1091,25 @@ public class NotaFiscalService {
      */
     private Transp preencherTransporte(NotaFiscalDto dto) {
         Transp transp = new Transp();
-        transp.setModFrete(dto.getModalidadeFrete()); // 9=Sem frete
+        transp.setModFrete(dto.getModalidadeFrete());
+
+        // Transportadora
+        Transp.Transporta transporta = new Transp.Transporta();
+        transporta.setCNPJ(dto.getCnpjTransportador());
+        transporta.setXNome(dto.getNomeTransportador());
+        transporta.setXEnder(dto.getEnderecoTransportador());
+        transporta.setXMun(dto.getMunicipioTransportador());
+
+        transp.setTransporta(transporta);
+
+        // Volume
+        Transp.Vol volume = new Transp.Vol();
+        volume.setQVol(String.valueOf(dto.getQuantidadeVolumes()));
+        volume.setPesoL(dto.getPesoLiquido());
+        volume.setPesoB(dto.getPesoBruto());
+
+        transp.getVol().add(volume);
+
         return transp;
     }
 
@@ -1121,7 +1131,6 @@ public class NotaFiscalService {
     private InfAdic preencherInformacoesAdicionais(NotaFiscalDto dto){
         InfAdic infAdic = new InfAdic();
         infAdic.setInfAdFisco(dto.getInformacaoAdicionalFisco());
-        infAdic.setInfCpl(dto.getInformacaoAdicionalContribuinte());
         return infAdic;
     }
 

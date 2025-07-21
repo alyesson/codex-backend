@@ -50,4 +50,9 @@ public class FornecedoresService {
             throw new DataIntegrityViolationException("Já existe um fornecedor cadastrado com este CNPJ");
         }
     }
+
+    public Fornecedores findByCnpj(String cnpj) {
+        Optional<Fornecedores> objFornec = fornecedoresRepository.findByCnpj(cnpj);
+        return objFornec.orElseThrow(() -> new ObjectNotFoundException("Fornecedor não encontrado"));
+    }
 }

@@ -206,6 +206,9 @@ public class NotaFiscal implements Serializable {
     private BigDecimal valorOriginalFatura;
     private BigDecimal valorDescontoFatura;
     private BigDecimal valorLiquidoFatura;
+    private String pesoLiquido;
+    private String pesoBruto;
+    private Integer quantidadeVolumes;
 
     @Lob
     private String informacaoAdicionalFisco;
@@ -250,7 +253,7 @@ public class NotaFiscal implements Serializable {
                       BigDecimal valorIcmsDesonerado, BigDecimal valorFcp, BigDecimal valorBaseCalculoSt, BigDecimal valorSt, BigDecimal valorFcpSt, BigDecimal valorFcpStRetido,
                       BigDecimal valorProdutos, BigDecimal valorFrete, BigDecimal valorSeguro, BigDecimal valorDesconto, BigDecimal valorIi, BigDecimal valorIpi, BigDecimal valorPagamento,
                       BigDecimal valorIpiDevolucao, BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorOutros, BigDecimal valorTotal, String modalidadeFrete,
-                      String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String numeroFatura, BigDecimal valorOriginalFatura,
+                      String cnpjTransportador, String nomeTransportador, String enderecoTransportador, String municipioTransportador, String pesoLiquido, String pesoBruto, Integer quantidadeVolumes, String numeroFatura, BigDecimal valorOriginalFatura,
                       BigDecimal valorDescontoFatura, BigDecimal valorLiquidoFatura, String informacaoAdicionalFisco, String informacaoAdicionalContribuinte, String chave, String cstat,
                       String numeroProtocolo, String dataHoraProtocolo, String motivoProtocolo) {
         this.id = id;
@@ -303,6 +306,9 @@ public class NotaFiscal implements Serializable {
         this.emailDestinatario = emailDestinatario;
         this.codigoPaisDestinatario = codigoPaisDestinatario;
         this.paisDestinatario = paisDestinatario;
+        this.pesoLiquido = pesoLiquido;
+        this.pesoBruto = pesoBruto;
+        this.quantidadeVolumes = quantidadeVolumes;
         this.valorBaseCalculo = valorBaseCalculo;
         this.valorIcms = valorIcms;
         this.valorIcmsDesonerado = valorIcmsDesonerado;
@@ -417,6 +423,9 @@ public class NotaFiscal implements Serializable {
         this.nomeTransportador = obj.getNomeTransportador();
         this.enderecoTransportador = obj.getEnderecoTransportador();
         this.municipioTransportador = obj.getMunicipioTransportador();
+        this.pesoLiquido = obj.getPesoLiquido();
+        this.pesoBruto = obj.getPesoBruto();
+        this.quantidadeVolumes = obj.getQuantidadeVolumes();
         this.numeroFatura = obj.getNumeroFatura();
         this.valorOriginalFatura = obj.getValorOriginalFatura();
         this.valorDescontoFatura = obj.getValorDescontoFatura();

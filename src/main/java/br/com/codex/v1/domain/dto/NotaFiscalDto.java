@@ -68,6 +68,9 @@ public class NotaFiscalDto implements Serializable {
     private	String	numeroFatura;
     private	String	numeroProtocolo;
     private	String	paisDestinatario;
+    private	String	pesoLiquido;
+    private	String	pesoBruto;
+    private Integer quantidadeVolumes;
     private String  presencaComprador;
     private	String	razaoSocialDestinatario;
     private	String	razaoSocialEmitente;
@@ -164,6 +167,9 @@ public class NotaFiscalDto implements Serializable {
         this.numeroFatura = obj.getNumeroFatura();
         this.numeroProtocolo = obj.getNumeroProtocolo();
         this.paisDestinatario = obj.getPaisDestinatario();
+        this.pesoLiquido = obj.getPesoLiquido();
+        this.pesoBruto = obj.getPesoBruto();
+        this.quantidadeVolumes = obj.getQuantidadeVolumes();
         this.presencaComprador = obj.getPresencaComprador();
         this.razaoSocialDestinatario = obj.getRazaoSocialDestinatario();
         this.razaoSocialEmitente = obj.getRazaoSocialEmitente();
