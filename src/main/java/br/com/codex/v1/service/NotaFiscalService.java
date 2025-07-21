@@ -56,6 +56,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static br.com.codex.v1.utilitario.FormatadorDecimal.formatar;
+import static br.com.codex.v1.utilitario.FormatadorDecimal.formatarPeso;
+
+import br.com.codex.v1.utilitario.RemoveExcessoCfop;
 
 @Service
 public class NotaFiscalService {
@@ -132,7 +135,7 @@ public class NotaFiscalService {
     /**
      * Emite uma NF-e seguindo o modelo da Wiki
      */
-    @Transactional
+     @Transactional
     public NotaFiscalDto emitirNotaFiscal(NotaFiscalDto dto) throws Exception {
         try {
             // 1. Configurações iniciais
@@ -229,14 +232,14 @@ public class NotaFiscalService {
         Ide ide = new Ide();
         ide.setCUF(EstadosEnum.valueOf(dto.getCodigoUf()).getCodigoUF());
         ide.setCNF(ChaveUtil.completarComZerosAEsquerda(dto.getNumero(), 8));
-        ide.setNatOp(dto.getNaturezaOperacao());
+        ide.setNatOp(RemoveExcessoCfop.limitarDescricao(dto.getNaturezaOperacao()));
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
         ide.setNNF(dto.getNumero());
         ide.setDhEmi(XmlNfeUtil.dataNfe(LocalDateTime.now()));
         ide.setTpNF(dto.getTipo());
         ide.setIdDest(dto.getLocalDestino());
-        ide.setCMunFG(config.getEstado().getCodigoUF() + "0001"); // Código do município padrão
+        ide.setCMunFG(dto.getCodigoMunicipioEmitente());
         ide.setTpImp(DANFE_NORMAL);
         ide.setTpEmis(dto.getTipo());
         ide.setCDV(chave.substring(chave.length() - 1));
@@ -326,24 +329,22 @@ public class NotaFiscalService {
 
             // Preenche dados do produto
             Prod prod = new Prod();
-            prod.setCProd(item.getCodigoProduto());
-            prod.setXProd(item.getNomeProduto());
-            prod.setCEAN(item.getCEAN());
-            prod.setNCM(item.getNcmSh().replace(".",""));
-            prod.setCEST(item.getCest().replace(".",""));
-            prod.setCFOP(item.getCfop());
-            prod.setUCom(item.getUnidadeComercial());
-            prod.setQCom(item.getQuantidadeComercial().toString());
-            prod.setVUnCom(formatar(item.getValorUnitarioComercial()));
-            prod.setVProd(formatar(item.getValorTotalProdutos()));
-            prod.setUTrib(item.getUnidadeTributacao());
-            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");
-            prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));
-            prod.setVFrete(formatar(item.getValorFrete()));
-            prod.setVSeg(formatar(item.getValorSeguro() ));
-            prod.setVDesc(formatar(item.getValorDesconto()));
-            prod.setVOutro(formatar(item.getValorOutro()));
-            prod.setIndTot("1");
+            prod.setCProd(item.getCodigoProduto());                            // 1
+            prod.setCEAN(item.getCEAN());                                      // 2
+            prod.setXProd(item.getNomeProduto());                              // 3
+            prod.setNCM(item.getNcmSh().replace(".", ""));                     // 4
+            prod.setCEST(item.getCest().replace(".", ""));                     // 5 (opcional)
+            prod.setCFOP(item.getCfop());                                      // 6
+            prod.setUCom(item.getUnidadeComercial());                          // 7
+            prod.setQCom(item.getQuantidadeComercial().toString());            // 8
+            prod.setVUnCom(formatar(item.getValorUnitarioComercial()));        // 9
+            prod.setVProd(formatar(item.getValorTotalProdutos()));             // 10
+            prod.setCEANTrib("SEM GTIN");                                      // 11
+            prod.setUTrib(item.getUnidadeTributacao());                        // 12
+            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");  // 13
+            prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));      // 14
+            prod.setIndTot("1");                                               // 15
+
             det.setProd(prod);
 
             // Preenche impostos
@@ -1105,8 +1106,8 @@ public class NotaFiscalService {
         // Volume
         Transp.Vol volume = new Transp.Vol();
         volume.setQVol(String.valueOf(dto.getQuantidadeVolumes()));
-        volume.setPesoL(dto.getPesoLiquido());
-        volume.setPesoB(dto.getPesoBruto());
+        volume.setPesoL(formatarPeso(Double.valueOf(dto.getPesoLiquido())));
+        volume.setPesoB(formatarPeso(Double.valueOf(dto.getPesoBruto())));
 
         transp.getVol().add(volume);
 
