@@ -1110,7 +1110,7 @@ public class NotaFiscalService {
         Pag pag = new Pag();
         Pag.DetPag detPag = new Pag.DetPag();
         detPag.setTPag(dto.getFormaPagamento()); // 01=Dinheiro
-        detPag.setVPag(formatar(dto.getValorPagamento()));
+        detPag.setVPag(formatar(dto.getValorTotal()));
         pag.getDetPag().add(detPag);
         return pag;
     }
