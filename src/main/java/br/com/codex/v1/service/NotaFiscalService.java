@@ -54,18 +54,18 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static br.com.codex.v1.utilitario.FormatadorDecimal.formatar;
-import static br.com.codex.v1.utilitario.FormatadorDecimal.formatarPeso;
+import java.util.Random;
 
 import br.com.codex.v1.utilitario.RemoveExcessoCfop;
+
+import static br.com.codex.v1.utilitario.FormatadorDecimal.*;
 
 @Service
 public class NotaFiscalService {
     private static final Logger logger = LoggerFactory.getLogger(NotaFiscalService.class);
 
     // Constantes
-    private static final String VERSAO_APLICATIVO = "1.0";
+    private static final String VERSAO_APLICATIVO = "4.00";
     private static final String CODIGO_PAIS_BRASIL = "1058";
     private static final String NOME_PAIS_BRASIL = "Brasil";
     private static final String DANFE_NORMAL = "1";
@@ -92,7 +92,7 @@ public class NotaFiscalService {
     @Autowired
     private NotaFiscalRepository notaFiscalRepository;
 
-    private Integer ambienteNota;
+    private Integer ambienteNota, codigoCnf;
     private String estadoUf;
 
     /**
@@ -144,6 +144,10 @@ public class NotaFiscalService {
             // 2. Obtém número da nota
             String numeroNota = obterProximoNumeroNota(dto);
             dto.setNumero(numeroNota);
+
+            // 2.1. Gera código numérico (cNF) de 8 dígitos sem zero à esquerda
+            String codigoNumerico = String.valueOf(10000000 + new Random().nextInt(89999999));
+            codigoCnf = Integer.parseInt(codigoNumerico);
 
             // 3. Monta a chave de acesso
             String chave = montarChaveAcesso(config, dto, numeroNota);
@@ -231,7 +235,7 @@ public class NotaFiscalService {
     private Ide preencherIde(ConfiguracoesNfe config, NotaFiscalDto dto, String chave) throws NfeException {
         Ide ide = new Ide();
         ide.setCUF(EstadosEnum.valueOf(dto.getCodigoUf()).getCodigoUF());
-        ide.setCNF(ChaveUtil.completarComZerosAEsquerda(dto.getNumero(), 8));
+        ide.setCNF(String.valueOf(codigoCnf));
         ide.setNatOp(RemoveExcessoCfop.limitarDescricao(dto.getNaturezaOperacao()));
         ide.setMod(dto.getModelo());
         ide.setSerie(dto.getSerie());
@@ -329,21 +333,25 @@ public class NotaFiscalService {
 
             // Preenche dados do produto
             Prod prod = new Prod();
-            prod.setCProd(item.getCodigoProduto());                            // 1
-            prod.setCEAN(item.getCEAN());                                      // 2
-            prod.setXProd(item.getNomeProduto());                              // 3
-            prod.setNCM(item.getNcmSh().replace(".", ""));                     // 4
-            prod.setCEST(item.getCest().replace(".", ""));                     // 5 (opcional)
-            prod.setCFOP(item.getCfop());                                      // 6
-            prod.setUCom(item.getUnidadeComercial());                          // 7
-            prod.setQCom(item.getQuantidadeComercial().toString());            // 8
-            prod.setVUnCom(formatar(item.getValorUnitarioComercial()));        // 9
-            prod.setVProd(formatar(item.getValorTotalProdutos()));             // 10
-            prod.setCEANTrib("SEM GTIN");                                      // 11
-            prod.setUTrib(item.getUnidadeTributacao());                        // 12
-            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");  // 13
-            prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));      // 14
-            prod.setIndTot("1");                                               // 15
+            prod.setCProd(item.getCodigoProduto());
+            prod.setCEAN(item.getCean() != null && item.getCean().matches("^[0-9]{13,14}$") ? item.getCean() : "SEM GTIN");
+            prod.setXProd(item.getNomeProduto());
+            prod.setNCM(item.getNcmSh().replace(".", ""));
+            prod.setCEST(item.getCest().replace(".", ""));
+            prod.setCFOP(item.getCfop());
+            prod.setQCom(item.getQuantidadeComercial().toString());
+            prod.setUCom(item.getUnidadeComercial());
+            prod.setVUnCom(formatar(item.getValorUnitarioComercial()));
+            prod.setVProd(formatar(item.getValorTotalProdutos()));
+            prod.setCEANTrib(prod.getCEAN());
+            prod.setUTrib(item.getUnidadeTributacao());
+            prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");
+            prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));
+            prod.setVFrete(formatar(dto.getValorFrete().divide(new BigDecimal(dto.getItens().size()),2, RoundingMode.HALF_UP)));
+            //prod.setVSeg((formatar(dto.getValorSeguro().divide(new BigDecimal(dto.getItens().size()), 2, RoundingMode.HALF_UP))));
+            //prod.setVDesc((formatar(dto.getValorDesconto().divide(new BigDecimal(dto.getItens().size()), 2, RoundingMode.HALF_UP))));
+            //prod.setVOutro((formatar(dto.getValorOutros().divide(new BigDecimal(dto.getItens().size()),2, RoundingMode.HALF_UP))));
+            prod.setIndTot("1");
 
             det.setProd(prod);
 
@@ -384,11 +392,11 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMS00 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS00();
                 obj.setOrig(item.getOrigIcms());
                 obj.setCST(cst);
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
 
                 // Cálculo da BC do ICMS
                 BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
-                obj.setVBC(bcIcms.toString());
+                obj.setVBC(formatar(bcIcms));
 
                 // Cálculo do valor do ICMS
                 BigDecimal valorIcms = BigDecimal.ZERO;
@@ -417,7 +425,7 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMS10 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS10();
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                 obj.setCST(cst);
-                obj.setModBC(formatar(item.getModBc() ));
+                obj.setModBC(item.getModBc());
 
                 // Cálculos para ICMS normal
                 BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
@@ -448,7 +456,7 @@ public class NotaFiscalService {
                 obj.setVFCPST(formatar(valorFcpSt.toString()));
                 obj.setVICMSST(formatar(valorIcmsSt.toString()));
                 obj.setVICMSSTDeson(formatar(item.getValorIcmsDesonerado()));
-                obj.setModBCST(formatar(item.getModBc()));
+                obj.setModBCST(item.getModBc());
                 obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
                 icms.setICMS10(obj);
             }
@@ -472,7 +480,7 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMS20 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS20();
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                 obj.setCST(cst);
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
 
                 // Cálculo com redução da BC
                 BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
@@ -531,7 +539,7 @@ public class NotaFiscalService {
                 obj.setCST(cst);
 
                 // Modalidade de determinação da BC (0-Margem Valor Agregado, 1-Pauta, 2-Valor Operação)
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
 
                 // 2. CÁLCULO DO FCP (independente do diferimento)
                 if(item.getBcFcp() != null && item.getAliqFcp() != null) {
@@ -664,7 +672,7 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMS70 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMS70();
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                 obj.setCST(cst);
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
 
                 // Cálculo com redução da BC
                 BigDecimal bcIcms = (item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
@@ -732,7 +740,7 @@ public class NotaFiscalService {
                     valorFcpSt = item.getBcFcpSt().multiply(item.getAliqFcpSt()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 }
 
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
                 obj.setVBC(formatar(item.getBcIcms()));
                 obj.setPRedBC(formatar(item.getPercentRedBc()));
                 obj.setPICMS(formatar(item.getAliqIcms()));
@@ -761,7 +769,7 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMSPart obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSPart();
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                 obj.setCST(cst);
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
 
                 // 2. CÁLCULO DO ICMS PRÓPRIO
                 BigDecimal valorIcms = BigDecimal.ZERO;
@@ -822,19 +830,19 @@ public class NotaFiscalService {
                             .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 }
 
-                obj.setVBCSTRet(formatar(item.getBcIcmsStRetido()) != null ? item.getBcIcmsStRetido().toString() : "0.00");
-                obj.setPST(formatar(item.getAliqIcmsSt()) != null ? item.getAliqIcmsSt().toString() : "0.00");
-                obj.setVICMSSubstituto(formatar(item.getValorIcmsSubstituto()) != null ? item.getValorIcmsSubstituto().toString() : "0.00");
+                obj.setVBCSTRet(formatar(item.getBcIcmsStRetido()));
+                obj.setPST(formatar(item.getAliqIcmsSt()));
+                obj.setVICMSSubstituto(formatar(item.getValorIcmsSubstituto()));
                 obj.setVICMSSTRet(formatar(valorIcmsStRetido));
-                obj.setVBCFCPSTRet(formatar(item.getBcFcpStRetido()) != null ? item.getBcFcpStRetido().toString() : "0.00");
-                obj.setPFCPSTRet(formatar(item.getAliqFcpSt()) != null ? item.getAliqFcpSt().toString() : "0.00");
+                obj.setVBCFCPSTRet(formatar(item.getBcFcpStRetido()));
+                obj.setPFCPSTRet(formatar(item.getAliqFcpSt()));
                 obj.setVFCPSTRet(formatar(valorFcpStRetido));
-                obj.setVBCSTDest(formatar(item.getBcIcmsStDestino()) != null ? item.getBcIcmsStDestino().toString() : "0.00");
-                obj.setVICMSSTDest(formatar(item.getValorIcmsStDestino()) != null ? item.getValorIcmsStDestino().toString() : "0.00");
-                obj.setPRedBCEfet(formatar(item.getPercentRedBcEfetivo()) != null ? item.getPercentRedBcEfetivo().toString() : "0.00");
-                obj.setVBCEfet(formatar(item.getBcIcmsEfetivo()) != null ? item.getBcIcmsEfetivo().toString() : "0.00");
-                obj.setPICMSEfet(formatar(item.getAliqIcmsEfetivo()) != null ? item.getAliqIcmsEfetivo().toString() : "0.00");
-                obj.setVICMSEfet(formatar(valorIcmsEfetivo.compareTo(BigDecimal.ZERO) > 0 ? valorIcmsEfetivo.toString() : null));
+                obj.setVBCSTDest(formatar(item.getBcIcmsStDestino()));
+                obj.setVICMSSTDest(formatar(item.getValorIcmsStDestino()));
+                obj.setPRedBCEfet(formatar(item.getPercentRedBcEfetivo()));
+                obj.setVBCEfet(formatar(item.getBcIcmsEfetivo()));
+                obj.setPICMSEfet(formatar(item.getAliqIcmsEfetivo()));
+                obj.setVICMSEfet(formatar(valorIcmsEfetivo.compareTo(BigDecimal.ZERO) > 0 ? valorIcmsEfetivo : BigDecimal.ZERO));
                 icms.setICMSST(obj);
             }
 
@@ -843,6 +851,8 @@ public class NotaFiscalService {
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0");
                 obj.setCSOSN(cst);
 
+                item.setBcIcms(BigDecimal.ZERO);
+                item.setValorIcms(BigDecimal.ZERO);
                 item.setBcFcp(new BigDecimal("0.00"));
                 item.setValorFcp(new BigDecimal("0.00"));
 
@@ -981,7 +991,7 @@ public class NotaFiscalService {
                 TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN900 obj = new TNFe.InfNFe.Det.Imposto.ICMS.ICMSSN900();
                 obj.setOrig(item.getOrigIcms() != null ? item.getOrigIcms() : "0.00");
                 obj.setCSOSN(cst);
-                obj.setModBC(formatar(item.getModBc()));
+                obj.setModBC(item.getModBc());
 
                 // Cálculos para ICMS normal
                 BigDecimal bcIcms = item.getBcIcms() != null ? item.getBcIcms() : BigDecimal.ZERO;
@@ -1063,7 +1073,15 @@ public class NotaFiscalService {
         Total total = new Total();
         ICMSTot icmsTot = new ICMSTot();
 
-        icmsTot.setVBC(formatar(dto.getValorProdutos()));
+        BigDecimal totalBaseCalculoICMS = BigDecimal.ZERO;
+
+        for (NotaFiscalItemDto item : dto.getItens()) {
+            if (item.getBcIcms() != null) {
+                totalBaseCalculoICMS = totalBaseCalculoICMS.add(item.getBcIcms());
+            }
+        }
+
+        icmsTot.setVBC(formatar(totalBaseCalculoICMS));
         icmsTot.setVICMS(formatar(dto.getValorIcms()));
         icmsTot.setVICMSDeson(formatar(dto.getValorIcmsDesonerado()));
         icmsTot.setVFCP(formatar(dto.getValorFcp()));

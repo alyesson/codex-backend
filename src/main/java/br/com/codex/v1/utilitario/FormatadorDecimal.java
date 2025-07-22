@@ -16,20 +16,13 @@ public class FormatadorDecimal {
      * Formata valores para 2 casas decimais com arredondamento HALF_UP
      */
     public static String formatar(BigDecimal valor) {
-        if (valor == null) {
+        if (valor == null || valor.equals(new BigDecimal("0.00"))) {
             return "0.00";
         }
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
         DecimalFormat df = new DecimalFormat("0.00", symbols);
         df.setRoundingMode(RoundingMode.HALF_UP);
         return df.format(valor);
-    }
-
-    public static String formatar(Double valor) {
-        if (valor == null) {
-            return "0.00";
-        }
-        return formatar(BigDecimal.valueOf(valor));
     }
 
     /**
@@ -40,11 +33,12 @@ public class FormatadorDecimal {
             return "0.00";
         }
         try {
-            return formatar(BigDecimal.valueOf(Long.parseLong(valor)));
+            return formatar(new BigDecimal(valor.replace(",", ".")));
         } catch (NumberFormatException e) {
             return "0.00";
         }
     }
+
 
     public static String formatarPeso(Double valor) {
         if (valor == null) {
@@ -55,4 +49,5 @@ public class FormatadorDecimal {
         DecimalFormat df = new DecimalFormat("0.000", symbols);
         return df.format(valor);
     }
+
 }

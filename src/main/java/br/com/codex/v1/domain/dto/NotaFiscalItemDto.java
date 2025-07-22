@@ -20,7 +20,7 @@ public class NotaFiscalItemDto implements Serializable {
     private String numeroNotaFiscal;
     private String nomeProduto;
     private String codigoProduto;
-    private String cEAN;
+    private String cean;
     private String ncmSh;
     private String cest;
     private String cfop;
@@ -114,7 +114,7 @@ public class NotaFiscalItemDto implements Serializable {
         this.numeroNotaFiscal = obj.getNumeroNotaFiscal();
         this.nomeProduto = obj.getNomeProduto();
         this.codigoProduto = obj.getCodigoProduto();
-        this.cEAN = obj.getCEAN();
+        this.cean = obj.getCean();
         this.ncmSh = obj.getNcmSh();
         this.cest = obj.getCest();
         this.cfop = obj.getCfop();
