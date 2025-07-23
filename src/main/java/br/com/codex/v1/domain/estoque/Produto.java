@@ -76,6 +76,8 @@ public class Produto implements Serializable {
     protected BigDecimal valorAliquotaCofins;
     protected BigDecimal valorCofins;
     protected boolean produtoProduzido;
+    protected String modalidadeBaseCalculo;
+    protected String modalidadeBaseCalculoSt;
 
 
     public Produto() {
@@ -88,7 +90,7 @@ public class Produto implements Serializable {
                    BigDecimal percentualFcp, BigDecimal percentualIcmsRed, String ipiSituacaotributaria, BigDecimal ipiBaseCalculo, BigDecimal percentualIpi, BigDecimal quantidadeTotalIpi, BigDecimal valorUnidTributavelIpi,
                    BigDecimal valorIpi, String cnpjProdutorIpi, String codigoSeloControle, String quantidadeSeloControle, String classeEnquadramentoIpi, String pisSituacaoTributaria,
                    BigDecimal percentualPis, BigDecimal pisBaseCalculo, BigDecimal valorPis, BigDecimal pisValorAliquota, String cofinsSituacaotributaria, BigDecimal percentualCofins,
-                   BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido) {
+                   BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido, String modalidadeBaseCalculo, String modalidadeBaseCalculoSt) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -138,6 +140,8 @@ public class Produto implements Serializable {
         this.valorAliquotaCofins = valorAliquotaCofins;
         this.valorCofins = valorCofins;
         this.produtoProduzido = produtoProduzido;
+        this.modalidadeBaseCalculo = modalidadeBaseCalculo;
+        this.modalidadeBaseCalculoSt = modalidadeBaseCalculoSt;
     }
 
     public Produto(ProdutoDto obj) {
@@ -190,6 +194,8 @@ public class Produto implements Serializable {
         this.valorAliquotaCofins = obj.getValorAliquotaCofins();
         this.valorCofins = obj.getValorCofins();
         this.produtoProduzido = obj.isProdutoProduzido();
+        this.modalidadeBaseCalculo = obj.getModalidadeBaseCalculo();
+        this.modalidadeBaseCalculoSt = obj.getModalidadeBaseCalculoSt();
     }
 
     @Override

@@ -82,6 +82,9 @@ public class ProdutoDto implements Serializable {
     protected BigDecimal valorCofins;
     @NotNull(message = "O campo produto produzido pode ficar em branco")
     protected boolean produtoProduzido;
+    @NotNull(message = "O campo produto modalidade base cálculo pode ficar em branco")
+    protected String modalidadeBaseCalculo;
+    protected String modalidadeBaseCalculoSt;
 
     public ProdutoDto() {
         super();
@@ -137,6 +140,8 @@ public class ProdutoDto implements Serializable {
         this.valorAliquotaCofins = obj.getValorAliquotaCofins();
         this.valorCofins = obj.getValorCofins();
         this.produtoProduzido = obj.isProdutoProduzido();
+        this.modalidadeBaseCalculo = obj.getModalidadeBaseCalculo();
+        this.modalidadeBaseCalculoSt = obj.getModalidadeBaseCalculoSt();
     }
 
     public void setDescricao(String descricao) {
