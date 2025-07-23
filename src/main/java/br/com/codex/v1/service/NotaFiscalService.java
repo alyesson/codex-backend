@@ -1159,7 +1159,7 @@ public class NotaFiscalService {
         enviNFe = assinarNFe(enviNFe, config);
 
         // 2. Validar a NFe
-        validarNFe(enviNFe, config);
+        //validarNFe(enviNFe, config);
 
         // 3. Transmitir a NFe
         TRetEnviNFe retorno = transmitirNFe(enviNFe, config);
@@ -1171,20 +1171,28 @@ public class NotaFiscalService {
     /**
      * Assina a NF-e
      */
-    private TEnviNFe assinarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException {
+    private TEnviNFe assinarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
 
         logger.info("Assinando NF-e, ID Lote: {}", enviNFe.getIdLote());
         String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
         String xmlAssinado = Assinar.assinaNfe(config, xml, AssinaturaEnum.NFE);
+        validarNFe(config, xmlAssinado, ServicosEnum.ENVIO);
         return XmlNfeUtil.xmlToObject(xmlAssinado, TEnviNFe.class);
     }
 
     /**
      * Valida a NF-e
      */
-    private void validarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
+    private void validarNFe(ConfiguracoesNfe config, String xml, ServicosEnum servico) throws NfeException, JAXBException, IOException {
+        Files.write(Paths.get("xml_nota.xml"), xml.getBytes());
+
+        if (!new Validar().isValidXml(config, xml, ServicosEnum.ENVIO)) {
+            throw new NfeException("XML inválido segundo schemas da SEFAZ");
+        }
+    }
+    /*private void validarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
         logger.info("Validando NF-e, ID Lote: {}", enviNFe.getIdLote());
-        String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
+        //String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
 
         // Salva temporariamente para análise (opcional)
         Files.write(Paths.get("xml_nota.xml"), xml.getBytes());
@@ -1192,7 +1200,7 @@ public class NotaFiscalService {
         if (!new Validar().isValidXml(config, xml, ServicosEnum.ENVIO)) {
             throw new NfeException("XML inválido segundo schemas da SEFAZ");
         }
-    }
+    }*/
 
     /**
      * Transmite a NF-e para a SEFAZ
