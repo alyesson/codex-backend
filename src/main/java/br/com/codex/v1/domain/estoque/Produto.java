@@ -78,6 +78,8 @@ public class Produto implements Serializable {
     protected boolean produtoProduzido;
     protected String modalidadeBaseCalculo;
     protected String modalidadeBaseCalculoSt;
+    protected String motivoDesoneracaoIcms;
+    protected BigDecimal percentualFcpSt;
 
 
     public Produto() {
@@ -90,7 +92,8 @@ public class Produto implements Serializable {
                    BigDecimal percentualFcp, BigDecimal percentualIcmsRed, String ipiSituacaotributaria, BigDecimal ipiBaseCalculo, BigDecimal percentualIpi, BigDecimal quantidadeTotalIpi, BigDecimal valorUnidTributavelIpi,
                    BigDecimal valorIpi, String cnpjProdutorIpi, String codigoSeloControle, String quantidadeSeloControle, String classeEnquadramentoIpi, String pisSituacaoTributaria,
                    BigDecimal percentualPis, BigDecimal pisBaseCalculo, BigDecimal valorPis, BigDecimal pisValorAliquota, String cofinsSituacaotributaria, BigDecimal percentualCofins,
-                   BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido, String modalidadeBaseCalculo, String modalidadeBaseCalculoSt) {
+                   BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido, String modalidadeBaseCalculo, String modalidadeBaseCalculoSt,
+                   String motivoDesoneracaoIcms, BigDecimal percentualFcpSt) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -142,6 +145,8 @@ public class Produto implements Serializable {
         this.produtoProduzido = produtoProduzido;
         this.modalidadeBaseCalculo = modalidadeBaseCalculo;
         this.modalidadeBaseCalculoSt = modalidadeBaseCalculoSt;
+        this.motivoDesoneracaoIcms = motivoDesoneracaoIcms;
+        this.percentualFcpSt = percentualFcpSt;
     }
 
     public Produto(ProdutoDto obj) {
@@ -196,6 +201,8 @@ public class Produto implements Serializable {
         this.produtoProduzido = obj.isProdutoProduzido();
         this.modalidadeBaseCalculo = obj.getModalidadeBaseCalculo();
         this.modalidadeBaseCalculoSt = obj.getModalidadeBaseCalculoSt();
+        this.motivoDesoneracaoIcms = obj.getMotivoDesoneracaoIcms();
+        this.percentualFcpSt = obj.getPercentualFcpSt();
     }
 
     @Override

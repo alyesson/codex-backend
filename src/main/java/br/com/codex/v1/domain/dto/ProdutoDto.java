@@ -85,6 +85,8 @@ public class ProdutoDto implements Serializable {
     @NotNull(message = "O campo produto modalidade base cálculo pode ficar em branco")
     protected String modalidadeBaseCalculo;
     protected String modalidadeBaseCalculoSt;
+    protected String motivoDesoneracaoIcms;
+    protected BigDecimal percentualFcpSt;
 
     public ProdutoDto() {
         super();
@@ -142,6 +144,8 @@ public class ProdutoDto implements Serializable {
         this.produtoProduzido = obj.isProdutoProduzido();
         this.modalidadeBaseCalculo = obj.getModalidadeBaseCalculo();
         this.modalidadeBaseCalculoSt = obj.getModalidadeBaseCalculoSt();
+        this.motivoDesoneracaoIcms = obj.getMotivoDesoneracaoIcms();
+        this.percentualFcpSt = obj.getPercentualFcpSt();
     }
 
     public void setDescricao(String descricao) {

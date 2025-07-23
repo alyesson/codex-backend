@@ -191,9 +191,8 @@ public class NotaFiscalService {
      */
     private String montarChaveAcesso(ConfiguracoesNfe config, NotaFiscalDto dto, String numeroNota) {
         String cnf = ChaveUtil.completarComZerosAEsquerda(numeroNota, 8);
-        ChaveUtil chaveUtil = new ChaveUtil(config.getEstado(), dto.getDocumentoEmitente(),
-                dto.getModelo(), Integer.parseInt(dto.getSerie()),
-                Integer.parseInt(numeroNota), dto.getTipo(), cnf, LocalDateTime.now());
+        ChaveUtil chaveUtil = new ChaveUtil(config.getEstado(), dto.getDocumentoEmitente(), dto.getModelo(), Integer.parseInt(dto.getSerie()),
+                Integer.parseInt(cnf), dto.getTipo(), String.valueOf(codigoCnf), LocalDateTime.now());
         return chaveUtil.getChaveNF();
     }
 
@@ -348,9 +347,6 @@ public class NotaFiscalService {
             prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");
             prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));
             prod.setVFrete(formatar(dto.getValorFrete().divide(new BigDecimal(dto.getItens().size()),2, RoundingMode.HALF_UP)));
-            //prod.setVSeg((formatar(dto.getValorSeguro().divide(new BigDecimal(dto.getItens().size()), 2, RoundingMode.HALF_UP))));
-            //prod.setVDesc((formatar(dto.getValorDesconto().divide(new BigDecimal(dto.getItens().size()), 2, RoundingMode.HALF_UP))));
-            //prod.setVOutro((formatar(dto.getValorOutros().divide(new BigDecimal(dto.getItens().size()),2, RoundingMode.HALF_UP))));
             prod.setIndTot("1");
 
             det.setProd(prod);
@@ -378,6 +374,7 @@ public class NotaFiscalService {
         if (item.getAliqFcp() != null && item.getAliqFcp().compareTo(BigDecimal.ZERO) > 0) {
             // Usa o valor total do produto (vProd) como base, ignorando item.getBcFcp()
             BigDecimal baseFcp = item.getValorTotalProdutos().setScale(2, RoundingMode.HALF_UP);
+            item.setBcFcp(baseFcp);
             valorFcp = baseFcp.multiply(item.getAliqFcp()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         }
 
@@ -448,7 +445,7 @@ public class NotaFiscalService {
                 obj.setPRedBCST(formatar(item.getPercentRedBcSt()));
                 obj.setVICMS(formatar(valorIcms.toString()));
                 obj.setPFCP(formatar(item.getAliqFcp()));
-                obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                obj.setPFCPST(String.valueOf(item.getAliqFcpSt()));
                 obj.setVFCP(formatar(valorFcp.toString()));
                 obj.setVBCFCP(formatar(item.getBcFcp()));
                 obj.setVBCFCPST(formatar(item.getBcFcpSt()));
@@ -457,7 +454,7 @@ public class NotaFiscalService {
                 obj.setVICMSST(formatar(valorIcmsSt.toString()));
                 obj.setVICMSSTDeson(formatar(item.getValorIcmsDesonerado()));
                 obj.setModBCST(item.getModBc());
-                obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
+                obj.setMotDesICMSST(item.getMotDesIcms());
                 icms.setICMS10(obj);
             }
 
@@ -703,13 +700,13 @@ public class NotaFiscalService {
                 obj.setPICMSST(formatar(item.getAliqIcmsSt()));
                 obj.setVICMSST(formatar(item.getValorIcmsSt()));
                 obj.setVBCFCPST(formatar(item.getBcFcpSt()));
-                obj.setPFCPST(formatar(item.getAliqFcpSt()));
+                obj.setPFCPST(String.valueOf(item.getAliqFcpSt()));
                 obj.setVFCPST(formatar(valorFcpSt));
                 obj.setVICMSDeson(formatar(item.getValorIcmsDesonerado()));
                 obj.setMotDesICMS(formatar(item.getMotDesIcms()));
                 obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado())); //Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd).0: Valor do ICMS desonerado (vICMSDeson) não deduz do valor do item (vProd) / total da NF-e 1: Valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd) / total da NF-e.
                 obj.setVICMSSTDeson(null);
-                obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
+                obj.setMotDesICMSST(item.getMotDesIcms());
                 icms.setICMS70(obj);
             }
 
@@ -746,7 +743,7 @@ public class NotaFiscalService {
                 obj.setPICMS(formatar(item.getAliqIcms()));
                 obj.setVICMS(formatar(valorIcms.toString()));
                 obj.setVBCFCP(formatar(item.getBcFcp()));
-                obj.setPFCP(formatar(item.getAliqFcp()));
+                obj.setPFCP(String.valueOf(item.getAliqFcp()));
                 obj.setVFCP(formatar(valorFcp.toString()));
                 obj.setModBCST(formatar(item.getModBcSt()));
                 obj.setPMVAST(formatar(item.getPercentMargemIcmsSt()));
@@ -761,7 +758,7 @@ public class NotaFiscalService {
                 obj.setMotDesICMS(formatar(item.getMotDesIcms()));
                 obj.setIndDeduzDeson(formatar(item.getValorIcmsDesonerado()));
                 obj.setVICMSSTDeson(null);
-                obj.setMotDesICMSST(formatar(item.getMotDesIcms()));
+                obj.setMotDesICMSST(item.getMotDesIcms());
                 icms.setICMS90(obj);
             }
 
@@ -1175,6 +1172,7 @@ public class NotaFiscalService {
      * Assina a NF-e
      */
     private TEnviNFe assinarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException {
+
         logger.info("Assinando NF-e, ID Lote: {}", enviNFe.getIdLote());
         String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
         String xmlAssinado = Assinar.assinaNfe(config, xml, AssinaturaEnum.NFE);
@@ -1542,7 +1540,6 @@ public class NotaFiscalService {
 
         return xmlRetorno;
     }
-
 
     //Extrai a chave de evento do XML (métudo auxiliar).
     private String extrairChaveEvento(String xml) {
