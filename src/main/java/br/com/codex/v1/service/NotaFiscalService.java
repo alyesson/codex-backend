@@ -6,7 +6,6 @@ import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import br.com.codex.v1.domain.contabilidade.SerieNfe;
 import br.com.codex.v1.domain.contabilidade.XmlNotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
-import br.com.codex.v1.domain.fiscal.LoteNfe;
 import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.utilitario.Base64Util;
@@ -48,9 +47,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -124,8 +126,7 @@ public class NotaFiscalService {
 
             AmbienteEnum ambienteEnum = converterCodigoParaAmbienteEnum(ambienteNota);
 
-            return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum,
-                    certificado, "schemas");
+            return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, "C:\\Users\\alyesson.sousa\\Documents\\Projeto Codex\\Projeto Codex Web\\V_1.0.0\\codex-backend\\src\\main\\resources\\schemas");
         } catch (Exception e) {
             logger.error("Erro ao configurar certificado", e);
             throw new NfeException("Falha na configuração do certificado", e);
@@ -1155,52 +1156,15 @@ public class NotaFiscalService {
      */
     private NotaFiscalDto processarEnvioNFe(ConfiguracoesNfe config, TEnviNFe enviNFe, NotaFiscalDto dto) throws NfeException, JAXBException, IOException {
 
-        // 1. Assinar a NFe
-        enviNFe = assinarNFe(enviNFe, config);
+        // 1. Monta e Assina o XML
+        enviNFe = Nfe.montaNfe(config, enviNFe, true);
 
-        // 2. Validar a NFe
-        //validarNFe(enviNFe, config);
-
-        // 3. Transmitir a NFe
+        // 2. Transmitir a NFe (Envia a Nfe para a Sefaz)
         TRetEnviNFe retorno = transmitirNFe(enviNFe, config);
 
-        // 4. Processar o retorno
+        // 3. Processar o retorno
         return processarRetorno(enviNFe, retorno, dto);
     }
-
-    /**
-     * Assina a NF-e
-     */
-    private TEnviNFe assinarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
-
-        logger.info("Assinando NF-e, ID Lote: {}", enviNFe.getIdLote());
-        String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
-        String xmlAssinado = Assinar.assinaNfe(config, xml, AssinaturaEnum.NFE);
-        validarNFe(config, xmlAssinado, ServicosEnum.ENVIO);
-        return XmlNfeUtil.xmlToObject(xmlAssinado, TEnviNFe.class);
-    }
-
-    /**
-     * Valida a NF-e
-     */
-    private void validarNFe(ConfiguracoesNfe config, String xml, ServicosEnum servico) throws NfeException, JAXBException, IOException {
-        Files.write(Paths.get("xml_nota.xml"), xml.getBytes());
-
-        if (!new Validar().isValidXml(config, xml, ServicosEnum.ENVIO)) {
-            throw new NfeException("XML inválido segundo schemas da SEFAZ");
-        }
-    }
-    /*private void validarNFe(TEnviNFe enviNFe, ConfiguracoesNfe config) throws NfeException, JAXBException, IOException {
-        logger.info("Validando NF-e, ID Lote: {}", enviNFe.getIdLote());
-        //String xml = XmlNfeUtil.objectToXml(enviNFe, config.getEncode());
-
-        // Salva temporariamente para análise (opcional)
-        Files.write(Paths.get("xml_nota.xml"), xml.getBytes());
-
-        if (!new Validar().isValidXml(config, xml, ServicosEnum.ENVIO)) {
-            throw new NfeException("XML inválido segundo schemas da SEFAZ");
-        }
-    }*/
 
     /**
      * Transmite a NF-e para a SEFAZ
@@ -1273,17 +1237,41 @@ public class NotaFiscalService {
     /**
      * Processa o retorno da SEFAZ
      */
-    private NotaFiscalDto processarRetorno(TEnviNFe enviNFe, br.com.swconsultoria.nfe.schema_4.retEnviNFe.TRetEnviNFe retorno, NotaFiscalDto dto)throws NfeException, JAXBException {
-
+    private NotaFiscalDto processarRetorno(TEnviNFe enviNFe, br.com.swconsultoria.nfe.schema_4.retEnviNFe.TRetEnviNFe retorno, NotaFiscalDto dto) throws NfeException, JAXBException {
         // Atualiza o DTO com os dados do retorno
         dto.setChave(retorno.getProtNFe().getInfProt().getChNFe());
         dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
         dto.setNumeroProtocolo(retorno.getProtNFe().getInfProt().getNProt());
         dto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
 
-        // Gera e salva o XML completo (nfeProc)
-        String xml = XmlNfeUtil.criaNfeProc(enviNFe, retorno.getProtNFe());
-        salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
+        try {
+            // Converter o protNFe para o tipo correto antes de gerar o nfeProc
+            br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe protNFe = new br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe();
+            protNFe.setVersao(retorno.getProtNFe().getVersao());
+
+            br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe.InfProt infProt =
+                    new br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe.InfProt();
+            infProt.setId(retorno.getProtNFe().getInfProt().getId());
+            infProt.setTpAmb(retorno.getProtNFe().getInfProt().getTpAmb());
+            infProt.setVerAplic(retorno.getProtNFe().getInfProt().getVerAplic());
+            infProt.setChNFe(retorno.getProtNFe().getInfProt().getChNFe());
+            infProt.setDhRecbto(retorno.getProtNFe().getInfProt().getDhRecbto());
+            infProt.setNProt(retorno.getProtNFe().getInfProt().getNProt());
+            infProt.setDigVal(retorno.getProtNFe().getInfProt().getDigVal());
+            infProt.setCStat(retorno.getProtNFe().getInfProt().getCStat());
+            infProt.setXMotivo(retorno.getProtNFe().getInfProt().getXMotivo());
+
+            protNFe.setInfProt(infProt);
+
+            // Gera e salva o XML completo (nfeProc)
+            String xml = XmlNfeUtil.criaNfeProc(enviNFe, protNFe);
+            salvaNotaFiscal(dto);
+            salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
+            salvarXmlEmArquivo(xml, dto.getChave());
+        } catch (Exception e) {
+            logger.error("Erro ao converter protNFe", e);
+            throw new NfeException("Erro ao processar retorno da SEFAZ", e);
+        }
 
         return dto;
     }
@@ -1296,7 +1284,9 @@ public class NotaFiscalService {
         return Nfe.statusServico(config, DocumentoEnum.NFE);
     }
 
-    // Cancela uma NF-e.
+    /**
+     * Cancela a Nota Fiscal Eletrônica
+     */
     @Transactional
     public TRetEnvEvento cancelarNotaFiscal(String chave, String protocolo, String motivo, String cnpj, ConfiguracoesNfe config) throws NfeException, JAXBException {
         logger.info("Cancelando NF-e, chave: {}", chave);
@@ -1351,7 +1341,9 @@ public class NotaFiscalService {
         return retorno;
     }
 
-    //Emite uma Carta de Correção Eletrônica (CC-e) para uma NF-e.
+    /**
+     * Emite uma Carta de Correção Eletrônica (CC-e) para uma NF-e.
+     */
     @Transactional
     public br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento cartaCorrecao(String chave, String cnpj, String correcao, ConfiguracoesNfe config) throws NfeException, JAXBException {
         logger.info("Emitindo Carta de Correção para NF-e, chave: {}", chave);
@@ -1413,7 +1405,9 @@ public class NotaFiscalService {
         return retorno;
     }
 
-    //Inutiliza uma faixa de numeração de NF-e.
+    /**
+     * Inutiliza a Nota Fiscal
+     */
     @Transactional
     public TRetInutNFe inutilizarNotaFiscal(String cnpj, String justificativa, String ano, String serie, String numInicial, String numFinal, ConfiguracoesNfe config) throws NfeException, JAXBException {
         logger.info("Inutilizando faixa de numeração para NF-e, série: {}, numInicial: {}, numFinal: {}", serie, numInicial, numFinal);
@@ -1444,7 +1438,6 @@ public class NotaFiscalService {
 
         return retorno;
     }
-
 
     /**
      * Salva o XML da NF-e no banco de dados
@@ -1588,4 +1581,33 @@ public class NotaFiscalService {
         return String.format("%02d", proximoSequencial);
     }
 
+    private void salvaNotaFiscal(NotaFiscalDto notaFiscalDto){
+        notaFiscalDto.setId(null);
+        NotaFiscal notaFiscal = new NotaFiscal(notaFiscalDto);
+        notaFiscalRepository.save(notaFiscal);
+    }
+
+    private void salvarXmlEmArquivo(String xml, String chave) throws NfeException {
+        try {
+            String dataAtual = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            Path diretorio = Paths.get("/tmp/notas_fiscal_", dataAtual);
+
+            // Cria o diretório se não existir
+            if (!Files.exists(diretorio)) {
+                Files.createDirectories(diretorio);
+            }
+
+            // Define o nome do arquivo
+            Path arquivo = diretorio.resolve("NFe_" + chave + ".xml");
+
+            // Salva o arquivo
+            Files.write(arquivo, xml.getBytes(StandardCharsets.UTF_8));
+
+            logger.info("XML salvo em: " + arquivo.toString());
+
+        } catch (IOException e) {
+            logger.error("Erro ao salvar XML em arquivo", e);
+            throw new NfeException("Erro ao salvar XML em arquivo", e);
+        }
+    }
 }
