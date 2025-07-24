@@ -54,6 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -1620,23 +1621,32 @@ public class NotaFiscalService {
         }
     }
 
-    private void lancaContasReceber(NotaFiscalDto notaFiscalDto){
+    private void lancaContasReceber(NotaFiscalDto notaFiscalDto) {
+        if (notaFiscalDto.getDuplicatas() == null || notaFiscalDto.getDuplicatas().isEmpty()) {
+            logger.info("Nenhuma duplicata encontrada para a nota fiscal {}", notaFiscalDto.getNumero());
+            return;
+        }
 
-        ContaReceberDto contaReceberDto = new ContaReceberDto();
+        for (NotaFiscalDuplicatasDto duplicata : notaFiscalDto.getDuplicatas()) {
+            ContaReceberDto contaReceberDto = new ContaReceberDto();
 
-        contaReceberDto.setId(null);
-        contaReceberDto.setDescricao("Venda Nota Fiscal "+notaFiscalDto.getNumero());
-        contaReceberDto.setCategoria(null);
-        contaReceberDto.setRecebidoDe(notaFiscalDto.getRazaoSocialDestinatario());
-        contaReceberDto.setNumeroDocumento(notaFiscalDto.getNumero());
-        contaReceberDto.setRepete(null); //aqui as opções podem ser Não, a cada 15 dias, 1 vez por mês e 1 vez por ano
-        contaReceberDto.setDataVencimento(null); //este campo é um campo de data
-        contaReceberDto.setDataCompetencia(null);  //este campo é um campo de data
-        contaReceberDto.setQuantidadeParcelas(notaFiscalDto.getDuplicatas().size());
-        contaReceberDto.setValor((BigDecimal) notaFiscalDto.getDuplicatas().stream().map(NotaFiscalDuplicatasDto::getValorDuplicata));
-        contaReceberDto.setMetodoRecebimento(notaFiscalDto.getFormaPagamento());
+            contaReceberDto.setId(null);
+            contaReceberDto.setDescricao("Venda Realizada: Parcela " + duplicata.getId() + " - Nota Fiscal #" + notaFiscalDto.getNumero());
+            contaReceberDto.setCategoria(null);
+            contaReceberDto.setRecebidoDe(notaFiscalDto.getRazaoSocialDestinatario());
+            contaReceberDto.setNumeroDocumento(notaFiscalDto.getNumero() + "/" + duplicata.getNumeroDuplicata());
+            contaReceberDto.setRepete("Não");
+            contaReceberDto.setDataVencimento(Date.valueOf(duplicata.getDataVencimento()));
+            contaReceberDto.setDataCompetencia(Date.valueOf(notaFiscalDto.getEmissao()));
+            contaReceberDto.setQuantidadeParcelas(notaFiscalDto.getDuplicatas().size());
+            contaReceberDto.setValor(duplicata.getValorDuplicata());
+            contaReceberDto.setMetodoRecebimento(notaFiscalDto.getFormaPagamento());
 
-        ContaReceber contaReceber = new ContaReceber(contaReceberDto);
-        contaReceberRepository.save(contaReceber);
+            ContaReceber contaReceber = new ContaReceber(contaReceberDto);
+            contaReceberRepository.save(contaReceber);
+
+            logger.info("Lançada conta a receber para parcela {} da nota {}",
+                    duplicata.getNumeroDuplicata(), notaFiscalDto.getNumero());
+        }
     }
 }
