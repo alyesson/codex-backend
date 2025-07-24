@@ -2,10 +2,13 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.cadastros.AmbienteNotaFiscal;
 import br.com.codex.v1.domain.cadastros.ConfiguracaoCertificado;
+import br.com.codex.v1.domain.dto.ContaReceberDto;
+import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
 import br.com.codex.v1.domain.dto.NotaFiscalItemDto;
 import br.com.codex.v1.domain.contabilidade.SerieNfe;
 import br.com.codex.v1.domain.contabilidade.XmlNotaFiscal;
 import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.financeiro.ContaReceber;
 import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.utilitario.Base64Util;
@@ -93,6 +96,9 @@ public class NotaFiscalService {
 
     @Autowired
     private NotaFiscalRepository notaFiscalRepository;
+
+    @Autowired
+    private ContaReceberRepository contaReceberRepository;
 
     private Integer ambienteNota, codigoCnf;
     private String estadoUf;
@@ -1268,6 +1274,7 @@ public class NotaFiscalService {
             salvaNotaFiscal(dto);
             salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
             salvarXmlEmArquivo(xml, dto.getChave());
+            lancaContasReceber(dto);
         } catch (Exception e) {
             logger.error("Erro ao converter protNFe", e);
             throw new NfeException("Erro ao processar retorno da SEFAZ", e);
@@ -1611,5 +1618,25 @@ public class NotaFiscalService {
             logger.error("Erro ao salvar XML em arquivo", e);
             throw new NfeException("Erro ao salvar XML em arquivo", e);
         }
+    }
+
+    private void lancaContasReceber(NotaFiscalDto notaFiscalDto){
+
+        ContaReceberDto contaReceberDto = new ContaReceberDto();
+
+        contaReceberDto.setId(null);
+        contaReceberDto.setDescricao("Venda Nota Fiscal "+notaFiscalDto.getNumero());
+        contaReceberDto.setCategoria(null);
+        contaReceberDto.setRecebidoDe(notaFiscalDto.getRazaoSocialDestinatario());
+        contaReceberDto.setNumeroDocumento(notaFiscalDto.getNumero());
+        contaReceberDto.setRepete(null); //aqui as opções podem ser Não, a cada 15 dias, 1 vez por mês e 1 vez por ano
+        contaReceberDto.setDataVencimento(null); //este campo é um campo de data
+        contaReceberDto.setDataCompetencia(null);  //este campo é um campo de data
+        contaReceberDto.setQuantidadeParcelas(notaFiscalDto.getDuplicatas().size());
+        contaReceberDto.setValor((BigDecimal) notaFiscalDto.getDuplicatas().stream().map(NotaFiscalDuplicatasDto::getValorDuplicata));
+        contaReceberDto.setMetodoRecebimento(notaFiscalDto.getFormaPagamento());
+
+        ContaReceber contaReceber = new ContaReceber(contaReceberDto);
+        contaReceberRepository.save(contaReceber);
     }
 }
