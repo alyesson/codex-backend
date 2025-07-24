@@ -1582,7 +1582,9 @@ public class NotaFiscalService {
     }
 
     private void salvaNotaFiscal(NotaFiscalDto notaFiscalDto){
+        LocalDate dataAtual = LocalDate.now();
         notaFiscalDto.setId(null);
+        notaFiscalDto.setEmissao(dataAtual);
         NotaFiscal notaFiscal = new NotaFiscal(notaFiscalDto);
         notaFiscalRepository.save(notaFiscal);
     }
