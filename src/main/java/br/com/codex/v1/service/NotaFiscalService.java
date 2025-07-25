@@ -134,6 +134,7 @@ public class NotaFiscalService {
             AmbienteEnum ambienteEnum = converterCodigoParaAmbienteEnum(ambienteNota);
 
             return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, "C:\\Users\\alyesson.sousa\\Documents\\Projeto Codex\\Projeto Codex Web\\V_1.0.0\\codex-backend\\src\\main\\resources\\schemas");
+            //return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, "/Users/alyessonsousa/Desktop/Projetos/Codex Web/V_1.0.0/codex-backend/src/main/resources/schemas");
         } catch (Exception e) {
             logger.error("Erro ao configurar certificado", e);
             throw new NfeException("Falha na configuração do certificado", e);
@@ -1631,7 +1632,7 @@ public class NotaFiscalService {
             ContaReceberDto contaReceberDto = new ContaReceberDto();
 
             contaReceberDto.setId(null);
-            contaReceberDto.setDescricao("Venda Realizada: Parcela " + duplicata.getId() + " - Nota Fiscal #" + notaFiscalDto.getNumero());
+            contaReceberDto.setDescricao("Venda Realizada: Parcela " + duplicata.getNumeroDuplicata() + " - Nota Fiscal #" + notaFiscalDto.getNumero());
             contaReceberDto.setCategoria(null);
             contaReceberDto.setRecebidoDe(notaFiscalDto.getRazaoSocialDestinatario());
             contaReceberDto.setNumeroDocumento(notaFiscalDto.getNumero() + "/" + duplicata.getNumeroDuplicata());
@@ -1640,6 +1641,7 @@ public class NotaFiscalService {
             contaReceberDto.setDataCompetencia(Date.valueOf(notaFiscalDto.getEmissao()));
             contaReceberDto.setQuantidadeParcelas(notaFiscalDto.getDuplicatas().size());
             contaReceberDto.setValor(duplicata.getValorDuplicata());
+            contaReceberDto.setSituacao("A Receber");
             contaReceberDto.setMetodoRecebimento(notaFiscalDto.getFormaPagamento());
 
             ContaReceber contaReceber = new ContaReceber(contaReceberDto);
