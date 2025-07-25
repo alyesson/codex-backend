@@ -46,10 +46,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBException;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -133,7 +135,21 @@ public class NotaFiscalService {
 
             AmbienteEnum ambienteEnum = converterCodigoParaAmbienteEnum(ambienteNota);
 
-            return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, "C:\\Users\\alyesson.sousa\\Documents\\Projeto Codex\\Projeto Codex Web\\V_1.0.0\\codex-backend\\src\\main\\resources\\schemas");
+            // Obtém a URL da pasta 'schemas' no classpath
+            URL schemasUrl = getClass().getClassLoader().getResource("schemas");
+            if (schemasUrl == null) {
+                throw new NfeException("Pasta 'schemas' não encontrada no classpath.");
+            }
+
+            // Converte URL para caminho do sistema (tratando espaços e barras)
+            File schemasDir = new File(schemasUrl.toURI());
+            String schemasPath = schemasDir.getAbsolutePath()
+                    .replace("\\", "/")  // Substitui barras invertidas por normais
+                    .replace("%20", " "); // Decodifica espaços (se houver)
+
+            logger.info("Caminho dos schemas corrigido: {}", schemasPath);
+
+            return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, schemasPath);
             //return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, "/Users/alyessonsousa/Desktop/Projetos/Codex Web/V_1.0.0/codex-backend/src/main/resources/schemas");
         } catch (Exception e) {
             logger.error("Erro ao configurar certificado", e);
@@ -1096,7 +1112,7 @@ public class NotaFiscalService {
         icmsTot.setVFCPST(formatar(dto.getValorFcpSt()));
         icmsTot.setVFCPSTRet(formatar(dto.getValorFcpStRetido()));
         icmsTot.setVProd(formatar(dto.getValorProdutos()));
-        icmsTot.setVFrete(formatar(dto.getValorFrete()));
+        icmsTot.setVFrete(String.valueOf(dto.getValorFrete()));
         icmsTot.setVSeg(formatar(dto.getValorSeguro()));
         icmsTot.setVDesc(formatar(dto.getValorDesconto()));
         icmsTot.setVII(formatar(dto.getValorIi()));
@@ -1485,13 +1501,17 @@ public class NotaFiscalService {
         throw new NfeException("Código de ambiente inválido: " + codigo);
     }
 
-    //Consulta o status de uma NF-e.
+    /**
+     * Consulta Status da Nfe
+     */
     public br.com.swconsultoria.nfe.schema_4.retConsSitNFe.TRetConsSitNFe consultarNotaFiscal(String chave, ConfiguracoesNfe config) throws NfeException {
         logger.info("Consultando status da NF-e, chave: {}", chave);
         return Nfe.consultaXml(config, chave, DocumentoEnum.NFE);
     }
 
-    //Consulta e atualiza a sequência de NSU, integrando com ControleNsuService.
+    /**
+     * Consulta e atualiza a sequência de NSU, integrando com ControleNsuService
+     */
     @Transactional
     public BigInteger consultarNSU(String cnpj, String ambiente) throws NfeException {
         logger.info("Consultando NSU para CNPJ: {}, Ambiente: {}", cnpj, ambiente);
@@ -1499,7 +1519,9 @@ public class NotaFiscalService {
         return controleNsuService.consultarUltimoNSU(cnpj);
     }
 
-    //Envia um evento manual (ex.: manifestação do destinatário, EPEC).
+    /**
+     * Envia um evento manual (ex.: manifestação do destinatário, EPEC)
+     */
     @Transactional
     public String enviarEventoManual(String xmlEvento, ServicosEnum tipoEvento, boolean valida, boolean assina, ConfiguracoesNfe config) throws NfeException {
         logger.info("Enviando evento manual, tipo: {}", tipoEvento);
@@ -1551,7 +1573,9 @@ public class NotaFiscalService {
         return xmlRetorno;
     }
 
-    //Extrai a chave de evento do XML (métudo auxiliar).
+    /**
+     * Extrai a chave de evento do XML (métudo auxiliar)
+     */
     private String extrairChaveEvento(String xml) {
         // Implementação simplificada para extrair chNFe do XML
         int index = xml.indexOf("<chNFe>");
@@ -1561,6 +1585,9 @@ public class NotaFiscalService {
         return "desconhecido-" + System.currentTimeMillis();
     }
 
+    /**
+     * Consulta Notas Emitidas noMês corrente
+     */
     public List<NotaFiscal> consultarNotasMesCorrente(String documentoEmitente) {
         YearMonth anoMesAtual = YearMonth.now();
         int ano = anoMesAtual.getYear();
@@ -1569,10 +1596,16 @@ public class NotaFiscalService {
         return notaFiscalRepository.consultarNotasMesCorrente(ano, mes, documentoEmitente);
     }
 
+    /**Consulta Notas Num Determinado Período
+     *
+     */
     public List<NotaFiscal> consultarNotasPorPeriodo(String documentoEmitente, LocalDate dataInicial, LocalDate dataFinal) {
         return notaFiscalRepository.consultarNotasPorPeriodo(dataInicial, dataFinal, documentoEmitente);
     }
 
+    /**
+     * Determina o próximo número sequencial para emissão da Nota Fiscal
+     */
     private String determinarProximoSequencial(String chave) throws NfeException {
         List<XmlNotaFiscal> eventos = xmlNotaFiscalRepository.findByChaveAcessoStartingWith(chave + "-cce");
         int ultimoSequencial = eventos.stream()
@@ -1590,6 +1623,9 @@ public class NotaFiscalService {
         return String.format("%02d", proximoSequencial);
     }
 
+    /**
+     * Salva a Nota Fiscal No Banco de Dados
+     */
     private void salvaNotaFiscal(NotaFiscalDto notaFiscalDto){
         LocalDate dataAtual = LocalDate.now();
         notaFiscalDto.setId(null);
@@ -1598,6 +1634,9 @@ public class NotaFiscalService {
         notaFiscalRepository.save(notaFiscal);
     }
 
+    /**
+     * Salva o XML Gerado No Banco de Dados
+     */
     private void salvarXmlEmArquivo(String xml, String chave) throws NfeException {
         try {
             String dataAtual = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -1622,6 +1661,9 @@ public class NotaFiscalService {
         }
     }
 
+    /**
+     * Realiza o Lançamento Do Título da Nota Fiscal nos Lançamentos de Conta a Receber
+     */
     private void lancaContasReceber(NotaFiscalDto notaFiscalDto) {
         if (notaFiscalDto.getDuplicatas() == null || notaFiscalDto.getDuplicatas().isEmpty()) {
             logger.info("Nenhuma duplicata encontrada para a nota fiscal {}", notaFiscalDto.getNumero());
@@ -1629,11 +1671,13 @@ public class NotaFiscalService {
         }
 
         for (NotaFiscalDuplicatasDto duplicata : notaFiscalDto.getDuplicatas()) {
+            LocalDate dataAtual = LocalDate.now();
             ContaReceberDto contaReceberDto = new ContaReceberDto();
 
             contaReceberDto.setId(null);
             contaReceberDto.setDescricao("Venda Realizada: Parcela " + duplicata.getNumeroDuplicata() + " - Nota Fiscal #" + notaFiscalDto.getNumero());
-            contaReceberDto.setCategoria(null);
+            contaReceberDto.setCategoria("Recebimento Venda Nfe");
+            contaReceberDto.setDataEmissao(Date.valueOf(dataAtual));
             contaReceberDto.setRecebidoDe(notaFiscalDto.getRazaoSocialDestinatario());
             contaReceberDto.setNumeroDocumento(notaFiscalDto.getNumero() + "/" + duplicata.getNumeroDuplicata());
             contaReceberDto.setRepete("Não");

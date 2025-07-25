@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -79,7 +80,7 @@ public class NotaFiscalDto implements Serializable {
     private	String	telefoneDestinatario;
     private	String	telefoneEmitente;
     private	String	tipo;
-    private String tipoAmbiente;
+    private String  tipoAmbiente;
     private	String	ufDestinatario;
     private	String	ufEmitente;
     private	BigDecimal	valorBaseCalculo;

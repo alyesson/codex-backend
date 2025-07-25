@@ -228,7 +228,7 @@ public class NotaFiscal implements Serializable {
     @Column(length = 45)
     private String dataHoraProtocolo;
 
-    @Column(length = 45)
+    @Lob
     private String motivoProtocolo;
 
     /* ------------ RELACIONAMENTO ------------ */

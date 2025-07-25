@@ -168,8 +168,7 @@ public class NotaFiscalResource {
      * Consulta o status de serviço da SEFAZ.
      */
     @GetMapping("/status")
-    public ResponseEntity<TRetConsStatServ> consultarStatusServico(
-            @RequestParam String cnpj) throws Exception {
+    public ResponseEntity<TRetConsStatServ> consultarStatusServico(@RequestParam String cnpj) throws Exception {
 
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
