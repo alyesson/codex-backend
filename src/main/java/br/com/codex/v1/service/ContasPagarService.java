@@ -1,6 +1,8 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.dto.ContaPagarDto;
+import br.com.codex.v1.domain.dto.GrupoDto;
+import br.com.codex.v1.domain.estoque.Grupo;
 import br.com.codex.v1.domain.financeiro.ContaPagar;
 import br.com.codex.v1.domain.repository.ContaPagarRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
@@ -27,7 +29,14 @@ public class ContasPagarService {
         return contaPagarRepository.save(contaPagar);
     }
 
-    public void update(Long id, String situacao) {
+    public ContaPagar update(Long id, ContaPagarDto contapagarDto) {
+        contapagarDto.setId(id);
+        ContaPagar obj = findById(id);
+        obj = new ContaPagar(contapagarDto);
+        return contaPagarRepository.save(obj);
+    }
+
+    public void updateSituacao(Long id, String situacao) {
         contaPagarRepository.saveSituacao(id, situacao);
     }
 

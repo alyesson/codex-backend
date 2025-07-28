@@ -31,8 +31,15 @@ public class ContasPagarResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'FINANCEIRO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ContaPagarDto> update(@PathVariable Long id, @RequestParam String situacao){
-        contasPagarService.update(id, situacao);
+    public ResponseEntity<ContaPagarDto> update(@PathVariable Long id, @RequestBody ContaPagarDto contaPagarDto){
+        ContaPagar objContapagar = contasPagarService.update(id, contaPagarDto);
+        return ResponseEntity.ok().body(new ContaPagarDto(objContapagar));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'FINANCEIRO')")
+    @PutMapping(value = "/confirma_pagamento/{id}")
+    public ResponseEntity<ContaPagarDto> updateSituacao(@PathVariable Long id, @RequestParam String situacao){
+        contasPagarService.updateSituacao(id, situacao);
         return ResponseEntity.ok().build();
     }
 
