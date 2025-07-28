@@ -103,6 +103,9 @@ public class NotaFiscalService {
     @Autowired
     private ContaReceberRepository contaReceberRepository;
 
+    @Autowired
+    private ImportarXmlService importarXmlService;
+
     private Integer ambienteNota, codigoCnf;
     private String estadoUf;
 
@@ -150,7 +153,6 @@ public class NotaFiscalService {
             logger.info("Caminho dos schemas corrigido: {}", schemasPath);
 
             return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, schemasPath);
-            //return ConfiguracoesNfe.criarConfiguracoes(EstadosEnum.valueOf(cert.get().getUf()), ambienteEnum, certificado, "/Users/alyessonsousa/Desktop/Projetos/Codex Web/V_1.0.0/codex-backend/src/main/resources/schemas");
         } catch (Exception e) {
             logger.error("Erro ao configurar certificado", e);
             throw new NfeException("Falha na configuração do certificado", e);
@@ -371,7 +373,12 @@ public class NotaFiscalService {
             prod.setUTrib(item.getUnidadeTributacao());
             prod.setQTrib(item.getQuantidadeTributacao() != null ? item.getQuantidadeTributacao().toString() : "0");
             prod.setVUnTrib(formatar(item.getValorUnitarioTributacao()));
-            prod.setVFrete(formatar(dto.getValorFrete().divide(new BigDecimal(dto.getItens().size()),2, RoundingMode.HALF_UP)));
+            BigDecimal valorFreteTotal = dto.getValorFrete();
+            if (valorFreteTotal.compareTo(BigDecimal.ZERO) == 0) {
+            } else {
+                BigDecimal fretePorItem = valorFreteTotal.divide(new BigDecimal(dto.getItens().size()), 2, RoundingMode.HALF_UP);
+                prod.setVFrete(formatar(fretePorItem));
+            }
             prod.setIndTot("1");
 
             det.setProd(prod);
@@ -1112,7 +1119,12 @@ public class NotaFiscalService {
         icmsTot.setVFCPST(formatar(dto.getValorFcpSt()));
         icmsTot.setVFCPSTRet(formatar(dto.getValorFcpStRetido()));
         icmsTot.setVProd(formatar(dto.getValorProdutos()));
-        icmsTot.setVFrete(String.valueOf(dto.getValorFrete()));
+        BigDecimal valorFrete = dto.getValorFrete();
+        if (valorFrete == null || valorFrete.compareTo(BigDecimal.ZERO) == 0) {
+            icmsTot.setVFrete("0"); // Envia "0" em vez de "0.00"
+        } else {
+            icmsTot.setVFrete(valorFrete.stripTrailingZeros().toPlainString());
+        }
         icmsTot.setVSeg(formatar(dto.getValorSeguro()));
         icmsTot.setVDesc(formatar(dto.getValorDesconto()));
         icmsTot.setVII(formatar(dto.getValorIi()));
@@ -1284,7 +1296,6 @@ public class NotaFiscalService {
             infProt.setDigVal(retorno.getProtNFe().getInfProt().getDigVal());
             infProt.setCStat(retorno.getProtNFe().getInfProt().getCStat());
             infProt.setXMotivo(retorno.getProtNFe().getInfProt().getXMotivo());
-
             protNFe.setInfProt(infProt);
 
             // Gera e salva o XML completo (nfeProc)

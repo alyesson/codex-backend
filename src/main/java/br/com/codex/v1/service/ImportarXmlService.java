@@ -920,8 +920,8 @@ public class ImportarXmlService {
 
         } else {
             // Nota de SAÍDA (venda feita pela empresa)
-            contaDebito = contasService.findByNome("Clientes");
-            contaCredito = contasService.findByNome("Receita Bruta De Vendas E Mercadorias");
+            contaDebito = contasService.findByNome(importarXml.getRazaoSocialDestinatario());
+            contaCredito = contasService.findByNome(importarXml.getRazaoSocialEmitente());
             historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
 
             String complemento = "NF " + importarXml.getNumero()
