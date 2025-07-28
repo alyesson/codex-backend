@@ -2,6 +2,12 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.contabilidade.*;
+import br.com.codex.v1.domain.dto.ContaPagarDto;
+import br.com.codex.v1.domain.dto.ContaReceberDto;
+import br.com.codex.v1.domain.dto.NotaFiscalDto;
+import br.com.codex.v1.domain.dto.NotaFiscalDuplicatasDto;
+import br.com.codex.v1.domain.financeiro.ContaPagar;
+import br.com.codex.v1.domain.financeiro.ContaReceber;
 import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.codex.v1.domain.contabilidade.ImportarXml;
@@ -48,7 +54,10 @@ public class ImportarXmlService {
     LancamentoContabilRepository lancamentoContabilRepository;
 
     @Autowired
-    private EmpresaRepository empresaRepository;
+    EmpresaRepository empresaRepository;
+
+    @Autowired
+    ContaPagarRepository contaPagarRepository;
 
     String numeroDaNota;
     String dataEmissaoNota;
@@ -260,6 +269,7 @@ public class ImportarXmlService {
             salvarNotaFiscal(nota);
             salvarNotaFiscalItens(itens);
             lancamentoContabil(nota);
+            lancaContasPagar(nota);
             logger.info("NF-e {} importada com sucesso", nota.getChave());
         } catch (JAXBException e) {
             logger.error("Erro ao parsear XML", e);
@@ -467,6 +477,7 @@ public class ImportarXmlService {
         salvarNotaFiscal(nota);
         salvarNotaFiscalItens(itens);
         lancamentoContabil(nota);
+        lancaContasPagar(nota);
 
         return nota;
     }
@@ -964,4 +975,62 @@ public class ImportarXmlService {
         return objNotaId.orElseThrow(() -> new ObjectNotFoundException("Nota fiscal não encontrada para o emissor "+razaoSocialEmitente));
     }
 
+    /**
+     * Realiza o Lançamento Do Título da Nota Fiscal nos Lançamentos de Conta a Receber
+     */
+    private void lancaContasPagar(ImportarXml importarXml) {
+
+        try {
+            // Primeiro verifica se é uma nota de entrada (compra)
+            if (!isNotaEntrada(importarXml)) {
+                logger.info("Nota fiscal {} é de saída (venda), não será lançada como conta a pagar", importarXml.getNumero());
+                return;
+            }
+
+            // Obtém as duplicatas do XML original
+            TNfeProc nfe = XmlNfeUtil.xmlToObject(importarXml.getXml(), TNfeProc.class);
+
+            if (nfe.getNFe().getInfNFe().getCobr() == null ||
+                    nfe.getNFe().getInfNFe().getCobr().getDup() == null ||
+                    nfe.getNFe().getInfNFe().getCobr().getDup().isEmpty()) {
+                logger.info("Nota fiscal {} não possui duplicatas para lançar como contas a pagar", importarXml.getNumero());
+                return;
+            }
+
+            // Obtém a lista de duplicatas
+            List<TNFe.InfNFe.Cobr.Dup> duplicatas = nfe.getNFe().getInfNFe().getCobr().getDup();
+            int quantidadeParcelas = duplicatas.size();
+
+            for (TNFe.InfNFe.Cobr.Dup duplicata : duplicatas) {
+                LocalDate dataAtual = LocalDate.now();
+                ContaPagarDto contaPagarDto = new ContaPagarDto();
+
+                contaPagarDto.setId(null);
+                contaPagarDto.setDescricao("Compra Realizada: Parcela " + duplicata.getNDup() + " - Nota Fiscal #" + importarXml.getNumero());
+                contaPagarDto.setCategoria("Despesa Variável");
+                contaPagarDto.setDataEmissao(Date.valueOf(dataAtual));
+                contaPagarDto.setPagoA(importarXml.getRazaoSocialDestinatario());
+                contaPagarDto.setNumeroDocumento(importarXml.getNumero() + "/" + duplicata.getNDup());
+                contaPagarDto.setRepete("Não");
+                contaPagarDto.setDataVencimento(Date.valueOf(LocalDate.parse(duplicata.getDVenc().substring(0, 10))));
+                contaPagarDto.setDataCompetencia(Date.valueOf(importarXml.getEmissao()));
+                contaPagarDto.setQuantidadeParcelas(quantidadeParcelas);
+                contaPagarDto.setValor(new BigDecimal(duplicata.getVDup()));
+                contaPagarDto.setSituacao("A Pagar");
+                contaPagarDto.setMetodoPagamento(null);
+
+                ContaPagar contaPagar = new ContaPagar(contaPagarDto);
+                contaPagarRepository.save(contaPagar);
+
+                logger.info("Lançada conta a pagar {}/{} da nota {} no valor de {}",
+                        duplicata.getNDup(), quantidadeParcelas, importarXml.getNumero(), duplicata.getVDup());
+            }
+        } catch (JAXBException e) {
+            logger.error("Erro ao parsear XML para obter duplicatas da nota {}: {}",
+                    importarXml.getNumero(), e.getMessage());
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao lançar contas a pagar para nota {}: {}",
+                    importarXml.getNumero(), e.getMessage());
+        }
+    }
 }
