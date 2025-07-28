@@ -188,7 +188,8 @@ public class NotaFiscalService {
 
         } catch (Exception e) {
             logger.error("Erro ao emitir NF-e", e);
-            throw e;
+            throw new IllegalArgumentException("Erro ao emitir NF-e: "+e);
+            //throw e;
         }
     }
 
@@ -1304,9 +1305,10 @@ public class NotaFiscalService {
             salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
             salvarXmlEmArquivo(xml, dto.getChave());
             lancaContasReceber(dto);
+            importarXmlService.obterXmlCompletoAutomatico(xml);
         } catch (Exception e) {
             logger.error("Erro ao converter protNFe", e);
-            throw new NfeException("Erro ao processar retorno da SEFAZ", e);
+            throw new NfeException("Erro ao processar retorno da SEFAZ: ", e);
         }
 
         return dto;

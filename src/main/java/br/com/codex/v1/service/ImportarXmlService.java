@@ -1,5 +1,6 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.contabilidade.*;
 import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
@@ -45,6 +46,9 @@ public class ImportarXmlService {
 
     @Autowired
     LancamentoContabilRepository lancamentoContabilRepository;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     String numeroDaNota;
     String dataEmissaoNota;
@@ -894,6 +898,23 @@ public class ImportarXmlService {
         return importarXmlRepository.findAllEntradaPeriodo(dataInicial, dataFinal);
     }
 
+    /**
+     * Aqui verifica se a nota é emitida por mim ou por outra empresa
+     */
+    private boolean isNotaEntrada(ImportarXml importarXml) {
+        // Verifica se a nota foi emitida por você (comparando CNPJ)
+        String cnpjEmitente = importarXml.getDocumentoEmitente();
+        Optional<Empresa> minhaEmpresa  = empresaRepository.findByCnpj(cnpjEmitente);
+
+        boolean foiEmitidaPorVoce = minhaEmpresa .isPresent();
+
+        // - Se foi emitida por você: tpNF=1 é SAÍDA (venda) => retorna false (não é entrada)
+        // - Se foi emitida por outro: tpNF=1 é ENTRADA (compra) => retorna true
+        return foiEmitidaPorVoce ?
+                "0".equals(importarXml.getTipo()) :  // Se sua nota é tpNF=0 (entrada para você)
+                "1".equals(importarXml.getTipo());   // Se nota de terceiro é tpNF=1 (entrada para você)
+    }
+
     private LancamentoContabil lancamentoContabil(ImportarXml importarXml) {
 
         Contas contaDebito;
@@ -905,9 +926,9 @@ public class ImportarXmlService {
         lancamento.setValor(importarXml.getValorTotal());
 
         // Verifica se a nota é de entrada (compra): tpNF = 1 significa saída do fornecedor, entrada para a empresa
-        boolean isNotaEntrada = "1".equals(importarXml.getTipo());
+        boolean isEntrada = isNotaEntrada(importarXml);
 
-        if (isNotaEntrada) {
+        if (isEntrada) {
             // Nota de ENTRADA (compra feita pela empresa)
             contaDebito = contasService.findByNome("Estoque");
             contaCredito = contasService.findByNome(importarXml.getRazaoSocialEmitente());
@@ -921,7 +942,7 @@ public class ImportarXmlService {
         } else {
             // Nota de SAÍDA (venda feita pela empresa)
             contaDebito = contasService.findByNome(importarXml.getRazaoSocialDestinatario());
-            contaCredito = contasService.findByNome(importarXml.getRazaoSocialEmitente());
+            contaCredito = contasService.findByNome("Receita Bruta De Vendas E Mercadorias");
             historico = historicoPadraoService.findByDescricao("Venda de Mercadorias");
 
             String complemento = "NF " + importarXml.getNumero()
