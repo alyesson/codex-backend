@@ -1017,7 +1017,7 @@ public class ImportarXmlService {
                 contaPagarDto.setQuantidadeParcelas(quantidadeParcelas);
                 contaPagarDto.setValor(new BigDecimal(duplicata.getVDup()));
                 contaPagarDto.setSituacao("A Pagar");
-                contaPagarDto.setMetodoPagamento(null);
+                contaPagarDto.setMetodoPagamento("15");
 
                 ContaPagar contaPagar = new ContaPagar(contaPagarDto);
                 contaPagarRepository.save(contaPagar);
