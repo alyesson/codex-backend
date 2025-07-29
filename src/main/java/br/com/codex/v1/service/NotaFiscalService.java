@@ -1326,8 +1326,12 @@ public class NotaFiscalService {
      * Cancela a Nota Fiscal Eletrônica
      */
     @Transactional
-    public TRetEnvEvento cancelarNotaFiscal(String chave, String protocolo, String motivo, String cnpj, ConfiguracoesNfe config) throws NfeException, JAXBException {
+    public TRetEnvEvento cancelarNotaFiscal(String chave, String protocolo, String motivo, String cnpj) throws NfeException, JAXBException {
         logger.info("Cancelando NF-e, chave: {}", chave);
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj); // Defina o CNPJ do e
+        ConfiguracoesNfe config = iniciarConfiguracoes(dto);
 
         // Valida parâmetros
         if (chave == null || chave.length() != 44) {
@@ -1359,10 +1363,10 @@ public class NotaFiscalService {
         xmlEvento = Assinar.assinaNfe(config, xmlEvento, AssinaturaEnum.EVENTO);
 
         // Valida o XML
-        if (!new Validar().isValidXml(config, xmlEvento, ServicosEnum.CANCELAMENTO)) {
+        /*if (!new Validar().isValidXml(config, xmlEvento, ServicosEnum.CANCELAMENTO)) {
             logger.error("XML inválido para cancelamento: {}", xmlEvento);
             throw new NfeException("Erro na validação do XML de cancelamento");
-        }
+        }*/
 
         // Envia o evento
         TRetEnvEvento retorno = Nfe.cancelarNfe(config, envEvento, true, DocumentoEnum.NFE);

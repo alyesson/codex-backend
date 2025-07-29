@@ -127,7 +127,7 @@ public class NotaFiscalResource {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
         ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-        br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento retorno = notaFiscalService.cancelarNotaFiscal(chave, protocolo, motivo, cnpj, config);
+        br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento retorno = notaFiscalService.cancelarNotaFiscal(chave, protocolo, motivo, cnpj);
 
         return ResponseEntity.ok(retorno);
     }
