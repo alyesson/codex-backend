@@ -1,6 +1,8 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.dto.ContaPagarDto;
 import br.com.codex.v1.domain.dto.ContaReceberDto;
+import br.com.codex.v1.domain.financeiro.ContaPagar;
 import br.com.codex.v1.domain.financeiro.ContaReceber;
 import br.com.codex.v1.service.ContasReceberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,15 @@ public class ContasReceberResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'FINANCEIRO')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ContaReceberDto> update(@PathVariable Long id, @RequestParam String situacao){
-        contasReceberService.update(id, situacao);
+    public ResponseEntity<ContaReceberDto> update(@PathVariable Long id, @RequestBody ContaReceberDto contaReceberDto){
+        ContaReceber objContapreceber = contasReceberService.update(id, contaReceberDto);
+        return ResponseEntity.ok().body(new ContaReceberDto(objContapreceber));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'FINANCEIRO')")
+    @PutMapping(value = "/confirma_recebimento/{id}")
+    public ResponseEntity<ContaReceberDto> updateSituacao(@PathVariable Long id, @RequestParam String situacao){
+        contasReceberService.updateSituacao(id, situacao);
         return ResponseEntity.ok().build();
     }
 

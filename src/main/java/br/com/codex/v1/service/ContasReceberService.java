@@ -27,7 +27,14 @@ public class ContasReceberService {
         return contaReceberRepository.save(contaReceber);
     }
 
-    public void update(Long id, String situacao) {
+    public ContaReceber update(Long id, ContaReceberDto contaReceberDto) {
+        contaReceberDto.setId(id);
+        ContaReceber obj = findById(id);
+        obj = new ContaReceber(contaReceberDto);
+        return contaReceberRepository.save(obj);
+    }
+
+    public void updateSituacao(Long id, String situacao) {
         contaReceberRepository.saveSituacao(id, situacao);
     }
 
