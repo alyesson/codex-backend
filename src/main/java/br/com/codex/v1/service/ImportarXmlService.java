@@ -990,11 +990,19 @@ public class ImportarXmlService {
             // Obtém as duplicatas do XML original
             TNfeProc nfe = XmlNfeUtil.xmlToObject(importarXml.getXml(), TNfeProc.class);
 
+            // Verifica se há informações de pagamento válidas
+            if (nfe.getNFe().getInfNFe().getPag() == null ||
+                    nfe.getNFe().getInfNFe().getPag().getDetPag() == null ||
+                    nfe.getNFe().getInfNFe().getPag().getDetPag().isEmpty()) {
+
+                logger.info("Nota fiscal {} não possui informações de pagamento válidas", importarXml.getNumero());
+            }
+
             if (nfe.getNFe().getInfNFe().getCobr() == null ||
                     nfe.getNFe().getInfNFe().getCobr().getDup() == null ||
                     nfe.getNFe().getInfNFe().getCobr().getDup().isEmpty()) {
                 logger.info("Nota fiscal {} não possui duplicatas para lançar como contas a pagar", importarXml.getNumero());
-                return;
+                    return;
             }
 
             // Obtém a lista de duplicatas
