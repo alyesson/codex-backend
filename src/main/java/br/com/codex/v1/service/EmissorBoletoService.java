@@ -64,24 +64,16 @@ public class EmissorBoletoService {
     private File emitirBoletoPorBanco(EmissorBoletoDto dto) throws ParseException {
         BancosSuportados banco = BancosSuportados.valueOf(dto.getBancoCedente());
 
-        switch (banco) {
-            case BANCO_DO_BRASIL:
-                return emitirBancoDoBrasil(dto);
-            case BANCO_DO_NORDESTE_DO_BRASIL:
-                return emitirBancoDoNordeste(dto);
-            case CAIXA_ECONOMICA_FEDERAL:
-                return emitirCaixaEconomica(dto);
-            case BANCO_BRADESCO:
-                return emitirBradesco(dto);
-            case BANCO_ITAU:
-                return emitirItau(dto);
-            case BANCO_SAFRA:
-                return emitirSafra(dto);
-            case BANCO_SANTANDER:
-                return emitirSantander(dto);
-            default:
-                throw new IllegalArgumentException("Banco não suportado: " + banco);
-        }
+        return switch (banco) {
+            case BANCO_DO_BRASIL -> emitirBancoDoBrasil(dto);
+            case BANCO_DO_NORDESTE_DO_BRASIL -> emitirBancoDoNordeste(dto);
+            case CAIXA_ECONOMICA_FEDERAL -> emitirCaixaEconomica(dto);
+            case BANCO_BRADESCO -> emitirBradesco(dto);
+            case BANCO_ITAU -> emitirItau(dto);
+            case BANCO_SAFRA -> emitirSafra(dto);
+            case BANCO_SANTANDER -> emitirSantander(dto);
+            default -> throw new IllegalArgumentException("Banco não suportado: " + banco);
+        };
     }
 
     public List<EmissorBoleto> findAllBoletosPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
