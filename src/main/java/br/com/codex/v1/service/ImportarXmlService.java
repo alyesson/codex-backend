@@ -1023,7 +1023,7 @@ public class ImportarXmlService {
                             duplicata.getNDup(), quantidadeParcelas, importarXml.getNumero(), duplicata.getVDup());
                 }
             }else{
-                // Obtém a lista de duplicatas
+                // Obtém a lista de pagamentos
                 List<TNFe.InfNFe.Pag.DetPag> pagamentos = nfe.getNFe().getInfNFe().getPag().getDetPag();
                 int quantidadeParcelas = pagamentos.size();
 

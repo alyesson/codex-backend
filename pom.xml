@@ -119,6 +119,12 @@
 			<artifactId>axis</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.braully/bpp-cobranca -->
+		<dependency>
+			<groupId>io.github.braully</groupId>
+			<artifactId>bpp-cobranca</artifactId>
+			<version>1.0.5</version>
+		</dependency>
 	</dependencies>
 
 	<build>
