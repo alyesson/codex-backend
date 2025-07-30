@@ -990,49 +990,70 @@ public class ImportarXmlService {
             // Obtém as duplicatas do XML original
             TNfeProc nfe = XmlNfeUtil.xmlToObject(importarXml.getXml(), TNfeProc.class);
 
-            // Verifica se há informações de pagamento válidas
-            if (nfe.getNFe().getInfNFe().getPag() == null ||
-                    nfe.getNFe().getInfNFe().getPag().getDetPag() == null ||
-                    nfe.getNFe().getInfNFe().getPag().getDetPag().isEmpty()) {
+            // Verifica se há informações de duplicatas válidas
+            if (nfe.getNFe().getInfNFe().getCobr() != null || nfe.getNFe().getInfNFe().getCobr().getDup() != null) {
+                logger.info("Nota fiscal {}  possui duplicatas para lançar como contas a pagar", importarXml.getNumero());
 
-                logger.info("Nota fiscal {} não possui informações de pagamento válidas", importarXml.getNumero());
+                // Obtém a lista de duplicatas
+                List<TNFe.InfNFe.Cobr.Dup> duplicatas = nfe.getNFe().getInfNFe().getCobr().getDup();
+                int quantidadeParcelas = duplicatas.size();
+
+                for (TNFe.InfNFe.Cobr.Dup duplicata : duplicatas) {
+                    LocalDate dataAtual = LocalDate.now();
+                    ContaPagarDto contaPagarDto = new ContaPagarDto();
+
+                    contaPagarDto.setId(null);
+                    contaPagarDto.setDescricao("Compra Realizada: Parcela " + duplicata.getNDup() + " - Nota Fiscal #" + importarXml.getNumero());
+                    contaPagarDto.setCategoria("Despesa Variável");
+                    contaPagarDto.setDataEmissao(Date.valueOf(dataAtual));
+                    contaPagarDto.setPagoA(importarXml.getRazaoSocialDestinatario());
+                    contaPagarDto.setNumeroDocumento(importarXml.getNumero() + "/" + duplicata.getNDup());
+                    contaPagarDto.setRepete("Não");
+                    contaPagarDto.setDataVencimento(Date.valueOf(LocalDate.parse(duplicata.getDVenc().substring(0, 10))));
+                    contaPagarDto.setDataCompetencia(Date.valueOf(importarXml.getEmissao()));
+                    contaPagarDto.setQuantidadeParcelas(quantidadeParcelas);
+                    contaPagarDto.setValor(new BigDecimal(duplicata.getVDup()));
+                    contaPagarDto.setSituacao("A Pagar");
+                    contaPagarDto.setMetodoPagamento("15");
+
+                    ContaPagar contaPagar = new ContaPagar(contaPagarDto);
+                    contaPagarRepository.save(contaPagar);
+
+                    logger.info("Lançada conta a pagar {}/{} da nota {} no valor de {}",
+                            duplicata.getNDup(), quantidadeParcelas, importarXml.getNumero(), duplicata.getVDup());
+                }
+            }else{
+                // Obtém a lista de duplicatas
+                List<TNFe.InfNFe.Pag.DetPag> pagamentos = nfe.getNFe().getInfNFe().getPag().getDetPag();
+                int quantidadeParcelas = pagamentos.size();
+
+                for (TNFe.InfNFe.Pag.DetPag pagamento : pagamentos) {
+                    LocalDate dataAtual = LocalDate.now();
+                    ContaPagarDto contaPagarDto = new ContaPagarDto();
+
+                    contaPagarDto.setId(null);
+                    contaPagarDto.setDescricao("Compra Realizada: Parcela " + 1 + " - Nota Fiscal #" + importarXml.getNumero());
+                    contaPagarDto.setCategoria("Despesa Variável");
+                    contaPagarDto.setDataEmissao(Date.valueOf(dataAtual));
+                    contaPagarDto.setPagoA(importarXml.getRazaoSocialDestinatario());
+                    contaPagarDto.setNumeroDocumento(importarXml.getNumero() + "/" + 1);
+                    contaPagarDto.setRepete("Não");
+                    contaPagarDto.setDataVencimento(null);
+                    contaPagarDto.setDataCompetencia(Date.valueOf(importarXml.getEmissao()));
+                    contaPagarDto.setQuantidadeParcelas(quantidadeParcelas);
+                    contaPagarDto.setValor(new BigDecimal(pagamento.getVPag()));
+                    contaPagarDto.setSituacao("A Pagar");
+                    contaPagarDto.setMetodoPagamento("15");
+
+                    ContaPagar contaPagar = new ContaPagar(contaPagarDto);
+                    contaPagarRepository.save(contaPagar);
+
+                    logger.info("Realização de lançamento de conta a pagar {}/{} da nota {} no valor de {}",
+                            1, quantidadeParcelas, importarXml.getNumero(), pagamento.getVPag());
+                }
             }
 
-            if (nfe.getNFe().getInfNFe().getCobr() == null ||
-                    nfe.getNFe().getInfNFe().getCobr().getDup() == null ||
-                    nfe.getNFe().getInfNFe().getCobr().getDup().isEmpty()) {
-                logger.info("Nota fiscal {} não possui duplicatas para lançar como contas a pagar", importarXml.getNumero());
-                    return;
-            }
 
-            // Obtém a lista de duplicatas
-            List<TNFe.InfNFe.Cobr.Dup> duplicatas = nfe.getNFe().getInfNFe().getCobr().getDup();
-            int quantidadeParcelas = duplicatas.size();
-
-            for (TNFe.InfNFe.Cobr.Dup duplicata : duplicatas) {
-                LocalDate dataAtual = LocalDate.now();
-                ContaPagarDto contaPagarDto = new ContaPagarDto();
-
-                contaPagarDto.setId(null);
-                contaPagarDto.setDescricao("Compra Realizada: Parcela " + duplicata.getNDup() + " - Nota Fiscal #" + importarXml.getNumero());
-                contaPagarDto.setCategoria("Despesa Variável");
-                contaPagarDto.setDataEmissao(Date.valueOf(dataAtual));
-                contaPagarDto.setPagoA(importarXml.getRazaoSocialDestinatario());
-                contaPagarDto.setNumeroDocumento(importarXml.getNumero() + "/" + duplicata.getNDup());
-                contaPagarDto.setRepete("Não");
-                contaPagarDto.setDataVencimento(Date.valueOf(LocalDate.parse(duplicata.getDVenc().substring(0, 10))));
-                contaPagarDto.setDataCompetencia(Date.valueOf(importarXml.getEmissao()));
-                contaPagarDto.setQuantidadeParcelas(quantidadeParcelas);
-                contaPagarDto.setValor(new BigDecimal(duplicata.getVDup()));
-                contaPagarDto.setSituacao("A Pagar");
-                contaPagarDto.setMetodoPagamento("15");
-
-                ContaPagar contaPagar = new ContaPagar(contaPagarDto);
-                contaPagarRepository.save(contaPagar);
-
-                logger.info("Lançada conta a pagar {}/{} da nota {} no valor de {}",
-                        duplicata.getNDup(), quantidadeParcelas, importarXml.getNumero(), duplicata.getVDup());
-            }
         } catch (JAXBException e) {
             logger.error("Erro ao parsear XML para obter duplicatas da nota {}: {}",
                     importarXml.getNumero(), e.getMessage());
