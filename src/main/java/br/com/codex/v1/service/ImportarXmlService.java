@@ -1006,7 +1006,7 @@ public class ImportarXmlService {
                     contaPagarDto.setDescricao("Compra Realizada: Parcela " + duplicata.getNDup() + " - Nota Fiscal #" + importarXml.getNumero());
                     contaPagarDto.setCategoria("Despesa Variável");
                     contaPagarDto.setDataEmissao(Date.valueOf(dataAtual));
-                    contaPagarDto.setPagoA(importarXml.getRazaoSocialDestinatario());
+                    contaPagarDto.setPagoA(importarXml.getRazaoSocialEmitente());
                     contaPagarDto.setNumeroDocumento(importarXml.getNumero() + "/" + duplicata.getNDup());
                     contaPagarDto.setRepete("Não");
                     contaPagarDto.setDataVencimento(Date.valueOf(LocalDate.parse(duplicata.getDVenc().substring(0, 10))));
@@ -1035,7 +1035,7 @@ public class ImportarXmlService {
                     contaPagarDto.setDescricao("Compra Realizada: Parcela " + 1 + " - Nota Fiscal #" + importarXml.getNumero());
                     contaPagarDto.setCategoria("Despesa Variável");
                     contaPagarDto.setDataEmissao(Date.valueOf(dataAtual));
-                    contaPagarDto.setPagoA(importarXml.getRazaoSocialDestinatario());
+                    contaPagarDto.setPagoA(importarXml.getRazaoSocialEmitente());
                     contaPagarDto.setNumeroDocumento(importarXml.getNumero() + "/" + 1);
                     contaPagarDto.setRepete("Não");
                     contaPagarDto.setDataVencimento(null);
