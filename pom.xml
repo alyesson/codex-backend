@@ -125,6 +125,12 @@
 			<artifactId>bpp-cobranca</artifactId>
 			<version>1.0.5</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/br.com.swconsultoria/java-danfe -->
+		<dependency>
+			<groupId>br.com.swconsultoria</groupId>
+			<artifactId>java-danfe</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
