@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -38,7 +39,7 @@ public class EmissorBoletoDto implements Serializable {
     protected String conta;
     @NotBlank(message = "Convênio não pode ficar em branco")
     protected String convenio;
-    @NotBlank(message = "Data do vencimento não pode estar em branco")
+    @NotNull(message = "Data do vencimento não pode estar em branco")
     protected LocalDate dataVencimento;
     protected String demonstrativo;
     protected String digitoAgencia;
