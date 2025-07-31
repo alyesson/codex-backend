@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.contabilidade.ImportarXmlItens;
+import br.com.codex.v1.domain.fiscal.ImportarXmlItens;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

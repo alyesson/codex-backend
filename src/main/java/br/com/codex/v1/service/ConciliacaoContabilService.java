@@ -2,7 +2,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.dto.ConciliacaoContabilDto;
-import br.com.codex.v1.domain.contabilidade.ImportarXml;
+import br.com.codex.v1.domain.fiscal.ImportarXml;
 import br.com.codex.v1.domain.repository.LancamentoContabilRepository;
 import br.com.codex.v1.domain.repository.ImportarXmlRepository;
 import org.springframework.beans.factory.annotation.Autowired;

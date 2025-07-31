@@ -1,8 +1,6 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.compras.Fornecedores;
-import br.com.codex.v1.domain.contabilidade.ImportarXml;
-import br.com.codex.v1.domain.dto.FornecedoresDto;
+import br.com.codex.v1.domain.fiscal.ImportarXml;
 import br.com.codex.v1.domain.dto.ImportarXmlDto;
 import br.com.codex.v1.domain.repository.ImportarXmlRepository;
 import br.com.codex.v1.service.ImportarXmlService;

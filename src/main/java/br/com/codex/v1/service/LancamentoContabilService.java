@@ -2,7 +2,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.contabilidade.Contas;
 import br.com.codex.v1.domain.contabilidade.HistoricoPadrao;
-import br.com.codex.v1.domain.contabilidade.ImportarXml;
+import br.com.codex.v1.domain.fiscal.ImportarXml;
 import br.com.codex.v1.domain.contabilidade.LancamentoContabil;
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
 import br.com.codex.v1.domain.repository.ContasRepository;

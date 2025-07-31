@@ -1,6 +1,5 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.contabilidade.ImportarXml;
 import br.com.codex.v1.domain.financeiro.ContaPagar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 public interface ContaPagarRepository extends JpaRepository<ContaPagar, Long> {
 

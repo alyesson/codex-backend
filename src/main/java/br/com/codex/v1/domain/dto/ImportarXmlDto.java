@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.contabilidade.ImportarXml;
+import br.com.codex.v1.domain.fiscal.ImportarXml;
 
 import java.math.BigDecimal;
 import java.sql.Date;

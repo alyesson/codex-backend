@@ -1,4 +1,4 @@
-package br.com.codex.v1.domain.contabilidade;
+package br.com.codex.v1.domain.fiscal;
 
 import br.com.codex.v1.domain.dto.ImportarXmlDto;
 import lombok.Getter;

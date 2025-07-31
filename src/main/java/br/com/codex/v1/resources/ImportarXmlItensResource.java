@@ -1,6 +1,6 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.contabilidade.ImportarXmlItens;
+import br.com.codex.v1.domain.fiscal.ImportarXmlItens;
 import br.com.codex.v1.domain.dto.ImportarXmlItensDto;
 import br.com.codex.v1.service.ImportarXmlItensService;
 import org.springframework.beans.factory.annotation.Autowired;

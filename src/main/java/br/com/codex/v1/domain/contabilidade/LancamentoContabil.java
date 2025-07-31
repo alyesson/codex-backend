@@ -1,6 +1,7 @@
 package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
+import br.com.codex.v1.domain.fiscal.ImportarXml;
 
 import javax.persistence.*;
 import java.io.Serial;
