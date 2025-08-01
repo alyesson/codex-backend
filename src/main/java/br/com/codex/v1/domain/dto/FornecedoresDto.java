@@ -3,12 +3,16 @@ package br.com.codex.v1.domain.dto;
 import br.com.codex.v1.domain.compras.Fornecedores;
 import br.com.codex.v1.utilitario.CapitalizarPalavras;
 import br.com.codex.v1.utilitario.MinimizarPalavras;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 
+@Getter
+@Setter
 public class FornecedoresDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -53,104 +57,24 @@ public class FornecedoresDto implements Serializable {
         this.vendedor = obj.getVendedor();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRazaoSocial() {
-        return razaoSocial;
-    }
-
     public void setRazaoSocial(String razaoSocial) {
         this.razaoSocial = CapitalizarPalavras.capitalizarPalavras(razaoSocial);
-    }
-
-    public String getNomeFantasia() {
-        return nomeFantasia;
     }
 
     public void setNomeFantasia(String nomeFantasia) {
         this.nomeFantasia = CapitalizarPalavras.capitalizarPalavras(nomeFantasia);
     }
 
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getIe() {
-        return ie;
-    }
-
-    public void setIe(String ie) {
-        this.ie = ie;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
     public void setEndereco(String endereco) {
         this.endereco = CapitalizarPalavras.capitalizarPalavras(endereco);
-    }
-
-    public String getBairro() {
-        return bairro;
     }
 
     public void setBairro(String bairro) {
         this.bairro = CapitalizarPalavras.capitalizarPalavras(bairro);
     }
 
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = MinimizarPalavras.minimizarPalavras(email);
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getVendedor() {
-        return vendedor;
     }
 
     public void setVendedor(String vendedor) {
