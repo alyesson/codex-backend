@@ -41,7 +41,7 @@ public class EmissorBoletoService {
     @Autowired
     private NossoNumeroCalculator nossoNumeroCalculator;
 
-    public File emitirBoleto(EmissorBoletoDto dto) throws ParseException {
+    public File emitirBoleto(EmissorBoletoDto dto) throws ParseException, IOException {
 
         //1. calcula o nosso número
         calcularNossoNumero(dto);
@@ -52,10 +52,7 @@ public class EmissorBoletoService {
         //3. Emite o boleto
         File boletoPdf = emitirBoletoPorBanco(dto);
 
-        //4. salva as informações
-        create(dto);
-
-        // Mostrando o boleto gerado na tela.
+        //4. Mostrando o boleto gerado na tela.
         mostrarBoletoNaTela(boletoPdf);
 
         return boletoPdf;
@@ -238,5 +235,4 @@ public class EmissorBoletoService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmmddMMyy");
         return agora.format(formatter);
     }
-
 }
