@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,10 @@ public class ContasPagarService {
     }
 
     public List<ContaPagar> findAll() {
-        return contaPagarRepository.findAll();
+        // Obtém o ano atual
+        int anoAtual = Year.now().getValue();
+
+        // Retorna apenas os registros do ano atual
+        return contaPagarRepository.findByAno(anoAtual);
     }
 }
