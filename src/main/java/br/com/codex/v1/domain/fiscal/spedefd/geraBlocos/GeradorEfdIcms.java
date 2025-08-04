@@ -40,6 +40,6 @@ public class GeradorEfdIcms {
         
         sb = GerarEfdIcms.gerar(efdIcms, sb);
         System.out.println(sb.toString());
-        Util.criarPastaArquivo("C:/Program Files/Codex/configuracao/export/Sped/EFD", "efd.txt", sb.toString());
+        Util.criarPastaArquivo("/tmp/Sped/EFD", "efd.txt", sb.toString());
     }
 }
