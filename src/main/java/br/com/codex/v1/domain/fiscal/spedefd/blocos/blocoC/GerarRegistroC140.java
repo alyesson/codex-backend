@@ -1,0 +1,24 @@
+package br.com.codex.v1.domain.fiscal.spedefd.blocos.blocoC;
+
+import br.com.codex.v1.domain.fiscal.spedefd.registros.blocoC.RegistroC140;
+import br.com.codex.v1.utilitario.Util;
+
+/**
+ * @author Alyesson Sousa
+ */
+public class GerarRegistroC140 {
+
+    public static StringBuilder gerar(RegistroC140 registroC140, StringBuilder sb) {
+
+        sb.append("|").append(Util.preencheRegistro(registroC140.getReg()));
+        sb.append("|").append(Util.preencheRegistro(registroC140.getInd_emit()));
+        sb.append("|").append(Util.preencheRegistro(registroC140.getInd_tit()));
+        sb.append("|").append(Util.preencheRegistro(registroC140.getDesc_tit()));
+        sb.append("|").append(Util.preencheRegistro(registroC140.getNum_tit()));
+        sb.append("|").append(Util.preencheRegistro(registroC140.getQtd_parc()));
+        sb.append("|").append(Util.preencheRegistro(registroC140.getVl_tit()));
+        sb.append("|").append('\n');
+
+        return sb;
+    }
+}

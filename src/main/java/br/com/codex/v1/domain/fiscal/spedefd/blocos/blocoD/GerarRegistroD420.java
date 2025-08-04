@@ -1,0 +1,24 @@
+
+package br.com.codex.v1.domain.fiscal.spedefd.blocos.blocoD;
+
+import br.com.codex.v1.domain.fiscal.spedefd.registros.blocoD.RegistroD420;
+import br.com.codex.v1.utilitario.Util;
+
+/**
+ * @author Yuri Lemes
+ *
+ */
+public class GerarRegistroD420 {
+
+    public static StringBuilder gerar(RegistroD420 registroD420, StringBuilder sb) {
+
+        sb.append("|").append(Util.preencheRegistro(registroD420.getReg()));
+        sb.append("|").append(Util.preencheRegistro(registroD420.getCod_mun_orig()));
+        sb.append("|").append(Util.preencheRegistro(registroD420.getVl_serv()));
+        sb.append("|").append(Util.preencheRegistro(registroD420.getVl_bc_icms()));
+        sb.append("|").append(Util.preencheRegistro(registroD420.getVl_icms()));
+        sb.append("|").append('\n');
+
+        return sb;
+    }
+}
