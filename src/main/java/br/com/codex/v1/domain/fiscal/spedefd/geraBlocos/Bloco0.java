@@ -1,47 +1,17 @@
 package br.com.codex.v1.domain.fiscal.spedefd.geraBlocos;
 
-import ConexaoBDCodex.ConexaoBD;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.atividade;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.bairroContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.bairroEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.cepContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.cepEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.cnpjContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.cnpjMatrizFiscal;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.codigoMunicipio;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.codigoMunicipioContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.complementoEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.cpfContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.crcContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.dataAte;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.dataDe;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.emailContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.emailEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.enderecoContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.enderecoEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.finalidadeArquivo;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.ieContibuinteSubstituto;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.ieMatrizFiscal;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.indicadorMovimento;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.nomeContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.nomeFantasia;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.numeroContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.numeroEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.perfil;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.suframa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.tarefaGeraSped;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.telefoneContador;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.telefoneEmpresa;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.ufContibuinteSubstituto;
-import static br.com.codex.v1.domain.fiscal.spedefd.SpedEfd.ufMatrizFiscal;
+import br.com.codex.v1.domain.dto.EmpresaDto;
+import br.com.codex.v1.domain.dto.GerarSpedRequestDto;
+import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.*;
-import Utilitarios.ValidaIntervaloDatas;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -49,15 +19,14 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class Bloco0 {
-    
-    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
     static SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
 
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheBloco0() {
-        br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0 = new br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0();
-        bloco0 = preencheRegistro0000(bloco0);
+    public static Bloco0 preencheBloco0(GerarSpedRequestDto gerarSpedRequestDto, List<NotaFiscalDto> notasFiscais) {
+        Bloco0 bloco0 = new Bloco0();
+        bloco0 = preencheRegistro0000(bloco0, gerarSpedRequestDto);
         bloco0 = preencheRegistro0001(bloco0);
-        bloco0 = preencheRegistro0005(bloco0);
+        bloco0 = preencheRegistro0005(bloco0, gerarSpedRequestDto);
         bloco0 = preencheRegistro0015(bloco0);
         bloco0 = preencheRegistro0100(bloco0);
         bloco0 = preencheRegistro0150(bloco0);
@@ -78,26 +47,20 @@ public class Bloco0 {
     }
 
     //Abertura do Arquivo Digital e Identificação da entidade
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0000(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
-
-        String _dataDe = dataDe.getDate().toString();
-        String[] _DataDe = _dataDe.split("/");
-
-        String _dataAte = dataAte.getDate().toString();
-        String[] _DataDAte = _dataAte.split("/");
+    public static Bloco0 preencheRegistro0000(Bloco0 bloco0, GerarSpedRequestDto gerarSpedRequestDto) {
 
         Registro0000 registro0000 = new Registro0000();
-        registro0000.setCod_fin(finalidadeArquivo.getSelectedItem().toString());
-        registro0000.setDt_ini(_DataDe[0] + _DataDe[1] + _DataDe[2]);
-        registro0000.setDt_fin(_DataDAte[0] + _DataDAte[1] + _DataDAte[2]);
-        registro0000.setNome(nomeFantasia.getText());
-        registro0000.setCnpj(cnpjMatrizFiscal.getText());
-        registro0000.setUf(ufMatrizFiscal.getText());
-        registro0000.setIe(ieMatrizFiscal.getText());
-        registro0000.setCod_mun(codigoMunicipio.getText());
-        registro0000.setSuframa(suframa.getText());
-        registro0000.setInd_perfil(perfil.getSelectedItem().toString());
-        registro0000.setInd_ativ(atividade.getSelectedItem().toString());
+        registro0000.setCod_fin(gerarSpedRequestDto.getFinalidadeArquivo());
+        registro0000.setDt_ini(String.valueOf(gerarSpedRequestDto.getDataInicio()));
+        registro0000.setDt_fin(String.valueOf(gerarSpedRequestDto.getDataFim()));
+        registro0000.setNome(gerarSpedRequestDto.getEmpresa().getNomeFantasia());
+        registro0000.setCnpj(gerarSpedRequestDto.getEmpresa().getCnpj());
+        registro0000.setUf(gerarSpedRequestDto.getEmpresa().getUf());
+        registro0000.setIe(gerarSpedRequestDto.getEmpresa().getInscricaoEstadual());
+        registro0000.setCod_mun(gerarSpedRequestDto.getEmpresa().getCodigoCidade());
+        registro0000.setSuframa(gerarSpedRequestDto.getEmpresa().getSuframa());
+        registro0000.setInd_perfil(gerarSpedRequestDto.getPerfil());
+        registro0000.setInd_ativ(gerarSpedRequestDto.getAtividade());
 
         bloco0.setRegistro0000(registro0000);
 
@@ -105,9 +68,9 @@ public class Bloco0 {
     }
 
     //Abertura do Bloco 0
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0001(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
+    public static Bloco0 preencheRegistro0001(Bloco0 bloco0, GerarSpedRequestDto gerarSpedRequestDto) {
         Registro0001 registro0001 = new Registro0001();
-        registro0001.setInd_mov(indicadorMovimento.getSelectedItem().toString());
+        registro0001.setInd_mov(gerarSpedRequestDto.getIndicadorMovimento());
 
         bloco0.setRegistro0001(registro0001);
 
@@ -115,9 +78,9 @@ public class Bloco0 {
     }
 
     //Classificação do Estabelecimento Industrial ou Equiparado a Industria
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0002(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
+    public static Bloco0 preencheRegistro0002(Bloco0 bloco0, GerarSpedRequestDto gerarSpedRequestDto) {
         Registro0002 registro0002 = new Registro0002();
-        registro0002.setClass_estab_ind(atividade.getSelectedItem().toString());
+        registro0002.setClass_estab_ind(gerarSpedRequestDto.getAtividade());
 
         bloco0.setRegistro0002(registro0002);
 
@@ -125,17 +88,17 @@ public class Bloco0 {
     }
 
     //Dados Complementares da entidade 
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0005(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
+    public static Bloco0 preencheRegistro0005(Bloco0 bloco0, GerarSpedRequestDto gerarSpedRequestDto) {
         Registro0005 registro0005 = new Registro0005();
-        registro0005.setFantasia(nomeFantasia.getText());
-        registro0005.setCep(cepEmpresa.getText());
-        registro0005.setEnd(enderecoEmpresa.getText());
-        registro0005.setNum(numeroEmpresa.getText());
-        registro0005.setCompl(complementoEmpresa.getText());
-        registro0005.setBairro(bairroEmpresa.getText());
-        registro0005.setFone(telefoneEmpresa.getText());
-        registro0005.setFax(telefoneEmpresa.getText());
-        registro0005.setEmail(emailEmpresa.getText());
+        registro0005.setFantasia(gerarSpedRequestDto.getEmpresa().getNomeFantasia());
+        registro0005.setCep(gerarSpedRequestDto.getEmpresa().getCep());
+        registro0005.setEnd(gerarSpedRequestDto.getEmpresa().getEndereco());
+        registro0005.setNum(gerarSpedRequestDto.getEmpresa().getNumero());
+        registro0005.setCompl(gerarSpedRequestDto.getEmpresa().getComplemento());
+        registro0005.setBairro(gerarSpedRequestDto.getEmpresa().getBairro());
+        registro0005.setFone(gerarSpedRequestDto.getEmpresa().getTelefone());
+        registro0005.setFax(null);
+        registro0005.setEmail(gerarSpedRequestDto.getEmpresa().getEmailContato());
 
         bloco0.setRegistro0005(registro0005);
 
@@ -143,7 +106,7 @@ public class Bloco0 {
     }
 
     //Dados do Contribuinte Substituto ou Responsável pelo ICMS Destino
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0015(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
+    public static Bloco0 preencheRegistro0015(Bloco0 bloco0) {
         Registro0015 registro0015 = new Registro0015();
         registro0015.setUf_st(ufContibuinteSubstituto.getText());
         registro0015.setIe_st(ieContibuinteSubstituto.getText());
@@ -154,20 +117,20 @@ public class Bloco0 {
     }
 
     //Dados do Contabilista
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0100(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
+    public static Bloco0 preencheRegistro0100(Bloco0 bloco0, GerarSpedRequestDto gerarSpedRequestDto) {
         Registro0100 registro0100 = new Registro0100();
-        registro0100.setNome(nomeContador.getText());
-        registro0100.setCpf(cpfContador.getText());
-        registro0100.setCrc(crcContador.getText());
-        registro0100.setCnpj(cnpjContador.getText());
-        registro0100.setCep(cepContador.getText());
-        registro0100.setEnd(enderecoContador.getText());
-        registro0100.setNum(numeroContador.getText());
-        registro0100.setBairro(bairroContador.getText());
-        registro0100.setFone(telefoneContador.getText());
-        registro0100.setFax(telefoneContador.getText());
-        registro0100.setEmail(emailContador.getText());
-        registro0100.setCod_mun(codigoMunicipioContador.getText());
+        registro0100.setNome(gerarSpedRequestDto.getNomeContador());
+        registro0100.setCpf(gerarSpedRequestDto.getCpfContador());
+        registro0100.setCrc(gerarSpedRequestDto.getCrcContador());
+        registro0100.setCnpj(null);
+        registro0100.setCep(gerarSpedRequestDto.getCepContador());
+        registro0100.setEnd(gerarSpedRequestDto.getLogradouroContador()));
+        registro0100.setNum(gerarSpedRequestDto.getNumeroContador());
+        registro0100.setBairro(gerarSpedRequestDto.getBairroContador());
+        registro0100.setFone(gerarSpedRequestDto.getTelefoneContador());
+        registro0100.setFax(null);
+        registro0100.setEmail(gerarSpedRequestDto.getEmailContador());
+        registro0100.setCod_mun(gerarSpedRequestDto.getCodigoMunicipioContador());
 
         bloco0.setRegistro0100(registro0100);
 
@@ -175,7 +138,7 @@ public class Bloco0 {
     }
 
     //Tabela de Cadastro do Participante
-    public static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 preencheRegistro0150(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco0.Bloco0 bloco0) {
+    public static Bloco0 preencheRegistro0150(Bloco0 bloco0) {
 
         String cpfCnpj, alteracao;
         String valorCpf = null;

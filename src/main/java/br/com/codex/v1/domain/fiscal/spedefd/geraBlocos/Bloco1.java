@@ -78,7 +78,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1010(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1010(Bloco1 bloco1) {
 
         Registro1010 registro1010 = new Registro1010();
         registro1010.setInd_aer("N");
@@ -99,7 +99,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1100(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1100(Bloco1 bloco1) {
 
         Registro1100 registro1100 = new Registro1100();
         registro1100.setInd_doc("");
@@ -142,7 +142,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1200(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1200(Bloco1 bloco1) {
 
         Registro1200 registro1200 = new Registro1200();
         registro1200.setCod_aj_apur("");
@@ -164,7 +164,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1250(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1250(Bloco1 bloco1) {
 
         Registro1250 registro1250 = new Registro1250();
         registro1250.setVl_credito_icms_op("");
@@ -187,7 +187,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1300(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1300(Bloco1 bloco1) {
 
         Registro1300 registro1300 = new Registro1300();
         registro1300.setCod_item("");
@@ -232,7 +232,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1350(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1350(Bloco1 bloco1) {
 
         Registro1350 registro1350 = new Registro1350();
         registro1350.setSerie("");
@@ -256,7 +256,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1390(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1390(Bloco1 bloco1) {
 
         Registro1390 registro1390 = new Registro1390();
         registro1390.setCod_prod("");
@@ -288,7 +288,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1400(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1400(Bloco1 bloco1) {
 
         Registro1400 registro1400 = new Registro1400();
         registro1400.setCod_item_ipm("");
@@ -300,7 +300,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1500(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1500(Bloco1 bloco1) {
 
         Registro1500 registro1500 = new Registro1500();
         registro1500.setInd_oper("");
@@ -357,7 +357,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1600(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1600(Bloco1 bloco1) {
 
         Registro1600 registro1600 = new Registro1600();
         registro1600.setCod_part("");
@@ -369,7 +369,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1700(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1700(Bloco1 bloco1) {
 
         Registro1700 registro1700 = new Registro1700();
         registro1700.setCod_disp("");
@@ -390,7 +390,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1800(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1800(Bloco1 bloco1) {
 
         Registro1800 registro1800 = new Registro1800();
         registro1800.setVl_carga("");
@@ -408,7 +408,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1900(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1900(Bloco1 bloco1) {
 
         Registro1900 registro1900 = new Registro1900();
         registro1900.setInd_apur_icms("");
@@ -484,7 +484,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1960(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1960(Bloco1 bloco1) {
 
         Registro1960 registro1960 = new Registro1960();
         registro1960.setInd_ap("111");
@@ -505,7 +505,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1970(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1970(Bloco1 bloco1) {
 
         Registro1970 registro1970 = new Registro1970();
         registro1970.setInd_ap("111");
@@ -530,7 +530,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1980(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1980(Bloco1 bloco1) {
 
         Registro1980 registro1980 = new Registro1980();
         registro1980.setInd_ap("");
@@ -552,7 +552,7 @@ public class Bloco1 {
         return bloco1;
     }
 
-    private static br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 preencheRegistro1990(br.com.codex.v1.domain.fiscal.spedefd.registros.bloco1.Bloco1 bloco1) {
+    private static Bloco1 preencheRegistro1990(Bloco1 bloco1) {
 
         Registro1990 registro1990 = new Registro1990();
         registro1990.setQtd_lin_1("");
