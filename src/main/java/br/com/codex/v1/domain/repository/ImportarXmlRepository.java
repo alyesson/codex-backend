@@ -26,4 +26,7 @@ public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> 
     Optional<Long> findIdByNumeroAndRazaoSocialEmitente(@Param("numero") String numero, @Param("razaoSocialEmitente") String razaoSocialEmitente);
 
     List<ImportarXml> findByEmissaoBetween(LocalDate inicio, LocalDate fim);
+
+    @Query("SELECT a FROM ImportarXml a WHERE a.dataImportacao BETWEEN :dataInicial AND :dataFinal")
+    List<String> findAllEntradaNotasPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 }

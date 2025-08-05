@@ -32,4 +32,6 @@ public class GerarSpedRequestDto {
     private String telefoneContador;
     private String emailContador;
     private String codigoMunicipioContador;
+    private String ufContribuinteSubstituto;
+    private String inscricaoEstadualContribuinteSubstituto;
 }
