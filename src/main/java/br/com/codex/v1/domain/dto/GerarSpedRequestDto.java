@@ -9,7 +9,6 @@ import java.util.List;
 public class GerarSpedRequestDto {
 
     private EmpresaDto empresa; // Dados da empresa (CNPJ, nome, endereço, etc.)
-    private List<NotaFiscalDto> notasFiscais; // Notas do período
     private LocalDate dataInicio; // Período do SPED
     private LocalDate dataFim;
     private String periodo;
@@ -18,10 +17,12 @@ public class GerarSpedRequestDto {
     private String atividade;
     private String apropriacaoCredito;
     private String indicadorMovimento;
+    private String classificacaoEstabelecimento;
     private String descricaoProcesso;
     private String descricaoComplementarObrigacoes;
     private String nomeContador;
     private String cpfContador;
+    private String CnpjContador;
     private String crcContador;
     private String logradouroContador;
     private String numeroContador;

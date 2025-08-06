@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> {
 
@@ -27,6 +28,9 @@ public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> 
 
     List<ImportarXml> findByEmissaoBetween(LocalDate inicio, LocalDate fim);
 
-    @Query("SELECT a FROM ImportarXml a WHERE a.dataImportacao BETWEEN :dataInicial AND :dataFinal")
+    @Query("SELECT i.xml FROM ImportarXml i WHERE i.emissao BETWEEN :dataInicial AND :dataFinal")
     List<String> findAllEntradaNotasPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
+
+    @Query("SELECT DISTINCT i.cfop FROM ImportaItensXml i JOIN i.nota n WHERE n.dataEmissao BETWEEN :dataInicio AND :dataFim")
+    Set<String> findDistinctCfopEntradaByPeriodo(@Param("dataInicio") LocalDate inicio, @Param("dataFim") LocalDate fim);
 }

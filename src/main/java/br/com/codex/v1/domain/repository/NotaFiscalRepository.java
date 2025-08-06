@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
 
@@ -18,4 +20,7 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
 
     @Query("SELECT a FROM NotaFiscal a WHERE a.emissao BETWEEN :dataInicial AND :dataFinal AND a.documentoEmitente=:documentoEmitente")
     List<NotaFiscal> consultarNotasPorPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal, @Param("documentoEmitente") String documentoEmitente);
+
+    @Query("SELECT DISTINCT n.cfop FROM NotaFiscalItens n JOIN n.notaFiscal nf WHERE nf.dataEmissao BETWEEN :dataInicio AND :dataFim")
+    Set<String> findDistinctCfopSaidaByPeriodo(@Param("dataInicio") LocalDateTime inicio, @Param("dataFim") LocalDateTime fim);
 }

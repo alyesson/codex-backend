@@ -6,7 +6,6 @@ import br.com.codex.v1.domain.enums.IndPagamento;
 import br.com.codex.v1.domain.enums.TipoFrete;
 import br.com.codex.v1.domain.enums.TipoOperacao;
 import br.com.codex.v1.domain.repository.ImportarXmlRepository;
-import br.com.codex.v1.domain.repository.NotaFiscalRepository;
 import br.com.codex.v1.domain.repository.XmlNotaFiscalRepository;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TNfeProc;

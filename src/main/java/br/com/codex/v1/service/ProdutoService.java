@@ -60,4 +60,8 @@ public class ProdutoService {
         Optional<Produto> obj = produtoRepository.findByCodigo(codigoProduto);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado com o código "+codigoProduto));
     }
+
+    public List<String> findByUnidadeComercial(){
+        return produtoRepository.findByUnidadeComercial();
+    }
 }

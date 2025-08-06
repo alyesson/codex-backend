@@ -1,10 +1,16 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.compras.AvaliacaoFornecedoresDetalhes;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
+@Setter
+@Getter
 public class AvaliacaoFornecedoresDetalhesDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,43 +33,7 @@ public class AvaliacaoFornecedoresDetalhesDto implements Serializable {
         this.avaliacaoFornecedores = new AvaliacaoFornecedoresDto(obj.getAvaliacaoFornecedores());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCriterio() {
-        return criterio;
-    }
-
     public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-
-    public float getPeso() {
-        return peso;
-    }
-
-    public void setPeso(float peso) {
-        this.peso = peso;
-    }
-
-    public float getNota() {
-        return nota;
-    }
-
-    public void setNota(float nota) {
-        this.nota = nota;
-    }
-
-    public AvaliacaoFornecedoresDto getAvaliacaoFornecedores() {
-        return avaliacaoFornecedores;
-    }
-
-    public void setAvaliacaoFornecedores(AvaliacaoFornecedoresDto avaliacaoFornecedores) {
-        this.avaliacaoFornecedores = avaliacaoFornecedores;
+        this.criterio = capitalizarPalavras(criterio);
     }
 }

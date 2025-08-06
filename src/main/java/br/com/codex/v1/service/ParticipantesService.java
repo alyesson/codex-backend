@@ -2,6 +2,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.dto.CadastroParticipantesSpedDto;
 import br.com.codex.v1.domain.dto.NotaEntradaSpedDto;
+import br.com.codex.v1.domain.dto.NotaSaidaSpedDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ParticipantesService {
         return participantes;
     }
 
-    public static List<CadastroParticipantesSpedDto> getListaParticipantesNotaSaida(List<NotaEntradaSpedDto> listaNotas) {
+    public static List<CadastroParticipantesSpedDto> getListaParticipantesNotaSaida(List<NotaSaidaSpedDto> listaNotas) {
         List<CadastroParticipantesSpedDto> participantes = new ArrayList<>();
 
         listaNotas.forEach(
