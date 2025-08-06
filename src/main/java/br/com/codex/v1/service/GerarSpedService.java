@@ -2,6 +2,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.dto.NotaEntradaSpedDto;
 import br.com.codex.v1.domain.fiscal.spedicms.EfdNota;
+import br.com.codex.v1.service.spedicms.Bloco0Service;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.bo.GerarEfdIcms;
 import br.com.swconsultoria.efd.icms.registros.EfdIcms;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,7 +25,7 @@ public class GerarSpedService {
             List<NotaEntradaSpedDto> listaNotasEntrada = EfdNota.getListaNotasEntrada(LocalDate dataInicial, LocalDate dataFinal);
 
             logger.info("Extraindo dados das Notas Saída");
-            List<NotaEntradaSpedDto> listaNotasSaida = EfdNota.getListaNotasSaida(LocalDate dataInicial, LocalDate dataFinal, String documentoEmissor);
+            List<NotaEntradaSpedDto> listaNotasSaida = EfdNota.getListaNotasSaida(LocalDateTime dataInicial, LocalDateTime dataFinal, String documentoEmissor);
 
             System.out.println("Preenchendo os Blocos...");
             EfdIcms efd = new EfdIcms();

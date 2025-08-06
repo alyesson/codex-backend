@@ -7,6 +7,7 @@ import br.com.codex.v1.domain.enums.TipoFrete;
 import br.com.codex.v1.domain.enums.TipoOperacao;
 import br.com.codex.v1.domain.repository.ImportarXmlRepository;
 import br.com.codex.v1.domain.repository.NotaFiscalRepository;
+import br.com.codex.v1.domain.repository.XmlNotaFiscalRepository;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TNfeProc;
 import br.com.swconsultoria.nfe.util.XmlNfeUtil;
@@ -17,16 +18,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EfdNota {
 
     @Autowired
-    private static ImportarXmlRepository importarXmlRepository;
+    private static ImportarXmlRepository importarXmlRepository; //obtém o xml das notas de entrada
 
     @Autowired
-    private static NotaFiscalRepository notaFiscalRepository;
+    private static XmlNotaFiscalRepository xmlNotaFiscalRepository; //obtém o xml das notas de saída
 
     private static String removeAcentos(String input) {
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
@@ -73,10 +75,10 @@ public class EfdNota {
         return notaEntrada;
     }
 
-    public static List<NotaSaidaSpedDto> getListaNotasSaida(LocalDate dataInicial, LocalDate dataFinal, String documentoEmissor) throws JAXBException, IOException {
+    public static List<NotaSaidaSpedDto> getListaNotasSaida(LocalDateTime dataInicial, LocalDateTime dataFinal, String documentoEmissor) throws JAXBException, IOException {
 
         List<NotaSaidaSpedDto> notasEntrada = new ArrayList<>();
-        List<String> xmlsEntrada = notaFiscalRepository.findAllNotasSaidasPeriodo(dataInicial, dataFinal, documentoEmissor);
+        List<String> xmlsEntrada = xmlNotaFiscalRepository.findAllNotasSaidasPeriodo(dataInicial, dataFinal);
 
         for (String arqXml : xmlsEntrada) {
             notasEntrada.add(montaNotaSaida(XmlNfeUtil.leXml(arqXml)));
