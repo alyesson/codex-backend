@@ -2,6 +2,7 @@ package br.com.codex.v1.service;
 
 
 import br.com.codex.v1.domain.contabilidade.Contas;
+import br.com.codex.v1.domain.dto.ContaSpedDto;
 import br.com.codex.v1.domain.dto.ContasDto;
 import br.com.codex.v1.domain.repository.ContasRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
@@ -54,10 +55,6 @@ public class ContasService {
         //Optional<Contas> objConta = contasRepository.findByConta(contasDto.getConta());
         Optional<Contas> objReduz = contasRepository.findByReduzido(contasDto.getReduzido());
 
-        //if(objConta.isPresent() && objConta.get().getConta().equals(contasDto.getConta())){
-         //   throw new DataIntegrityViolationException("Esta conta contábil já existe");
-        //}
-
         if(objReduz.isPresent() && objReduz.get().getReduzido().equals(contasDto.getReduzido())){
             throw new DataIntegrityViolationException("Esta conta reduzida já existe");
         }
@@ -72,5 +69,25 @@ public class ContasService {
                     }
                     throw new ObjectNotFoundException("Não foi encontrada uma conta com o nome ou semelhante a: " + nome);
                 });
+    }
+
+    //Busca as informações de uma conta contábil pelo código (ex: "1.1.02.101.2"). Retorna null se não encontrada.
+    public Contas buscarContaPorCodigo(String contaContabil) {
+        return contasRepository.findByConta(contaContabil);
+    }
+
+    //Mét/odo para uso no SPED: busca a conta e retorna um DTO com campos específicos.
+    public ContaSpedDto buscarContaParaSped(String contaContabil) {
+        Contas conta = contasRepository.findByConta(contaContabil);
+        if (conta == null) {
+            return null;
+        }
+        return new ContaSpedDto(
+                conta.getConta(),
+                conta.getNome(),
+                conta.getNatureza(), // Ex: "01" para Ativo
+                conta.getTipo(),    // Ex: "S" (Sintética) ou "A" (Analítica)
+                conta.getConta().split("\\.").length - 1 // Calcula o nível
+        );
     }
 }

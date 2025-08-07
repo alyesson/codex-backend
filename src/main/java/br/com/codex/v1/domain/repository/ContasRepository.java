@@ -16,4 +16,5 @@ public interface ContasRepository extends JpaRepository<Contas, Long> {
     // ele busca por nomes que contenham a string e usa o primeiro da lista, evitando o erro por múltiplos resultados.
     List<Contas> findByNomeIgnoreCaseContaining(String nome);
 
+    Contas findByConta(String conta);
 }

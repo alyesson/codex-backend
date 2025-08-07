@@ -12,6 +12,7 @@ import br.com.codex.v1.domain.fiscal.spedicms.EfdNota;
 import br.com.codex.v1.domain.repository.AtivoImobilizadoRepository;
 import br.com.codex.v1.domain.repository.InformacaoesAdicionaisFiscoRepository;
 import br.com.codex.v1.domain.repository.InformacaoesComplementaresRepository;
+import br.com.codex.v1.domain.repository.ProdutoRepository;
 import br.com.codex.v1.service.spedicms.Bloco0Service;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.bo.GerarEfdIcms;
@@ -36,6 +37,9 @@ public class GerarSpedService {
     private ProdutoService produtoService;
 
     @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
     private AtivoImobilizadoRepository ativoImobilizadoRepository;
 
     @Autowired
@@ -47,6 +51,9 @@ public class GerarSpedService {
     @Autowired
     private InformacaoesComplementaresRepository informacaoesComplementaresRepository;
 
+    @Autowired
+    private ContasService contasService;
+
     public void gerarBlocos(GerarSpedRequestDto requestDto){
 
         LocalDate dataInicial = requestDto.getDataInicio();
@@ -54,14 +61,13 @@ public class GerarSpedService {
 
         LocalDateTime dataInicial1 = requestDto.getDataInicio().atStartOfDay();
         LocalDateTime dataFinal1 = requestDto.getDataFim().atStartOfDay();
-        String documentoEmissor = requestDto.getEmpresa().getCnpj();
 
         try {
             logger.info("Extraindo dados das Notas Entrada");
             List<NotaEntradaSpedDto> listaNotasEntrada = EfdNota.getListaNotasEntrada(dataInicial, dataFinal);
 
             logger.info("Extraindo dados das Notas Saída");
-            List<NotaSaidaSpedDto> listaNotasSaida = EfdNota.getListaNotasSaida(dataInicial1, dataFinal1, documentoEmissor);
+            List<NotaSaidaSpedDto> listaNotasSaida = EfdNota.getListaNotasSaida(dataInicial1, dataFinal1);
 
             logger.info(("Extraindo unidades de medida"));
             List<String> listaUnidadesMedida = produtoService.findByUnidadeComercial();
@@ -81,13 +87,13 @@ public class GerarSpedService {
             logger.info("Extraindo informações adicionais utilizados no período");
             List<InformacaoesComplementares> listaInfoComp = informacaoesComplementaresRepository.findAll();
 
-            logger.info("Extraindo plano de contas utilizados no período");
-
+            logger.info("Extraindo contas contábeis utilizados no período");
+            List<Produto> listaContaContabil = produtoRepository.findByContaContabil();
 
             System.out.println("Preenchendo os Blocos...");
             EfdIcms efd = new EfdIcms();
             efd.setBloco0(Bloco0Service.getBloco(requestDto, listaNotasSaida, listaUnidadesMedida,
-                    listaProdutos, listaAtivosImobilizados, listaCfop, listaInfoFisco, listaInfoComp));
+                    listaProdutos, listaAtivosImobilizados, listaCfop, listaInfoFisco, listaInfoComp, contasService));
 
             efd.setBlocoB(BlocoBService.getBloco());
             efd.setBlocoC(BlocoCService.getBloco(listaNotasSaida));

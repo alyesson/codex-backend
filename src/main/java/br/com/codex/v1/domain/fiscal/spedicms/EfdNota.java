@@ -74,7 +74,7 @@ public class EfdNota {
         return notaEntrada;
     }
 
-    public static List<NotaSaidaSpedDto> getListaNotasSaida(LocalDateTime dataInicial, LocalDateTime dataFinal, String documentoEmissor) throws JAXBException, IOException {
+    public static List<NotaSaidaSpedDto> getListaNotasSaida(LocalDateTime dataInicial, LocalDateTime dataFinal) throws JAXBException, IOException {
 
         List<NotaSaidaSpedDto> notasEntrada = new ArrayList<>();
         List<String> xmlsEntrada = xmlNotaFiscalRepository.findAllNotasSaidasPeriodo(dataInicial, dataFinal);

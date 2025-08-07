@@ -7,11 +7,18 @@ import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.estoque.Produto;
 import br.com.codex.v1.domain.fiscal.InformacaoesAdicionaisFisco;
 import br.com.codex.v1.domain.fiscal.InformacaoesComplementares;
+import br.com.codex.v1.service.ContasService;
 import br.com.codex.v1.service.ParticipantesService;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.registros.bloco0.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class Bloco0Service {
 
@@ -24,7 +31,7 @@ public class Bloco0Service {
                                   List<String> listaUnidadesMedida, List<Produto> listaProdutos,
                                   List<AtivoImobilizado> listaAtivosImobilizados, List<TabelaCfop> listaCfop,
                                   List<InformacaoesAdicionaisFisco> listaInfoFisco, List<InformacaoesComplementares> listaInfoComp,
-                                  List<Contas> listaContasContabeis) {
+                                  ContasService) {
         bloco0 = new Bloco0();
         preencherRegistro0000(requestDto);
         preencherRegistro0001(requestDto);
@@ -48,7 +55,7 @@ public class Bloco0Service {
         preencheRegistro0450(listaInfoComp);
         preencheRegistro0460(listaInfoFisco);
 
-        preencheRegistro0500(listaContasContabeis);
+        preencheRegistro0500(ContasService);
 
 
         return bloco0;
@@ -314,18 +321,31 @@ public class Bloco0Service {
     }
 
     //Plano de contas contábeis
-    public static void preencheRegistro0500(List<Contas> contasContabeis){
+    public static void preencheRegistro0500(List<Produto> listaProdutos, ContaContabilService contaService) {
+        Set<String> contasUnicas = new HashSet<>();
 
-        for (Contas conta : contasContabeis) {
-            Registro0500 registro0500 = new Registro0500();
-            registro0500.setDt_alt(Util.dataSpeed(conta.getInclusao().toLocalDate()));
-            registro0500.setCod_nat_cc(conta.getNatureza()); // 01 a 99
-            registro0500.setInd_cta(conta.getTipo()); // A = Analítica
-            registro0500.setNivel(String.valueOf(conta.getNivel()));
-            registro0500.setCod_cta(conta.getConta());
-            registro0500.setNome_cta(conta.getNome());
+        // Extrai todas as contas únicas dos produtos
+        for (Produto produto : listaProdutos) {
+            if (produto.getContaContabil() != null) {
+                contasUnicas.add(produto.getContaContabil());
+            }
+        }
+        int ano = LocalDate.now().getYear();
 
-            bloco0.getRegistro0500().add(registro0500);
+        // Para cada conta, busca informações e preenche o registro 0500
+        for (String contaCodigo : contasUnicas) {
+            ContaSpedDto contaDto = contaService.buscarContaParaSped(contaCodigo);
+            if (contaDto != null) {
+                Registro0500 registro0500 = new Registro0500();
+                registro0500.setDt_alt("0101"+ano);
+                registro0500.setCod_nat_cc(contaDto.getNatureza());
+                registro0500.setInd_cta(contaDto.getTipo());
+                registro0500.setNivel(String.valueOf(contaDto.getNivel()));
+                registro0500.setCod_cta(contaDto.getCodigo());
+                registro0500.setNome_cta(contaDto.getNome());
+
+                bloco0.getRegistro0500().add(registro0500);
+            }
         }
     }
 
@@ -384,5 +404,58 @@ public class Bloco0Service {
         return produto.getSubGrupo() != null &&
                 (produto.getSubGrupo().equals("COMBUSTIVEL") ||
                         produto.getSubGrupo().equals("LUBRIFICANTE"));
+    }
+
+    // Extrai todos os níveis hierárquicos das contas (ex: "1.1.02" → ["1", "1.1", "1.1.02"])
+    private Set<String> extrairHierarquiaCompleta(List<String> contasProdutos) {
+        Set<String> hierarquia = new TreeSet<>(); // Usamos TreeSet para ordenar naturalmente
+        for (String conta : contasProdutos) {
+            if (conta == null || conta.isEmpty()) continue;
+            String[] partes = conta.split("\\.");
+            StringBuilder codigoPai = new StringBuilder();
+            for (String parte : partes) {
+                codigoPai.append(parte);
+                hierarquia.add(codigoPai.toString());
+                codigoPai.append(".");
+            }
+        }
+        return hierarquia;
+    }
+
+    // Mapeia as contas para o formato do Registro 0500
+    private List<Registro0500> mapearParaRegistro0500(Set<String> contas) {
+        return contas.stream()
+                .map(codigo -> {
+                    String nomeConta = "Nome da Conta " + codigo; // Substitua por uma lógica real (ex: buscar do banco)
+                    String codNat = getCodNat(codigo); // Ex: "01" para Ativo
+                    String indCta = isContaAnalitica(codigo, contas) ? "A" : "S";
+                    int nivel = codigo.split("\\.").length - 1;
+                    return new Registro0500(
+                            "01012024", // DT_ALT (ajuste conforme sua necessidade)
+                            codNat,
+                            indCta,
+                            nivel,
+                            codigo,
+                            nomeConta
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Determina se a conta é analítica (último nível)
+    private boolean isContaAnalitica(String codigo, Set<String> contas) {
+        return contas.stream().noneMatch(c -> c.startsWith(codigo + "."));
+    }
+
+    // Define a natureza da conta (COD_NAT) com base no primeiro nível
+    private String getCodNat(String codigo) {
+        String primeiroNivel = codigo.split("\\.")[0];
+        return switch (primeiroNivel) {
+            case "1" -> "01"; // Ativo
+            case "2" -> "02"; // Passivo
+            case "3" -> "04"; // Receitas
+            case "4" -> "05"; // Despesas
+            default -> "09"; // Outros (ajuste conforme seu plano de contas)
+        };
     }
 }

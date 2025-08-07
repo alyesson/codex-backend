@@ -14,4 +14,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("SELECT DISTINCT p.unidadeComercial FROM Produto p WHERE p.unidadeComercial IS NOT NULL")
     List<String> findByUnidadeComercial();
+
+    @Query("SELECT p.contaContabil FROM Produto p WHERE p.codigo IS NOT NULL AND p.codigo <> ''")
+    List<Produto> findByContaContabil();
 }
