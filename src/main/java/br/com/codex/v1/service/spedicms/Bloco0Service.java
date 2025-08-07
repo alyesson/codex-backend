@@ -2,6 +2,7 @@ package br.com.codex.v1.service.spedicms;
 
 import br.com.codex.v1.domain.cadastros.TabelaCfop;
 import br.com.codex.v1.domain.contabilidade.AtivoImobilizado;
+import br.com.codex.v1.domain.contabilidade.Contas;
 import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.estoque.Produto;
 import br.com.codex.v1.domain.fiscal.InformacaoesAdicionaisFisco;
@@ -22,7 +23,8 @@ public class Bloco0Service {
     public static Bloco0 getBloco(GerarSpedRequestDto requestDto, List<NotaSaidaSpedDto> listaNotas,
                                   List<String> listaUnidadesMedida, List<Produto> listaProdutos,
                                   List<AtivoImobilizado> listaAtivosImobilizados, List<TabelaCfop> listaCfop,
-                                  List<InformacaoesAdicionaisFisco> listaInfoFisco, List<InformacaoesComplementares> listaInfoComp) {
+                                  List<InformacaoesAdicionaisFisco> listaInfoFisco, List<InformacaoesComplementares> listaInfoComp,
+                                  List<Contas> listaContasContabeis) {
         bloco0 = new Bloco0();
         preencherRegistro0000(requestDto);
         preencherRegistro0001(requestDto);
@@ -45,6 +47,8 @@ public class Bloco0Service {
         preencheRegistro0400(listaCfop);
         preencheRegistro0450(listaInfoComp);
         preencheRegistro0460(listaInfoFisco);
+
+        preencheRegistro0500(listaContasContabeis);
 
 
         return bloco0;
@@ -310,17 +314,19 @@ public class Bloco0Service {
     }
 
     //Plano de contas contábeis
-    public static void preencheRegistro0500(){
+    public static void preencheRegistro0500(List<Contas> contasContabeis){
 
-        Registro0500 registro0500 = new Registro0500();
-        registro0500.setDt_alt(df.format(rs0500.getDate("dataInclusao")));
-        registro0500.setCod_nat_cc(rs0500.getString("naturezaPlanConta").substring(0, 2));
-        registro0500.setInd_cta(rs0500.getString("tipo").substring(0,1));
-        registro0500.setNivel(rs0500.getString("codigoReduzido"));
-        registro0500.setCod_cta(rs0500.getString("codigoExpandido"));
-        registro0500.setNome_cta(rs0500.getString("nomePlanoConta"));
+        for (Contas conta : contasContabeis) {
+            Registro0500 registro0500 = new Registro0500();
+            registro0500.setDt_alt(Util.dataSpeed(conta.getInclusao().toLocalDate()));
+            registro0500.setCod_nat_cc(conta.getNatureza()); // 01 a 99
+            registro0500.setInd_cta(conta.getTipo()); // A = Analítica
+            registro0500.setNivel(String.valueOf(conta.getNivel()));
+            registro0500.setCod_cta(conta.getConta());
+            registro0500.setNome_cta(conta.getNome());
 
-        bloco0.getRegistro0500().add(registro0500);
+            bloco0.getRegistro0500().add(registro0500);
+        }
     }
 
     //Centro de custos

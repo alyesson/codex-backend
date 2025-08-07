@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("v1/api/sped_efd")
 public class SpedEfdResource {
@@ -24,7 +22,7 @@ public class SpedEfdResource {
 
         String caminhoArquivo = "C:\\SPED\\EFD_ICMS.txt";
         //String caminhoArquivo = "/tmp/sped/EFD_ICMS.txt";
-        //GerarSpedService.geraBlocos(bloco0, caminhoArquivo);
+        GerarSpedService.geraBlocos(bloco0, caminhoArquivo);
 
         return ResponseEntity.ok("SPED gerado com sucesso em: " + caminhoArquivo);
     }

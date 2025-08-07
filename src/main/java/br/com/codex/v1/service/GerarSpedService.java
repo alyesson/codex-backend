@@ -81,6 +81,9 @@ public class GerarSpedService {
             logger.info("Extraindo informações adicionais utilizados no período");
             List<InformacaoesComplementares> listaInfoComp = informacaoesComplementaresRepository.findAll();
 
+            logger.info("Extraindo plano de contas utilizados no período");
+
+
             System.out.println("Preenchendo os Blocos...");
             EfdIcms efd = new EfdIcms();
             efd.setBloco0(Bloco0Service.getBloco(requestDto, listaNotasSaida, listaUnidadesMedida,

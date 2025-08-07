@@ -89,6 +89,8 @@ public class ProdutoDto implements Serializable {
     protected BigDecimal percentualFcpSt;
     @NotNull(message = "O campo quantidade por unidade não pode ficar em branco")
     protected Integer quantidadePorUnidade;
+    protected String contaContabil;
+    protected String centroCusto;
 
     public ProdutoDto() {
         super();
@@ -149,6 +151,8 @@ public class ProdutoDto implements Serializable {
         this.motivoDesoneracaoIcms = obj.getMotivoDesoneracaoIcms();
         this.percentualFcpSt = obj.getPercentualFcpSt();
         this.quantidadePorUnidade = obj.getQuantidadePorUnidade();
+        this.contaContabil = obj.getContaContabil();
+        this.centroCusto = obj.getCentroCusto();
     }
 
     public void setDescricao(String descricao) {

@@ -81,6 +81,8 @@ public class Produto implements Serializable {
     protected String motivoDesoneracaoIcms;
     protected BigDecimal percentualFcpSt;
     protected Integer quantidadePorUnidade;
+    protected String contaContabil;
+    protected String centroCusto;
 
 
     public Produto() {
@@ -94,7 +96,7 @@ public class Produto implements Serializable {
                    BigDecimal valorIpi, String cnpjProdutorIpi, String codigoSeloControle, String quantidadeSeloControle, String classeEnquadramentoIpi, String pisSituacaoTributaria,
                    BigDecimal percentualPis, BigDecimal pisBaseCalculo, BigDecimal valorPis, BigDecimal pisValorAliquota, String cofinsSituacaotributaria, BigDecimal percentualCofins,
                    BigDecimal cofinsBaseCalculo, BigDecimal valorAliquotaCofins, BigDecimal valorCofins, boolean produtoProduzido, String modalidadeBaseCalculo, String modalidadeBaseCalculoSt,
-                   String motivoDesoneracaoIcms, BigDecimal percentualFcpSt, Integer quantidadePorUnidade) {
+                   String motivoDesoneracaoIcms, BigDecimal percentualFcpSt, Integer quantidadePorUnidade, String contaContabil, String centroCusto) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
@@ -149,6 +151,8 @@ public class Produto implements Serializable {
         this.motivoDesoneracaoIcms = motivoDesoneracaoIcms;
         this.percentualFcpSt = percentualFcpSt;
         this.quantidadePorUnidade = quantidadePorUnidade;
+        this.contaContabil = contaContabil;
+        this.centroCusto = centroCusto;
     }
 
     public Produto(ProdutoDto obj) {
@@ -206,6 +210,8 @@ public class Produto implements Serializable {
         this.motivoDesoneracaoIcms = obj.getMotivoDesoneracaoIcms();
         this.percentualFcpSt = obj.getPercentualFcpSt();
         this.quantidadePorUnidade = obj.getQuantidadePorUnidade();
+        this.contaContabil = obj.getContaContabil();
+        this.centroCusto = obj.getCentroCusto();
     }
 
     @Override
