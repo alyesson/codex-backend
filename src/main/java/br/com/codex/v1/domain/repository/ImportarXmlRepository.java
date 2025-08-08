@@ -31,6 +31,11 @@ public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> 
     @Query("SELECT i.xml FROM ImportarXml i WHERE i.emissao BETWEEN :dataInicial AND :dataFinal")
     List<String> findAllEntradaNotasPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 
-    @Query("SELECT DISTINCT i.cfop FROM ImportaItensXml i JOIN i.nota n WHERE n.dataEmissao BETWEEN :dataInicio AND :dataFim")
-    Set<String> findDistinctCfopEntradaByPeriodo(@Param("dataInicio") LocalDate inicio, @Param("dataFim") LocalDate fim);
+    @Query(value = "SELECT DISTINCT i.cfop FROM importar_xml_itens i " +
+            "WHERE EXISTS (SELECT 1 FROM importar_xml n " +
+            "WHERE i.numero_nota_fiscal = n.numero " +
+            "AND n.emissao BETWEEN :dataInicio AND :dataFim)",
+            nativeQuery = true)
+    Set<String> findDistinctCfopEntradaByPeriodo(@Param("dataInicio") LocalDate inicio,
+                                                 @Param("dataFim") LocalDate fim);
 }

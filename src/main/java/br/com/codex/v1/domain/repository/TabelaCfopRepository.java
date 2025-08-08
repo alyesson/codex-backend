@@ -13,5 +13,6 @@ public interface TabelaCfopRepository extends JpaRepository<TabelaCfop, Long> {
     @Query("SELECT c FROM TabelaCfop c WHERE c.fluxo = :fluxo")
     List<TabelaCfop> findByFluxo(@Param("fluxo") String fluxo);
 
-    List<TabelaCfop> findByCodigo(Set<String> todosCfops);
+    @Query("SELECT t FROM TabelaCfop t WHERE t.codigo IN :codigos")
+    List<TabelaCfop> findByCodigos(@Param("codigos") Set<Integer> codigos);
 }

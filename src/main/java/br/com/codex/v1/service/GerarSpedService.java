@@ -87,22 +87,19 @@ public class GerarSpedService {
             logger.info("Extraindo informações adicionais utilizados no período");
             List<InformacaoesComplementares> listaInfoComp = informacaoesComplementaresRepository.findAll();
 
-            logger.info("Extraindo contas contábeis utilizados no período");
-            List<Produto> listaContaContabil = produtoRepository.findByContaContabil();
-
             System.out.println("Preenchendo os Blocos...");
             EfdIcms efd = new EfdIcms();
             efd.setBloco0(Bloco0Service.getBloco(requestDto, listaNotasSaida, listaUnidadesMedida,
                     listaProdutos, listaAtivosImobilizados, listaCfop, listaInfoFisco, listaInfoComp, contasService));
 
-            efd.setBlocoB(BlocoBService.getBloco());
+            /*efd.setBlocoB(BlocoBService.getBloco());
             efd.setBlocoC(BlocoCService.getBloco(listaNotasSaida));
             efd.setBlocoD(BlocoDService.getBloco(listaNotasEntrada));
             efd.setBlocoE(BlocoEService.getBloco());
             efd.setBlocoG(BlocoGService.getBloco());
             efd.setBlocoH(BlocoHService.getBloco());
             efd.setBlocoK(BlocoKService.getBloco());
-            efd.setBloco1(Bloco1Service.getBloco());
+            efd.setBloco1(Bloco1Service.getBloco());*/
 
             System.out.println("Gerando contadores e conteudo...");
             StringBuilder sb = new StringBuilder();

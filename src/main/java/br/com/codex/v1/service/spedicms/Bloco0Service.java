@@ -2,7 +2,6 @@ package br.com.codex.v1.service.spedicms;
 
 import br.com.codex.v1.domain.cadastros.TabelaCfop;
 import br.com.codex.v1.domain.contabilidade.AtivoImobilizado;
-import br.com.codex.v1.domain.contabilidade.Contas;
 import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.estoque.Produto;
 import br.com.codex.v1.domain.fiscal.InformacaoesAdicionaisFisco;
@@ -13,7 +12,6 @@ import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.registros.bloco0.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +29,7 @@ public class Bloco0Service {
                                   List<String> listaUnidadesMedida, List<Produto> listaProdutos,
                                   List<AtivoImobilizado> listaAtivosImobilizados, List<TabelaCfop> listaCfop,
                                   List<InformacaoesAdicionaisFisco> listaInfoFisco, List<InformacaoesComplementares> listaInfoComp,
-                                  ContasService) {
+                                  ContasService contasService) {
         bloco0 = new Bloco0();
         preencherRegistro0000(requestDto);
         preencherRegistro0001(requestDto);
@@ -55,7 +53,9 @@ public class Bloco0Service {
         preencheRegistro0450(listaInfoComp);
         preencheRegistro0460(listaInfoFisco);
 
-        preencheRegistro0500(ContasService);
+        preencheRegistro0500(listaProdutos, contasService);
+
+        preencheRegistro0600();
 
 
         return bloco0;
@@ -321,7 +321,7 @@ public class Bloco0Service {
     }
 
     //Plano de contas contábeis
-    public static void preencheRegistro0500(List<Produto> listaProdutos, ContaContabilService contaService) {
+    public static void preencheRegistro0500(List<Produto> listaProdutos, ContasService contaService) {
         Set<String> contasUnicas = new HashSet<>();
 
         // Extrai todas as contas únicas dos produtos
@@ -351,16 +351,12 @@ public class Bloco0Service {
 
     //Centro de custos
     public static void preencheRegistro0600(){
-        
+        int ano = LocalDate.now().getYear();
+
         Registro0600 registro0600 = new Registro0600();
-        registro0600.setDt_alt(df.format(rs0600.getDate("dataAtivacao")));
-        registro0600.setCod_ccus(rs0600.getString("centroCusto"));
-        registro0600.setCod_ccus(rs0600.getString("descricao"));
-        bloco0.getRegistro0600().add(registro0600);
-        Registro0600 registro0600 = new Registro0600();
-        registro0600.setDt_alt(df.format(rs0600.getDate("dataAtivacao")));
-        registro0600.setCod_ccus(rs0600.getString("codCCustoSinte"));
-        registro0600.setCod_ccus(rs0600.getString("ccSintetico"));
+        registro0600.setDt_alt("0101"+ano);
+        registro0600.setCod_ccus(null);
+        registro0600.setCcus(null);
         bloco0.getRegistro0600().add(registro0600);
     }
 
@@ -420,26 +416,6 @@ public class Bloco0Service {
             }
         }
         return hierarquia;
-    }
-
-    // Mapeia as contas para o formato do Registro 0500
-    private List<Registro0500> mapearParaRegistro0500(Set<String> contas) {
-        return contas.stream()
-                .map(codigo -> {
-                    String nomeConta = "Nome da Conta " + codigo; // Substitua por uma lógica real (ex: buscar do banco)
-                    String codNat = getCodNat(codigo); // Ex: "01" para Ativo
-                    String indCta = isContaAnalitica(codigo, contas) ? "A" : "S";
-                    int nivel = codigo.split("\\.").length - 1;
-                    return new Registro0500(
-                            "01012024", // DT_ALT (ajuste conforme sua necessidade)
-                            codNat,
-                            indCta,
-                            nivel,
-                            codigo,
-                            nomeConta
-                    );
-                })
-                .collect(Collectors.toList());
     }
 
     // Determina se a conta é analítica (último nível)

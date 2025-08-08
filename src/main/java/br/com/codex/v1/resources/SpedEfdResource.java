@@ -16,14 +16,9 @@ public class SpedEfdResource {
     @Autowired
     private GerarSpedService gerarSpedService;
 
-    @PostMapping("/gerar-efd-icms")
+    @PostMapping("/gerar_efd_icms")
     public ResponseEntity<String> gerarEfdIcms(@RequestBody GerarSpedRequestDto requestDto ) {
         gerarSpedService.gerarBlocos(requestDto);
-
-        String caminhoArquivo = "C:\\SPED\\EFD_ICMS.txt";
-        //String caminhoArquivo = "/tmp/sped/EFD_ICMS.txt";
-        GerarSpedService.geraBlocos(bloco0, caminhoArquivo);
-
-        return ResponseEntity.ok("SPED gerado com sucesso em: " + caminhoArquivo);
+        return ResponseEntity.ok("SPED gerado com sucesso em: ");
     }
 }

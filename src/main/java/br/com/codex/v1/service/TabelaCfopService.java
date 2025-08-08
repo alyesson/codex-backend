@@ -32,18 +32,18 @@ public class TabelaCfopService {
     // 1. Crie um métudo no seu service para buscar CFOPs utilizados
     public List<TabelaCfop> findCfopsUtilizadosNoPeriodo(LocalDate dataInicio, LocalDate dataFim) {
         // Busca CFOPs distintos das notas de entrada
-        Set<String> cfopsEntrada = importarXmlRepository.findDistinctCfopEntradaByPeriodo(dataInicio, dataFim);
+        Set<Integer> cfopsEntrada = importarXmlRepository.findDistinctCfopEntradaByPeriodo(dataInicio, dataFim);
 
         // Busca CFOPs distintos das notas de saída
-        Set<String> cfopsSaida = notaFiscalRepository.findDistinctCfopSaidaByPeriodo(dataInicio.atStartOfDay(),
+        Set<Integer> cfopsSaida = notaFiscalRepository.findDistinctCfopSaidaByPeriodo(dataInicio.atStartOfDay(),
                 dataFim.atTime(23, 59, 59));
 
         // Unifica os conjuntos
-        Set<String> todosCfops = new HashSet<>();
+        Set<Integer> todosCfops = new HashSet<>();
         todosCfops.addAll(cfopsEntrada);
         todosCfops.addAll(cfopsSaida);
 
         // Busca as descrições na tabela_cfop
-        return tabelaCfopRepository.findByCodigo(todosCfops);
+        return tabelaCfopRepository.findByCodigos(todosCfops);
     }
 }
