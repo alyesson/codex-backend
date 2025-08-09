@@ -21,6 +21,6 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
     @Query("SELECT a FROM NotaFiscal a WHERE a.emissao BETWEEN :dataInicial AND :dataFinal AND a.documentoEmitente=:documentoEmitente")
     List<NotaFiscal> consultarNotasPorPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal, @Param("documentoEmitente") String documentoEmitente);
 
-    @Query("SELECT DISTINCT n.cfop FROM NotaFiscalItens n JOIN n.notaFiscal nf WHERE nf.dataEmissao BETWEEN :dataInicio AND :dataFim")
-    Set<Integer> findDistinctCfopSaidaByPeriodo(@Param("dataInicio") LocalDateTime inicio, @Param("dataFim") LocalDateTime fim);
+    @Query("SELECT DISTINCT n.cfop FROM NotaFiscalItem n JOIN n.notaFiscal nf WHERE nf.emissao BETWEEN :dataInicio AND :dataFim")
+    Set<Integer> findDistinctCfopSaidaByPeriodo(@Param("dataInicio") LocalDate inicio, @Param("dataFim") LocalDate fim);
 }

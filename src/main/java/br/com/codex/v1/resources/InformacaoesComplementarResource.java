@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "v1/api/informacao_fisco_nfe")
+@RequestMapping(value = "v1/api/informacao_complementar_nfe")
 public class InformacaoesComplementarResource {
     
     @Autowired

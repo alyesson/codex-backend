@@ -23,15 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class GerarSpedService {
     private static final Logger logger = LoggerFactory.getLogger(GerarSpedService.class);
-
-    @Autowired
-    private EfdNota efdNota;
 
     @Autowired
     private ProdutoService produtoService;
@@ -54,20 +50,26 @@ public class GerarSpedService {
     @Autowired
     private ContasService contasService;
 
+    @Autowired
+    private EfdNota efdNota;
+
+    @Autowired
+    private Bloco0Service bloco0Service;
+
     public void gerarBlocos(GerarSpedRequestDto requestDto){
 
         LocalDate dataInicial = requestDto.getDataInicio();
         LocalDate dataFinal = requestDto.getDataFim();
 
-        LocalDateTime dataInicial1 = requestDto.getDataInicio().atStartOfDay();
-        LocalDateTime dataFinal1 = requestDto.getDataFim().atStartOfDay();
+        LocalDate dataInicial1 = requestDto.getDataInicio();
+        LocalDate dataFinal1 = requestDto.getDataFim();
 
         try {
             logger.info("Extraindo dados das Notas Entrada");
-            List<NotaEntradaSpedDto> listaNotasEntrada = EfdNota.getListaNotasEntrada(dataInicial, dataFinal);
+            List<NotaEntradaSpedDto> listaNotasEntrada = efdNota.getListaNotasEntrada(dataInicial, dataFinal);
 
             logger.info("Extraindo dados das Notas Saída");
-            List<NotaSaidaSpedDto> listaNotasSaida = EfdNota.getListaNotasSaida(dataInicial1, dataFinal1);
+            List<NotaSaidaSpedDto> listaNotasSaida = efdNota.getListaNotasSaida(dataInicial1, dataFinal1);
 
             logger.info(("Extraindo unidades de medida"));
             List<String> listaUnidadesMedida = produtoService.findByUnidadeComercial();
@@ -89,7 +91,7 @@ public class GerarSpedService {
 
             System.out.println("Preenchendo os Blocos...");
             EfdIcms efd = new EfdIcms();
-            efd.setBloco0(Bloco0Service.getBloco(requestDto, listaNotasSaida, listaUnidadesMedida,
+            efd.setBloco0(bloco0Service.getBloco(requestDto, listaNotasSaida, listaUnidadesMedida,
                     listaProdutos, listaAtivosImobilizados, listaCfop, listaInfoFisco, listaInfoComp, contasService));
 
             /*efd.setBlocoB(BlocoBService.getBloco());

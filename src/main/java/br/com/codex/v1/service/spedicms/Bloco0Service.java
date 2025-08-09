@@ -10,22 +10,23 @@ import br.com.codex.v1.service.ContasService;
 import br.com.codex.v1.service.ParticipantesService;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.registros.bloco0.*;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
+@Service
 public class Bloco0Service {
 
-    private static Bloco0 bloco0;
+    private Bloco0 bloco0;
 
     private Bloco0Service() {}
 
     //Abertura do Arquivo Digital e Identificação da entidade
-    public static Bloco0 getBloco(GerarSpedRequestDto requestDto, List<NotaSaidaSpedDto> listaNotas,
+    public Bloco0 getBloco(GerarSpedRequestDto requestDto, List<NotaSaidaSpedDto> listaNotas,
                                   List<String> listaUnidadesMedida, List<Produto> listaProdutos,
                                   List<AtivoImobilizado> listaAtivosImobilizados, List<TabelaCfop> listaCfop,
                                   List<InformacaoesAdicionaisFisco> listaInfoFisco, List<InformacaoesComplementares> listaInfoComp,
@@ -61,7 +62,7 @@ public class Bloco0Service {
         return bloco0;
     }
     //Abertura do Arquivo Digital e Identificação da entidade
-    private static void preencherRegistro0000(GerarSpedRequestDto requestDto) {
+    private void preencherRegistro0000(GerarSpedRequestDto requestDto) {
 
         Registro0000 registro0000 = new Registro0000();
         registro0000.setCod_fin(requestDto.getFinalidadeArquivo());
@@ -80,14 +81,14 @@ public class Bloco0Service {
     }
 
     //Abertura do Bloco 0
-    private static void preencherRegistro0001(GerarSpedRequestDto requestDto) {
+    private void preencherRegistro0001(GerarSpedRequestDto requestDto) {
         Registro0001 registro0001 = new Registro0001();
         registro0001.setInd_mov(requestDto.getIndicadorMovimento());
         bloco0.setRegistro0001(registro0001);
     }
 
     //Classificação do Estabelecimento Industrial ou Equiparado a Indústria
-    private static void preencherRegistro0002(GerarSpedRequestDto requestDto){
+    private void preencherRegistro0002(GerarSpedRequestDto requestDto){
         Registro0002 registro0002 = new Registro0002();
         registro0002.setClass_estab_ind(requestDto.getClassificacaoEstabelecimento());
 
@@ -95,7 +96,7 @@ public class Bloco0Service {
     }
 
     //Dados Complementares da entidade
-    private static void preencherRegistro0005(GerarSpedRequestDto requestDto) {
+    private void preencherRegistro0005(GerarSpedRequestDto requestDto) {
         Registro0005 registro0005 = new Registro0005();
         registro0005.setFantasia(requestDto.getEmpresa().getNomeFantasia());
         registro0005.setCep(requestDto.getEmpresa().getCep());
@@ -109,7 +110,7 @@ public class Bloco0Service {
     }
 
     //Dados do Contribuinte Substituto ou Responsável pelo ICMS Destino
-    public static void preencheRegistro0015(GerarSpedRequestDto requestDto) {
+    public void preencheRegistro0015(GerarSpedRequestDto requestDto) {
         Registro0015 registro0015 = new Registro0015();
         registro0015.setUf_st(requestDto.getUfContribuinteSubstituto());
         registro0015.setIe_st(requestDto.getInscricaoEstadualContribuinteSubstituto());
@@ -118,7 +119,7 @@ public class Bloco0Service {
     }
 
     //Dados do Contador
-    private static void preencherRegistro0100(GerarSpedRequestDto requestDto) {
+    private void preencherRegistro0100(GerarSpedRequestDto requestDto) {
         Registro0100 registro0100 = new Registro0100();
         registro0100.setNome(requestDto.getNomeContador());
         registro0100.setCpf(requestDto.getCpfContador());
@@ -134,7 +135,7 @@ public class Bloco0Service {
     }
 
     //Tabela de Cadastro de Participantes
-    private static void preencherRegistro0150(List<CadastroParticipantesSpedDto> listaParticipantes) {
+    private void preencherRegistro0150(List<CadastroParticipantesSpedDto> listaParticipantes) {
         Registro0150 registro0150;
         for (CadastroParticipantesSpedDto participante : listaParticipantes) {
             registro0150 = new Registro0150();
@@ -165,7 +166,7 @@ public class Bloco0Service {
     }
 
     //Identificação das unidades de medida
-    public static void preencheRegistro0190(List<String> listaUnidadesMedida) {
+    public void preencheRegistro0190(List<String> listaUnidadesMedida) {
 
         if (listaUnidadesMedida != null) {
             for (String unidade : listaUnidadesMedida) {
@@ -178,7 +179,7 @@ public class Bloco0Service {
     }
 
     //Tabela de Identificação do item (Produtos e Serviços)
-    public static void preencheRegistro0200(List<Produto> listaProdutos) {
+    public void preencheRegistro0200(List<Produto> listaProdutos) {
 
         for(Produto produto : listaProdutos){
 
@@ -218,7 +219,7 @@ public class Bloco0Service {
     }
 
     //Consumo Específico Padronizado
-    public static void preencheRegistro0210(List<Produto> listaProdutos) {
+    public void preencheRegistro0210(List<Produto> listaProdutos) {
 
         for (Produto composicao : listaProdutos) {
             Registro0210 registro0210 = new Registro0210();
@@ -235,7 +236,7 @@ public class Bloco0Service {
     }
 
     //Fatores de Conversão de Unidade
-    public static void preencheRegistro0220(List<Produto> produtos) {
+    public void preencheRegistro0220(List<Produto> produtos) {
         for (Produto produto : produtos) {
                 Registro0220 registro0220 = new Registro0220();
                 registro0220.setUnid_conv(null);
@@ -251,7 +252,7 @@ public class Bloco0Service {
     }
 
     //Correlação entre códigos de itens comercializados
-    public static void preencheRegistro0221(List<Produto> produtos) {
+    public void preencheRegistro0221(List<Produto> produtos) {
         for (Produto composicao : produtos) {
             Registro0221 registro0221 = new Registro0221();
             registro0221.setCod_item_atomico(composicao.getCodigo());
@@ -266,7 +267,7 @@ public class Bloco0Service {
     }
 
     //Cadastro de bens ou componentes do Ativo Imobilizado
-    public static void preencheRegistro0300(List<AtivoImobilizado> listaAtivosImobilizados) {
+    public void preencheRegistro0300(List<AtivoImobilizado> listaAtivosImobilizados) {
 
         for (AtivoImobilizado ativo : listaAtivosImobilizados) {
             Registro0300 registro0300 = new Registro0300();
@@ -288,7 +289,7 @@ public class Bloco0Service {
     }
 
     //Tabela de Natureza da Operação/ Prestação
-    public static void preencheRegistro0400(List<TabelaCfop> listaCfop){
+    public void preencheRegistro0400(List<TabelaCfop> listaCfop){
 
         for(TabelaCfop cfop : listaCfop) {
             Registro0400 registro0400 = new Registro0400();
@@ -300,7 +301,7 @@ public class Bloco0Service {
     }
 
     //Tabela de Informação Complementar do documento fiscal
-    public static void preencheRegistro0450(List<InformacaoesComplementares> listaInfoCompl){
+    public void preencheRegistro0450(List<InformacaoesComplementares> listaInfoCompl){
         for(InformacaoesComplementares infoAdic : listaInfoCompl) {
             Registro0450 registro0450 = new Registro0450();
             registro0450.setCod_inf(infoAdic.getCodigo());
@@ -310,7 +311,7 @@ public class Bloco0Service {
     }
 
     //Tabela de Observações do Lançamento Fiscal
-    public static void preencheRegistro0460(List<InformacaoesAdicionaisFisco> listaInfoAdic){
+    public void preencheRegistro0460(List<InformacaoesAdicionaisFisco> listaInfoAdic){
         for(InformacaoesAdicionaisFisco infoAdic : listaInfoAdic) {
             Registro0460 registro0460 = new Registro0460();
             registro0460.setCod_obs(infoAdic.getCodigo());
@@ -321,7 +322,7 @@ public class Bloco0Service {
     }
 
     //Plano de contas contábeis
-    public static void preencheRegistro0500(List<Produto> listaProdutos, ContasService contaService) {
+    public void preencheRegistro0500(List<Produto> listaProdutos, ContasService contaService) {
         Set<String> contasUnicas = new HashSet<>();
 
         // Extrai todas as contas únicas dos produtos
@@ -350,7 +351,7 @@ public class Bloco0Service {
     }
 
     //Centro de custos
-    public static void preencheRegistro0600(){
+    public void preencheRegistro0600(){
         int ano = LocalDate.now().getYear();
 
         Registro0600 registro0600 = new Registro0600();
@@ -360,8 +361,8 @@ public class Bloco0Service {
         bloco0.getRegistro0600().add(registro0600);
     }
 
-    // Métoudo auxiliar para obter a descrição (opcional)
-    private static String obterCodigo(String descricao) {
+    // Métudo auxiliar para obter a descrição (opcional)
+    private String obterCodigo(String descricao) {
         return switch (descricao) {
             case "Unidade" -> "UN";
             case "Quilograma" -> "KG";
@@ -396,7 +397,7 @@ public class Bloco0Service {
     }
 
     // Métudo auxiliar para identificar combustíveis
-    private static boolean isProdutoCombustivel(Produto produto) {
+    private boolean isProdutoCombustivel(Produto produto) {
         return produto.getSubGrupo() != null &&
                 (produto.getSubGrupo().equals("COMBUSTIVEL") ||
                         produto.getSubGrupo().equals("LUBRIFICANTE"));

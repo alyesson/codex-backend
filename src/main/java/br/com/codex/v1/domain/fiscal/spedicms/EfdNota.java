@@ -11,6 +11,9 @@ import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.nfe.schema_4.enviNFe.TNfeProc;
 import br.com.swconsultoria.nfe.util.XmlNfeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -21,20 +24,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class EfdNota {
 
     @Autowired
-    private static ImportarXmlRepository importarXmlRepository; //obtém o xml das notas de entrada
+    private ImportarXmlRepository importarXmlRepository; //obtém o xml das notas de entrada
 
     @Autowired
-    private static XmlNotaFiscalRepository xmlNotaFiscalRepository; //obtém o xml das notas de saída
+    private XmlNotaFiscalRepository xmlNotaFiscalRepository; //obtém o xml das notas de saída
 
-    private static String removeAcentos(String input) {
+    private String removeAcentos(String input) {
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replace('&', 'E');
     }
 
-    public static List<NotaEntradaSpedDto> getListaNotasEntrada(LocalDate dataInicial, LocalDate dataFinal) throws JAXBException, IOException {
+    public List<NotaEntradaSpedDto> getListaNotasEntrada(LocalDate dataInicial, LocalDate dataFinal) throws JAXBException, IOException {
 
         List<NotaEntradaSpedDto> notasEntrada = new ArrayList<>();
         List<String> xmlsEntrada = importarXmlRepository.findAllEntradaNotasPeriodo(dataInicial, dataFinal);
@@ -46,7 +50,7 @@ public class EfdNota {
         return notasEntrada;
     }
 
-    private static NotaEntradaSpedDto montaNotaEntrada(String xml) throws JAXBException {
+    private NotaEntradaSpedDto montaNotaEntrada(String xml) throws JAXBException {
         TNfeProc nfe = XmlNfeUtil.xmlToObject(removeAcentos(xml), TNfeProc.class);
 
         NotaEntradaSpedDto notaEntrada = new NotaEntradaSpedDto();
@@ -74,7 +78,7 @@ public class EfdNota {
         return notaEntrada;
     }
 
-    public static List<NotaSaidaSpedDto> getListaNotasSaida(LocalDateTime dataInicial, LocalDateTime dataFinal) throws JAXBException, IOException {
+    public List<NotaSaidaSpedDto> getListaNotasSaida(LocalDate dataInicial, LocalDate dataFinal) throws JAXBException, IOException {
 
         List<NotaSaidaSpedDto> notasEntrada = new ArrayList<>();
         List<String> xmlsEntrada = xmlNotaFiscalRepository.findAllNotasSaidasPeriodo(dataInicial, dataFinal);
@@ -86,7 +90,7 @@ public class EfdNota {
         return notasEntrada;
     }
 
-    private static NotaSaidaSpedDto montaNotaSaida(String xml) throws JAXBException {
+    private NotaSaidaSpedDto montaNotaSaida(String xml) throws JAXBException {
         TNfeProc nfe = XmlNfeUtil.xmlToObject(removeAcentos(xml), TNfeProc.class);
 
         NotaSaidaSpedDto notaSaida = new NotaSaidaSpedDto();

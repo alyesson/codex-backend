@@ -16,6 +16,6 @@ public interface XmlNotaFiscalRepository extends JpaRepository<XmlNotaFiscal, Lo
 
     List<XmlNotaFiscal> findByChaveAcessoStartingWith(String s);
 
-    @Query("SELECT x.conteudoXml FROM XmlNotaFiscal x WHERE x.dataCriacao BETWEEN :inicioDoDiaInicial AND :fimDoDiaFinal")
-    List<String> findAllNotasSaidasPeriodo(@Param("inicioDoDiaInicial") LocalDateTime inicioDoDiaInicial, @Param("fimDoDiaFinal") LocalDateTime fimDoDiaFinal);
+    @Query("SELECT x.xmlContent FROM XmlNotaFiscal x WHERE x.dataCriacao BETWEEN :inicioDoDiaInicial AND :fimDoDiaFinal")
+    List<String> findAllNotasSaidasPeriodo(@Param("inicioDoDiaInicial") LocalDate inicioDoDiaInicial, @Param("fimDoDiaFinal") LocalDate fimDoDiaFinal);
 }

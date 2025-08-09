@@ -34,9 +34,8 @@ public class TabelaCfopService {
         // Busca CFOPs distintos das notas de entrada
         Set<Integer> cfopsEntrada = importarXmlRepository.findDistinctCfopEntradaByPeriodo(dataInicio, dataFim);
 
-        // Busca CFOPs distintos das notas de saída
-        Set<Integer> cfopsSaida = notaFiscalRepository.findDistinctCfopSaidaByPeriodo(dataInicio.atStartOfDay(),
-                dataFim.atTime(23, 59, 59));
+        // Busca CFOPs distintos das notas de saída (agora usando LocalDate diretamente)
+        Set<Integer> cfopsSaida = notaFiscalRepository.findDistinctCfopSaidaByPeriodo(dataInicio, dataFim);
 
         // Unifica os conjuntos
         Set<Integer> todosCfops = new HashSet<>();
