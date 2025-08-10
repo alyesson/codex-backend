@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class OrcamentoItens implements Serializable {
+public class ServicosItens implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -21,8 +21,8 @@ public class OrcamentoItens implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "orcamento_id", nullable = false)
-    private Orcamento orcamento;
+    @JoinColumn(name = "servicos_id", nullable = false)
+    private Servicos servicos;
 
     @Column(nullable = false, length = 6)
     private String codigo;
@@ -42,13 +42,13 @@ public class OrcamentoItens implements Serializable {
     @Column(nullable = false)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
-    public OrcamentoItens() {
+    public ServicosItens() {
         super();
     }
 
-    public OrcamentoItens(Long id, Orcamento orcamento, String codigo, String descricao, BigDecimal quantidade, BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
+    public ServicosItens(Long id, Servicos servicos, String codigo, String descricao, BigDecimal quantidade, BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
         this.id = id;
-        this.orcamento = orcamento;
+        this.servicos = servicos;
         this.codigo = codigo;
         this.descricao = descricao;
         this.quantidade = quantidade;
@@ -60,7 +60,7 @@ public class OrcamentoItens implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        OrcamentoItens that = (OrcamentoItens) o;
+        ServicosItens that = (ServicosItens) o;
         return Objects.equals(id, that.id);
     }
 

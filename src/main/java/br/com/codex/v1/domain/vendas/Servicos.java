@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,7 +15,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class Orcamento implements Serializable {
+public class Servicos implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -60,14 +59,14 @@ public class Orcamento implements Serializable {
     @Column(length = 500)
     private String observacoes;
 
-    @OneToMany(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrcamentoItens> itens;
+    @OneToMany(mappedBy = "servicos", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServicosItens> itens;
 
-    public Orcamento() {
+    public Servicos() {
         super();
     }
 
-    public Orcamento(Long id, String codigo, LocalDate dataEmissao, LocalDate dataValidade, String vendedor, String tipoOrcamento, String formaPagamento, Situacao situacao, BigDecimal valorFrete, BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal, String observacoes, List<OrcamentoItens> itens) {
+    public Servicos(Long id, String codigo, LocalDate dataEmissao, LocalDate dataValidade, String vendedor, String tipoOrcamento, String formaPagamento, Situacao situacao, BigDecimal valorFrete, BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal, String observacoes, List<ServicosItens> itens) {
         this.id = id;
         this.codigo = codigo;
         this.dataEmissao = dataEmissao;
@@ -87,12 +86,12 @@ public class Orcamento implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Orcamento orcamento = (Orcamento) o;
-        return Objects.equals(id, orcamento.id) && Objects.equals(codigo, orcamento.codigo);
+        Servicos servicos = (Servicos) o;
+        return Objects.equals(id, servicos.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, codigo);
+        return Objects.hashCode(id);
     }
 }
