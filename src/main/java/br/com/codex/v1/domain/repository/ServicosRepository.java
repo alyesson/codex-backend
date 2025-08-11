@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.contabilidade.Servicos;
+import br.com.codex.v1.domain.vendas.Servicos;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

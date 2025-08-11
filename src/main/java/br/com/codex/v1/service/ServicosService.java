@@ -1,8 +1,8 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.contabilidade.Servicos;
 import br.com.codex.v1.domain.dto.ServicosDto;
 import br.com.codex.v1.domain.repository.ServicosRepository;
+import br.com.codex.v1.domain.vendas.Servicos;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

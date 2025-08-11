@@ -1,7 +1,7 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.contabilidade.Servicos;
 import br.com.codex.v1.domain.dto.ServicosDto;
+import br.com.codex.v1.domain.vendas.Servicos;
 import br.com.codex.v1.service.ServicosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
