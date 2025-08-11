@@ -27,6 +27,12 @@ public class Orcamento implements Serializable {
     @Column(nullable = false, unique = true, length = 6)
     private String codigo;
 
+    @Column(nullable = false)
+    private String consumidor;
+
+    @Column(nullable = false)
+    private String documentoConsumidor;
+
     @Column(nullable = false, length = 11)
     private LocalDate dataEmissao;
 
@@ -67,12 +73,14 @@ public class Orcamento implements Serializable {
         super();
     }
 
-    public Orcamento(Long id, String codigo, LocalDate dataEmissao, LocalDate dataValidade, String vendedor,
+    public Orcamento(Long id, String codigo, String consumidor, String documentoConsumidor, LocalDate dataEmissao, LocalDate dataValidade, String vendedor,
                      String tipoOrcamento, String formaPagamento, Situacao situacao, BigDecimal valorFrete,
                      BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal,
                      String observacoes, List<OrcamentoItens> itens) {
         this.id = id;
         this.codigo = codigo;
+        this.consumidor = consumidor;
+        this.documentoConsumidor = documentoConsumidor;
         this.dataEmissao = dataEmissao;
         this.dataValidade = dataValidade;
         this.vendedor = vendedor;
