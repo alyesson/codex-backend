@@ -37,23 +37,19 @@ public class ServicosItens implements Serializable {
     private BigDecimal valorUnitario = BigDecimal.ZERO;
 
     @Column(nullable = false)
-    private BigDecimal desconto = BigDecimal.ZERO;
-
-    @Column(nullable = false)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public ServicosItens() {
         super();
     }
 
-    public ServicosItens(Long id, Servicos servicos, String codigo, String descricao, BigDecimal quantidade, BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
+    public ServicosItens(Long id, Servicos servicos, String codigo, String descricao, BigDecimal quantidade, BigDecimal valorUnitario, BigDecimal valorTotal) {
         this.id = id;
         this.servicos = servicos;
         this.codigo = codigo;
         this.descricao = descricao;
         this.quantidade = quantidade;
         this.valorUnitario = valorUnitario;
-        this.desconto = desconto;
         this.valorTotal = valorTotal;
     }
 

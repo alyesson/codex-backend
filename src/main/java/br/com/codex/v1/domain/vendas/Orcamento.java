@@ -67,7 +67,10 @@ public class Orcamento implements Serializable {
         super();
     }
 
-    public Orcamento(Long id, String codigo, LocalDate dataEmissao, LocalDate dataValidade, String vendedor, String tipoOrcamento, String formaPagamento, Situacao situacao, BigDecimal valorFrete, BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal, String observacoes, List<OrcamentoItens> itens) {
+    public Orcamento(Long id, String codigo, LocalDate dataEmissao, LocalDate dataValidade, String vendedor,
+                     String tipoOrcamento, String formaPagamento, Situacao situacao, BigDecimal valorFrete,
+                     BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal,
+                     String observacoes, List<OrcamentoItens> itens) {
         this.id = id;
         this.codigo = codigo;
         this.dataEmissao = dataEmissao;

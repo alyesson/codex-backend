@@ -1,6 +1,7 @@
 package br.com.codex.v1.domain.vendas;
 
 import br.com.codex.v1.domain.enums.Situacao;
+import br.com.codex.v1.domain.enums.TipoCobranca;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -29,14 +31,11 @@ public class Servicos implements Serializable {
     @Column(nullable = false, length = 11)
     private LocalDate dataEmissao;
 
-    @Column(nullable = false, length = 11)
-    private LocalDate dataValidade;
+    @Column(nullable = false)
+    private TipoCobranca tipoCobranca;
 
-    @Column(nullable = false, length = 30)
-    private String vendedor;
-
-    @Column(nullable = false, length = 30)
-    private String tipoOrcamento;
+    @Column
+    private Duration tempoMedioExecucao;
 
     @Column(nullable = false, length = 30)
     private String formaPagamento;
@@ -44,17 +43,11 @@ public class Servicos implements Serializable {
     @Column(nullable = false, length = 30)
     private Situacao situacao;
 
-    @Column(nullable = false, length = 30)
-    private BigDecimal valorFrete = BigDecimal.ZERO;
-
     @Column(nullable = false, length = 6)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
-    @Column(nullable = false)
-    private BigDecimal descontoTotal = BigDecimal.ZERO;
-
-    @Column(nullable = false)
-    private BigDecimal valorFinal = BigDecimal.ZERO;
+    @Column
+    private String garantia;
 
     @Column(length = 500)
     private String observacoes;
@@ -66,19 +59,17 @@ public class Servicos implements Serializable {
         super();
     }
 
-    public Servicos(Long id, String codigo, LocalDate dataEmissao, LocalDate dataValidade, String vendedor, String tipoOrcamento, String formaPagamento, Situacao situacao, BigDecimal valorFrete, BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal, String observacoes, List<ServicosItens> itens) {
+    public Servicos(Long id, String codigo, LocalDate dataEmissao, TipoCobranca tipoCobranca, Duration tempoMedioExecucao,
+                    String formaPagamento, Situacao situacao, BigDecimal valorTotal, String garantia, String observacoes, List<ServicosItens> itens) {
         this.id = id;
         this.codigo = codigo;
         this.dataEmissao = dataEmissao;
-        this.dataValidade = dataValidade;
-        this.vendedor = vendedor;
-        this.tipoOrcamento = tipoOrcamento;
+        this.tipoCobranca = tipoCobranca;
+        this.tempoMedioExecucao = tempoMedioExecucao;
         this.formaPagamento = formaPagamento;
         this.situacao = situacao;
-        this.valorFrete = valorFrete;
         this.valorTotal = valorTotal;
-        this.descontoTotal = descontoTotal;
-        this.valorFinal = valorFinal;
+        this.garantia = garantia;
         this.observacoes = observacoes;
         this.itens = itens;
     }
