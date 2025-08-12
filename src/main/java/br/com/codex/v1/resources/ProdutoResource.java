@@ -57,7 +57,7 @@ public class ProdutoResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_VENDAS', 'VENDEDOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_VENDAS', 'VENDEDOR')")
     @GetMapping(value = "/descricao/{produto}")
     public ResponseEntity<ProdutoDto> findProduto(@PathVariable String produto){
         Produto objProd = produtoService.findByDescricao(produto);

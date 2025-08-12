@@ -67,7 +67,7 @@ public class OrcamentoService {
 
     public Orcamento findById(Long id){
         Optional<Orcamento> objOrcamento = orcamentoRepository.findById(id);
-        return objOrcamento.orElseThrow(() -> new ObjectNotFoundException("Orçamento não encontrada"));
+        return objOrcamento.orElseThrow(() -> new ObjectNotFoundException("Orçamento não encontrado"));
     }
 
     public List<Orcamento> findAllOrcamentoPeriodo(Date dataInicial, Date dataFinal) {

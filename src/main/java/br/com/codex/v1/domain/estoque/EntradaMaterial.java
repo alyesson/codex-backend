@@ -37,12 +37,16 @@ public class EntradaMaterial implements Serializable {
     protected String autor;
     protected String motivoAcerto;
     protected String unidadeComercial;
+    protected Integer quantidadePorUnidade;
 
     public EntradaMaterial() {
         super();
     }
 
-    public EntradaMaterial(Long id, String codigoProduto, String produto, Date dataEntrada, String fornecedor, String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota, BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade, String autor, String motivoAcerto, String unidadeComercial) {
+    public EntradaMaterial(Long id, String codigoProduto, String produto, Date dataEntrada, String fornecedor,
+                           String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota,
+                           BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade,
+                           String autor, String motivoAcerto, String unidadeComercial, Integer quantidadePorUnidade) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.produto = produto;
@@ -59,6 +63,7 @@ public class EntradaMaterial implements Serializable {
         this.autor = autor;
         this.motivoAcerto = motivoAcerto;
         this.unidadeComercial = unidadeComercial;
+        this.quantidadePorUnidade = quantidadePorUnidade;
     }
 
     public EntradaMaterial(EntradaMaterialDto obj) {
@@ -78,6 +83,7 @@ public class EntradaMaterial implements Serializable {
         this.autor = obj.getAutor();
         this.motivoAcerto = obj.getMotivoAcerto();
         this.unidadeComercial = obj.getUnidadeComercial();
+        this.quantidadePorUnidade = obj.getQuantidadePorUnidade();
     }
 
     @Override
