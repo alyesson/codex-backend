@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.vendas;
 
+import br.com.codex.v1.domain.dto.OrcamentoDto;
 import br.com.codex.v1.domain.enums.Situacao;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,10 +34,10 @@ public class Orcamento implements Serializable {
     @Column(nullable = false)
     private String documentoConsumidor;
 
-    @Column(nullable = false, length = 11)
+    @Column(nullable = false)
     private LocalDate dataEmissao;
 
-    @Column(nullable = false, length = 11)
+    @Column(nullable = false)
     private LocalDate dataValidade;
 
     @Column(nullable = false, length = 30)
@@ -51,16 +52,16 @@ public class Orcamento implements Serializable {
     @Column(nullable = false, length = 30)
     private Situacao situacao;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal valorFrete = BigDecimal.ZERO;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal descontoTotal = BigDecimal.ZERO;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal valorFinal = BigDecimal.ZERO;
 
     @Column(length = 500)
@@ -93,6 +94,25 @@ public class Orcamento implements Serializable {
         this.valorFinal = valorFinal;
         this.observacoes = observacoes;
         this.itens = itens;
+    }
+
+    public Orcamento(OrcamentoDto obj) {
+        this.id = obj.getId();
+        this.codigo = obj.getCodigo();
+        this.consumidor = obj.getConsumidor();
+        this.documentoConsumidor = obj.getDocumentoConsumidor();
+        this.dataEmissao = obj.getDataEmissao();
+        this.dataValidade = obj.getDataValidade();
+        this.vendedor = obj.getVendedor();
+        this.tipoOrcamento = obj.getTipoOrcamento();
+        this.formaPagamento = obj.getFormaPagamento();
+        this.situacao = obj.getSituacao();
+        this.valorFrete = obj.getValorFrete();
+        this.valorTotal = obj.getValorTotal();
+        this.descontoTotal = obj.getDescontoTotal();
+        this.valorFinal = obj.getValorFinal();
+        this.observacoes = obj.getObservacoes();
+        this.itens = obj.getItens();
     }
 
     @Override

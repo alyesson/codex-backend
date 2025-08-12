@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.vendas;
 
+import br.com.codex.v1.domain.dto.OrcamentoItensDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,6 +56,17 @@ public class OrcamentoItens implements Serializable {
         this.valorUnitario = valorUnitario;
         this.desconto = desconto;
         this.valorTotal = valorTotal;
+    }
+
+    public OrcamentoItens(OrcamentoItensDto obj) {
+        this.id = obj.getId();
+        this.orcamento = obj.getOrcamento();
+        this.codigo = obj.getCodigo();
+        this.descricao = obj.getDescricao();
+        this.quantidade = obj.getQuantidade();
+        this.valorUnitario = obj.getValorUnitario();
+        this.desconto = obj.getDesconto();
+        this.valorTotal = obj.getValorTotal();
     }
 
     @Override

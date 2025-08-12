@@ -36,8 +36,6 @@ public class OrcamentoDto implements Serializable {
     private BigDecimal descontoTotal = BigDecimal.ZERO;
     private BigDecimal valorFinal = BigDecimal.ZERO;
     private String observacoes;
-
-    @OneToMany(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrcamentoItens> itens;
 
     public OrcamentoDto() {

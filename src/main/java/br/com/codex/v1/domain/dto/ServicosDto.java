@@ -13,9 +13,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
 
-@Entity
 @Getter
 @Setter
 public class ServicosDto implements Serializable {
