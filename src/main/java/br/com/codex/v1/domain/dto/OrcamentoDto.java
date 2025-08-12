@@ -2,7 +2,6 @@ package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.vendas.Orcamento;
-import br.com.codex.v1.domain.vendas.OrcamentoItens;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +19,6 @@ public class OrcamentoDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-
     private Long id;
     private String codigo;
     private String consumidor;
@@ -36,7 +34,7 @@ public class OrcamentoDto implements Serializable {
     private BigDecimal descontoTotal = BigDecimal.ZERO;
     private BigDecimal valorFinal = BigDecimal.ZERO;
     private String observacoes;
-    private List<OrcamentoItens> itens;
+    private List<OrcamentoItensDto> itens;
 
     public OrcamentoDto() {
         super();
@@ -58,6 +56,5 @@ public class OrcamentoDto implements Serializable {
         this.descontoTotal = obj.getDescontoTotal();
         this.valorFinal = obj.getValorFinal();
         this.observacoes = obj.getObservacoes();
-        this.itens = obj.getItens();
     }
 }

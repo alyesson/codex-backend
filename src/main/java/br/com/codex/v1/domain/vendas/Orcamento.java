@@ -112,7 +112,6 @@ public class Orcamento implements Serializable {
         this.descontoTotal = obj.getDescontoTotal();
         this.valorFinal = obj.getValorFinal();
         this.observacoes = obj.getObservacoes();
-        this.itens = obj.getItens();
     }
 
     @Override

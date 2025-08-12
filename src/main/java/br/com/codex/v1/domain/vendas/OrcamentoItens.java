@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.vendas;
 
+import br.com.codex.v1.domain.compras.SolicitacaoCompra;
 import br.com.codex.v1.domain.dto.OrcamentoItensDto;
 import lombok.Getter;
 import lombok.Setter;
