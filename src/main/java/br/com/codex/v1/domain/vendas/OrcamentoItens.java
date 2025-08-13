@@ -48,7 +48,8 @@ public class OrcamentoItens implements Serializable {
         super();
     }
 
-    public OrcamentoItens(Long id, Orcamento orcamento, String codigo, String descricao, BigDecimal quantidade, BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
+    public OrcamentoItens(Long id, Orcamento orcamento, String codigo, String descricao, BigDecimal quantidade,
+                          BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
         this.id = id;
         this.orcamento = orcamento;
         this.codigo = codigo;
