@@ -26,7 +26,7 @@ public class OrcamentoItens implements Serializable {
     @JoinColumn(name = "orcamento_id", nullable = false)
     private Orcamento orcamento;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, length = 20)
     private String codigo;
 
     @Column(nullable = false, length = 200)
