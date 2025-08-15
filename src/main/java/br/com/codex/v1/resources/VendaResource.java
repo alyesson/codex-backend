@@ -12,7 +12,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,46 +69,50 @@ public class VendaResource {
     //Venda por período
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/vendas_periodo")
-    public ResponseEntity<List<VendaDto>> findAllVendaPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+    public ResponseEntity<List<VendaDto>> findAllVendaPeriodo(@RequestParam("dataInicial") LocalDate dataInicial, @RequestParam("dataFinal") LocalDate dataFinal){
         List<Venda> list = vendaService.findAllVendaPeriodo(dataInicial, dataFinal);
         List<VendaDto> listDto = list.stream().map(VendaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 
     //Contabiliza os melhores vendedores
-    /*@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/melhores_vendedores")
-    public ResponseEntity<List<VendaDto>> findAllVendedoresPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+    public ResponseEntity<List<Map<String, Object>>> findAllVendedoresPeriodo(
+            @RequestParam("dataInicial") LocalDate dataInicial,
+            @RequestParam("dataFinal") LocalDate dataFinal) {
+
         List<Object[]> resultados = vendaService.findVendedoresByNumeroVendas(dataInicial, dataFinal);
 
-        // Mapeia cada resultado para um objeto VendaDto
-        List<VendaDto> listDto = resultados.stream()
+        List<Map<String, Object>> response = resultados.stream()
                 .map(result -> {
-                    VendaDto dto = new VendaDto();
-                    dto.setVendedor((String) result[0]); // Nome do vendedor na primeira posição
-                    dto.setQuantidade(((Number) result[1]).intValue());
-                    dto.setTotalVenda((BigDecimal) result[2]); // Total de vendas na terceira posição
-                    return dto;
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("vendedor", result[0]);
+                    map.put("quantidade", result[1]);
+                    map.put("totalVendas", result[2]);
+                    return map;
                 })
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
+
+        return ResponseEntity.ok(response);
     }
 
-    //Contabiliza os melhores clientes
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/melhores_clientes")
-    public ResponseEntity<List<VendaDto>> findByVendasClientes(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
+    public ResponseEntity<List<Map<String, Object>>> findByVendasClientes(
+            @RequestParam("dataInicial") LocalDate dataInicial, @RequestParam("dataFinal") LocalDate dataFinal) {
+
         List<Object[]> resultados = vendaService.findByVendasClientes(dataInicial, dataFinal);
 
-        // Mapeia cada resultado para um objeto VendaDto
-        List<VendaDto> listDto = resultados.stream()
+        List<Map<String, Object>> response = resultados.stream()
                 .map(result -> {
-                    VendaDto dto = new VendaDto();
-                    dto.setCliente((String) result[0]); // Nome do vendedor na primeira posição
-                    dto.setTotalVenda((BigDecimal) result[1]); // Total de vendas na terceira posição
-                    return dto;
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("cliente", result[0]);
+                    map.put("totalVendas", result[1]);
+                    return map;
                 })
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }*/
+
+        return ResponseEntity.ok(response);
+    }
 }

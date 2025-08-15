@@ -5,28 +5,31 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 import java.util.List;
 
-public interface VendaRepository extends JpaRepository<Venda,Long> {
-    @Query("SELECT v FROM Venda v WHERE YEAR(v.dataVenda) = :ano")
+public interface VendaRepository extends JpaRepository<Venda, Long> {
+    @Query("SELECT v FROM Venda v WHERE YEAR(v.dataEmissao) = :ano")
     List<Venda> findAllByYear(@Param("ano") Integer ano);
 
-    @Query("SELECT m FROM Venda m WHERE YEAR(m.dataVenda) = :ano and MONTH(m.dataVenda) = :mes")
+    @Query("SELECT v FROM Venda v WHERE YEAR(v.dataEmissao) = :ano AND MONTH(v.dataEmissao) = :mes")
     List<Venda> findAllByYearAndMonth(@Param("ano") Integer ano, @Param("mes") Integer mes);
 
-    @Query("SELECT COUNT(m.dataVenda) FROM Venda m WHERE YEAR(m.dataVenda) = :ano and MONTH(m.dataVenda) = :mes")
+    @Query("SELECT COUNT(v) FROM Venda v WHERE YEAR(v.dataEmissao) = :ano AND MONTH(v.dataEmissao) = :mes")
     int countByDataVenda(@Param("ano") Integer ano, @Param("mes") Integer mes);
 
-    @Query("SELECT v FROM Venda v WHERE v.dataVenda BETWEEN :dataInicial AND :dataFinal")
-    List<Venda> findAllVendaPeriodo(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
+    @Query("SELECT v FROM Venda v WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal")
+    List<Venda> findAllVendaPeriodo(@Param("dataInicial") LocalDate dataInicial,
+                                    @Param("dataFinal") LocalDate dataFinal);
 
-    @Query("SELECT v.vendedor, COUNT(v), SUM(v.totalVenda) AS totalVendas FROM Venda v " +
-            "WHERE v.dataVenda BETWEEN :dataInicial AND :dataFinal GROUP BY v.vendedor ORDER BY totalVendas DESC")
-    List<Object[]> findVendedoresByNumeroVendas(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
+    @Query("SELECT v.vendedor, COUNT(v), SUM(v.valorFinal) AS totalVendas FROM Venda v " +
+            "WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal GROUP BY v.vendedor ORDER BY totalVendas DESC")
+    List<Object[]> findVendedoresByNumeroVendas(@Param("dataInicial") LocalDate dataInicial,
+                                                @Param("dataFinal") LocalDate dataFinal);
 
-    @Query("SELECT v.cliente, SUM(v.totalVenda) AS totalVendas FROM Venda v " +
-            "WHERE v.dataVenda BETWEEN :dataInicial AND :dataFinal GROUP BY v.cliente ORDER BY totalVendas DESC")
-    List<Object[]> findByVendasClientes(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
-
+    @Query("SELECT v.consumidor, SUM(v.valorFinal) AS totalVendas FROM Venda v " +
+            "WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal GROUP BY v.consumidor ORDER BY totalVendas DESC")
+    List<Object[]> findByVendasClientes(@Param("dataInicial") LocalDate dataInicial,
+                                        @Param("dataFinal") LocalDate dataFinal);
 }

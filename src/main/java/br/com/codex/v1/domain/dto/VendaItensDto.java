@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.vendas.OrcamentoItens;
+import br.com.codex.v1.domain.vendas.VendaItens;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ public class VendaItensDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private OrcamentoDto orcamentoId; // ou String codigoOrcamento
+    private VendaDto vendaId; // ou String codigoVenda
     private String codigo;
     private String descricao;
     private BigDecimal quantidade = BigDecimal.ONE;
@@ -27,9 +27,9 @@ public class VendaItensDto implements Serializable {
         super();
     }
 
-    public VendaItensDto(OrcamentoItens obj) {
+    public VendaItensDto(VendaItens obj) {
         this.id = obj.getId();
-        this.orcamentoId = new OrcamentoDto(obj.getOrcamento());
+        this.vendaId = new VendaDto(obj.getVenda());
         this.codigo = obj.getCodigo();
         this.descricao = obj.getDescricao();
         this.quantidade = obj.getQuantidade();

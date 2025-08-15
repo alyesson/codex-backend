@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VendaService {
@@ -24,23 +26,35 @@ public class VendaService {
     @Autowired
     private VendaItensRepository vendaItensRepository;
 
-    public Venda create(VendaDto vendaDto){
+    public Venda create(VendaDto vendaDto) {
+        if (vendaDto == null) {
+            throw new IllegalArgumentException("Dados da venda não podem ser nulos");
+        }
+
+        // Cria a venda principal
         vendaDto.setId(null);
         Venda objVenda = new Venda(vendaDto);
-        objVenda = vendaRepository.save(objVenda);
 
-        for(VendaItensDto itemDto : vendaDto.getItens()){
-            VendaItens item = new VendaItens();
-            item.setCodigo(itemDto.getCodigo());
-            item.setDescricao(itemDto.getDescricao());
-            item.setDesconto(itemDto.getDesconto());
-            item.setQuantidade(itemDto.getQuantidade());
-            item.setValorUnitario(itemDto.getValorUnitario());
-            item.setValorTotal(itemDto.getValorTotal());
-            item.setVenda(objVenda);
-            vendaItensRepository.save(item);
+        // Processa os itens da venda
+        if (vendaDto.getItens() != null && !vendaDto.getItens().isEmpty()) {
+            List<VendaItens> itens = vendaDto.getItens().stream()
+                    .map(itemDto -> {
+                        VendaItens item = new VendaItens();
+                        item.setCodigo(itemDto.getCodigo());
+                        item.setDescricao(itemDto.getDescricao());
+                        item.setDesconto(itemDto.getDesconto());
+                        item.setQuantidade(itemDto.getQuantidade());
+                        item.setValorUnitario(itemDto.getValorUnitario());
+                        item.setValorTotal(itemDto.getValorTotal());
+                        item.setVenda(objVenda); // Estabelece a relação bidirecional
+                        return item;
+                    })
+                    .collect(Collectors.toList());
+            objVenda.setItens(itens);
         }
-        return objVenda;
+
+        // Salva a venda (os itens serão salvos automaticamente devido ao cascade)
+        return vendaRepository.save(objVenda);
     }
 
     public Venda findById(Long id){
@@ -61,15 +75,15 @@ public class VendaService {
         return quantidade;
     }
 
-    public List<Venda> findAllVendaPeriodo(Date dataInicial, Date dataFinal) {
+    public List<Venda> findAllVendaPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
         return vendaRepository.findAllVendaPeriodo(dataInicial, dataFinal);
     }
 
-    public List<Object[]> findVendedoresByNumeroVendas(Date dataInicial, Date dataFinal) {
+    public List<Object[]> findVendedoresByNumeroVendas(LocalDate dataInicial, LocalDate dataFinal) {
         return vendaRepository.findVendedoresByNumeroVendas(dataInicial, dataFinal);
     }
 
-    public List<Object[]> findByVendasClientes(Date dataInicial, Date dataFinal) {
+    public List<Object[]> findByVendasClientes(LocalDate dataInicial, LocalDate dataFinal) {
         return vendaRepository.findByVendasClientes(dataInicial, dataFinal);
     }
 }

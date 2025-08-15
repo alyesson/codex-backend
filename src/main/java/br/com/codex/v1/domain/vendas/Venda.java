@@ -66,7 +66,7 @@ public class Venda implements Serializable {
     @Column(length = 500)
     private String observacoes;
 
-    @OneToMany(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VendaItens> itens;
 
     public Venda() {
