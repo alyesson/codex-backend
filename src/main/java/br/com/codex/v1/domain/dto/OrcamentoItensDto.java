@@ -18,7 +18,7 @@ public class OrcamentoItensDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Orcamento orcamento;
+    private OrcamentoDto orcamentoId; // ou String codigoOrcamento
     private String codigo;
     private String descricao;
     private BigDecimal quantidade = BigDecimal.ONE;
@@ -32,7 +32,7 @@ public class OrcamentoItensDto implements Serializable {
 
     public OrcamentoItensDto(OrcamentoItens obj) {
         this.id = obj.getId();
-        this.orcamento = obj.getOrcamento();
+        this.orcamentoId = new OrcamentoDto(obj.getOrcamento());
         this.codigo = obj.getCodigo();
         this.descricao = obj.getDescricao();
         this.quantidade = obj.getQuantidade();

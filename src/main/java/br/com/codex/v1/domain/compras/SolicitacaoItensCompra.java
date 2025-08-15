@@ -1,5 +1,8 @@
 package br.com.codex.v1.domain.compras;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -7,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class SolicitacaoItensCompra implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -34,62 +39,6 @@ public class SolicitacaoItensCompra implements Serializable {
         this.quantidade = quantidade;
         this.unidadeComercial = unidadeComercial;
         this.precoUnitario = precoUnitario;
-        this.solicitacaoCompra = solicitacaoCompra;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigoProduto() {
-        return codigoProduto;
-    }
-
-    public void setCodigoProduto(String codigoProduto) {
-        this.codigoProduto = codigoProduto;
-    }
-
-    public String getDescricaoProduto() {
-        return descricaoProduto;
-    }
-
-    public void setDescricaoProduto(String descricaoProduto) {
-        this.descricaoProduto = descricaoProduto;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getUnidadeComercial() {
-        return unidadeComercial;
-    }
-
-    public void setUnidadeComercial(String unidadeComercial) {
-        this.unidadeComercial = unidadeComercial;
-    }
-
-    public BigDecimal getPrecoUnitario() {
-        return precoUnitario;
-    }
-
-    public void setPrecoUnitario(BigDecimal precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
-
-    public SolicitacaoCompra getSolicitacaoCompra() {
-        return solicitacaoCompra;
-    }
-
-    public void setSolicitacaoCompra(SolicitacaoCompra solicitacaoCompra) {
         this.solicitacaoCompra = solicitacaoCompra;
     }
 
