@@ -25,7 +25,7 @@ public class Orcamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 6)
+    @Column(nullable = false, unique = true, length = 20)
     private String codigo;
 
     @Column(nullable = false)
