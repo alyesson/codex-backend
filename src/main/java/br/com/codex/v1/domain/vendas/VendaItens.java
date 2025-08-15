@@ -1,14 +1,12 @@
 package br.com.codex.v1.domain.vendas;
 
-import br.com.codex.v1.domain.dto.VendaItensDto;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -20,41 +18,48 @@ public class VendaItens implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
-    protected String cpfCnpj;
-    protected String codigoProduto;
-    protected String descricaoProduto;
-    protected Integer quantidade;
-    protected BigDecimal valorProduto;
-    protected BigDecimal valorTotal;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "venda_id", nullable = false)
+    private Venda venda;
+
+    @Column(nullable = false, length = 20)
+    private String codigo;
+
+    @Column(nullable = false, length = 200)
+    private String descricao;
+
+    @Column(nullable = false)
+    private BigDecimal quantidade = BigDecimal.ONE;
+
+    @Column(nullable = false)
+    private BigDecimal valorUnitario = BigDecimal.ZERO;
+
+    @Column(nullable = false)
+    private BigDecimal desconto = BigDecimal.ZERO;
+
+    @Column(nullable = false)
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public VendaItens() {
         super();
     }
 
-    public VendaItens(Long id, String cpfCnpj, String codigoProduto, String descricaoProduto, Integer quantidade, BigDecimal valorProduto, BigDecimal valorTotal) {
+    public VendaItens(Long id, Venda venda, String codigo, String descricao, BigDecimal quantidade,
+                      BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
         this.id = id;
-        this.cpfCnpj = cpfCnpj;
-        this.codigoProduto = codigoProduto;
-        this.descricaoProduto = descricaoProduto;
+        this.venda = venda;
+        this.codigo = codigo;
+        this.descricao = descricao;
         this.quantidade = quantidade;
-        this.valorProduto = valorProduto;
+        this.valorUnitario = valorUnitario;
+        this.desconto = desconto;
         this.valorTotal = valorTotal;
-    }
-
-    public VendaItens(VendaItensDto objItens) {
-        this.id = objItens.getId();
-        this.cpfCnpj = objItens.getCpfCnpj();
-        this.codigoProduto = objItens.getCodigoProduto();
-        this.descricaoProduto = objItens.getDescricaoProduto();
-        this.quantidade = objItens.getQuantidade();
-        this.valorProduto = objItens.getValorProduto();
-        this.valorTotal = objItens.getValorTotal();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VendaItens that = (VendaItens) o;
         return Objects.equals(id, that.id);
@@ -62,6 +67,6 @@ public class VendaItens implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hashCode(id);
     }
 }

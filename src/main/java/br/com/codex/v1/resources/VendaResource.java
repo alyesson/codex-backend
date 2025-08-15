@@ -1,7 +1,7 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.vendas.Venda;
 import br.com.codex.v1.domain.dto.VendaDto;
+import br.com.codex.v1.domain.vendas.Venda;
 import br.com.codex.v1.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +73,7 @@ public class VendaResource {
     }
 
     //Contabiliza os melhores vendedores
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
+    /*@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/melhores_vendedores")
     public ResponseEntity<List<VendaDto>> findAllVendedoresPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
         List<Object[]> resultados = vendaService.findVendedoresByNumeroVendas(dataInicial, dataFinal);
@@ -107,5 +107,5 @@ public class VendaResource {
                 })
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
-    }
+    }*/
 }

@@ -1,8 +1,12 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.vendas.Venda;
+
 import br.com.codex.v1.domain.dto.VendaDto;
+import br.com.codex.v1.domain.dto.VendaItensDto;
+import br.com.codex.v1.domain.repository.VendaItensRepository;
 import br.com.codex.v1.domain.repository.VendaRepository;
+import br.com.codex.v1.domain.vendas.Venda;
+import br.com.codex.v1.domain.vendas.VendaItens;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +20,27 @@ public class VendaService {
 
     @Autowired
     private VendaRepository vendaRepository;
+    
+    @Autowired
+    private VendaItensRepository vendaItensRepository;
 
     public Venda create(VendaDto vendaDto){
         vendaDto.setId(null);
         Venda objVenda = new Venda(vendaDto);
-        return vendaRepository.save(objVenda);
+        objVenda = vendaRepository.save(objVenda);
+
+        for(VendaItensDto itemDto : vendaDto.getItens()){
+            VendaItens item = new VendaItens();
+            item.setCodigo(itemDto.getCodigo());
+            item.setDescricao(itemDto.getDescricao());
+            item.setDesconto(itemDto.getDesconto());
+            item.setQuantidade(itemDto.getQuantidade());
+            item.setValorUnitario(itemDto.getValorUnitario());
+            item.setValorTotal(itemDto.getValorTotal());
+            item.setVenda(objVenda);
+            vendaItensRepository.save(item);
+        }
+        return objVenda;
     }
 
     public Venda findById(Long id){

@@ -1,7 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-
-import br.com.codex.v1.domain.vendas.VendaItens;
+import br.com.codex.v1.domain.vendas.OrcamentoItens;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,25 +14,27 @@ public class VendaItensDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected Long id;
-    protected String cpfCnpj;
-    protected String codigoProduto;
-    protected String descricaoProduto;
-    protected Integer quantidade;
-    protected BigDecimal valorProduto;
-    protected BigDecimal valorTotal;
+    private Long id;
+    private OrcamentoDto orcamentoId; // ou String codigoOrcamento
+    private String codigo;
+    private String descricao;
+    private BigDecimal quantidade = BigDecimal.ONE;
+    private BigDecimal valorUnitario = BigDecimal.ZERO;
+    private BigDecimal desconto = BigDecimal.ZERO;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public VendaItensDto() {
         super();
     }
 
-    public VendaItensDto(VendaItens objItens) {
-        this.id = objItens.getId();
-        this.cpfCnpj = objItens.getCpfCnpj();
-        this.codigoProduto = objItens.getCodigoProduto();
-        this.descricaoProduto = objItens.getDescricaoProduto();
-        this.quantidade = objItens.getQuantidade();
-        this.valorProduto = objItens.getValorProduto();
-        this.valorTotal = objItens.getValorTotal();
+    public VendaItensDto(OrcamentoItens obj) {
+        this.id = obj.getId();
+        this.orcamentoId = new OrcamentoDto(obj.getOrcamento());
+        this.codigo = obj.getCodigo();
+        this.descricao = obj.getDescricao();
+        this.quantidade = obj.getQuantidade();
+        this.valorUnitario = obj.getValorUnitario();
+        this.desconto = obj.getDesconto();
+        this.valorTotal = obj.getValorTotal();
     }
 }
