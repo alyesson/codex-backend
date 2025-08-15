@@ -2,6 +2,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.dto.OrcamentoDto;
 import br.com.codex.v1.domain.dto.OrcamentoItensDto;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.repository.OrcamentoItensRepository;
 import br.com.codex.v1.domain.repository.OrcamentoRepository;
 import br.com.codex.v1.domain.vendas.Orcamento;
@@ -10,6 +11,8 @@ import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -72,5 +75,14 @@ public class OrcamentoService {
 
     public List<Orcamento> findAllOrcamentoPeriodo(Date dataInicial, Date dataFinal) {
         return orcamentoRepository.findAllOrcamentoPeriodo(dataInicial, dataFinal);
+    }
+
+    @Transactional
+    public Orcamento atualizarSituacao(Long id, Situacao situacao) {
+        Orcamento orcamento = orcamentoRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Orçamento não encontrado"));
+
+        orcamento.setSituacao(situacao);
+        return orcamentoRepository.save(orcamento);
     }
 }

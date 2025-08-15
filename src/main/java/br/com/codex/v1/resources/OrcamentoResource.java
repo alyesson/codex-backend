@@ -2,6 +2,7 @@ package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.dto.OrcamentoDto;
 import br.com.codex.v1.domain.dto.OrcamentoItensDto;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.vendas.Orcamento;
 import br.com.codex.v1.domain.vendas.OrcamentoItens;
 import br.com.codex.v1.service.OrcamentoService;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +34,11 @@ public class OrcamentoResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<OrcamentoDto> update(@PathVariable Long id, @RequestParam String situacao){
-        orcamentoService.update(id, situacao);
-        return ResponseEntity.ok().build();
+    @PutMapping(value = "/situacao/{id}")
+    public ResponseEntity<OrcamentoDto> atualizarSituacao(@PathVariable Long id, @RequestParam Situacao situacao) {
+
+        Orcamento orcamento = orcamentoService.atualizarSituacao(id, situacao);
+        return ResponseEntity.ok(new OrcamentoDto(orcamento));
     }
 
     @GetMapping("/{id}/itens")
