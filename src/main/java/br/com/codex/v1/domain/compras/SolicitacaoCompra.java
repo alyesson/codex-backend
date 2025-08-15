@@ -31,9 +31,9 @@ public class SolicitacaoCompra implements Serializable {
     protected String centroCusto;
     protected String motivoCompra;
     protected String destinoMaterial;
-    protected String eUrgente;
+    protected String urgente;
     protected String opcaoMarca;
-    protected String eItemEstoque;
+    protected String itemEstoque;
     @JsonIgnore
     @OneToMany(mappedBy = "solicitacaoCompra")
     protected List<SolicitacaoItensCompra> solicitacaoItensCompra = new ArrayList<>();
@@ -43,7 +43,7 @@ public class SolicitacaoCompra implements Serializable {
         super();
     }
 
-    public SolicitacaoCompra(Long id, String solicitante, String departamento, Date dataSolicitacao, String centroCusto, String motivoCompra, String destinoMaterial, String eUrgente, String opcaoMarca, String eItemEstoque, String situacao) {
+    public SolicitacaoCompra(Long id, String solicitante, String departamento, Date dataSolicitacao, String centroCusto, String motivoCompra, String destinoMaterial, String urgente, String opcaoMarca, String itemEstoque, String situacao) {
         this.id = id;
         this.solicitante = solicitante;
         this.departamento = departamento;
@@ -51,9 +51,9 @@ public class SolicitacaoCompra implements Serializable {
         this.centroCusto = centroCusto;
         this.motivoCompra = motivoCompra;
         this.destinoMaterial = destinoMaterial;
-        this.eUrgente = eUrgente;
+        this.urgente = urgente;
         this.opcaoMarca = opcaoMarca;
-        this.eItemEstoque = eItemEstoque;
+        this.itemEstoque = itemEstoque;
         this.situacao  = situacao;
     }
 
@@ -65,18 +65,10 @@ public class SolicitacaoCompra implements Serializable {
         this.centroCusto = obj.getCentroCusto();
         this.motivoCompra = obj.getMotivoCompra();
         this.destinoMaterial = obj.getDestinoMaterial();
-        this.eUrgente = obj.geteUrgente();
+        this.urgente = obj.getUrgente();
         this.opcaoMarca = obj.getOpcaoMarca();
-        this.eItemEstoque = obj.geteItemEstoque();
+        this.itemEstoque = obj.getItemEstoque();
         this.situacao = obj.getSituacao();
-    }
-    
-    public void setMotivoCompra(String motivoCompra) {
-        this.motivoCompra = capitalizarPalavras(motivoCompra);
-    }
-
-    public void setDestinoMaterial(String destinoMaterial) {
-        this.destinoMaterial = capitalizarPalavras(destinoMaterial);
     }
 
     @Override
