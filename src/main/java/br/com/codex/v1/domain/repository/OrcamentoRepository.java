@@ -23,7 +23,7 @@ public interface OrcamentoRepository extends JpaRepository<Orcamento, Long> {
     @Query("UPDATE Orcamento u SET u.situacao = :situacao WHERE u.id = :id")
     void saveSituacao(@Param("id") Long id, @Param("situacao")String situacao);
 
-    @Query("SELECT s FROM Orcamento s WHERE s.situacao = 'Aprovado' AND YEAR(s.dataEmissao) = :anoAtual ORDER BY s.dataEmissao DESC")
+    @Query("SELECT s FROM Orcamento s WHERE s.situacao = 'APROVADO' AND YEAR(s.dataEmissao) = :anoAtual ORDER BY s.dataEmissao DESC")
     List<Orcamento> findAllBysituacao(@Param("anoAtual") int anoAtual);
 
     @Query("SELECT s FROM Orcamento s WHERE s.dataEmissao BETWEEN :dataInicial AND :dataFinal")

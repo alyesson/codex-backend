@@ -1,7 +1,11 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.dto.OrcamentoDto;
 import br.com.codex.v1.domain.dto.VendaDto;
+import br.com.codex.v1.domain.enums.Situacao;
+import br.com.codex.v1.domain.vendas.Orcamento;
 import br.com.codex.v1.domain.vendas.Venda;
+import br.com.codex.v1.service.OrcamentoService;
 import br.com.codex.v1.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +29,9 @@ public class VendaResource {
     @Autowired
     private VendaService vendaService;
 
+    @Autowired
+    private OrcamentoService orcamentoService;
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
     @PostMapping
     public ResponseEntity<VendaDto> create(@RequestBody VendaDto vendaDto){
@@ -40,7 +47,7 @@ public class VendaResource {
         return ResponseEntity.ok().body(new VendaDto(objVenda));
     }
 
-    //Neste método serão listadas todas as vendas no ano ordenando do mais recente para o mais antigo
+    //Neste métudo serão listadas todas as vendas no ano ordenando do mais recente para o mais antigo
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping("/vendas_ano")
     public ResponseEntity <List<VendaDto>> findAllByYear(@RequestParam(value = "ano") Integer ano){
@@ -114,5 +121,13 @@ public class VendaResource {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
+    @GetMapping("/orcamentos_aprovados")
+    public ResponseEntity<List<OrcamentoDto>> findOrcamentosAprovados() {
+        List<Orcamento> orcamentos = orcamentoService.findAllBySituacao();
+        List<OrcamentoDto> listDto = orcamentos.stream().map(OrcamentoDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
     }
 }
