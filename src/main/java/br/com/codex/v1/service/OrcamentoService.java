@@ -65,7 +65,7 @@ public class OrcamentoService {
     }
 
     public List<Orcamento> findAllBySituacao() {
-        return orcamentoRepository.findAllBysituacao(anoAtual);
+        return orcamentoRepository.findAllBySituacao(anoAtual);
     }
 
     public Orcamento findById(Long id){
