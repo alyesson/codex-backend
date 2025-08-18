@@ -49,8 +49,8 @@ public class OrcamentoResource {
     }
 
     @GetMapping("/orcamento_vendedor_ano")
-    public ResponseEntity <List<OrcamentoDto>> findAllByYearUsuario(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "solicitante") String solicitante){
-        List<Orcamento> objVenda = orcamentoService.findAllByYearUsuario(ano, solicitante);
+    public ResponseEntity <List<OrcamentoDto>> findAllByYearUsuario(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "vendedor") String vendedor){
+        List<Orcamento> objVenda = orcamentoService.findAllByYearUsuario(ano, vendedor);
         List<OrcamentoDto> listDto = objVenda.stream().map(OrcamentoDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
@@ -71,9 +71,10 @@ public class OrcamentoResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Orcamento> findById(@PathVariable Long id){
+    public ResponseEntity<OrcamentoDto> findById(@PathVariable Long id){
         Orcamento obj = orcamentoService.findById(id);
-        return ResponseEntity.ok().body(obj);
+        OrcamentoDto response = new OrcamentoDto(obj);
+        return ResponseEntity.ok().body(response);
     }
 
     //ASolicitações de Compra Por Período

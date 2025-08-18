@@ -43,7 +43,9 @@ public class SolicitacaoCompra implements Serializable {
         super();
     }
 
-    public SolicitacaoCompra(Long id, String solicitante, String departamento, Date dataSolicitacao, String centroCusto, String motivoCompra, String destinoMaterial, String urgente, String opcaoMarca, String itemEstoque, String situacao) {
+    public SolicitacaoCompra(Long id, String solicitante, String departamento, Date dataSolicitacao,
+                             String centroCusto, String motivoCompra, String destinoMaterial, String urgente,
+                             String opcaoMarca, String itemEstoque, String situacao) {
         this.id = id;
         this.solicitante = solicitante;
         this.departamento = departamento;

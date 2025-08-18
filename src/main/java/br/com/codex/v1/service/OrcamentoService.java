@@ -85,5 +85,4 @@ public class OrcamentoService {
         orcamento.setSituacao(situacao);
         return orcamentoRepository.save(orcamento);
     }
-
 }

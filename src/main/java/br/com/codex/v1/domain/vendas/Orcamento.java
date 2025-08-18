@@ -2,6 +2,7 @@ package br.com.codex.v1.domain.vendas;
 
 import br.com.codex.v1.domain.dto.OrcamentoDto;
 import br.com.codex.v1.domain.enums.Situacao;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 

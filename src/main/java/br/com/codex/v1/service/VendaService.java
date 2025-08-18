@@ -3,6 +3,7 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.dto.VendaDto;
 import br.com.codex.v1.domain.dto.VendaItensDto;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.repository.VendaItensRepository;
 import br.com.codex.v1.domain.repository.VendaRepository;
 import br.com.codex.v1.domain.vendas.Venda;
