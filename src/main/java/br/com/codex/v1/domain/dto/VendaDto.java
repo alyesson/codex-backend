@@ -28,7 +28,6 @@ public class VendaDto implements Serializable {
     private String formaPagamento;
     private Situacao situacao;
     private BigDecimal valorFrete = BigDecimal.ZERO;
-    private BigDecimal valorTotal = BigDecimal.ZERO;
     private BigDecimal descontoTotal = BigDecimal.ZERO;
     private BigDecimal valorFinal = BigDecimal.ZERO;
     private String observacoes;
@@ -50,7 +49,6 @@ public class VendaDto implements Serializable {
         this.formaPagamento = obj.getFormaPagamento();
         this.situacao = obj.getSituacao();
         this.valorFrete = obj.getValorFrete();
-        this.valorTotal = obj.getValorTotal();
         this.descontoTotal = obj.getDescontoTotal();
         this.valorFinal = obj.getValorFinal();
         this.observacoes = obj.getObservacoes();

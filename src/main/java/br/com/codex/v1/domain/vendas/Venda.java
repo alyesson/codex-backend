@@ -55,9 +55,6 @@ public class Venda implements Serializable {
     private BigDecimal valorFrete = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorTotal = BigDecimal.ZERO;
-
-    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal descontoTotal = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -75,7 +72,7 @@ public class Venda implements Serializable {
 
     public Venda(Long id, String codigo, String consumidor, String documentoConsumidor, LocalDate dataEmissao, LocalDate dataValidade, String vendedor,
                  String tipoVenda, String formaPagamento, Situacao situacao, BigDecimal valorFrete,
-                 BigDecimal valorTotal, BigDecimal descontoTotal, BigDecimal valorFinal,
+                 BigDecimal descontoTotal, BigDecimal valorFinal,
                  String observacoes, List<VendaItens> itens) {
         this.id = id;
         this.codigo = codigo;
@@ -88,7 +85,6 @@ public class Venda implements Serializable {
         this.formaPagamento = formaPagamento;
         this.situacao = situacao;
         this.valorFrete = valorFrete;
-        this.valorTotal = valorTotal;
         this.descontoTotal = descontoTotal;
         this.valorFinal = valorFinal;
         this.observacoes = observacoes;
@@ -107,7 +103,6 @@ public class Venda implements Serializable {
         this.formaPagamento = obj.getFormaPagamento();
         this.situacao = obj.getSituacao();
         this.valorFrete = obj.getValorFrete();
-        this.valorTotal = obj.getValorTotal();
         this.descontoTotal = obj.getDescontoTotal();
         this.valorFinal = obj.getValorFinal();
         this.observacoes = obj.getObservacoes();
