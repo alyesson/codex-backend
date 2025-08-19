@@ -44,6 +44,14 @@ public class VendaResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
+    @GetMapping("/situacao_vendas")
+    public ResponseEntity<List<VendaDto>> findAllBySituacao() {
+        List<Venda> vendas = vendaService.findAllBySituacao();
+        List<VendaDto> listDto = vendas.stream().map(VendaDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     //Neste métudo serão listadas todas as vendas no ano ordenando do mais recente para o mais antigo
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping("/vendas_ano")
@@ -116,11 +124,10 @@ public class VendaResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
-    @GetMapping("/situacao_vendas")
-    public ResponseEntity<List<VendaDto>> findAllBySituacao() {
-        List<Venda> vendas = vendaService.findAllBySituacao();
-        List<VendaDto> listDto = vendas.stream().map(VendaDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
+    @PutMapping(value = "/situacao/{id}")
+    public ResponseEntity<VendaDto> atualizarSituacao(@PathVariable Long id, @RequestParam Situacao situacao) {
+        Venda venda = vendaService.atualizarSituacao(id, situacao);
+        return ResponseEntity.ok(new VendaDto(venda));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
@@ -135,13 +142,5 @@ public class VendaResource {
         List<VendaItens> itens = vendaService.findAllItensByVendaId(id);
         List<VendaItensDto> listDto = itens.stream().map(VendaItensDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
-    @PutMapping(value = "/situacao/{id}")
-    public ResponseEntity<VendaDto> atualizarSituacao(@PathVariable Long id, @RequestParam Situacao situacao) {
-
-        Venda venda = vendaService.atualizarSituacao(id, situacao);
-        return ResponseEntity.ok(new VendaDto(venda));
     }
 }
