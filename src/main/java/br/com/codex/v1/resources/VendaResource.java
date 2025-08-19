@@ -1,10 +1,14 @@
 package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.dto.OrcamentoDto;
+import br.com.codex.v1.domain.dto.OrcamentoItensDto;
 import br.com.codex.v1.domain.dto.VendaDto;
+import br.com.codex.v1.domain.dto.VendaItensDto;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.vendas.Orcamento;
+import br.com.codex.v1.domain.vendas.OrcamentoItens;
 import br.com.codex.v1.domain.vendas.Venda;
+import br.com.codex.v1.domain.vendas.VendaItens;
 import br.com.codex.v1.service.OrcamentoService;
 import br.com.codex.v1.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +42,6 @@ public class VendaResource {
         Venda objVenda = vendaService.create(vendaDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(objVenda.getId()).toUri();
         return ResponseEntity.created(uri).build();
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<VendaDto> findById(@PathVariable Long id){
-        Venda objVenda = vendaService.findById(id);
-        return ResponseEntity.ok().body(new VendaDto(objVenda));
     }
 
     //Neste métudo serão listadas todas as vendas no ano ordenando do mais recente para o mais antigo
@@ -85,9 +82,7 @@ public class VendaResource {
     //Contabiliza os melhores vendedores
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/melhores_vendedores")
-    public ResponseEntity<List<Map<String, Object>>> findAllVendedoresPeriodo(
-            @RequestParam("dataInicial") LocalDate dataInicial,
-            @RequestParam("dataFinal") LocalDate dataFinal) {
+    public ResponseEntity<List<Map<String, Object>>> findAllVendedoresPeriodo(@RequestParam("dataInicial") LocalDate dataInicial, @RequestParam("dataFinal") LocalDate dataFinal) {
 
         List<Object[]> resultados = vendaService.findVendedoresByNumeroVendas(dataInicial, dataFinal);
 
@@ -106,11 +101,8 @@ public class VendaResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/melhores_clientes")
-    public ResponseEntity<List<Map<String, Object>>> findByVendasClientes(
-            @RequestParam("dataInicial") LocalDate dataInicial, @RequestParam("dataFinal") LocalDate dataFinal) {
-
+    public ResponseEntity<List<Map<String, Object>>> findByVendasClientes(@RequestParam("dataInicial") LocalDate dataInicial, @RequestParam("dataFinal") LocalDate dataFinal) {
         List<Object[]> resultados = vendaService.findByVendasClientes(dataInicial, dataFinal);
-
         List<Map<String, Object>> response = resultados.stream()
                 .map(result -> {
                     Map<String, Object> map = new HashMap<>();
@@ -124,10 +116,32 @@ public class VendaResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
-    @GetMapping("/orcamentos_aprovados")
-    public ResponseEntity<List<OrcamentoDto>> findOrcamentosAprovados() {
-        List<Orcamento> orcamentos = orcamentoService.findAllBySituacao();
-        List<OrcamentoDto> listDto = orcamentos.stream().map(OrcamentoDto::new).collect(Collectors.toList());
+    @GetMapping("/situacao_vendas")
+    public ResponseEntity<List<VendaDto>> findAllBySituacao() {
+        List<Venda> vendas = vendaService.findAllBySituacao();
+        List<VendaDto> listDto = vendas.stream().map(VendaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<VendaDto> findById(@PathVariable Long id){
+        Venda objVenda = vendaService.findById(id);
+        return ResponseEntity.ok().body(new VendaDto(objVenda));
+    }
+
+    @GetMapping("/{id}/itens")
+    public ResponseEntity<List<VendaItensDto>> findAllItens(@PathVariable Long id) {
+        List<VendaItens> itens = vendaService.findAllItensByVendaId(id);
+        List<VendaItensDto> listDto = itens.stream().map(VendaItensDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
+    @PutMapping(value = "/situacao/{id}")
+    public ResponseEntity<VendaDto> atualizarSituacao(@PathVariable Long id, @RequestParam Situacao situacao) {
+
+        Venda venda = vendaService.atualizarSituacao(id, situacao);
+        return ResponseEntity.ok(new VendaDto(venda));
     }
 }

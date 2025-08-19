@@ -3,7 +3,7 @@ package br.com.codex.v1.domain.enums;
 public enum Situacao {
 
     ABERTO(0, "ABERTO"), CANCELADO(1, "CANCELADO"), ATUANDO(2, "ATUANDO"), FECHADO(3, "FECHADO"),
-    PENDENTE(4, "PENDENTE"), APROVADO(5, "APROVADO"), REJEITADO(6, "REJEITADO");
+    PENDENTE(4, "PENDENTE"), APROVADO(5, "APROVADO"), REJEITADO(6, "REJEITADO"), DEVOLUCAO(7, "DEVOLUCAO");
 
     private Integer codigo;
     private String descricao;

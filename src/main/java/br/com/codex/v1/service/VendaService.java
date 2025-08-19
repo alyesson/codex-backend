@@ -6,20 +6,26 @@ import br.com.codex.v1.domain.dto.VendaItensDto;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.repository.VendaItensRepository;
 import br.com.codex.v1.domain.repository.VendaRepository;
+import br.com.codex.v1.domain.vendas.Orcamento;
+import br.com.codex.v1.domain.vendas.OrcamentoItens;
 import br.com.codex.v1.domain.vendas.Venda;
 import br.com.codex.v1.domain.vendas.VendaItens;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class VendaService {
+
+    int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
 
     @Autowired
     private VendaRepository vendaRepository;
@@ -86,5 +92,20 @@ public class VendaService {
 
     public List<Object[]> findByVendasClientes(LocalDate dataInicial, LocalDate dataFinal) {
         return vendaRepository.findByVendasClientes(dataInicial, dataFinal);
+    }
+
+    public List<Venda> findAllBySituacao() {
+        return vendaRepository.findAllBySituacao(anoAtual);
+    }
+
+    public List<VendaItens> findAllItensByVendaId(Long orcamentoId) {
+        return vendaItensRepository.findByVendaId(orcamentoId);
+    }
+
+    @Transactional
+    public Venda atualizarSituacao(Long id, Situacao situacao) {
+        Venda venda = vendaRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("venda não encontrado"));
+        venda.setSituacao(situacao);
+        return vendaRepository.save(venda);
     }
 }

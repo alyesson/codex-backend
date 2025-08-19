@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.repository;
 
+import br.com.codex.v1.domain.vendas.Orcamento;
 import br.com.codex.v1.domain.vendas.Venda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +33,7 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
             "WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal GROUP BY v.consumidor ORDER BY totalVendas DESC")
     List<Object[]> findByVendasClientes(@Param("dataInicial") LocalDate dataInicial,
                                         @Param("dataFinal") LocalDate dataFinal);
+
+    @Query("SELECT s FROM Venda s WHERE s.situacao = 4 AND YEAR(s.dataEmissao) = :anoAtual ORDER BY s.id DESC")
+    List<Venda> findAllBySituacao(@Param("anoAtual") int anoAtual);
 }
