@@ -36,4 +36,8 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
 
     @Query("SELECT s FROM Venda s WHERE s.situacao = 4 AND YEAR(s.dataEmissao) = :anoAtual ORDER BY s.id DESC")
     List<Venda> findAllBySituacao(@Param("anoAtual") int anoAtual);
+
+    @Query("SELECT v FROM Venda v WHERE YEAR(v.dataEmissao) = :ano AND v.vendedor = :vendedor ORDER BY v.id DESC")
+    List<Venda> findByYearAndVendedor(@Param("ano") Integer ano, @Param("vendedor") String vendedor);
+
 }

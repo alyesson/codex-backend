@@ -70,6 +70,19 @@ public class VendaResource {
         return ResponseEntity.ok().body(listDto);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SOCIO','GERENTE_VENDAS','VENDAS')")
+    @GetMapping("/vendas_ano_vendedor")
+    public ResponseEntity<List<VendaDto>> findAllByYearAndVendedor(
+            @RequestParam(value = "ano") Integer ano,
+            @RequestParam(value = "vendedor") String vendedor) {
+
+        List<Venda> objVenda = vendaService.findAllByYearAndVendedor(ano, vendedor);
+        List<VendaDto> listDto = objVenda.stream()
+                .map(VendaDto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     //Conta a quantidade de vendas realziadas no mês
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/vendas_contabilizadas_mes")

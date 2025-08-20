@@ -76,6 +76,10 @@ public class VendaService {
         return vendaRepository.findAllByYearAndMonth(ano, mes);
     }
 
+    public List<Venda> findAllByYearAndVendedor(Integer ano, String vendedor) {
+        return vendaRepository.findByYearAndVendedor(ano, vendedor);
+    }
+
     public int contaVendasMes(Integer ano, Integer mes) {
         int quantidade = vendaRepository.countByDataVenda(ano, mes);
         return quantidade;
