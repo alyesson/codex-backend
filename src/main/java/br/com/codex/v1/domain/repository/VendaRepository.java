@@ -21,23 +21,23 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
     int countByDataVenda(@Param("ano") Integer ano, @Param("mes") Integer mes);
 
     @Query("SELECT v FROM Venda v WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal")
-    List<Venda> findAllVendaPeriodo(@Param("dataInicial") LocalDate dataInicial,
-                                    @Param("dataFinal") LocalDate dataFinal);
+    List<Venda> findAllVendaPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 
     @Query("SELECT v.vendedor, COUNT(v), SUM(v.valorFinal) AS totalVendas FROM Venda v " +
             "WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal GROUP BY v.vendedor ORDER BY totalVendas DESC")
-    List<Object[]> findVendedoresByNumeroVendas(@Param("dataInicial") LocalDate dataInicial,
-                                                @Param("dataFinal") LocalDate dataFinal);
+    List<Object[]> findVendedoresByNumeroVendas(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 
     @Query("SELECT v.consumidor, SUM(v.valorFinal) AS totalVendas FROM Venda v " +
             "WHERE v.dataEmissao BETWEEN :dataInicial AND :dataFinal GROUP BY v.consumidor ORDER BY totalVendas DESC")
-    List<Object[]> findByVendasClientes(@Param("dataInicial") LocalDate dataInicial,
-                                        @Param("dataFinal") LocalDate dataFinal);
+    List<Object[]> findByVendasClientes(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 
     @Query("SELECT s FROM Venda s WHERE s.situacao = 4 AND YEAR(s.dataEmissao) = :anoAtual ORDER BY s.id DESC")
     List<Venda> findAllBySituacao(@Param("anoAtual") int anoAtual);
 
     @Query("SELECT v FROM Venda v WHERE YEAR(v.dataEmissao) = :ano AND v.vendedor = :vendedor ORDER BY v.id DESC")
     List<Venda> findByYearAndVendedor(@Param("ano") Integer ano, @Param("vendedor") String vendedor);
+
+    @Query("SELECT v FROM Venda v WHERE YEAR(v.dataEmissao) = :ano AND MONTH(v.dataEmissao) = :mes AND v.vendedor = :vendedor ORDER BY v.vendedor")
+    List<Venda> findAllByMonthAndVendedor(@Param("ano") Integer ano, @Param("mes") Integer mes, @Param("vendedor") String vendedor);
 
 }

@@ -64,19 +64,26 @@ public class VendaResource {
     //Contabiliza as vendas no mês - calcula quanto em dinheiro recebeu
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS')")
     @GetMapping(value = "/vendas_mes")
-    public ResponseEntity<List<VendaDto>> findAllMonth(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "mes") Integer mes){
-        List<Venda> list = vendaService.findAllByYearAndMonth(ano, mes);
+    public ResponseEntity<List<VendaDto>> findAllMonth(){
+        List<Venda> list = vendaService.findAllByYearAndMonth();
         List<VendaDto> listDto = list.stream().map(VendaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SOCIO','GERENTE_VENDAS','VENDAS')")
     @GetMapping("/vendas_ano_vendedor")
-    public ResponseEntity<List<VendaDto>> findAllByYearAndVendedor(
-            @RequestParam(value = "ano") Integer ano,
-            @RequestParam(value = "vendedor") String vendedor) {
-
+    public ResponseEntity<List<VendaDto>> findAllByYearAndVendedor(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "vendedor") String vendedor) {
         List<Venda> objVenda = vendaService.findAllByYearAndVendedor(ano, vendedor);
+        List<VendaDto> listDto = objVenda.stream()
+                .map(VendaDto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SOCIO','GERENTE_VENDAS','VENDAS')")
+    @GetMapping("/vendas_mes_vendedor")
+    public ResponseEntity<List<VendaDto>> findAllByMonthAndVendedor(@RequestParam(value = "vendedor") String vendedor) {
+        List<Venda> objVenda = vendaService.findAllByMonthAndVendedor(vendedor);
         List<VendaDto> listDto = objVenda.stream()
                 .map(VendaDto::new)
                 .collect(Collectors.toList());

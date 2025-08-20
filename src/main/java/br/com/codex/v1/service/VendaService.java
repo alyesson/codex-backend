@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class VendaService {
 
     int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+    int mesAtual = Integer.parseInt(new SimpleDateFormat("MM").format(new Date(System.currentTimeMillis())));
 
     @Autowired
     private VendaRepository vendaRepository;
@@ -72,12 +73,16 @@ public class VendaService {
         return vendaRepository.findAllByYear(ano);
     }
 
-    public List<Venda> findAllByYearAndMonth(Integer ano, Integer mes) {
-        return vendaRepository.findAllByYearAndMonth(ano, mes);
+    public List<Venda> findAllByYearAndMonth() {
+        return vendaRepository.findAllByYearAndMonth(anoAtual, mesAtual);
     }
 
     public List<Venda> findAllByYearAndVendedor(Integer ano, String vendedor) {
         return vendaRepository.findByYearAndVendedor(ano, vendedor);
+    }
+
+    public List<Venda> findAllByMonthAndVendedor(String vendedor) {
+        return vendaRepository.findAllByMonthAndVendedor(anoAtual, mesAtual, vendedor);
     }
 
     public int contaVendasMes(Integer ano, Integer mes) {
