@@ -37,9 +37,6 @@ public class OrcamentoItens implements Serializable {
     private BigDecimal valorUnitario = BigDecimal.ZERO;
 
     @Column(nullable = false)
-    private BigDecimal desconto = BigDecimal.ZERO;
-
-    @Column(nullable = false)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public OrcamentoItens() {
@@ -47,14 +44,13 @@ public class OrcamentoItens implements Serializable {
     }
 
     public OrcamentoItens(Long id, Orcamento orcamento, String codigo, String descricao, BigDecimal quantidade,
-                          BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
+                          BigDecimal valorUnitario, BigDecimal valorTotal) {
         this.id = id;
         this.orcamento = orcamento;
         this.codigo = codigo;
         this.descricao = descricao;
         this.quantidade = quantidade;
         this.valorUnitario = valorUnitario;
-        this.desconto = desconto;
         this.valorTotal = valorTotal;
     }
 

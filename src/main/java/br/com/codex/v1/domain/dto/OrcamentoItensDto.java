@@ -23,7 +23,6 @@ public class OrcamentoItensDto implements Serializable {
     private String descricao;
     private BigDecimal quantidade = BigDecimal.ONE;
     private BigDecimal valorUnitario = BigDecimal.ZERO;
-    private BigDecimal desconto = BigDecimal.ZERO;
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public OrcamentoItensDto() {
@@ -37,7 +36,6 @@ public class OrcamentoItensDto implements Serializable {
         this.descricao = obj.getDescricao();
         this.quantidade = obj.getQuantidade();
         this.valorUnitario = obj.getValorUnitario();
-        this.desconto = obj.getDesconto();
         this.valorTotal = obj.getValorTotal();
     }
 }

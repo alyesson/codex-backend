@@ -38,7 +38,6 @@ public class OrcamentoService {
             OrcamentoItens item = new OrcamentoItens();
             item.setCodigo(itemDto.getCodigo());
             item.setDescricao(itemDto.getDescricao());
-            item.setDesconto(itemDto.getDesconto());
             item.setQuantidade(itemDto.getQuantidade());
             item.setValorUnitario(itemDto.getValorUnitario());
             item.setValorTotal(itemDto.getValorTotal());

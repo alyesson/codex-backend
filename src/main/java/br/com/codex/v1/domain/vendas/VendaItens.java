@@ -37,9 +37,6 @@ public class VendaItens implements Serializable {
     private BigDecimal valorUnitario = BigDecimal.ZERO;
 
     @Column(nullable = false)
-    private BigDecimal desconto = BigDecimal.ZERO;
-
-    @Column(nullable = false)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public VendaItens() {
@@ -47,14 +44,13 @@ public class VendaItens implements Serializable {
     }
 
     public VendaItens(Long id, Venda venda, String codigo, String descricao, BigDecimal quantidade,
-                      BigDecimal valorUnitario, BigDecimal desconto, BigDecimal valorTotal) {
+                      BigDecimal valorUnitario, BigDecimal valorTotal) {
         this.id = id;
         this.venda = venda;
         this.codigo = codigo;
         this.descricao = descricao;
         this.quantidade = quantidade;
         this.valorUnitario = valorUnitario;
-        this.desconto = desconto;
         this.valorTotal = valorTotal;
     }
 

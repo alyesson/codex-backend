@@ -49,7 +49,6 @@ public class VendaService {
                         VendaItens item = new VendaItens();
                         item.setCodigo(itemDto.getCodigo());
                         item.setDescricao(itemDto.getDescricao());
-                        item.setDesconto(itemDto.getDesconto());
                         item.setQuantidade(itemDto.getQuantidade());
                         item.setValorUnitario(itemDto.getValorUnitario());
                         item.setValorTotal(itemDto.getValorTotal());
