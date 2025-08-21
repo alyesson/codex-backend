@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/api/relatorios")
 public class RelatorioResource {
@@ -21,24 +23,23 @@ public class RelatorioResource {
     @Autowired
     private JasperReportService jasperReportService;
 
-    @Autowired
-    private VendaService vendaService;
-
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
     @GetMapping("/venda/{id}")
     public ResponseEntity<byte[]> gerarRelatorioVenda(@PathVariable Long id) {
         try {
-            Venda venda = vendaService.findById(id);
-            byte[] pdfBytes = jasperReportService.generateVendaReport(venda);
+            // Agora passa apenas o ID
+            byte[] pdfBytes = jasperReportService.generateVendaReport(id);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("filename", "solicitacao_venda_" + venda.getCodigo() + ".pdf");
+            headers.setContentDispositionFormData("filename", "venda_" + id + ".pdf");
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Erro ao gerar relatório: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
         }
     }
 }

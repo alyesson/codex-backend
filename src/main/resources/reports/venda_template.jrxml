@@ -1,347 +1,271 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
-              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="venda_report"
-              pageWidth="595"
-              pageHeight="842"
-              columnWidth="555"
-              leftMargin="20"
-              rightMargin="20"
-              topMargin="20"
-              bottomMargin="20">
-
-    <property name="com.jasperassistant.designer.EditorSnapToGuides" value="true"/>
-    <property name="com.jasperassistant.designer.GridInterval" value="8"/>
-    <property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
-
-    <parameter name="CODIGO_VENDA" class="java.lang.String"/>
-    <parameter name="DATA_EMISSAO" class="java.util.Date"/>
-    <parameter name="VENDEDOR" class="java.lang.String"/>
-    <parameter name="CLIENTE" class="java.lang.String"/>
-    <parameter name="DOCUMENTO" class="java.lang.String"/>
-    <parameter name="VALOR_TOTAL" class="java.math.BigDecimal"/>
-    <parameter name="SITUACAO" class="java.lang.String"/>
-    <parameter name="DATA_EMISSAO_RELATORIO" class="java.util.Date"/>
-    <parameter name="ITENS_DATA_SOURCE" class="net.sf.jasperreports.engine.JRDataSource"/>
-
-    <queryString>
-        <![CDATA[]]>
-    </queryString>
-
-    <field name="codigo" class="java.lang.String"/>
-    <field name="descricao" class="java.lang.String"/>
-    <field name="quantidade" class="java.lang.Integer"/>
-    <field name="valorUnitario" class="java.math.BigDecimal"/>
-    <field name="valorTotal" class="java.math.BigDecimal"/>
-    <field name="unidade" class="java.lang.String"/>
-
-    <title>
-        <band height="100" splitType="Stretch">
-            <!-- Cabeçalho -->
-            <frame>
-                <reportElement mode="Opaque" x="0" y="0" width="555" height="80" backcolor="#2C3E50"/>
-
-                <textField>
-                    <reportElement x="0" y="10" width="555" height="30"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="18" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA["CODEX COMÉRCIO"]]></textFieldExpression>
-                </textField>
-
-                <textField>
-                    <reportElement x="0" y="40" width="555" height="20"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="12" isPdfEmbedded="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA["SOLICITAÇÃO DE VENDA"]]></textFieldExpression>
-                </textField>
-
-                <textField>
-                    <reportElement x="0" y="60" width="555" height="20"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="10" isBold="true" isPdfEmbedded="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA["Nº " + $P{CODIGO_VENDA}]]></textFieldExpression>
-                </textField>
-            </frame>
-        </band>
-    </title>
-
-    <pageHeader>
-        <band height="50" splitType="Stretch">
-            <!-- Informações da empresa -->
-            <textField>
-                <reportElement x="0" y="0" width="555" height="12"/>
-                <textElement textAlignment="Center">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["CNPJ: 12.345.678/0001-90 | Rua Exemplo, 123 - Centro - Cidade/UF | Tel: (11) 9999-9999"]]></textFieldExpression>
-            </textField>
-        </band>
-    </pageHeader>
-
-    <columnHeader>
-        <band height="30" splitType="Stretch">
-            <!-- Dados da venda -->
-            <frame>
-                <reportElement x="0" y="0" width="555" height="30" backcolor="#34495E"/>
-
-                <staticText>
-                    <reportElement x="0" y="0" width="555" height="30"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="12" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                    </textElement>
-                    <text><![CDATA[DADOS DA VENDA]]></text>
-                </staticText>
-            </frame>
-        </band>
-    </columnHeader>
-
-    <detail>
-        <band height="120" splitType="Stretch">
-            <!-- Dados principais -->
-            <textField>
-                <reportElement x="0" y="10" width="120" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Data Emissão:"]]></textFieldExpression>
-            </textField>
-            <textField pattern="dd/MM/yyyy">
-                <reportElement x="120" y="10" width="150" height="15"/>
-                <textElement>
-                    <font size="9" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{DATA_EMISSAO}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="30" width="120" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Vendedor:"]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="120" y="30" width="435" height="15"/>
-                <textElement>
-                    <font size="9" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{VENDEDOR}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="50" width="120" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Cliente:"]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="120" y="50" width="435" height="15"/>
-                <textElement>
-                    <font size="9" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{CLIENTE}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="70" width="120" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Documento:"]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="120" y="70" width="435" height="15"/>
-                <textElement>
-                    <font size="9" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{DOCUMENTO}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="90" width="120" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Valor Total:"]]></textFieldExpression>
-            </textField>
-            <textField pattern="R$ #,##0.00">
-                <reportElement x="120" y="90" width="150" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{VALOR_TOTAL}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="300" y="90" width="120" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Situação:"]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="420" y="90" width="135" height="15"/>
-                <textElement>
-                    <font size="9" isBold="true" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{SITUACAO}]]></textFieldExpression>
-            </textField>
-        </band>
-
-        <band height="30" splitType="Stretch">
-            <!-- Cabeçalho dos itens -->
-            <frame>
-                <reportElement x="0" y="0" width="555" height="30" backcolor="#3498DB"/>
-
-                <staticText>
-                    <reportElement x="0" y="0" width="555" height="30"/>
-                    <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font size="12" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                    </textElement>
-                    <text><![CDATA[ITENS DA VENDA]]></text>
-                </staticText>
-            </frame>
-        </band>
-
-        <band height="25" splitType="Stretch">
-            <!-- Cabeçalho da tabela -->
-            <rectangle>
-                <reportElement x="0" y="0" width="555" height="25" backcolor="#2980B9"/>
-            </rectangle>
-
-            <staticText>
-                <reportElement x="0" y="0" width="80" height="25"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                </textElement>
-                <text><![CDATA[Código]]></text>
-            </staticText>
-
-            <staticText>
-                <reportElement x="80" y="0" width="220" height="25"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                </textElement>
-                <text><![CDATA[Descrição]]></text>
-            </staticText>
-
-            <staticText>
-                <reportElement x="300" y="0" width="60" height="25"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                </textElement>
-                <text><![CDATA[Qtd]]></text>
-            </staticText>
-
-            <staticText>
-                <reportElement x="360" y="0" width="80" height="25"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                </textElement>
-                <text><![CDATA[Valor Unit.]]></text>
-            </staticText>
-
-            <staticText>
-                <reportElement x="440" y="0" width="80" height="25"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                </textElement>
-                <text><![CDATA[Total]]></text>
-            </staticText>
-
-            <staticText>
-                <reportElement x="520" y="0" width="35" height="25"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true" isPdfEmbedded="true" pdfFontName="Helvetica-Bold"/>
-                </textElement>
-                <text><![CDATA[Un]]></text>
-            </staticText>
-        </band>
-
-        <band height="20" splitType="Stretch">
-            <!-- Itens -->
-            <rectangle>
-                <reportElement x="0" y="0" width="555" height="20" backcolor="#FFFFFF"/>
-            </rectangle>
-
-            <textField>
-                <reportElement x="0" y="0" width="80" height="20"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="80" y="0" width="220" height="20"/>
-                <textElement verticalAlignment="Middle">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="300" y="0" width="60" height="20"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
-            </textField>
-
-            <textField pattern="R$ #,##0.00">
-                <reportElement x="360" y="0" width="80" height="20"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{valorUnitario}]]></textFieldExpression>
-            </textField>
-
-            <textField pattern="R$ #,##0.00">
-                <reportElement x="440" y="0" width="80" height="20"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{valorTotal}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="520" y="0" width="35" height="20"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{unidade}]]></textFieldExpression>
-            </textField>
-        </band>
-    </detail>
-
-    <summary>
-        <band height="50" splitType="Stretch">
-            <!-- Rodapé -->
-            <line>
-                <reportElement x="0" y="0" width="555" height="1"/>
-            </line>
-
-            <textField pattern="dd/MM/yyyy HH:mm">
-                <reportElement x="0" y="10" width="555" height="12"/>
-                <textElement textAlignment="Center">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Emitido em: " + $P{DATA_EMISSAO_RELATORIO}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="25" width="555" height="12"/>
-                <textElement textAlignment="Center">
-                    <font size="8" isPdfEmbedded="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Documento gerado automaticamente - CODEX ERP"]]></textFieldExpression>
-            </textField>
-        </band>
-    </summary>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="venda_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2ae85583-686d-4887-972f-df70cea544fb">
+	<property name="com.jasperassistant.designer.EditorSnapToGuides" value="true"/>
+	<property name="com.jasperassistant.designer.GridInterval" value="8"/>
+	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
+	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
+	<parameter name="VENDEDOR" class="java.lang.String"/>
+	<parameter name="CLIENTE" class="java.lang.String"/>
+	<parameter name="DOCUMENTO" class="java.lang.String"/>
+	<parameter name="VALOR_TOTAL" class="java.math.BigDecimal"/>
+	<parameter name="SITUACAO" class="java.lang.String"/>
+	<parameter name="DATA_EMISSAO_RELATORIO" class="java.util.Date"/>
+	<parameter name="ITENS_DATA_SOURCE" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CODIGO" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[Select * from venda WHERE id =$P{P_CODIGO};]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="consumidor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_emissao" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_validade" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desconto_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="documento_consumidor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="forma_pagamento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="observacoes" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="situacao" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_venda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_final" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_frete" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vendedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<title>
+		<band height="100" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="80" y="0" width="400" height="80" backcolor="#FFFFFF" uuid="0f155bad-9af5-4d08-aa31-c64fb98cccca"/>
+				<rectangle radius="10">
+					<reportElement mode="Transparent" x="3" y="0" width="397" height="80" uuid="89ccb6f8-7bb2-4c76-b0cc-815412b55863"/>
+				</rectangle>
+			</frame>
+			<image>
+				<reportElement x="2" y="3" width="68" height="40" uuid="4b3cddf2-7dcc-4026-a72c-6a860c76c347"/>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="188" y="6" width="82" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Venda Nº]]></text>
+			</staticText>
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="0" y="2" width="555" height="41" uuid="18ef62e0-a6b0-4fd6-9319-469b40ada420"/>
+			</rectangle>
+			<textField>
+				<reportElement x="270" y="6" width="100" height="30" uuid="399fb8f9-e1c2-4fcc-aad9-a9d993e1f42c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="124" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="10" width="74" height="20" uuid="17e00f99-e81f-48bb-bbd6-fa13f5e66a53"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Emissão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="30" width="74" height="20" uuid="7f2d0c7d-a41c-4f14-aca7-dca950bed62f"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vendedor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="50" width="74" height="20" uuid="e63e0673-ec53-4e3d-b66b-9757eee288f2"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="70" width="74" height="20" uuid="b2b480e7-5b0b-493e-b858-1520811ff472"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="90" width="74" height="20" uuid="a7970355-791b-4362-8cca-f38d74cf19b9"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="90" width="52" height="20" uuid="58d0719a-31c4-48da-89e0-80f16269419f"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="90" width="162" height="20" uuid="51755378-f15c-46f0-8852-359624704397"/>
+				<textFieldExpression><![CDATA[$F{valor_final}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="80" y="10" width="162" height="20" uuid="05cc9c4d-d956-42f8-bc17-f1f0840dbd87"/>
+				<textFieldExpression><![CDATA[$F{data_emissao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="30" width="265" height="20" uuid="49129413-75a3-4aaa-a98e-b5650c085844"/>
+				<textFieldExpression><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="50" width="400" height="20" uuid="3d8441d3-5841-44f9-b559-28afd2677276"/>
+				<textFieldExpression><![CDATA[$F{consumidor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="70" width="162" height="20" uuid="d289c779-b7ff-47cd-91b0-77bec35cc7e7"/>
+				<textFieldExpression><![CDATA[$F{documento_consumidor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="90" width="155" height="20" uuid="3b95afd3-c55a-40c5-91a1-da86bd8e3f26"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="136" y="3" width="304" height="20" uuid="8b4d5a7e-48e8-4277-be5b-bcf049697dfb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ITENS DA VENDA]]></text>
+			</staticText>
+		</band>
+		<band height="84" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="552" height="77" uuid="c5b29f67-36b4-442d-8f1a-d4a879799281"/>
+				<dataSourceExpression><![CDATA[$P{ITENS_DATA_SOURCE}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["venda_subreport_template.jasper"]]></subreportExpression>
+			</subreport>
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="0" y="1" width="555" height="81" uuid="06b32321-93b0-4b7d-be3e-b49c4eb78945"/>
+			</rectangle>
+		</band>
+		<band height="111">
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="242" y="3" width="313" height="104" uuid="0db19174-a58b-4641-ba98-47ec3c0697dd"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="246" y="15" width="68" height="20" uuid="404e4758-3b0c-46ba-a8dd-76714bbebdcd"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Venda:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="314" y="15" width="100" height="20" uuid="4f1a7da2-8638-4e3d-93a5-63528928bc50"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo_venda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="35" width="100" height="20" uuid="1c6f82a5-d24d-4dca-b602-12ea4a41ebf8"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{data_validade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="246" y="35" width="68" height="20" uuid="8569f36d-c435-480d-8994-d735cba5b911"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Validade:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="314" y="55" width="100" height="20" uuid="21315ca2-d51f-424d-9b34-cd820d623bcc"/>
+				<textFieldExpression><![CDATA[$F{desconto_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="246" y="55" width="68" height="20" uuid="ce77b238-8f7a-4c3d-8a8d-864e3f6d19b5"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desconto:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="314" y="73" width="100" height="20" uuid="84b1115f-828b-442c-ad1f-9aeccf874ebd"/>
+				<textFieldExpression><![CDATA[$F{valor_frete}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="246" y="73" width="68" height="20" uuid="98c6b3b5-250d-4f51-9d6b-3d302a2a02c7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Frete:]]></text>
+			</staticText>
+		</band>
+		<band height="64">
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="56" y="1" width="496" height="61" uuid="e5278ebb-673a-41ee-8dec-fdc40286f1ca"/>
+			</rectangle>
+			<textField>
+				<reportElement x="61" y="3" width="484" height="56" uuid="f6f64a3a-455d-4e27-875e-f58d4c1a3bbd"/>
+				<textFieldExpression><![CDATA[$F{observacoes}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="56" height="20" uuid="40f3acd1-7131-40bc-9551-1801bd0d6772"/>
+				<text><![CDATA[Observação]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="336" y="3" width="61" height="15" uuid="b3beda81-7b1b-4a3b-8e42-bd3a8ac8bf0a"/>
+				<text><![CDATA[Emitido em:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="336" y="18" width="216" height="15" uuid="bb8a59cf-a85d-41f7-b196-db17cacb228a"/>
+				<text><![CDATA[Documento gerado automaticamente - CODEX ERP]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="397" y="3" width="148" height="15" uuid="f80bb8a5-b759-4583-828a-fa396b8321a4"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>
