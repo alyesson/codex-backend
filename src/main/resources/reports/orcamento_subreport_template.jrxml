@@ -35,7 +35,7 @@
 	<columnHeader>
 		<band height="20">
 			<rectangle radius="10">
-				<reportElement mode="Opaque" x="0" y="0" width="554" height="18" backcolor="#A9E2FF" uuid="d67e10ee-c291-45a0-a504-785c79ac2edb"/>
+				<reportElement mode="Opaque" x="0" y="0" width="554" height="19" backcolor="#A9E2FF" uuid="d67e10ee-c291-45a0-a504-785c79ac2edb"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="0" y="0" width="58" height="18" uuid="e06645a3-d681-4754-b4ce-5bf2f57a4b75"/>
@@ -66,9 +66,6 @@
 				<reportElement x="0" y="26" width="554" height="1" uuid="449baefe-160a-477e-924b-085a4a8b777a"/>
 			</line>
 			<line>
-				<reportElement x="0" y="-1" width="554" height="1" uuid="bda5a078-a2bf-4e41-ad26-9fd8ac2ae7d7"/>
-			</line>
-			<line>
 				<reportElement x="58" y="0" width="1" height="26" uuid="af2b3888-ffe1-45b0-958f-bed05c52c705"/>
 			</line>
 			<line>
@@ -84,19 +81,19 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0">
 				<reportElement x="379" y="4" width="33" height="20" uuid="d216b8a9-a2bb-4110-9b8e-ec427ece3b98"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="414" y="4" width="60" height="20" uuid="a2411d2b-5006-4c74-90e8-8f12f539fc8f"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{valor_unitario}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="474" y="4" width="80" height="20" uuid="030baa78-de72-435c-8ea5-ac69ac8fa104"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{valor_total}]]></textFieldExpression>
 			</textField>
 			<line>

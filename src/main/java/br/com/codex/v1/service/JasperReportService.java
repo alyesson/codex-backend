@@ -108,7 +108,7 @@ public class JasperReportService {
             parameters.put("cliente", orcamento.getConsumidor());
             parameters.put("documento", orcamento.getDocumentoConsumidor());
             parameters.put("valor_total", orcamento.getValorFinal());
-            parameters.put("situacao", orcamento.getSituacao().getDescricao());
+            parameters.put("situacao", converterSituacaoParaTexto(orcamento.getSituacao()));
             parameters.put("observacao", orcamento.getObservacoes());
             parameters.put("tipo_venda", orcamento.getTipoOrcamento());
             parameters.put("validade", orcamento.getDataValidade());
@@ -128,5 +128,10 @@ public class JasperReportService {
                 try { connection.close(); } catch (SQLException e) { /* log error */ }
             }
         }
+    }
+
+    private String converterSituacaoParaTexto(Situacao situacao) {
+        if (situacao == null) return "DESCONHECIDA";
+        return situacao.getDescricao();
     }
 }
