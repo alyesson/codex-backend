@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="venda_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2ae85583-686d-4887-972f-df70cea544fb">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orcamento_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2ae85583-686d-4887-972f-df70cea544fb">
 	<property name="com.jasperassistant.designer.EditorSnapToGuides" value="true"/>
 	<property name="com.jasperassistant.designer.GridInterval" value="8"/>
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="672"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -20,7 +20,7 @@
 	</parameter>
 	<parameter name="P_CODIGO" class="java.lang.Long" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[Select * from venda WHERE id = $P{P_CODIGO}]]>
+		<![CDATA[Select * from orcamento WHERE id = $P{P_CODIGO}]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -52,7 +52,7 @@
 	<field name="situacao" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="tipo_venda" class="java.lang.String">
+	<field name="tipo_orcamento" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="valor_final" class="java.math.BigDecimal">
@@ -80,11 +80,11 @@
 	<columnHeader>
 		<band height="44" splitType="Stretch">
 			<staticText>
-				<reportElement x="188" y="6" width="82" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
+				<reportElement x="151" y="6" width="119" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Venda Nº]]></text>
+				<text><![CDATA[OrçamentoNº]]></text>
 			</staticText>
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="2" width="555" height="41" uuid="18ef62e0-a6b0-4fd6-9319-469b40ada420"/>
@@ -172,70 +172,70 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[ITENS DA VENDA]]></text>
+				<text><![CDATA[ITENS DO ORÇAMENTO]]></text>
 			</staticText>
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="2" width="555" height="93" uuid="eed6b8fd-9644-47fe-903e-b97d760cf842"/>
 			</rectangle>
 		</band>
-		<band height="365" splitType="Stretch">
-			<rectangle radius="10">
-				<reportElement mode="Transparent" x="0" y="3" width="555" height="358" uuid="06b32321-93b0-4b7d-be3e-b49c4eb78945"/>
-			</rectangle>
+		<band height="366" splitType="Stretch">
 			<subreport>
 				<reportElement x="0" y="1" width="552" height="359" uuid="c5b29f67-36b4-442d-8f1a-d4a879799281"/>
 				<subreportParameter name="P_CODIGOID">
 					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["src/main/resources/reports/venda_subreport_template.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["src/main/resources/reports/orcamento_subreport_template.jasper"]]></subreportExpression>
 			</subreport>
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="0" y="3" width="555" height="358" uuid="06b32321-93b0-4b7d-be3e-b49c4eb78945"/>
+			</rectangle>
 		</band>
 		<band height="108">
 			<rectangle radius="10">
-				<reportElement mode="Transparent" x="2" y="3" width="553" height="100" uuid="0db19174-a58b-4641-ba98-47ec3c0697dd"/>
+				<reportElement mode="Transparent" x="2" y="4" width="553" height="100" uuid="0db19174-a58b-4641-ba98-47ec3c0697dd"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="8" y="15" width="68" height="20" uuid="404e4758-3b0c-46ba-a8dd-76714bbebdcd"/>
+				<reportElement x="8" y="15" width="88" height="20" uuid="404e4758-3b0c-46ba-a8dd-76714bbebdcd"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Tipo Venda:]]></text>
+				<text><![CDATA[Tipo Orçamento:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="76" y="15" width="100" height="20" uuid="4f1a7da2-8638-4e3d-93a5-63528928bc50"/>
+				<reportElement x="97" y="15" width="100" height="20" uuid="4f1a7da2-8638-4e3d-93a5-63528928bc50"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{tipo_venda}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_orcamento}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="76" y="35" width="100" height="20" uuid="1c6f82a5-d24d-4dca-b602-12ea4a41ebf8"/>
+				<reportElement x="97" y="35" width="100" height="20" uuid="1c6f82a5-d24d-4dca-b602-12ea4a41ebf8"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{data_validade}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="8" y="35" width="68" height="20" uuid="8569f36d-c435-480d-8994-d735cba5b911"/>
+				<reportElement x="8" y="35" width="88" height="20" uuid="8569f36d-c435-480d-8994-d735cba5b911"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Validade:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="76" y="55" width="100" height="20" uuid="21315ca2-d51f-424d-9b34-cd820d623bcc"/>
+				<reportElement x="97" y="55" width="100" height="20" uuid="21315ca2-d51f-424d-9b34-cd820d623bcc"/>
 				<textFieldExpression><![CDATA[$F{desconto_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="8" y="55" width="68" height="20" uuid="ce77b238-8f7a-4c3d-8a8d-864e3f6d19b5"/>
+				<reportElement x="8" y="55" width="88" height="20" uuid="ce77b238-8f7a-4c3d-8a8d-864e3f6d19b5"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Desconto:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="76" y="73" width="100" height="20" uuid="84b1115f-828b-442c-ad1f-9aeccf874ebd"/>
+				<reportElement x="97" y="73" width="100" height="20" uuid="84b1115f-828b-442c-ad1f-9aeccf874ebd"/>
 				<textFieldExpression><![CDATA[$F{valor_frete}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="8" y="73" width="68" height="20" uuid="98c6b3b5-250d-4f51-9d6b-3d302a2a02c7"/>
+				<reportElement x="8" y="73" width="88" height="20" uuid="98c6b3b5-250d-4f51-9d6b-3d302a2a02c7"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
