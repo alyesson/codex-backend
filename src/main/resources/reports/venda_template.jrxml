@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="3"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -18,9 +18,9 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="P_CODIGO" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="P_CODIGO" class="java.lang.Long" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[Select * from venda WHERE id =$P{P_CODIGO};]]>
+		<![CDATA[Select * from venda WHERE id = $P{P_CODIGO}]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -142,7 +142,7 @@
 				</textElement>
 				<text><![CDATA[Situação:]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="¤ #,##0.00">
 				<reportElement x="80" y="90" width="162" height="20" uuid="51755378-f15c-46f0-8852-359624704397"/>
 				<textFieldExpression><![CDATA[$F{valor_final}]]></textFieldExpression>
 			</textField>
@@ -178,14 +178,17 @@
 			</staticText>
 		</band>
 		<band height="84" splitType="Stretch">
-			<subreport>
-				<reportElement x="0" y="0" width="552" height="77" uuid="c5b29f67-36b4-442d-8f1a-d4a879799281"/>
-				<dataSourceExpression><![CDATA[$P{ITENS_DATA_SOURCE}]]></dataSourceExpression>
-				<subreportExpression><![CDATA["venda_subreport_template.jasper"]]></subreportExpression>
-			</subreport>
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="1" width="555" height="81" uuid="06b32321-93b0-4b7d-be3e-b49c4eb78945"/>
 			</rectangle>
+			<subreport>
+				<reportElement x="0" y="0" width="552" height="77" uuid="c5b29f67-36b4-442d-8f1a-d4a879799281"/>
+				<subreportParameter name="P_CODIGOID">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["src/main/resources/reports/venda_subreport_template.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 		<band height="111">
 			<rectangle radius="10">
