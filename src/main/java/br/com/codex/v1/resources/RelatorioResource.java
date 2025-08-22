@@ -1,8 +1,6 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.domain.vendas.Venda;
 import br.com.codex.v1.service.JasperReportService;
-import br.com.codex.v1.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,7 +35,6 @@ public class RelatorioResource {
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(("Erro ao gerar relatório: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
         }

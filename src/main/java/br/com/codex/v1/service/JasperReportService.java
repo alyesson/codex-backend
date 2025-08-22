@@ -52,7 +52,7 @@ public class JasperReportService {
             parameters.put("cliente", venda.getConsumidor());
             parameters.put("documento", venda.getDocumentoConsumidor());
             parameters.put("valor_total", venda.getValorFinal());
-            parameters.put("situacao", venda.getSituacao());
+            parameters.put("situacao", venda.getSituacao().getDescricao());
             parameters.put("observacao", venda.getObservacoes());
             parameters.put("tipo_venda", venda.getTipoVenda());
             parameters.put("validade", venda.getDataValidade());
