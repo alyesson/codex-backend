@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="3"/>
+	<property name="ireport.y" value="627"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -177,12 +177,12 @@
 				<text><![CDATA[ITENS DA VENDA]]></text>
 			</staticText>
 		</band>
-		<band height="84" splitType="Stretch">
+		<band height="362" splitType="Stretch">
 			<rectangle radius="10">
-				<reportElement mode="Transparent" x="0" y="1" width="555" height="81" uuid="06b32321-93b0-4b7d-be3e-b49c4eb78945"/>
+				<reportElement mode="Transparent" x="0" y="1" width="555" height="358" uuid="06b32321-93b0-4b7d-be3e-b49c4eb78945"/>
 			</rectangle>
 			<subreport>
-				<reportElement x="0" y="0" width="552" height="77" uuid="c5b29f67-36b4-442d-8f1a-d4a879799281"/>
+				<reportElement x="0" y="0" width="552" height="359" uuid="c5b29f67-36b4-442d-8f1a-d4a879799281"/>
 				<subreportParameter name="P_CODIGOID">
 					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -192,65 +192,65 @@
 		</band>
 		<band height="111">
 			<rectangle radius="10">
-				<reportElement mode="Transparent" x="242" y="3" width="313" height="104" uuid="0db19174-a58b-4641-ba98-47ec3c0697dd"/>
+				<reportElement mode="Transparent" x="2" y="3" width="553" height="104" uuid="0db19174-a58b-4641-ba98-47ec3c0697dd"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="246" y="15" width="68" height="20" uuid="404e4758-3b0c-46ba-a8dd-76714bbebdcd"/>
+				<reportElement x="8" y="15" width="68" height="20" uuid="404e4758-3b0c-46ba-a8dd-76714bbebdcd"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tipo Venda:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="314" y="15" width="100" height="20" uuid="4f1a7da2-8638-4e3d-93a5-63528928bc50"/>
+				<reportElement x="76" y="15" width="100" height="20" uuid="4f1a7da2-8638-4e3d-93a5-63528928bc50"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{tipo_venda}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="314" y="35" width="100" height="20" uuid="1c6f82a5-d24d-4dca-b602-12ea4a41ebf8"/>
+				<reportElement x="76" y="35" width="100" height="20" uuid="1c6f82a5-d24d-4dca-b602-12ea4a41ebf8"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{data_validade}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="246" y="35" width="68" height="20" uuid="8569f36d-c435-480d-8994-d735cba5b911"/>
+				<reportElement x="8" y="35" width="68" height="20" uuid="8569f36d-c435-480d-8994-d735cba5b911"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Validade:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="314" y="55" width="100" height="20" uuid="21315ca2-d51f-424d-9b34-cd820d623bcc"/>
+				<reportElement x="76" y="55" width="100" height="20" uuid="21315ca2-d51f-424d-9b34-cd820d623bcc"/>
 				<textFieldExpression><![CDATA[$F{desconto_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="246" y="55" width="68" height="20" uuid="ce77b238-8f7a-4c3d-8a8d-864e3f6d19b5"/>
+				<reportElement x="8" y="55" width="68" height="20" uuid="ce77b238-8f7a-4c3d-8a8d-864e3f6d19b5"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Desconto:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="314" y="73" width="100" height="20" uuid="84b1115f-828b-442c-ad1f-9aeccf874ebd"/>
+				<reportElement x="76" y="73" width="100" height="20" uuid="84b1115f-828b-442c-ad1f-9aeccf874ebd"/>
 				<textFieldExpression><![CDATA[$F{valor_frete}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="246" y="73" width="68" height="20" uuid="98c6b3b5-250d-4f51-9d6b-3d302a2a02c7"/>
+				<reportElement x="8" y="73" width="68" height="20" uuid="98c6b3b5-250d-4f51-9d6b-3d302a2a02c7"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Frete:]]></text>
 			</staticText>
 		</band>
-		<band height="64">
+		<band height="105">
 			<rectangle radius="10">
-				<reportElement mode="Transparent" x="56" y="1" width="496" height="61" uuid="e5278ebb-673a-41ee-8dec-fdc40286f1ca"/>
+				<reportElement mode="Transparent" x="3" y="21" width="548" height="82" uuid="e5278ebb-673a-41ee-8dec-fdc40286f1ca"/>
 			</rectangle>
 			<textField>
-				<reportElement x="61" y="3" width="484" height="56" uuid="f6f64a3a-455d-4e27-875e-f58d4c1a3bbd"/>
+				<reportElement x="8" y="23" width="537" height="80" uuid="f6f64a3a-455d-4e27-875e-f58d4c1a3bbd"/>
 				<textFieldExpression><![CDATA[$F{observacoes}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="15" width="56" height="20" uuid="40f3acd1-7131-40bc-9551-1801bd0d6772"/>
+				<reportElement x="3" y="3" width="56" height="15" uuid="40f3acd1-7131-40bc-9551-1801bd0d6772"/>
 				<text><![CDATA[Observação]]></text>
 			</staticText>
 		</band>
@@ -258,15 +258,15 @@
 	<summary>
 		<band height="50" splitType="Stretch">
 			<staticText>
-				<reportElement x="336" y="3" width="61" height="15" uuid="b3beda81-7b1b-4a3b-8e42-bd3a8ac8bf0a"/>
+				<reportElement x="336" y="11" width="61" height="15" uuid="b3beda81-7b1b-4a3b-8e42-bd3a8ac8bf0a"/>
 				<text><![CDATA[Emitido em:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="336" y="18" width="216" height="15" uuid="bb8a59cf-a85d-41f7-b196-db17cacb228a"/>
+				<reportElement x="336" y="26" width="216" height="15" uuid="bb8a59cf-a85d-41f7-b196-db17cacb228a"/>
 				<text><![CDATA[Documento gerado automaticamente - CODEX ERP]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy HH:mm">
-				<reportElement x="397" y="3" width="148" height="15" uuid="f80bb8a5-b759-4583-828a-fa396b8321a4"/>
+				<reportElement x="397" y="11" width="148" height="15" uuid="f80bb8a5-b759-4583-828a-fa396b8321a4"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
