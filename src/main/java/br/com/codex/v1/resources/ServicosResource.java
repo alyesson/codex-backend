@@ -22,6 +22,14 @@ public class ServicosResource {
     private ServicosService servicosService;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
+    @GetMapping
+    public ResponseEntity<List<ServicosDto>> findAll(){
+        List<Servicos> list = servicosService.findAll();
+        List<ServicosDto> listDto = list.stream().map(ServicosDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PostMapping
     public ResponseEntity<ServicosDto> create(@Valid @RequestBody ServicosDto servicosDto){
         Servicos objServicos = servicosService.create(servicosDto);
@@ -51,17 +59,9 @@ public class ServicosResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
-    @GetMapping(value = "/{codigo}")
+    @GetMapping(value = "/codigo/{codigo}")
     public ResponseEntity<ServicosDto> findByCodigo(@PathVariable String codigo){
         Servicos objServicos = servicosService.findByCodigo(codigo);
         return ResponseEntity.ok().body(new ServicosDto(objServicos));
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
-    @GetMapping
-    public ResponseEntity<List<ServicosDto>> findAll(){
-        List<Servicos> list = servicosService.findAll();
-        List<ServicosDto> listDto = list.stream().map(ServicosDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
     }
 }
