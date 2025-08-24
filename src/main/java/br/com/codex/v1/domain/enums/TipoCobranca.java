@@ -2,7 +2,7 @@ package br.com.codex.v1.domain.enums;
 
 public enum TipoCobranca {
 
-    HORA(1, "Por Hora"), DIA(2, "Por Dia"), UNIDADE(3, "Por Unidade"), METRO_QUADRADO(4, "Por m²"), VISITA(5, "Por Visita");;
+    HORA(1, "Por Hora"), DIA(2, "Por Dia"), UNIDADE(3, "Por Unidade"), METRO_QUADRADO(4, "Por m²"), VISITA(5, "Por Visita");
 
     private Integer codigo;
     private String descricao;

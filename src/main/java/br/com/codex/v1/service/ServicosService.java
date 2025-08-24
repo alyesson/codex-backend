@@ -8,18 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ServicosService {
 
+    LocalDate dataAtual = LocalDate.now();
+
     @Autowired
     private ServicosRepository servicosRepository;
 
-
     public Servicos create(ServicosDto servicosDto) {
         servicosDto.setId(null);
+        servicosDto.setDataEmissao(dataAtual);
         validaServicos(servicosDto);
         Servicos servicos = new Servicos(servicosDto);
         return servicosRepository.save(servicos);

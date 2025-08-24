@@ -5,6 +5,7 @@ import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.enums.TipoCobranca;
 import lombok.Getter;
 import lombok.Setter;
+import org.codehaus.groovy.runtime.typehandling.BigDecimalMath;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -28,6 +29,9 @@ public class Servicos implements Serializable {
 
     @Column(nullable = false, unique = true, length = 6)
     private String codigo;
+    @Column(nullable = false, length = 60)
+    private String nome;
+    private String descricao;
 
     @Column(nullable = false, length = 11)
     private LocalDate dataEmissao;
@@ -36,13 +40,10 @@ public class Servicos implements Serializable {
     private TipoCobranca tipoCobranca;
 
     @Column(length = 6)
-    private Duration tempoMedioExecucao;
+    private String tempoMedioExecucao;
 
     @Column(nullable = false, length = 30)
     private String formaPagamento;
-
-    @Column(nullable = false, length = 30)
-    private Situacao situacao;
 
     @Column(nullable = false, length = 8)
     private BigDecimal baseCalculo = BigDecimal.ZERO;
@@ -75,30 +76,51 @@ public class Servicos implements Serializable {
     private BigDecimal cssValor = BigDecimal.ZERO;
 
     @Column(nullable = false, length = 8)
+    private BigDecimal valorVista = BigDecimal.ZERO;
+
+    @Column(nullable = false, length = 8)
+    private BigDecimal valorPrazo = BigDecimal.ZERO;
+
+    @Column(nullable = false, length = 8)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
-    @Column
+    @Column(length = 3)
     private String garantia;
 
     @Column(length = 500)
     private String observacoes;
 
+    @Column(length = 15)
+    private String nbsCodigo;
+
+    @Column(length = 50)
+    private String nbsNome;
+
+    @Column(length = 15)
+    private String cnaeCodigo;
+
+    @Column(length = 50)
+    private String cnaeNome;
+
+
     public Servicos() {
         super();
     }
 
-    public Servicos(Long id, String codigo, LocalDate dataEmissao, TipoCobranca tipoCobranca, Duration tempoMedioExecucao,
-                    String formaPagamento, Situacao situacao, BigDecimal baseCalculo, BigDecimal aliquotaPercentual,
+    public Servicos(Long id, String codigo, String nome, String descricao, LocalDate dataEmissao, TipoCobranca tipoCobranca, String tempoMedioExecucao,
+                    String formaPagamento, BigDecimal baseCalculo, BigDecimal aliquotaPercentual,
                     BigDecimal issPercentual, BigDecimal issValor, BigDecimal pisPercentual, BigDecimal pisValor,
                     BigDecimal cofinsPercentual, BigDecimal cofinsValor, BigDecimal csllPercentual, BigDecimal cssValor,
-                    BigDecimal valorTotal, String garantia, String observacoes) {
+                    BigDecimal valorTotal, BigDecimal valorVista, BigDecimal valorPrazo, String garantia, String observacoes,
+                    String nbsCodigo, String nbsNome, String cnaeCodigo, String cnaeNome) {
         this.id = id;
         this.codigo = codigo;
+        this.nome = nome;
+        this.descricao = descricao;
         this.dataEmissao = dataEmissao;
         this.tipoCobranca = tipoCobranca;
         this.tempoMedioExecucao = tempoMedioExecucao;
         this.formaPagamento = formaPagamento;
-        this.situacao = situacao;
         this.baseCalculo = baseCalculo;
         this.aliquotaPercentual = aliquotaPercentual;
         this.issPercentual = issPercentual;
@@ -112,16 +134,24 @@ public class Servicos implements Serializable {
         this.valorTotal = valorTotal;
         this.garantia = garantia;
         this.observacoes = observacoes;
+        this.valorVista = valorVista;
+        this.valorPrazo = valorPrazo;
+        this.nbsCodigo = nbsCodigo;
+        this.nbsNome = nbsNome;
+        this.cnaeCodigo = cnaeCodigo;
+        this.cnaeNome = cnaeNome;
+
     }
 
     public Servicos(ServicosDto obj) {
         this.id = obj.getId();
         this.codigo = obj.getCodigo();
+        this.nome = obj.getNome();
+        this.descricao = obj.getDescricao();
         this.dataEmissao = obj.getDataEmissao();
         this.tipoCobranca = obj.getTipoCobranca();
         this.tempoMedioExecucao = obj.getTempoMedioExecucao();
         this.formaPagamento = obj.getFormaPagamento();
-        this.situacao = obj.getSituacao();
         this.baseCalculo = obj.getBaseCalculo();
         this.aliquotaPercentual = obj.getAliquotaPercentual();
         this.issPercentual = obj.getIssPercentual();
@@ -135,6 +165,12 @@ public class Servicos implements Serializable {
         this.valorTotal = obj.getValorTotal();
         this.garantia = obj.getGarantia();
         this.observacoes = obj.getObservacoes();
+        this.valorVista = obj.getValorVista();
+        this.valorPrazo = obj.getValorPrazo();
+        this.nbsCodigo = obj.getNbsCodigo();
+        this.nbsNome = obj.getNbsNome();
+        this.cnaeCodigo = obj.getCnaeCodigo();
+        this.cnaeNome = obj.getCnaeNome();
     }
 
     @Override
