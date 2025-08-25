@@ -1603,7 +1603,7 @@ public class NotaFiscalService {
     }
 
     /**
-     * Consulta Notas Emitidas noMês corrente
+     * Consulta Notas Emitidas no ês corrente
      */
     public List<NotaFiscal> consultarNotasMesCorrente(String documentoEmitente) {
         YearMonth anoMesAtual = YearMonth.now();
@@ -1611,6 +1611,16 @@ public class NotaFiscalService {
         int mes = anoMesAtual.getMonthValue();
 
         return notaFiscalRepository.consultarNotasMesCorrente(ano, mes, documentoEmitente);
+    }
+
+    /**
+     * Consulta Notas Emitidas no Ano corrente
+     */
+    public List<NotaFiscal> consultarNotasAnoCorrente() {
+        YearMonth anoMesAtual = YearMonth.now();
+        int ano = anoMesAtual.getYear();
+
+        return notaFiscalRepository.consultarNotasAnoCorrente(ano);
     }
 
     /**Consulta Notas Num Determinado Período

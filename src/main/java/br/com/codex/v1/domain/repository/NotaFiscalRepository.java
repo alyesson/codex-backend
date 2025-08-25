@@ -16,7 +16,7 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
     List<NotaFiscal> consultarNotasMesCorrente(@Param("ano") Integer ano, @Param("mes") Integer mes, @Param("documentoEmitente") String documentoEmitente);
 
     @Query("SELECT c FROM NotaFiscal c WHERE YEAR(c.emissao) = :ano")
-    List<NotaFiscal> findAllYear(@Param("ano") Integer ano);
+    List<NotaFiscal> consultarNotasAnoCorrente(@Param("ano") Integer ano);
 
     @Query("SELECT a FROM NotaFiscal a WHERE a.emissao BETWEEN :dataInicial AND :dataFinal AND a.documentoEmitente=:documentoEmitente")
     List<NotaFiscal> consultarNotasPorPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal, @Param("documentoEmitente") String documentoEmitente);

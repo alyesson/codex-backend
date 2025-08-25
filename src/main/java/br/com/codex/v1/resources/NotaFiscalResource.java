@@ -31,34 +31,6 @@ public class NotaFiscalResource {
 
 
     /**
-     * Gera configuraçòes iniciais da nota fiscal.
-     */
-    @GetMapping("/status_servico/{cnpj}")
-    public ResponseEntity<?> verificarStatusServico(@PathVariable String cnpj) {
-        try {
-            // Cria um DTO mínimo apenas com o CNPJ
-            NotaFiscalDto dto = new NotaFiscalDto();
-            dto.setDocumentoEmitente(cnpj);
-
-            // Obtém as configurações
-            ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-
-            // Consulta o status
-            TRetConsStatServ status = notaFiscalService.consultarStatusServico(config);
-
-            // Retorna um objeto simplificado para o frontend
-            Map<String, String> response = new HashMap<>();
-            response.put("status", status.getCStat() + " - " + status.getXMotivo());
-            response.put("dataHora", status.getDhRecbto() != null ? status.getDhRecbto().toString() : "");
-
-            return ResponseEntity.ok(response);
-        } catch (NfeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("status", "Erro", "message", e.getMessage()));
-        }
-    }
-
-    /**
      * Emite uma nova NF-e.
      */
     @PostMapping
@@ -79,6 +51,16 @@ public class NotaFiscalResource {
     }
 
     /**
+     * Visualiza as notas emitidas no ano corrente.
+     */
+    @GetMapping("/ano_corrente")
+    public ResponseEntity<List<NotaFiscalDto>> consultarNotasAnoCorrente() {
+        List<NotaFiscal> list = notaFiscalService.consultarNotasAnoCorrente();
+        List<NotaFiscalDto> listDto = list.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    /**
      * Consulta notas fiscais por período
      */
     @GetMapping("/por_periodo")
@@ -89,6 +71,62 @@ public class NotaFiscalResource {
         List<NotaFiscal> list = notaFiscalService.consultarNotasPorPeriodo(documentoEmitente, dataInicial, dataFinal);
         List<NotaFiscalDto> listDto = list.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
+    }
+
+    /**
+     * Inutiliza uma faixa de numeração de NF-e.
+     */
+    @PostMapping("/inutilizar")
+    public ResponseEntity<TRetInutNFe> inutilizarNotaFiscal(
+            @RequestParam String cnpj, @RequestParam String justificativa,
+            @RequestParam String ano, @RequestParam String serie,
+            @RequestParam String numInicial, @RequestParam String numFinal) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
+        TRetInutNFe retorno = notaFiscalService.inutilizarNotaFiscal(cnpj, justificativa, ano, serie, numInicial, numFinal, config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Consulta o status de serviço da SEFAZ.
+     */
+    @GetMapping("/status")
+    public ResponseEntity<TRetConsStatServ> consultarStatusServico(@RequestParam String cnpj) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
+        TRetConsStatServ retorno = notaFiscalService.consultarStatusServico(config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Envia um evento manual.
+     */
+    @PostMapping("/evento")
+    public ResponseEntity<String> enviarEventoManual(@RequestBody String xmlEvento, @RequestParam String tipoEvento, @RequestParam boolean valida,
+            @RequestParam boolean assina,@RequestParam String cnpj) throws Exception {
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj);
+
+        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
+        String retorno = notaFiscalService.enviarEventoManual(xmlEvento,ServicosEnum.valueOf(tipoEvento), valida, assina, config);
+        return ResponseEntity.ok(retorno);
+    }
+
+    /**
+     * Consulta documentos fiscais por NSU.
+     */
+    @GetMapping("/distribuicao")
+    public ResponseEntity<BigInteger> consultarDocumentos(@RequestParam String cnpj, @RequestParam String ambiente) throws Exception {
+
+        BigInteger ultimoNsu = notaFiscalService.consultarNSU(cnpj, ambiente);
+        return ResponseEntity.ok(ultimoNsu);
     }
 
     /**
@@ -144,67 +182,30 @@ public class NotaFiscalResource {
     }
 
     /**
-     * Inutiliza uma faixa de numeração de NF-e.
+     * Gera configuraçòes iniciais da nota fiscal.
      */
-    @PostMapping("/inutilizar")
-    public ResponseEntity<TRetInutNFe> inutilizarNotaFiscal(
-            @RequestParam String cnpj,
-            @RequestParam String justificativa,
-            @RequestParam String ano,
-            @RequestParam String serie,
-            @RequestParam String numInicial,
-            @RequestParam String numFinal) throws Exception {
+    @GetMapping("/status_servico/{cnpj}")
+    public ResponseEntity<?> verificarStatusServico(@PathVariable String cnpj) {
+        try {
+            // Cria um DTO mínimo apenas com o CNPJ
+            NotaFiscalDto dto = new NotaFiscalDto();
+            dto.setDocumentoEmitente(cnpj);
 
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(cnpj);
+            // Obtém as configurações
+            ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
 
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-        TRetInutNFe retorno = notaFiscalService.inutilizarNotaFiscal(cnpj, justificativa, ano, serie, numInicial, numFinal, config);
-        return ResponseEntity.ok(retorno);
-    }
+            // Consulta o status
+            TRetConsStatServ status = notaFiscalService.consultarStatusServico(config);
 
-    /**
-     * Consulta o status de serviço da SEFAZ.
-     */
-    @GetMapping("/status")
-    public ResponseEntity<TRetConsStatServ> consultarStatusServico(@RequestParam String cnpj) throws Exception {
+            // Retorna um objeto simplificado para o frontend
+            Map<String, String> response = new HashMap<>();
+            response.put("status", status.getCStat() + " - " + status.getXMotivo());
+            response.put("dataHora", status.getDhRecbto() != null ? status.getDhRecbto().toString() : "");
 
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(cnpj);
-
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-        TRetConsStatServ retorno = notaFiscalService.consultarStatusServico(config);
-        return ResponseEntity.ok(retorno);
-    }
-
-    /**
-     * Envia um evento manual.
-     */
-    @PostMapping("/evento")
-    public ResponseEntity<String> enviarEventoManual(
-            @RequestBody String xmlEvento,
-            @RequestParam String tipoEvento,
-            @RequestParam boolean valida,
-            @RequestParam boolean assina,
-            @RequestParam String cnpj) throws Exception {
-
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(cnpj);
-
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-        String retorno = notaFiscalService.enviarEventoManual(xmlEvento,ServicosEnum.valueOf(tipoEvento), valida, assina, config);
-        return ResponseEntity.ok(retorno);
-    }
-
-    /**
-     * Consulta documentos fiscais por NSU.
-     */
-    @GetMapping("/distribuicao")
-    public ResponseEntity<BigInteger> consultarDocumentos(
-            @RequestParam String cnpj,
-            @RequestParam String ambiente) throws Exception {
-
-        BigInteger ultimoNsu = notaFiscalService.consultarNSU(cnpj, ambiente);
-        return ResponseEntity.ok(ultimoNsu);
+            return ResponseEntity.ok(response);
+        } catch (NfeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "Erro", "message", e.getMessage()));
+        }
     }
 }
