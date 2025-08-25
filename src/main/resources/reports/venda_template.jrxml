@@ -254,7 +254,7 @@
 				<textFieldExpression><![CDATA[$F{observacoes}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="3" y="3" width="56" height="15" uuid="40f3acd1-7131-40bc-9551-1801bd0d6772"/>
+				<reportElement x="3" y="3" width="63" height="15" uuid="40f3acd1-7131-40bc-9551-1801bd0d6772"/>
 				<text><![CDATA[Observação]]></text>
 			</staticText>
 		</band>

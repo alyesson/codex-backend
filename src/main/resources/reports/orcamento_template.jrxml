@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="624"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -168,7 +168,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[OrçamentoNº]]></text>
+				<text><![CDATA[Orçamento Nº]]></text>
 			</staticText>
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="3" width="555" height="41" uuid="18ef62e0-a6b0-4fd6-9319-469b40ada420"/>
@@ -222,7 +222,7 @@
 				</textElement>
 				<text><![CDATA[Validade:]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="¤ #,##0.00">
 				<reportElement x="97" y="55" width="100" height="20" uuid="21315ca2-d51f-424d-9b34-cd820d623bcc"/>
 				<textFieldExpression><![CDATA[$F{desconto_total}]]></textFieldExpression>
 			</textField>
