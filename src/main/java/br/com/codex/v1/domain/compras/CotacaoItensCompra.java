@@ -1,5 +1,8 @@
 package br.com.codex.v1.domain.compras;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -7,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class CotacaoItensCompra implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -19,10 +24,7 @@ public class CotacaoItensCompra implements Serializable {
     protected Integer quantidade;
     protected String unidadeComercial;
     protected BigDecimal precoUnitario;
-    protected BigDecimal ipi;
-    protected BigDecimal pis;
-    protected BigDecimal icms;
-    protected BigDecimal cofins;
+    protected BigDecimal frete;
     protected BigDecimal desconto;
     protected BigDecimal precoTotal;
     @ManyToOne
@@ -33,123 +35,18 @@ public class CotacaoItensCompra implements Serializable {
         super();
     }
 
-    public CotacaoItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, BigDecimal ipi, BigDecimal pis, BigDecimal icms, BigDecimal cofins, BigDecimal desconto, BigDecimal precoTotal, CotacaoCompra cotacaoCompra) {
+    public CotacaoItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade,
+                              String unidadeComercial, BigDecimal precoUnitario, BigDecimal frete,
+                              BigDecimal desconto, BigDecimal precoTotal, CotacaoCompra cotacaoCompra) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.descricaoProduto = descricaoProduto;
         this.quantidade = quantidade;
         this.unidadeComercial = unidadeComercial;
         this.precoUnitario = precoUnitario;
-        this.ipi = ipi;
-        this.pis = pis;
-        this.icms = icms;
-        this.cofins = cofins;
+        this.frete = frete;
         this.desconto = desconto;
         this.precoTotal = precoTotal;
-        this.cotacaoCompra = cotacaoCompra;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigoProduto() {
-        return codigoProduto;
-    }
-
-    public void setCodigoProduto(String codigoProduto) {
-        this.codigoProduto = codigoProduto;
-    }
-
-    public String getDescricaoProduto() {
-        return descricaoProduto;
-    }
-
-    public void setDescricaoProduto(String descricaoProduto) {
-        this.descricaoProduto = descricaoProduto;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getUnidadeComercial() {
-        return unidadeComercial;
-    }
-
-    public void setUnidadeComercial(String unidadeComercial) {
-        this.unidadeComercial = unidadeComercial;
-    }
-
-    public BigDecimal getPrecoUnitario() {
-        return precoUnitario;
-    }
-
-    public void setPrecoUnitario(BigDecimal precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
-
-    public BigDecimal getIpi() {
-        return ipi;
-    }
-
-    public void setIpi(BigDecimal ipi) {
-        this.ipi = ipi;
-    }
-
-    public BigDecimal getPis() {
-        return pis;
-    }
-
-    public void setPis(BigDecimal pis) {
-        this.pis = pis;
-    }
-
-    public BigDecimal getIcms() {
-        return icms;
-    }
-
-    public void setIcms(BigDecimal icms) {
-        this.icms = icms;
-    }
-
-    public BigDecimal getCofins() {
-        return cofins;
-    }
-
-    public void setCofins(BigDecimal cofins) {
-        this.cofins = cofins;
-    }
-
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
-
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
-
-    public BigDecimal getPrecoTotal() {
-        return precoTotal;
-    }
-
-    public void setPrecoTotal(BigDecimal precoTotal) {
-        this.precoTotal = precoTotal;
-    }
-
-    public CotacaoCompra getCotacaoCompra() {
-        return cotacaoCompra;
-    }
-
-    public void setCotacaoCompra(CotacaoCompra cotacaoCompra) {
         this.cotacaoCompra = cotacaoCompra;
     }
 
