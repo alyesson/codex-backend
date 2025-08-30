@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class SolicitacaoItensCompra implements Serializable {
+public class OrdemItensCompra implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -25,28 +25,28 @@ public class SolicitacaoItensCompra implements Serializable {
     protected String unidadeComercial;
     protected BigDecimal precoUnitario;
     @ManyToOne
-    @JoinColumn(name = "solicitacaoCompra_id")
-    private SolicitacaoCompra solicitacaoCompra;
+    @JoinColumn(name = "ordemCompra_id")
+    private OrdemCompra ordemCompra;
 
-    public SolicitacaoItensCompra() {
+    public OrdemItensCompra() {
         super();
     }
 
-    public SolicitacaoItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, SolicitacaoCompra solicitacaoCompra) {
+    public OrdemItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade, String unidadeComercial, BigDecimal precoUnitario, OrdemCompra ordemCompra) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.descricaoProduto = descricaoProduto;
         this.quantidade = quantidade;
         this.unidadeComercial = unidadeComercial;
         this.precoUnitario = precoUnitario;
-        this.solicitacaoCompra = solicitacaoCompra;
+        this.ordemCompra = ordemCompra;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SolicitacaoItensCompra that = (SolicitacaoItensCompra) o;
+        OrdemItensCompra that = (OrdemItensCompra) o;
         return Objects.equals(id, that.id);
     }
 

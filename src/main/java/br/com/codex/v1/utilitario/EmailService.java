@@ -1,7 +1,7 @@
 package br.com.codex.v1.utilitario;
 
-import br.com.codex.v1.domain.dto.SolicitacaoCompraDto;
+import br.com.codex.v1.domain.dto.OrdemCompraDto;
 
 public interface EmailService {
-    String sendSimpleMail(SolicitacaoCompraDto solicitacaoCompraDto);
+    String sendSimpleMail(OrdemCompraDto ordemCompraDto);
 }

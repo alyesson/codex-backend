@@ -1,10 +1,14 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.compras.CotacaoItensCompra;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class CotacaoItensCompraDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -14,10 +18,7 @@ public class CotacaoItensCompraDto implements Serializable {
     protected Integer quantidade;
     protected String unidadeComercial;
     protected BigDecimal precoUnitario;
-    protected BigDecimal ipi;
-    protected BigDecimal pis;
-    protected BigDecimal icms;
-    protected BigDecimal cofins;
+    protected BigDecimal frete;
     protected BigDecimal desconto;
     protected BigDecimal precoTotal;
     protected CotacaoCompraDto cotacaoCompra;
@@ -33,116 +34,8 @@ public class CotacaoItensCompraDto implements Serializable {
         this.quantidade = obj.getQuantidade();
         this.unidadeComercial = obj.getUnidadeComercial();
         this.precoUnitario = obj.getPrecoUnitario();
-        this.ipi = obj.getIpi();
-        this.pis = obj.getPis();
-        this.icms = obj.getIcms();
-        this.cofins = obj.getCofins();
         this.desconto = obj.getDesconto();
         this.precoTotal = obj.getPrecoTotal();
         this.cotacaoCompra = new CotacaoCompraDto(obj.getCotacaoCompra());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigoProduto() {
-        return codigoProduto;
-    }
-
-    public void setCodigoProduto(String codigoProduto) {
-        this.codigoProduto = codigoProduto;
-    }
-
-    public String getDescricaoProduto() {
-        return descricaoProduto;
-    }
-
-    public void setDescricaoProduto(String descricaoProduto) {
-        this.descricaoProduto = descricaoProduto;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getUnidadeComercial() {
-        return unidadeComercial;
-    }
-
-    public void setUnidadeComercial(String unidadeComercial) {
-        this.unidadeComercial = unidadeComercial;
-    }
-
-    public BigDecimal getPrecoUnitario() {
-        return precoUnitario;
-    }
-
-    public void setPrecoUnitario(BigDecimal precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
-
-    public BigDecimal getIpi() {
-        return ipi;
-    }
-
-    public void setIpi(BigDecimal ipi) {
-        this.ipi = ipi;
-    }
-
-    public BigDecimal getPis() {
-        return pis;
-    }
-
-    public void setPis(BigDecimal pis) {
-        this.pis = pis;
-    }
-
-    public BigDecimal getIcms() {
-        return icms;
-    }
-
-    public void setIcms(BigDecimal icms) {
-        this.icms = icms;
-    }
-
-    public BigDecimal getCofins() {
-        return cofins;
-    }
-
-    public void setCofins(BigDecimal cofins) {
-        this.cofins = cofins;
-    }
-
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
-
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
-
-    public BigDecimal getPrecoTotal() {
-        return precoTotal;
-    }
-
-    public void setPrecoTotal(BigDecimal precoTotal) {
-        this.precoTotal = precoTotal;
-    }
-
-    public CotacaoCompraDto getCotacaoCompra() {
-        return cotacaoCompra;
-    }
-
-    public void setCotacaoCompra(CotacaoCompraDto cotacaoCompra) {
-        this.cotacaoCompra = cotacaoCompra;
     }
 }

@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.compras.SolicitacaoCompra;
+import br.com.codex.v1.domain.compras.OrdemCompra;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SolicitacaoCompraDto implements Serializable {
+public class OrdemCompraDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -27,14 +27,14 @@ public class SolicitacaoCompraDto implements Serializable {
     protected String urgente;
     protected String opcaoMarca;
     protected String itemEstoque;
-    private List<SolicitacaoItensCompraDto> itens;
+    private List<OrdemItensCompraDto> itens;
     protected String situacao;
 
-    public SolicitacaoCompraDto() {
+    public OrdemCompraDto() {
         super();
     }
 
-    public SolicitacaoCompraDto(SolicitacaoCompra obj) {
+    public OrdemCompraDto(OrdemCompra obj) {
         this.id = obj.getId();
         this.solicitante = obj.getSolicitante();
         this.departamento = obj.getDepartamento();

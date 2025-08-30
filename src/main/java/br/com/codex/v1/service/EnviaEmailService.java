@@ -1,6 +1,6 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.dto.SolicitacaoCompraDto;
+import br.com.codex.v1.domain.dto.OrdemCompraDto;
 import br.com.codex.v1.utilitario.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,18 +22,18 @@ public class EnviaEmailService implements EmailService {
 
     String destinatario = "suporteti@decampaluminio.com.br";
 
-    public String sendSimpleMail(SolicitacaoCompraDto solicitacaoCompraDto){
+    public String sendSimpleMail(OrdemCompraDto ordemCompraDto){
 
-        String subject = "Solicitação de Compra" + " - " + solicitacaoCompraDto.getSolicitante();
+        String subject = "Solicitação de Compra" + " - " + ordemCompraDto.getSolicitante();
 
         // Montando a mensagem HTML
-        String message = "<p>Você recebeu este e-mail pois o usuário " + solicitacaoCompraDto.getSolicitante() +
+        String message = "<p>Você recebeu este e-mail pois o usuário " + ordemCompraDto.getSolicitante() +
                 " fez uma solicitação de compra</p>";
-        message += "<font color=blue>Nome Solicitante:</font> " + solicitacaoCompraDto.getSolicitante() + "<br/>";
-        message += "<font color=blue>Data Abertura:</font> " + solicitacaoCompraDto.getDataSolicitacao() + "<br/>";
-        message += "<font color=blue>Departamento:</font> " + solicitacaoCompraDto.getDepartamento() + "<br/>";
-        message += "<font color=blue>Centro de Custo:</font> " + solicitacaoCompraDto.getCentroCusto() + "<br/>";
-        message += "<font color=blue>Motivo:</font> " + solicitacaoCompraDto.getMotivoCompra() + "<br/>";
+        message += "<font color=blue>Nome Solicitante:</font> " + ordemCompraDto.getSolicitante() + "<br/>";
+        message += "<font color=blue>Data Abertura:</font> " + ordemCompraDto.getDataSolicitacao() + "<br/>";
+        message += "<font color=blue>Departamento:</font> " + ordemCompraDto.getDepartamento() + "<br/>";
+        message += "<font color=blue>Centro de Custo:</font> " + ordemCompraDto.getCentroCusto() + "<br/>";
+        message += "<font color=blue>Motivo:</font> " + ordemCompraDto.getMotivoCompra() + "<br/>";
         // Adicionando a assinatura com a imagem
         message += "<br/><p>Atenciosamente,</p>";
         message += "<p>Sistema Codex</p>";

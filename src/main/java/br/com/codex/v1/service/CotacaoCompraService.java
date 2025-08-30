@@ -36,10 +36,7 @@ public class CotacaoCompraService {
             item.setQuantidade(itemDto.getQuantidade());
             item.setUnidadeComercial(itemDto.getUnidadeComercial());
             item.setPrecoUnitario(itemDto.getPrecoUnitario());
-            item.setIpi(itemDto.getIpi());
-            item.setPis(itemDto.getPis());
-            item.setIcms(itemDto.getIcms());
-            item.setCofins(itemDto.getCofins());
+            item.setFrete(itemDto.getFrete());
             item.setDesconto(itemDto.getDesconto());
             item.setPrecoTotal(itemDto.getPrecoTotal());
             item.setCotacaoCompra(objCotacaoCompra);
