@@ -10,13 +10,17 @@ import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CotacaoCompraService {
+
+    int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+    LocalDate data = LocalDate.now();
 
     @Autowired
     CotacaoCompraRepository cotacaoCompraRepository;
@@ -26,6 +30,7 @@ public class CotacaoCompraService {
 
     public CotacaoCompra create(CotacaoCompraDto cotacaoCompradto) {
         cotacaoCompradto.setId(null);
+        cotacaoCompradto.setDataAbertura(data);
         CotacaoCompra objCotacaoCompra = new CotacaoCompra(cotacaoCompradto);
         objCotacaoCompra = cotacaoCompraRepository.save(objCotacaoCompra);
 
@@ -52,8 +57,8 @@ public class CotacaoCompraService {
         return cotacaoItensCompraRepository.findByCotacaoCompraId(solicitacaoId);
     }
 
-    public List<CotacaoCompra> findAll() {
-        return cotacaoCompraRepository.findAll();
+    public List<CotacaoCompra> findAllByYear() {
+        return cotacaoCompraRepository.findAllByYear(anoAtual);
     }
 
     public void update(Long id, String situacao) {

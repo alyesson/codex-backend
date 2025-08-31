@@ -1,6 +1,7 @@
 package br.com.codex.v1.domain.repository;
 
 import br.com.codex.v1.domain.compras.CotacaoCompra;
+import br.com.codex.v1.domain.compras.OrdemCompra;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,8 @@ import java.util.List;
 
 public interface CotacaoCompraRepository extends JpaRepository<CotacaoCompra, Long> {
 
-    List<CotacaoCompra> findAll();
+    @Query("SELECT s FROM CotacaoCompra s WHERE YEAR(s.dataAbertura) = :ano")
+    List<CotacaoCompra> findAllByYear(@Param("ano") Integer ano);
 
     @Modifying
     @Transactional

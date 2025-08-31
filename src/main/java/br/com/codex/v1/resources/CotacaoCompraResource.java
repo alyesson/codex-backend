@@ -34,9 +34,9 @@ public class CotacaoCompraResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @GetMapping
-    public ResponseEntity <List<CotacaoCompraDto>> findAll(){
-        List<CotacaoCompra> objCotacao = cotacaoCompraService.findAll();
+    @GetMapping(value = "/cotacoes_ano")
+    public ResponseEntity <List<CotacaoCompraDto>> findAllByYear(){
+        List<CotacaoCompra> objCotacao = cotacaoCompraService.findAllByYear();
         List<CotacaoCompraDto> listDto = objCotacao.stream().map(CotacaoCompraDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
