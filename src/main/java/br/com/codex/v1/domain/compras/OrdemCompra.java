@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class OrdemCompra implements Serializable {
     protected Long id;
     protected String solicitante;
     protected String departamento;
-    protected Date dataSolicitacao;
+    protected LocalDate dataSolicitacao;
     protected String centroCusto;
     protected String motivoCompra;
     protected String destinoMaterial;
@@ -41,7 +42,7 @@ public class OrdemCompra implements Serializable {
         super();
     }
 
-    public OrdemCompra(Long id, String solicitante, String departamento, Date dataSolicitacao,
+    public OrdemCompra(Long id, String solicitante, String departamento, LocalDate dataSolicitacao,
                        String centroCusto, String motivoCompra, String destinoMaterial, String urgente,
                        String opcaoMarca, String itemEstoque, String situacao) {
         this.id = id;

@@ -15,8 +15,8 @@ public interface OrdemCompraRepository extends JpaRepository<OrdemCompra, Long> 
     @Query("SELECT s FROM OrdemCompra s WHERE YEAR(s.dataSolicitacao) = :ano AND s.centroCusto = :centroCustoUsuario AND s.solicitante = :solicitante")
     List<OrdemCompra> findAllByYearUsuario(@Param("ano") Integer ano, @Param("centroCustoUsuario") String centroCustoUsuario, @Param("solicitante") String solicitante);
 
-    @Query("SELECT s FROM OrdemCompra s WHERE YEAR(s.dataSolicitacao) = :ano AND s.centroCusto = :centroCustoUsuario")
-    List<OrdemCompra> findAllByYear(@Param("ano") Integer ano, @Param("centroCustoUsuario") String centroCustoUsuario);
+    @Query("SELECT s FROM OrdemCompra s WHERE YEAR(s.dataSolicitacao) = :ano")
+    List<OrdemCompra> findAllByYear(@Param("ano") Integer ano);
 
     @Modifying
     @Transactional

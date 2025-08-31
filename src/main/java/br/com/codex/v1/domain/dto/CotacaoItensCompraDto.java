@@ -21,6 +21,8 @@ public class CotacaoItensCompraDto implements Serializable {
     protected BigDecimal frete;
     protected BigDecimal desconto;
     protected BigDecimal precoTotal;
+    protected Integer quantidadePorUnidade;
+    protected Integer quantidadeTotal;
     protected CotacaoCompraDto cotacaoCompra;
 
     public CotacaoItensCompraDto() {
@@ -36,6 +38,8 @@ public class CotacaoItensCompraDto implements Serializable {
         this.precoUnitario = obj.getPrecoUnitario();
         this.desconto = obj.getDesconto();
         this.precoTotal = obj.getPrecoTotal();
+        this.quantidadePorUnidade = obj.getQuantidadePorUnidade();
+        this.quantidadeTotal = obj.getQuantidadeTotal();
         this.cotacaoCompra = new CotacaoCompraDto(obj.getCotacaoCompra());
     }
 }

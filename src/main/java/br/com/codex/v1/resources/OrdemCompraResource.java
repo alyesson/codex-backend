@@ -31,7 +31,29 @@ public class OrdemCompraResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_CONTABILIDADE', 'GERENTE_FINANCEIRO', 'GERENTE_COMPRAS', 'GERENTE_VENDAS')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'COMPRADOR', 'GERENTE_COMPRAS')")
+    @GetMapping("/ordem_compra_ano")
+    public ResponseEntity <List<OrdemCompraDto>> findAllByYear(){
+        List<OrdemCompra> objVenda = ordemCompraService.findAllByYear();
+        List<OrdemCompraDto> listDto = objVenda.stream().map(OrdemCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @GetMapping("/ordem_usuario_ano")
+    public ResponseEntity <List<OrdemCompraDto>> findAllByYearUsuario(@RequestParam(value = "centroCustoUsuario") String centroCustoUsuario, @RequestParam(value = "solicitante") String solicitante){
+        List<OrdemCompra> objVenda = ordemCompraService.findAllByYearUsuario(centroCustoUsuario, solicitante);
+        List<OrdemCompraDto> listDto = objVenda.stream().map(OrdemCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @GetMapping("/situacao")
+    public ResponseEntity <List<OrdemCompraDto>> findAllBySituacao(){
+        List<OrdemCompra> objOrdem = ordemCompraService.findAllBySituacao();
+        List<OrdemCompraDto> listDto = objOrdem.stream().map(OrdemCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<OrdemCompraDto> update(@PathVariable Long id, @RequestParam String situacao){
         ordemCompraService.update(id, situacao);
@@ -45,28 +67,6 @@ public class OrdemCompraResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @GetMapping("/solicitacoes_usuario_ano")
-    public ResponseEntity <List<OrdemCompraDto>> findAllByYearUsuario(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "centroCustoUsuario") String centroCustoUsuario, @RequestParam(value = "solicitante") String solicitante){
-        List<OrdemCompra> objVenda = ordemCompraService.findAllByYearUsuario(ano, centroCustoUsuario, solicitante);
-        List<OrdemCompraDto> listDto = objVenda.stream().map(OrdemCompraDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FINANCEIRO', 'GERENTE_COMPRAS', 'GERENTE_VENDAS', 'GERENTE_ESTOQUE', 'GERENTE_ADMINISTRATIVO', 'GERENTE_CONTABILIDADE')")
-    @GetMapping("/solicitacoes_compra_ano")
-    public ResponseEntity <List<OrdemCompraDto>> findAllByYear(@RequestParam(value = "ano") Integer ano, @RequestParam(value = "centroCustoUsuario") String centroCustoUsuario){
-        List<OrdemCompra> objVenda = ordemCompraService.findAllByYear(ano, centroCustoUsuario);
-        List<OrdemCompraDto> listDto = objVenda.stream().map(OrdemCompraDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @GetMapping("/situacao")
-    public ResponseEntity <List<OrdemCompraDto>> findAllBySituacao(){
-        List<OrdemCompra> objOrdem = ordemCompraService.findAllBySituacao();
-        List<OrdemCompraDto> listDto = objOrdem.stream().map(OrdemCompraDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<OrdemCompra> findById(@PathVariable Long id){
         OrdemCompra obj = ordemCompraService.findById(id);
@@ -75,7 +75,7 @@ public class OrdemCompraResource {
 
     //ASolicitações de Compra Por Período
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_TI', 'TI', 'GERENTE_ADMINISTRATIVO', 'ADMINISTRATIVO')")
-    @GetMapping(value = "/solicitacoes_periodo")
+    @GetMapping(value = "/ordem_periodo")
     public ResponseEntity<List<OrdemCompraDto>> findAllOrdemPeriodo(@RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal){
         List<OrdemCompra> list = ordemCompraService.findAllOrdemPeriodo(dataInicial, dataFinal);
         List<OrdemCompraDto> listDto = list.stream().map(OrdemCompraDto::new).collect(Collectors.toList());

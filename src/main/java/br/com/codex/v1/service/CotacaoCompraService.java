@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,8 @@ public class CotacaoCompraService {
             item.setFrete(itemDto.getFrete());
             item.setDesconto(itemDto.getDesconto());
             item.setPrecoTotal(itemDto.getPrecoTotal());
+            item.setQuantidadePorUnidade(itemDto.getQuantidadePorUnidade());
+            item.setQuantidadeTotal(itemDto.getQuantidadeTotal());
             item.setCotacaoCompra(objCotacaoCompra);
             cotacaoItensCompraRepository.save(item);
         }
@@ -62,7 +65,7 @@ public class CotacaoCompraService {
         return objCotacaoCompra.orElseThrow(() -> new ObjectNotFoundException("Cotação não encontrada"));
     }
 
-    public List<CotacaoCompra> findAllCotacoesPeriodo(Date dataInicial, Date dataFinal) {
+    public List<CotacaoCompra> findAllCotacoesPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
         return cotacaoCompraRepository.findAllCotacoesPeriodo(dataInicial, dataFinal);
     }
 }

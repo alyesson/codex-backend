@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class OrdemCompraService {
 
     int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+    LocalDate data = LocalDate.now();
 
     @Autowired
     private OrdemCompraRepository ordemCompraRepository;
@@ -26,11 +28,12 @@ public class OrdemCompraService {
     @Autowired
     private OrdemItensCompraRepository ordemItensCompraRepository;
 
-    @Autowired
-    private EnviaEmailService enviaEmailService;
+    //@Autowired
+    //private EnviaEmailService enviaEmailService;
 
     public OrdemCompra create(OrdemCompraDto ordemCompradto) {
         ordemCompradto.setId(null);
+        ordemCompradto.setDataSolicitacao(data);
         OrdemCompra objOrdemCompra = new OrdemCompra(ordemCompradto);
         objOrdemCompra = ordemCompraRepository.save(objOrdemCompra);
 
@@ -47,10 +50,10 @@ public class OrdemCompraService {
         }
 
         // Enviar e-mail e capturar o retorno
-        String resultadoEnvioEmail = enviaEmailService.sendSimpleMail(ordemCompradto);
+        //String resultadoEnvioEmail = enviaEmailService.sendSimpleMail(ordemCompradto);
 
         // Retornar o resultado do envio de e-mail
-        System.out.println(resultadoEnvioEmail); // Para log ou monitoramento
+        //System.out.println(resultadoEnvioEmail); // Para log ou monitoramento
 
         return objOrdemCompra;
     }
@@ -59,12 +62,12 @@ public class OrdemCompraService {
         return ordemItensCompraRepository.findByOrdemCompraId(solicitacaoId);
     }
 
-    public List<OrdemCompra> findAllByYearUsuario(Integer ano, String centroCustoUsuario, String solicitante) {
-        return ordemCompraRepository.findAllByYearUsuario(ano, centroCustoUsuario, solicitante);
+    public List<OrdemCompra> findAllByYearUsuario(String centroCustoUsuario, String solicitante) {
+        return ordemCompraRepository.findAllByYearUsuario(anoAtual, centroCustoUsuario, solicitante);
     }
 
-    public List<OrdemCompra> findAllByYear(Integer ano, String centroCustoUsuario) {
-        return ordemCompraRepository.findAllByYear(ano, centroCustoUsuario);
+    public List<OrdemCompra> findAllByYear() {
+        return ordemCompraRepository.findAllByYear(anoAtual);
     }
 
     public void update(Long id, String situacao) {

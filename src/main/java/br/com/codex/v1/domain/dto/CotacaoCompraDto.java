@@ -4,11 +4,13 @@ import br.com.codex.v1.domain.compras.CotacaoCompra;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -18,14 +20,14 @@ public class CotacaoCompraDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected Long id;
-    protected Integer numeroSolicitacao;
+    protected Integer numeroOrdem;
     protected String solicitante;
-    protected Date dataSolicitacao;
-    protected Date dataAbertura;
-    protected Date validade;
+    protected LocalDate dataAbertura;
+    @NotNull(message = "A validade da cotação não pode estar em branco")
+    protected LocalDate validade;
     protected String situacao;
     protected String comprador;
-    @NotNull(message = "O fornecedor não pode estar em branco")
+    @NotBlank(message = "O fornecedor não pode estar em branco")
     protected String fornecedor;
     protected String cnpj;
     protected String ie;
@@ -44,9 +46,8 @@ public class CotacaoCompraDto implements Serializable {
 
     public CotacaoCompraDto(CotacaoCompra obj) {
         this.id = obj.getId();
-        this.numeroSolicitacao = obj.getNumeroSolicitacao();
+        this.numeroOrdem = obj.getNumeroOrdem();
         this.solicitante = obj.getSolicitante();
-        this.dataSolicitacao = obj.getDataSolicitacao();
         this.dataAbertura = obj.getDataAbertura();
         this.validade = obj.getValidade();
         this.situacao = obj.getSituacao();

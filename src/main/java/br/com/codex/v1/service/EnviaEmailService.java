@@ -20,7 +20,7 @@ public class EnviaEmailService implements EmailService {
     @Value("${spring.mail.username}")
     private String remetente;
 
-    String destinatario = "suporteti@decampaluminio.com.br";
+    String destinatario = "";
 
     public String sendSimpleMail(OrdemCompraDto ordemCompraDto){
 

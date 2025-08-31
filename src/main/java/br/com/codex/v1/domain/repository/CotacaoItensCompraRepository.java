@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CotacaoItensCompraRepository extends JpaRepository<CotacaoItensCompra, Long> {
 
-    List<CotacaoItensCompra> findByCotacaoCompraId(Long solicitacaoId);
+    List<CotacaoItensCompra> findByCotacaoCompraId(Long cotacaoId);
 }

@@ -27,6 +27,8 @@ public class CotacaoItensCompra implements Serializable {
     protected BigDecimal frete;
     protected BigDecimal desconto;
     protected BigDecimal precoTotal;
+    protected Integer quantidadePorUnidade;
+    protected Integer quantidadeTotal;
     @ManyToOne
     @JoinColumn(name = "cotacaoCompra_id")
     protected CotacaoCompra cotacaoCompra;
@@ -37,7 +39,8 @@ public class CotacaoItensCompra implements Serializable {
 
     public CotacaoItensCompra(Long id, String codigoProduto, String descricaoProduto, Integer quantidade,
                               String unidadeComercial, BigDecimal precoUnitario, BigDecimal frete,
-                              BigDecimal desconto, BigDecimal precoTotal, CotacaoCompra cotacaoCompra) {
+                              BigDecimal desconto, BigDecimal precoTotal, CotacaoCompra cotacaoCompra, Integer quantidadePorUnidade,
+                              Integer quantidadeTotal) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.descricaoProduto = descricaoProduto;
@@ -48,6 +51,8 @@ public class CotacaoItensCompra implements Serializable {
         this.desconto = desconto;
         this.precoTotal = precoTotal;
         this.cotacaoCompra = cotacaoCompra;
+        this.quantidadePorUnidade = quantidadePorUnidade;
+        this.quantidadeTotal = quantidadeTotal;
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,11 +25,10 @@ public class CotacaoCompra implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected Integer numeroSolicitacao;
+    protected Integer numeroOrdem;
     protected String solicitante;
-    protected Date dataSolicitacao;
-    protected Date dataAbertura;
-    protected Date validade;
+    protected LocalDate dataAbertura;
+    protected LocalDate validade;
     protected String situacao;
     protected String comprador;
     protected String fornecedor;
@@ -49,14 +49,13 @@ public class CotacaoCompra implements Serializable {
         super();
     }
 
-    public CotacaoCompra(Long id, Integer numeroSolicitacao, String solicitante, Date dataSolicitacao, Date dataAbertura,
-                         Date validade, String situacao, String comprador, String fornecedor, String cnpj,
+    public CotacaoCompra(Long id, Integer numeroOrdem, String solicitante, LocalDate dataAbertura,
+                         LocalDate validade, String situacao, String comprador, String fornecedor, String cnpj,
                          String ie, String endereco, String prazoEntrega, String contato, BigDecimal valorCotado,
                          String linkCompra, String condicoesPagamento, String observacao) {
         this.id = id;
-        this.numeroSolicitacao = numeroSolicitacao;
+        this.numeroOrdem = numeroOrdem;
         this.solicitante = solicitante;
-        this.dataSolicitacao = dataSolicitacao;
         this.dataAbertura = dataAbertura;
         this.validade = validade;
         this.situacao = situacao;
@@ -75,9 +74,8 @@ public class CotacaoCompra implements Serializable {
 
     public CotacaoCompra(CotacaoCompraDto obj) {
         this.id = obj.getId();
-        this.numeroSolicitacao = obj.getNumeroSolicitacao();
+        this.numeroOrdem = obj.getNumeroOrdem();
         this.solicitante = obj.getSolicitante();
-        this.dataSolicitacao = obj.getDataSolicitacao();
         this.dataAbertura = obj.getDataAbertura();
         this.validade = obj.getValidade();
         this.situacao = obj.getSituacao();

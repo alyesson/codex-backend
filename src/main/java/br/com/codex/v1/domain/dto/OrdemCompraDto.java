@@ -8,7 +8,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
+
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
 @Getter
 @Setter
@@ -19,7 +22,7 @@ public class OrdemCompraDto implements Serializable {
     protected Long id;
     protected String solicitante;
     protected String departamento;
-    protected Date dataSolicitacao;
+    protected LocalDate dataSolicitacao;
     @NotNull(message = "Centro de custo não pode estar em branco")
     protected String centroCusto;
     protected String motivoCompra;
@@ -46,5 +49,13 @@ public class OrdemCompraDto implements Serializable {
         this.opcaoMarca = obj.getOpcaoMarca();
         this.itemEstoque = obj.getItemEstoque();
         this.situacao = obj.getSituacao();
+    }
+
+    public void setMotivoCompra(String motivoCompra) {
+        this.motivoCompra = capitalizarPalavras(motivoCompra);
+    }
+
+    public void setDestinoMaterial(String destinoMaterial) {
+        this.destinoMaterial = capitalizarPalavras(destinoMaterial);
     }
 }
