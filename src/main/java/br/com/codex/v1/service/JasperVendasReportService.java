@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
-public class JasperReportService {
+public class JasperVendasReportService {
 
     @Autowired
     private DataSource dataSource;

@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 @Component
 @Profile("desenvolvimento")
 public class StartupInitializerDev {
-
     private static final Logger logger = LoggerFactory.getLogger(StartupInitializerDev.class);
 
     @Autowired

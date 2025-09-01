@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.dto.CotacaoCompraDto;
 import br.com.codex.v1.domain.dto.CotacaoItensCompraDto;
 import br.com.codex.v1.service.CotacaoCompraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,9 @@ public class CotacaoCompraResource {
     //ASolicitações de Compra Por Período
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/cotacoes_periodo")
-    public ResponseEntity<List<CotacaoCompraDto>> findAllCotacaoPeriodo(@RequestParam("dataInicial") LocalDate dataInicial, @RequestParam("dataFinal") LocalDate dataFinal){
+    public ResponseEntity<List<CotacaoCompraDto>> findAllCotacaoPeriodo(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+                                                                        @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
         List<CotacaoCompra> list = cotacaoCompraService.findAllCotacoesPeriodo(dataInicial, dataFinal);
         List<CotacaoCompraDto> listDto = list.stream().map(CotacaoCompraDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
