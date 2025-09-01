@@ -166,14 +166,14 @@
 				<text><![CDATA[ITENS DA COTAÇÃO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="151" y="7" width="173" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
+				<reportElement x="159" y="8" width="173" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Cotação De Compra Nº]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="324" y="7" width="100" height="30" forecolor="#009999" uuid="399fb8f9-e1c2-4fcc-aad9-a9d993e1f42c"/>
+				<reportElement x="332" y="8" width="100" height="30" forecolor="#009999" uuid="399fb8f9-e1c2-4fcc-aad9-a9d993e1f42c"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font size="15" isBold="true"/>
 				</textElement>
