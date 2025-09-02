@@ -34,7 +34,7 @@ public class PedidoCompraResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @GetMapping(value = "/pedidos_ano")
+    @GetMapping(value = "/pedido_ano")
     public ResponseEntity <List<PedidoCompraDto>> findAllByYear(){
         List<PedidoCompra> objPedido = pedidoCompraService.findAllByYear();
         List<PedidoCompraDto> listDto = objPedido.stream().map(PedidoCompraDto::new).collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class PedidoCompraResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @GetMapping(value = "/pedidos_periodo")
+    @GetMapping(value = "/pedido_periodo")
     public ResponseEntity<List<PedidoCompraDto>> findAllPedidoPeriodo(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
                                                                         @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
