@@ -3,11 +3,11 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.configuration.StartupInitializerDev;
 import br.com.codex.v1.domain.compras.CotacaoCompra;
 import br.com.codex.v1.domain.compras.CotacaoItensCompra;
-import br.com.codex.v1.domain.compras.OrdemCompra;
-import br.com.codex.v1.domain.compras.OrdemItensCompra;
+import br.com.codex.v1.domain.compras.SolicitacaoCompra;
+import br.com.codex.v1.domain.compras.SolicitacaoItensCompra;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.repository.CotacaoItensCompraRepository;
-import br.com.codex.v1.domain.repository.OrdemItensCompraRepository;
+import br.com.codex.v1.domain.repository.SolicitacaoItensCompraRepository;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -34,10 +34,10 @@ public class JasperComprasReportService {
     private DataSource dataSource;
 
     @Autowired
-    private OrdemCompraService ordemCompraService;
+    private SolicitacaoCompraService solicitacaoCompraService;
 
     @Autowired
-    private OrdemItensCompraRepository ordemItensCompraRepository;
+    private SolicitacaoItensCompraRepository solicitacaoItensCompraRepository;
 
     @Autowired
     private CotacaoCompraService cotacaoCompraService;
@@ -45,38 +45,38 @@ public class JasperComprasReportService {
     @Autowired
     private CotacaoItensCompraRepository cotacaoItensCompraRepository;
 
-    public byte[] generateOrdemCompraReport(Long ordemCompraId) throws Exception {
+    public byte[] generateSolicitacaoCompraReport(Long solicitacaoCompraId) throws Exception {
         Connection connection = null;
         try {
 
             connection = dataSource.getConnection();
 
-            OrdemCompra ordemCompra = ordemCompraService.findById(ordemCompraId);
-            if (ordemCompra == null) {
-                throw new RuntimeException("Ordem de compra não encontrada com ID: " + ordemCompraId);
+            SolicitacaoCompra solicitacaoCompra = solicitacaoCompraService.findById(solicitacaoCompraId);
+            if (solicitacaoCompra == null) {
+                throw new RuntimeException("Solicitacao de compra não encontrada com ID: " + solicitacaoCompraId);
             }
-            // Busca os Itens pelo OrdemCompraItemRepository
-            List<OrdemItensCompra> itens = ordemItensCompraRepository.findByOrdemCompraId(ordemCompraId);
+            // Busca os Itens pelo SolicitacaoCompraItemRepository
+            List<SolicitacaoItensCompra> itens = solicitacaoItensCompraRepository.findBySolicitacaoCompraId(solicitacaoCompraId);
 
             Map<String, Object> parameters = new HashMap<>();
 
             // PARÂMETRO PARA O RELATÓRIO PRINCIPAL
-            parameters.put("P_CODIGO", ordemCompraId);
-            parameters.put("P_CODIGOID", ordemCompraId);
+            parameters.put("P_CODIGO", solicitacaoCompraId);
+            parameters.put("P_CODIGOID", solicitacaoCompraId);
 
-            parameters.put("id", ordemCompra.getId());
-            parameters.put("solicitante", ordemCompra.getSolicitante());
-            parameters.put("data_solicitacao", ordemCompra.getDataSolicitacao());
-            parameters.put("departamento", ordemCompra.getDepartamento());
-            parameters.put("destino_material", ordemCompra.getDestinoMaterial());
-            parameters.put("item_estoque", ordemCompra.getItemEstoque());
-            parameters.put("situacao", ordemCompra.getSituacao());
-            parameters.put("motivo_compra", ordemCompra.getMotivoCompra());
-            parameters.put("opcao_marca", ordemCompra.getOpcaoMarca());
-            parameters.put("urgente", ordemCompra.getUrgente());
+            parameters.put("id", solicitacaoCompra.getId());
+            parameters.put("solicitante", solicitacaoCompra.getSolicitante());
+            parameters.put("data_solicitacao", solicitacaoCompra.getDataSolicitacao());
+            parameters.put("departamento", solicitacaoCompra.getDepartamento());
+            parameters.put("destino_material", solicitacaoCompra.getDestinoMaterial());
+            parameters.put("item_estoque", solicitacaoCompra.getItemEstoque());
+            parameters.put("situacao", solicitacaoCompra.getSituacao());
+            parameters.put("motivo_compra", solicitacaoCompra.getMotivoCompra());
+            parameters.put("opcao_marca", solicitacaoCompra.getOpcaoMarca());
+            parameters.put("urgente", solicitacaoCompra.getUrgente());
             parameters.put("REPORT_CONNECTION", connection);
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("src/main/resources/reports/ordem_compra_template.jasper"));
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("src/main/resources/reports/solicitacao_compra_template.jasper"));
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
 
             return JasperExportManager.exportReportToPdf(jasperPrint);
@@ -87,7 +87,7 @@ public class JasperComprasReportService {
             if (connection != null) {
                 try { connection.close();
                 } catch (SQLException e) {
-                    logger.error("Erro ao gerar PDF de ordem de compra: " +e);
+                    logger.error("Erro ao gerar PDF de solicitacao de compra: " +e);
                 }
             }
         }
@@ -103,7 +103,7 @@ public class JasperComprasReportService {
             if (cotacaoCompra == null) {
                 throw new RuntimeException("Cotação não encontrada com ID: " + cotacaoCompraId);
             }
-            // Busca os Itens pelo OrdemCompraItemRepository
+            // Busca os Itens pelo SolicitacaoCompraItemRepository
             List<CotacaoItensCompra> itens = cotacaoItensCompraRepository.findByCotacaoCompraId(cotacaoCompraId);
 
             Map<String, Object> parameters = new HashMap<>();
@@ -122,7 +122,7 @@ public class JasperComprasReportService {
             parameters.put("fornecedor", cotacaoCompra.getFornecedor());
             parameters.put("ie", cotacaoCompra.getIe());
             parameters.put("link_compra", cotacaoCompra.getLinkCompra());
-            parameters.put("numero_ordem", cotacaoCompra.getNumeroOrdem());
+            parameters.put("numero_solicitacao", cotacaoCompra.getNumeroSolicitacao());
             parameters.put("observacao", cotacaoCompra.getObservacao());
             parameters.put("prazo_entrega", cotacaoCompra.getPrazoEntrega());
             parameters.put("situacao", cotacaoCompra.getSituacao());

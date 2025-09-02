@@ -1,7 +1,7 @@
 package br.com.codex.v1.domain.repository;
 
 import br.com.codex.v1.domain.compras.CotacaoCompra;
-import br.com.codex.v1.domain.compras.OrdemCompra;
+import br.com.codex.v1.domain.compras.SolicitacaoCompra;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

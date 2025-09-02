@@ -414,7 +414,7 @@ Preencher com &quot;2B&quot;, quando se tratar de Cupom Fiscal emitido por máqu
 															</xs:element>
 															<xs:element name="nECF">
 																<xs:annotation>
-																	<xs:documentation>Informar o número de ordem seqüencial do ECF que emitiu o Cupom Fiscal vinculado à NF-e</xs:documentation>
+																	<xs:documentation>Informar o número de solicitacao seqüencial do ECF que emitiu o Cupom Fiscal vinculado à NF-e</xs:documentation>
 																</xs:annotation>
 																<xs:simpleType>
 																	<xs:restriction base="xs:string">
@@ -425,7 +425,7 @@ Preencher com &quot;2B&quot;, quando se tratar de Cupom Fiscal emitido por máqu
 															</xs:element>
 															<xs:element name="nCOO">
 																<xs:annotation>
-																	<xs:documentation>Informar o Número do Contador de Ordem de Operação - COO vinculado à NF-e</xs:documentation>
+																	<xs:documentation>Informar o Número do Contador de Solicitacao de Operação - COO vinculado à NF-e</xs:documentation>
 																</xs:annotation>
 																<xs:simpleType>
 																	<xs:restriction base="xs:string">
@@ -1069,7 +1069,7 @@ Formato ”CFOP9999”.</xs:documentation>
 															<xs:element name="tpIntermedio">
 																<xs:annotation>
 																	<xs:documentation>Forma de Importação quanto a intermediação 
-																	1-por conta propria;2-por conta e ordem;3-encomenda</xs:documentation>
+																	1-por conta propria;2-por conta e solicitacao;3-encomenda</xs:documentation>
 																</xs:annotation>
 																<xs:simpleType>
 																	<xs:restriction base="xs:string">

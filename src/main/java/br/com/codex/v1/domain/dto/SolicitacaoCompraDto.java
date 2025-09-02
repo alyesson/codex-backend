@@ -1,13 +1,12 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.compras.OrdemCompra;
+import br.com.codex.v1.domain.compras.SolicitacaoCompra;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras
 
 @Getter
 @Setter
-public class OrdemCompraDto implements Serializable {
+public class SolicitacaoCompraDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -27,17 +26,20 @@ public class OrdemCompraDto implements Serializable {
     protected String centroCusto;
     protected String motivoCompra;
     protected String destinoMaterial;
+    @NotNull(message = "Campo é urgente não pode estar em branco")
     protected String urgente;
+    @NotNull(message = "Campo opção de marca não pode estar em branco")
     protected String opcaoMarca;
+    @NotNull(message = "Campo item de estoque não pode estar em branco")
     protected String itemEstoque;
-    private List<OrdemItensCompraDto> itens;
+    private List<SolicitacaoItensCompraDto> itens;
     protected String situacao;
 
-    public OrdemCompraDto() {
+    public SolicitacaoCompraDto() {
         super();
     }
 
-    public OrdemCompraDto(OrdemCompra obj) {
+    public SolicitacaoCompraDto(SolicitacaoCompra obj) {
         this.id = obj.getId();
         this.solicitante = obj.getSolicitante();
         this.departamento = obj.getDepartamento();

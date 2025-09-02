@@ -20,7 +20,7 @@ public class CotacaoCompraDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected Long id;
-    protected Integer numeroOrdem;
+    protected Integer numeroSolicitacao;
     protected String solicitante;
     protected LocalDate dataAbertura;
     @NotNull(message = "A validade da cotação não pode estar em branco")
@@ -51,7 +51,7 @@ public class CotacaoCompraDto implements Serializable {
 
     public CotacaoCompraDto(CotacaoCompra obj) {
         this.id = obj.getId();
-        this.numeroOrdem = obj.getNumeroOrdem();
+        this.numeroSolicitacao = obj.getNumeroSolicitacao();
         this.solicitante = obj.getSolicitante();
         this.dataAbertura = obj.getDataAbertura();
         this.validade = obj.getValidade();

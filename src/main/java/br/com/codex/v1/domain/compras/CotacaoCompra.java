@@ -25,7 +25,7 @@ public class CotacaoCompra implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected Integer numeroOrdem;
+    protected Integer numeroSolicitacao;
     protected String solicitante;
     protected LocalDate dataAbertura;
     protected LocalDate validade;
@@ -50,12 +50,12 @@ public class CotacaoCompra implements Serializable {
         super();
     }
 
-    public CotacaoCompra(Long id, Integer numeroOrdem, String solicitante, LocalDate dataAbertura,
+    public CotacaoCompra(Long id, Integer numeroSolicitacao, String solicitante, LocalDate dataAbertura,
                          LocalDate validade, String situacao, String comprador, String fornecedor, String cnpj,
                          String ie, String endereco, String prazoEntrega, String contato, BigDecimal valorCotado,
                          String linkCompra, String condicoesPagamento, String observacao, String justificativa) {
         this.id = id;
-        this.numeroOrdem = numeroOrdem;
+        this.numeroSolicitacao = numeroSolicitacao;
         this.solicitante = solicitante;
         this.dataAbertura = dataAbertura;
         this.validade = validade;
@@ -76,7 +76,7 @@ public class CotacaoCompra implements Serializable {
 
     public CotacaoCompra(CotacaoCompraDto obj) {
         this.id = obj.getId();
-        this.numeroOrdem = obj.getNumeroOrdem();
+        this.numeroSolicitacao = obj.getNumeroSolicitacao();
         this.solicitante = obj.getSolicitante();
         this.dataAbertura = obj.getDataAbertura();
         this.validade = obj.getValidade();

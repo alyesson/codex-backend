@@ -52,7 +52,7 @@
 	<field name="link_compra" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="numero_ordem" class="java.lang.Integer">
+	<field name="numero_solicitacao" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="observacao" class="java.lang.String">
@@ -151,7 +151,7 @@
 			<textField>
 				<reportElement x="82" y="96" width="158" height="20" uuid="3d8441d3-5841-44f9-b559-28afd2677276"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{numero_ordem}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_solicitacao}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="372" y="96" width="162" height="20" uuid="3b95afd3-c55a-40c5-91a1-da86bd8e3f26"/>

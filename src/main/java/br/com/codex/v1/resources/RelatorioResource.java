@@ -64,21 +64,21 @@ public class RelatorioResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @GetMapping("/ordem_compra/{id}")
-    public ResponseEntity<byte[]> gerarRelatorioOrdemCompra(@PathVariable Long id) {
+    @GetMapping("/solicitacao_compra/{id}")
+    public ResponseEntity<byte[]> gerarRelatorioSolicitacaoCompra(@PathVariable Long id) {
         try {
             // Agora passa apenas o ID
-            byte[] pdfBytes = jasperComprasReportService.generateOrdemCompraReport(id);
+            byte[] pdfBytes = jasperComprasReportService.generateSolicitacaoCompraReport(id);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("filename", "ordem_compra_" + id + ".pdf");
+            headers.setContentDispositionFormData("filename", "solicitacao_compra_" + id + ".pdf");
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(("Erro ao gerar Pdf do ordem de compra: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
+                    .body(("Erro ao gerar Pdf do solicitacao de compra: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
         }
     }
 

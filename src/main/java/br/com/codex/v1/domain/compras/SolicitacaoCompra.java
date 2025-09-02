@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.compras;
 
-import br.com.codex.v1.domain.dto.OrdemCompraDto;
+import br.com.codex.v1.domain.dto.SolicitacaoCompraDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class OrdemCompra implements Serializable {
+public class SolicitacaoCompra implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -34,15 +33,15 @@ public class OrdemCompra implements Serializable {
     protected String opcaoMarca;
     protected String itemEstoque;
     @JsonIgnore
-    @OneToMany(mappedBy = "ordemCompra")
-    protected List<OrdemItensCompra> ordemItensCompra = new ArrayList<>();
+    @OneToMany(mappedBy = "solicitacaoCompra")
+    protected List<SolicitacaoItensCompra> solicitacaoItensCompra = new ArrayList<>();
     protected String situacao;
 
-    public OrdemCompra() {
+    public SolicitacaoCompra() {
         super();
     }
 
-    public OrdemCompra(Long id, String solicitante, String departamento, LocalDate dataSolicitacao,
+    public SolicitacaoCompra(Long id, String solicitante, String departamento, LocalDate dataSolicitacao,
                        String centroCusto, String motivoCompra, String destinoMaterial, String urgente,
                        String opcaoMarca, String itemEstoque, String situacao) {
         this.id = id;
@@ -58,7 +57,7 @@ public class OrdemCompra implements Serializable {
         this.situacao  = situacao;
     }
 
-    public OrdemCompra(OrdemCompraDto obj) {
+    public SolicitacaoCompra(SolicitacaoCompraDto obj) {
         this.id = obj.getId();
         this.solicitante = obj.getSolicitante();
         this.departamento = obj.getDepartamento();
@@ -76,7 +75,7 @@ public class OrdemCompra implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrdemCompra that = (OrdemCompra) o;
+        SolicitacaoCompra that = (SolicitacaoCompra) o;
         return Objects.equals(id, that.id);
     }
 
