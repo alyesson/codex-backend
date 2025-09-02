@@ -18,7 +18,7 @@ public class OrcamentoItensDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private OrcamentoDto orcamentoId; // ou String codigoOrcamento
+    private OrcamentoDto orcamentoId;
     private String codigo;
     private String descricao;
     private BigDecimal quantidade = BigDecimal.ONE;

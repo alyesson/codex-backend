@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.dto.PedidoCompraDto;
 import br.com.codex.v1.domain.dto.PedidoItensCompraDto;
 import br.com.codex.v1.service.PedidoCompraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,9 +34,27 @@ public class PedidoCompraResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @GetMapping(value = "/pedidos_ano")
+    public ResponseEntity <List<PedidoCompraDto>> findAllByYear(){
+        List<PedidoCompra> objPedido = pedidoCompraService.findAllByYear();
+        List<PedidoCompraDto> listDto = objPedido.stream().map(PedidoCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @GetMapping(value = "/pedidos_periodo")
+    public ResponseEntity<List<PedidoCompraDto>> findAllPedidoPeriodo(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+                                                                        @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        List<PedidoCompra> list = pedidoCompraService.findAllCotacoesPeriodo(dataInicial, dataFinal);
+        List<PedidoCompraDto> listDto = list.stream().map(PedidoCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PedidoCompraDto> update(@PathVariable Long id, @RequestParam String situacao){
-        pedidoCompraService.update(id, situacao);
+    public ResponseEntity<PedidoCompraDto> atualizarSituacao(@PathVariable Long id, @RequestParam String situacao, @RequestParam(required = false) String justificativa) {
+        pedidoCompraService.update(id, situacao, justificativa);
         return ResponseEntity.ok().build();
     }
 
@@ -47,16 +67,9 @@ public class PedidoCompraResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @GetMapping
-    public ResponseEntity <List<PedidoCompraDto>> findAll(){
-        List<PedidoCompra> objVenda = pedidoCompraService.findAll();
-        List<PedidoCompraDto> listDto = objVenda.stream().map(PedidoCompraDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<PedidoCompraDto> findById(@PathVariable Long id){
-        PedidoCompra obj = pedidoCompraService.findById(id);
-        return ResponseEntity.ok().body(new PedidoCompraDto(obj));
+    @GetMapping("/{id}")
+    public ResponseEntity <PedidoCompraDto> findById(@PathVariable Long id){
+        PedidoCompra objPedido = pedidoCompraService.findById(id);
+        return ResponseEntity.ok().body(new PedidoCompraDto(objPedido));
     }
 }
