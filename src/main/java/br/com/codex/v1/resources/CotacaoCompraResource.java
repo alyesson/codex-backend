@@ -4,6 +4,9 @@ import br.com.codex.v1.domain.compras.CotacaoCompra;
 import br.com.codex.v1.domain.compras.CotacaoItensCompra;
 import br.com.codex.v1.domain.dto.CotacaoCompraDto;
 import br.com.codex.v1.domain.dto.CotacaoItensCompraDto;
+import br.com.codex.v1.domain.dto.OrcamentoDto;
+import br.com.codex.v1.domain.enums.Situacao;
+import br.com.codex.v1.domain.vendas.Orcamento;
 import br.com.codex.v1.service.CotacaoCompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,7 +58,7 @@ public class CotacaoCompraResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CotacaoCompraDto> update(@PathVariable Long id, @RequestParam String situacao){
+    public ResponseEntity<CotacaoCompraDto> atualizarSituacao(@PathVariable Long id, @RequestParam String situacao){
         cotacaoCompraService.update(id, situacao);
         return ResponseEntity.ok().build();
     }
