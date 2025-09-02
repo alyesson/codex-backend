@@ -21,6 +21,6 @@ public interface CotacaoCompraRepository extends JpaRepository<CotacaoCompra, Lo
     @Query("UPDATE CotacaoCompra u SET u.situacao = :situacao WHERE u.id = :id")
     void saveSituacao(@Param("id") Long id, @Param("situacao")String situacao);
 
-    @Query("SELECT c FROM CotacaoCompra  c WHERE c.dataAbertura BETWEEN :dataInicial AND :dataFinal")
+    @Query("SELECT c FROM CotacaoCompra c WHERE c.dataAbertura BETWEEN :dataInicial AND :dataFinal")
     List<CotacaoCompra> findAllCotacoesPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 }

@@ -45,7 +45,6 @@ public class CotacaoCompraResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    //ASolicitações de Compra Por Período
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/cotacoes_periodo")
     public ResponseEntity<List<CotacaoCompraDto>> findAllCotacaoPeriodo(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,

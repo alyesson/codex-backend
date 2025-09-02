@@ -32,13 +32,6 @@ public class AtendimentosResource {
     @Autowired
     private AtendimentosService atendimentosService;
 
-   /* @PostMapping
-    public ResponseEntity<AtendimentosDto> create(@Valid @RequestBody AtendimentosDto atendimentosDto){
-        Atendimentos obj = atendimentosService.create(atendimentosDto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }*/
-
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestParam("solicitante") String solicitante,
                                          @RequestParam("email") String email,
