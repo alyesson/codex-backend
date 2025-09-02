@@ -34,6 +34,7 @@ public class CotacaoCompraDto implements Serializable {
     protected String endereco;
     @NotBlank(message = "O prazo de entrega não pode estar em branco")
     protected String prazoEntrega;
+    @NotBlank(message = "O contato não pode estar em branco")
     protected String contato;
     @NotNull(message = "O valor cotado não pode estar em branco")
     protected BigDecimal valorCotado;

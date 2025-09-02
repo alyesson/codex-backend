@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="576"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -244,14 +244,14 @@
 				<reportElement x="336" y="11" width="61" height="15" uuid="b3beda81-7b1b-4a3b-8e42-bd3a8ac8bf0a"/>
 				<text><![CDATA[Emitido em:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="336" y="26" width="216" height="15" uuid="bb8a59cf-a85d-41f7-b196-db17cacb228a"/>
-				<text><![CDATA[Documento gerado automaticamente - CODEX ERP]]></text>
-			</staticText>
 			<textField pattern="dd/MM/yyyy HH:mm">
 				<reportElement x="397" y="11" width="148" height="15" uuid="f80bb8a5-b759-4583-828a-fa396b8321a4"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="8" y="11" width="241" height="15" uuid="33ac2974-7d19-443d-a648-0987a39cbaa7"/>
+				<text><![CDATA[Codex Soluções - Sitema Codex]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>
