@@ -41,6 +41,7 @@ public class CotacaoCompra implements Serializable {
     protected String linkCompra;
     protected String condicoesPagamento;
     protected String observacao;
+    protected String justificativa;
     @JsonIgnore
     @OneToMany(mappedBy = "cotacaoCompra")
     protected List<CotacaoItensCompra> cotacaoItensCompras = new ArrayList<>();
@@ -52,7 +53,7 @@ public class CotacaoCompra implements Serializable {
     public CotacaoCompra(Long id, Integer numeroOrdem, String solicitante, LocalDate dataAbertura,
                          LocalDate validade, String situacao, String comprador, String fornecedor, String cnpj,
                          String ie, String endereco, String prazoEntrega, String contato, BigDecimal valorCotado,
-                         String linkCompra, String condicoesPagamento, String observacao) {
+                         String linkCompra, String condicoesPagamento, String observacao, String justificativa) {
         this.id = id;
         this.numeroOrdem = numeroOrdem;
         this.solicitante = solicitante;
@@ -70,6 +71,7 @@ public class CotacaoCompra implements Serializable {
         this.linkCompra = linkCompra;
         this.condicoesPagamento = condicoesPagamento;
         this.observacao = observacao;
+        this.justificativa = justificativa;
     }
 
     public CotacaoCompra(CotacaoCompraDto obj) {
@@ -90,6 +92,7 @@ public class CotacaoCompra implements Serializable {
         this.linkCompra = obj.getLinkCompra();
         this.condicoesPagamento = obj.getCondicoesPagamento();
         this.observacao = obj.getObservacao();
+        this.justificativa = obj.getJustificativa();
     }
 
     @Override

@@ -38,6 +38,7 @@ public class CotacaoCompraDto implements Serializable {
     protected String linkCompra;
     protected String condicoesPagamento;
     protected String observacao;
+    protected String justificativa;
     protected List<CotacaoItensCompraDto> itens;
 
     public CotacaoCompraDto() {
@@ -62,5 +63,6 @@ public class CotacaoCompraDto implements Serializable {
         this.linkCompra = obj.getLinkCompra();
         this.condicoesPagamento = obj.getCondicoesPagamento();
         this.observacao = obj.getObservacao();
+        this.justificativa = obj.getJustificativa();
     }
 }
