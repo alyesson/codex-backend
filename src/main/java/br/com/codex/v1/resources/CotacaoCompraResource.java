@@ -58,8 +58,8 @@ public class CotacaoCompraResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CotacaoCompraDto> atualizarSituacao(@PathVariable Long id, @RequestParam String situacao){
-        cotacaoCompraService.update(id, situacao);
+    public ResponseEntity<CotacaoCompraDto> atualizarSituacao(@PathVariable Long id, @RequestParam String situacao, @RequestParam(required = false) String justificativa) {
+        cotacaoCompraService.update(id, situacao, justificativa);
         return ResponseEntity.ok().build();
     }
 

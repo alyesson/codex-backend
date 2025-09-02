@@ -2,10 +2,12 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.compras.CotacaoCompra;
 import br.com.codex.v1.domain.compras.CotacaoItensCompra;
+import br.com.codex.v1.domain.compras.OrdemCompra;
 import br.com.codex.v1.domain.dto.CotacaoCompraDto;
 import br.com.codex.v1.domain.dto.CotacaoItensCompraDto;
 import br.com.codex.v1.domain.repository.CotacaoCompraRepository;
 import br.com.codex.v1.domain.repository.CotacaoItensCompraRepository;
+import br.com.codex.v1.domain.repository.OrdemCompraRepository;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,18 @@ public class CotacaoCompraService {
     LocalDate data = LocalDate.now();
 
     @Autowired
-    CotacaoCompraRepository cotacaoCompraRepository;
+    private CotacaoCompraRepository cotacaoCompraRepository;
 
     @Autowired
-    CotacaoItensCompraRepository cotacaoItensCompraRepository;
+    private CotacaoItensCompraRepository cotacaoItensCompraRepository;
+
+    @Autowired
+    private OrdemCompraRepository ordemCompraRepository;
 
     public CotacaoCompra create(CotacaoCompraDto cotacaoCompradto) {
+
+        findByIdOrdem(Long.valueOf(cotacaoCompradto.getNumeroOrdem()));
+
         cotacaoCompradto.setId(null);
         cotacaoCompradto.setDataAbertura(data);
         CotacaoCompra objCotacaoCompra = new CotacaoCompra(cotacaoCompradto);
@@ -61,8 +69,15 @@ public class CotacaoCompraService {
         return cotacaoCompraRepository.findAllByYear(anoAtual);
     }
 
-    public void update(Long id, String situacao) {
-        cotacaoCompraRepository.saveSituacao(id, situacao);
+    public void update(Long id, String situacao, String justificativa) {
+        CotacaoCompra cotacao = findById(id);
+        cotacao.setSituacao(situacao);
+
+        if (justificativa != null && !justificativa.trim().isEmpty()) {
+            cotacao.setJustificativa(justificativa);
+        }
+
+        cotacaoCompraRepository.save(cotacao);
     }
 
     public CotacaoCompra findById(Long id) {
@@ -72,5 +87,10 @@ public class CotacaoCompraService {
 
     public List<CotacaoCompra> findAllCotacoesPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
         return cotacaoCompraRepository.findAllCotacoesPeriodo(dataInicial, dataFinal);
+    }
+
+    private void findByIdOrdem(Long id){
+        Optional<OrdemCompra> objOrdem = ordemCompraRepository.findById(id);
+        objOrdem.orElseThrow(() -> new ObjectNotFoundException("Não existe ordem de compra para o número " + id));
     }
 }
