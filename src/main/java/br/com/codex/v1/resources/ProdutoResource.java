@@ -21,6 +21,13 @@ public class ProdutoResource {
     @Autowired
     private ProdutoService produtoService;
 
+    @GetMapping
+    public ResponseEntity<List<ProdutoDto>> findAll(){
+        List<Produto> list = produtoService.findAll();
+        List<ProdutoDto> listDto = list.stream().map(ProdutoDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'GERENTE_COMPRAS', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @PostMapping
     public ResponseEntity<ProdutoDto> create(@Valid @RequestBody ProdutoDto produtoDto){
@@ -43,18 +50,10 @@ public class ProdutoResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ADMINISTRATIVO', 'GERENTE_TI')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProdutoDto> findById(@PathVariable Long id){
         Produto objProd = produtoService.findById(id);
         return ResponseEntity.ok().body(new ProdutoDto(objProd));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProdutoDto>> findAll(){
-        List<Produto> list = produtoService.findAll();
-        List<ProdutoDto> listDto = list.stream().map(ProdutoDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_VENDAS', 'VENDEDOR')")
