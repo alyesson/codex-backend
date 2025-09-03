@@ -8,7 +8,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
 
 import javax.mail.internet.MimeMessage;
 
@@ -22,9 +21,6 @@ public class EnviaEmailService implements EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
-    @Autowired
-    private TemplateEngine templateEngine;
 
     @Value("${spring.mail.username}")
     private String remetente;
