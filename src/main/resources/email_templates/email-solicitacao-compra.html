@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de Compra</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #32625a 0%, #34dbbf 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 30px;
+        }
+        .info-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #34dbbf;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #32625a;
+            min-width: 150px;
+            font-size: 14px;
+        }
+        .info-value {
+            flex: 1;
+            font-size: 14px;
+            color: #555;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        .assinatura {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: center;
+        }
+        .assinatura img {
+            max-width: 200px;
+            height: auto;
+        }
+        .badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📦 Solicitação de Compra</h1>
+        <div class="badge">Nº: {{numeroSolicitacao}}</div>
+    </div>
+
+    <div class="content">
+        <div class="info-section">
+            <div class="info-row">
+                <span class="info-label">👤 Solicitante:</span>
+                <span class="info-value">{{solicitante}}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">📅 Data:</span>
+                <span class="info-value">{{dataSolicitacao}}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">🏢 Departamento:</span>
+                <span class="info-value">{{departamento}}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">💰 Centro Custo:</span>
+                <span class="info-value">{{centroCusto}}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">📋 Motivo:</span>
+                <span class="info-value">{{motivoCompra}}</span>
+            </div>
+            {{#urgente}}
+            <div class="info-row">
+                <span class="info-label">🚨 Urgência:</span>
+                <span class="info-value" style="color: #d32f2f; font-weight: 600;">URGENTE</span>
+            </div>
+            {{/urgente}}
+        </div>
+
+        <div style="text-align: center; margin: 25px 0;">
+            <p style="color: #666; font-style: italic;">
+                Esta solicitação foi registrada no Sistema Codex e será processada
+                pela equipe de compras em breve.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="assinatura">
+            <p style="margin: 0; color: #666; font-size: 14px;">Atenciosamente,</p>
+            <p style="margin: 5px 0 15px 0; color: #32625a; font-weight: 600; font-size: 16px;">
+                Sistema Codex
+            </p>
+            <img src="cid:assinaturaImagem" alt="Assinatura Codex">
+            <p style="margin: 10px 0 0 0; color: #999; font-size: 12px;">
+                Email automático - Não responder
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

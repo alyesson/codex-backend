@@ -46,7 +46,7 @@ public class EnviaEmailChamadoConcluidoService implements EmailAtendimentoServic
             helper.setText(message, true); // O segundo argumento 'true' define que o conteúdo é HTML
 
             // Carregando a imagem da assinatura
-            ClassPathResource imageResource = new ClassPathResource("/templates/assinatura_ti.png");
+            ClassPathResource imageResource = new ClassPathResource("/email_templates/assinatura_ti.png");
             helper.addInline("assinaturaImagem", imageResource); // Associando o Content-ID "assinaturaImagem" com o arquivo
 
             javaMailSender.send(mimeMessage);

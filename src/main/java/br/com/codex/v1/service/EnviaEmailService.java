@@ -8,8 +8,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 
 import javax.mail.internet.MimeMessage;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.reflections.Reflections.log;
 
 @Service
 public class EnviaEmailService implements EmailService {
@@ -17,12 +23,63 @@ public class EnviaEmailService implements EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private TemplateEngine templateEngine;
+
     @Value("${spring.mail.username}")
     private String remetente;
 
     String destinatario = "";
 
-    public String sendSimpleMail(SolicitacaoCompraDto solicitacaoCompraDto){
+    public String sendSimpleMail(SolicitacaoCompraDto solicitacaoCompraDto) {
+        try {
+
+            // Carregar o template HTML
+            String templateContent = new String(Files.readAllBytes(
+                    Paths.get(getClass().getResource("/templates/email-solicitacao-compra.html").toURI())
+            ));
+
+            // Preencher o template com os dados
+            String message = templateContent
+                    .replace("{{numeroSolicitacao}}", solicitacaoCompraDto.getId().toString())
+                    .replace("{{solicitante}}", solicitacaoCompraDto.getSolicitante())
+                    .replace("{{dataSolicitacao}}", solicitacaoCompraDto.getDataSolicitacao().toString())
+                    .replace("{{departamento}}", solicitacaoCompraDto.getDepartamento())
+                    .replace("{{centroCusto}}", solicitacaoCompraDto.getCentroCusto())
+                    .replace("{{motivoCompra}}", solicitacaoCompraDto.getMotivoCompra())
+                    .replace("{{urgente}}", solicitacaoCompraDto.getUrgente());
+
+            // Remover seção urgente se não for urgente
+            if (!Boolean.parseBoolean(solicitacaoCompraDto.getUrgente())) {
+                message = message.replace("{{#urgente}}", "").replace("{{/urgente}}", "");
+            }
+
+            String subject = "📦 Solicitação de Compra #" + solicitacaoCompraDto.getId() +
+                    " - " + solicitacaoCompraDto.getSolicitante();
+
+            // Criar mensagem MIME
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setFrom(remetente);
+            helper.setTo(destinatario);
+            helper.setSubject(subject);
+            helper.setText(message, true);
+
+            // Adicionar imagem da assinatura
+            ClassPathResource imageResource = new ClassPathResource("/templates/assinatura_ti.png");
+            helper.addInline("assinaturaImagem", imageResource);
+
+            javaMailSender.send(mimeMessage);
+            return "E-mail enviado com sucesso para " + destinatario;
+
+        } catch (Exception e) {
+            log.error("Erro ao enviar e-mail: {}", e.getMessage(), e);
+            return "Erro ao enviar e-mail: " + e.getMessage();
+        }
+    }
+
+    /*public String sendSimpleMail(SolicitacaoCompraDto solicitacaoCompraDto){
 
         String subject = "Solicitação de Compra" + " - " + solicitacaoCompraDto.getSolicitante();
 
@@ -49,7 +106,7 @@ public class EnviaEmailService implements EmailService {
             helper.setText(message, true); // O segundo argumento 'true' define que o conteúdo é HTML
 
             // Carregando a imagem da assinatura
-            ClassPathResource imageResource = new ClassPathResource("/templates/assinatura_ti.png");
+            ClassPathResource imageResource = new ClassPathResource("/email_templates/assinatura_ti.png");
             helper.addInline("assinaturaImagem", imageResource); // Associando o Content-ID "assinaturaImagem" com o arquivo
 
             javaMailSender.send(mimeMessage);
@@ -57,5 +114,5 @@ public class EnviaEmailService implements EmailService {
         } catch (Exception e) {
             return "Erro ao enviar e-mail: " + e.getMessage();
         }
-    }
+    }*/
 }
