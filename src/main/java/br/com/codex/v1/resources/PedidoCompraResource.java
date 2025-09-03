@@ -53,9 +53,16 @@ public class PedidoCompraResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<PedidoCompraDto> atualizarSituacao(@PathVariable Long id, @RequestParam String situacao, @RequestParam(required = false) String justificativa) {
-        pedidoCompraService.update(id, situacao, justificativa);
+    @PutMapping(value = "/aprova_pedido/{id}")
+    public ResponseEntity<PedidoCompraDto> aprovaPedido(@PathVariable Long id, @RequestParam String situacao, @RequestParam String aprovador, @RequestParam(required = false) String justificativa) {
+        pedidoCompraService.aprovaPedido(id, situacao, aprovador, justificativa);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @PutMapping(value = "/rejeita_pedido/{id}")
+    public ResponseEntity<PedidoCompraDto> rejeitaPedido(@PathVariable Long id, @RequestParam String situacao, @RequestParam(required = false) String justificativa) {
+        pedidoCompraService.rejeitaPedido(id, situacao, justificativa);
         return ResponseEntity.ok().build();
     }
 

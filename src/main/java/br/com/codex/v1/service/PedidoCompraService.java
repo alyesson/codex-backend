@@ -71,7 +71,20 @@ public class PedidoCompraService {
         return pedidoCompraRepository.findAllByYear(anoAtual);
     }
 
-    public void update(Long id, String situacao, String justificativa) {
+    public void aprovaPedido(Long id, String situacao, String aprovador,String justificativa) {
+        PedidoCompra pedidoCompra = findById(id);
+        pedidoCompra.setSituacao(Situacao.valueOf(situacao));
+        pedidoCompra.setDataAprovacao(data);
+        pedidoCompra.setAprovador(aprovador);
+
+        if (justificativa != null && !justificativa.trim().isEmpty()) {
+            pedidoCompra.setJustificativa(justificativa);
+        }
+
+        pedidoCompraRepository.save(pedidoCompra);
+    }
+
+    public void rejeitaPedido(Long id, String situacao, String justificativa) {
         PedidoCompra pedidoCompra = findById(id);
         pedidoCompra.setSituacao(Situacao.valueOf(situacao));
 

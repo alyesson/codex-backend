@@ -4,10 +4,7 @@ import br.com.codex.v1.domain.dto.ProdutoDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import java.io.Serial;
@@ -28,60 +25,169 @@ public class Produto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+    @Column(length = 10)
     protected String codigo;
+
+    @Column(length = 60)
     protected String descricao;
+
+    @Column(length = 60)
     protected String grupo;
+
+    @Column(length = 60)
     protected String subGrupo;
+
+    @Column(length = 7)
     protected Integer minimo;
+
+    @Column(length = 7)
     protected Integer maximo;
+
+    @Column(length = 15)
     protected String unidadeComercial;
+
+    @Column(length = 10)
     protected String local;
+
+    @Column(length = 15)
     protected String codigoNcm;
+
+    @Lob
     protected String descricaoNcm;
+
+    @Column(length = 15)
     protected String codigoCest;
+
+    @Lob
     protected String descricaoCest;
+
+    @Column(length = 25)
     protected String categoriaProduto;
+
+    @Column(length = 15)
     protected String ean;
+
+    @Column(length = 15)
     protected String extipi;
+
+    @Column(length = 10)
     protected String tipoDeposito;
+
+    @Column(length = 7)
     protected String peso;
+
+    @Column(length = 15)
     protected BigDecimal precoVenda;
+
+    @Column(length = 15)
     protected BigDecimal precoCusto;
+
+    @Column(length = 5)
     protected BigDecimal margemLucro;
+
+    @Column(length = 15)
     protected String origemProduto;
+
+    @Column(length = 15)
     protected String icmsSituacaoTributaria;
+
+    @Column(length = 15)
     protected BigDecimal creditoIcms;
+
+    @Column(length = 15)
     protected BigDecimal percentualIcms;
+
+    @Column(length = 15)
     protected BigDecimal percentualDiferimento;
+
+    @Column(length = 15)
     protected BigDecimal percentualFcp;
+
+    @Column(length = 15)
     protected BigDecimal percentualIcmsRed;
+
+    @Column(length = 15)
     protected String ipiSituacaotributaria;
+
+    @Column(length = 15)
     protected BigDecimal ipiBaseCalculo;
+
+    @Column(length = 15)
     protected BigDecimal percentualIpi;
+
+    @Column(length = 15)
     protected BigDecimal quantidadeTotalIpi;
+
+    @Column(length = 15)
     protected BigDecimal valorUnidTributavelIpi;
+
+    @Column(length = 15)
     protected BigDecimal valorIpi;
+
+    @Column(length = 19)
     protected String cnpjProdutorIpi;
+
+    @Column(length = 15)
     protected String codigoSeloControle;
+
+    @Column(length = 15)
     protected String quantidadeSeloControle;
+
+    @Column(length = 15)
     protected String classeEnquadramentoIpi;
+
+    @Column(length = 15)
     protected String pisSituacaoTributaria;
+
+    @Column(length = 15)
     protected BigDecimal percentualPis;
+
+    @Column(length = 15)
     protected BigDecimal pisBaseCalculo;
+
+    @Column(length = 15)
     protected BigDecimal valorPis;
+
+    @Column(length = 15)
     protected BigDecimal pisValorAliquota;
+
+    @Column(length = 15)
     protected String cofinsSituacaotributaria;
+
+    @Column(length = 15)
     protected BigDecimal percentualCofins;
+
+    @Column(length = 15)
     protected BigDecimal cofinsBaseCalculo;
+
+    @Column(length = 15)
     protected BigDecimal valorAliquotaCofins;
+
+    @Column(length = 15)
     protected BigDecimal valorCofins;
+
+    @Column(length = 15)
     protected boolean produtoProduzido;
+
+    @Column(length = 15)
     protected String modalidadeBaseCalculo;
+
+    @Column(length = 15)
     protected String modalidadeBaseCalculoSt;
+
+    @Column(length = 15)
     protected String motivoDesoneracaoIcms;
+
+    @Column(length = 15)
     protected BigDecimal percentualFcpSt;
+
+    @Column(length = 15)
     protected Integer quantidadePorUnidade;
+
+    @Column(length = 15)
     protected String contaContabil;
+
+    @Column(length = 15)
     protected String centroCusto;
 
 

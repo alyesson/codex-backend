@@ -28,8 +28,8 @@ public class SolicitacaoCompraService {
     @Autowired
     private SolicitacaoItensCompraRepository solicitacaoItensCompraRepository;
 
-    //@Autowired
-    //private EnviaEmailService enviaEmailService;
+    @Autowired
+    private EnviaEmailService enviaEmailService;
 
     public SolicitacaoCompra create(SolicitacaoCompraDto solicitacaoCompradto) {
         solicitacaoCompradto.setId(null);
@@ -50,10 +50,10 @@ public class SolicitacaoCompraService {
         }
 
         // Enviar e-mail e capturar o retorno
-        //String resultadoEnvioEmail = enviaEmailService.sendSimpleMail(solicitacaoCompradto);
+        String resultadoEnvioEmail = enviaEmailService.sendSimpleMail(solicitacaoCompradto);
 
         // Retornar o resultado do envio de e-mail
-        //System.out.println(resultadoEnvioEmail); // Para log ou monitoramento
+        System.out.println(resultadoEnvioEmail); // Para log ou monitoramento
 
         return objSolicitacaoCompra;
     }
