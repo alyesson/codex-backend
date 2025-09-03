@@ -1,12 +1,10 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.configuration.StartupInitializerDev;
-import br.com.codex.v1.domain.compras.CotacaoCompra;
-import br.com.codex.v1.domain.compras.CotacaoItensCompra;
-import br.com.codex.v1.domain.compras.SolicitacaoCompra;
-import br.com.codex.v1.domain.compras.SolicitacaoItensCompra;
+import br.com.codex.v1.domain.compras.*;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.repository.CotacaoItensCompraRepository;
+import br.com.codex.v1.domain.repository.PedidoItensCompraRepository;
 import br.com.codex.v1.domain.repository.SolicitacaoItensCompraRepository;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -44,6 +42,12 @@ public class JasperComprasReportService {
 
     @Autowired
     private CotacaoItensCompraRepository cotacaoItensCompraRepository;
+
+    @Autowired
+    private PedidoCompraService pedidoCompraService;
+
+    @Autowired
+    private PedidoItensCompraRepository pedidoItensCompraRepository;
 
     public byte[] generateSolicitacaoCompraReport(Long solicitacaoCompraId) throws Exception {
         Connection connection = null;
@@ -143,6 +147,73 @@ public class JasperComprasReportService {
                 try { connection.close();
                 } catch (SQLException e) {
                     logger.error("Erro ao gerar PDF de cotação de compra: " +e);
+                }
+            }
+        }
+    }
+
+    public byte[] generatePedidoCompraReport(Long pedidoCompraId) throws Exception {
+        Connection connection = null;
+        try {
+
+            connection = dataSource.getConnection();
+
+            PedidoCompra pedidoCompra = pedidoCompraService.findById(pedidoCompraId);
+            if (pedidoCompra == null) {
+                throw new RuntimeException("Pedido não encontrada com ID: " + pedidoCompraId);
+            }
+            // Busca os Itens pelo SolicitacaoCompraItemRepository
+            List<PedidoItensCompra> itens = pedidoItensCompraRepository.findByPedidoCompraId(pedidoCompraId);
+
+            Map<String, Object> parameters = new HashMap<>();
+
+            // PARÂMETRO PARA O RELATÓRIO PRINCIPAL
+            parameters.put("P_CODIGO", pedidoCompraId);
+            parameters.put("P_CODIGOID", pedidoCompraId);
+
+            parameters.put("id", pedidoCompra.getId());
+            parameters.put("aprovador", pedidoCompra.getAprovador());
+            parameters.put("centro_custo", pedidoCompra.getCentroCusto());
+            parameters.put("cnpj", pedidoCompra.getCnpj());
+            parameters.put("comprador", pedidoCompra.getComprador());
+            parameters.put("condicoes_pagamento", pedidoCompra.getCondicoesPagamento());
+            parameters.put("contato", pedidoCompra.getContato());
+            parameters.put("data_aprovacao", pedidoCompra.getDataAprovacao());
+            parameters.put("data_entrega_prevista", pedidoCompra.getDataEntregaPrevista());
+            parameters.put("data_entrega_real", pedidoCompra.getDataEntregaReal());
+            parameters.put("data_pedido", pedidoCompra.getDataPedido());
+            parameters.put("departamento", pedidoCompra.getDepartamento());
+            parameters.put("forma_pagamento", pedidoCompra.getFormaPagamento());
+            parameters.put("endereco", pedidoCompra.getEndereco());
+            parameters.put("fornecedor", pedidoCompra.getFornecedor());
+            parameters.put("ie", pedidoCompra.getIe());
+            parameters.put("justificativa", pedidoCompra.getJustificativa());
+            parameters.put("link_compra", pedidoCompra.getLinkCompra());
+            parameters.put("numero_cotacao", pedidoCompra.getNumeroCotacao());
+            parameters.put("numero_parcelas", pedidoCompra.getNumeroParcelas());
+            parameters.put("numero_requisicao", pedidoCompra.getNumeroRequisicao());
+            parameters.put("observacao", pedidoCompra.getObservacao());
+            parameters.put("situacao", converterSituacaoParaTexto(pedidoCompra.getSituacao()));
+            parameters.put("solicitante", pedidoCompra.getSolicitante());
+            parameters.put("validade", pedidoCompra.getValidade());
+            parameters.put("valor_pedido", pedidoCompra.getValorPedido());
+            parameters.put("valor_frete", pedidoCompra.getValorFrete());
+            parameters.put("valor_desconto", pedidoCompra.getValorDesconto());
+            parameters.put("valor_total", pedidoCompra.getValorTotal());
+            parameters.put("REPORT_CONNECTION", connection);
+
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("src/main/resources/reports/pedido_compra_template.jasper"));
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
+
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar Pdf: " + e.getMessage(), e);
+        } finally {
+            if (connection != null) {
+                try { connection.close();
+                } catch (SQLException e) {
+                    logger.error("Erro ao gerar PDF de pedido de compra: " +e);
                 }
             }
         }

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pedido_compra_subreport_template" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="98b1065b-f4e8-419f-8a14-47aed0427782">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataSourceItens"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CODIGOID" class="java.lang.Long" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[Select * from pedido_itens_compra where pedido_compra_id = $P{P_CODIGOID}]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codigo_produto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cofins" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desconto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descricao_produto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="frete" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="icms" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ipi" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pis" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="preco_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="preco_unitario" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantidade" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantidade_por_unidade" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantidade_total" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unidade_comercial" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pedido_compra_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20">
+			<rectangle radius="10">
+				<reportElement mode="Opaque" x="0" y="0" width="554" height="19" backcolor="#A9E2FF" uuid="d67e10ee-c291-45a0-a504-785c79ac2edb"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="58" height="18" uuid="e06645a3-d681-4754-b4ce-5bf2f57a4b75"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="0" width="60" height="18" uuid="f1bf5d8f-8d38-4b99-969d-d5fd08c2a35d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="0" width="33" height="18" uuid="48b3e5c1-0593-402b-a1c0-a1634d71d5d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Quant.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="355" y="0" width="36" height="18" uuid="10e2f4b3-6b18-4d84-9852-037b1aec97c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Vlr. Unit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="509" y="0" width="33" height="18" uuid="69ddc067-b22c-4018-afed-563241608a45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="406" y="2" width="32" height="18" uuid="6f7af540-53a0-413d-991e-91e1af04ea65"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[IPI(%)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="445" y="1" width="46" height="18" uuid="e5469ad0-d052-4d70-9f0b-2cf50b27cb73"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ICMS(%)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="26" width="554" height="1" uuid="449baefe-160a-477e-924b-085a4a8b777a"/>
+			</line>
+			<line>
+				<reportElement x="58" y="0" width="1" height="26" uuid="af2b3888-ffe1-45b0-958f-bed05c52c705"/>
+			</line>
+			<line>
+				<reportElement x="313" y="-1" width="1" height="26" uuid="aad7a7dd-0d0a-4475-b143-e6be167c33b2"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="58" height="26" uuid="0239a721-33f6-4b78-9b6f-686aaea0fa1b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{codigo_produto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="4" width="252" height="20" uuid="c036759d-2903-435a-b7bb-a9327212032c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descricao_produto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="315" y="4" width="33" height="20" uuid="d216b8a9-a2bb-4110-9b8e-ec427ece3b98"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="351" y="4" width="44" height="20" uuid="a2411d2b-5006-4c74-90e8-8f12f539fc8f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{preco_unitario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="493" y="4" width="60" height="20" uuid="030baa78-de72-435c-8ea5-ac69ac8fa104"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{preco_total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="349" y="0" width="1" height="26" uuid="dd2fedfb-d83b-4705-ba0c-43898e7ab08f"/>
+			</line>
+			<line>
+				<reportElement x="492" y="1" width="1" height="26" uuid="ff2211e2-6d12-4e4c-ac20-cf40ba3389ef"/>
+			</line>
+			<line>
+				<reportElement x="397" y="0" width="1" height="26" uuid="2d8be8ab-b1fb-4410-9e78-b00e0d9f5952"/>
+			</line>
+			<line>
+				<reportElement x="442" y="0" width="1" height="26" uuid="66d96b40-1496-4be9-8cf4-b17ea789a079"/>
+			</line>
+			<textField>
+				<reportElement x="444" y="4" width="46" height="20" uuid="d2f52bc4-f7ae-4943-8942-300dd92aa12c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{icms}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="401" y="4" width="37" height="20" uuid="6c83d4fb-dd9a-45b8-8d22-ca9e2dcbc809"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ipi}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

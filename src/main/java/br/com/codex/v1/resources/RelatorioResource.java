@@ -106,7 +106,7 @@ public class RelatorioResource {
     public ResponseEntity<byte[]> gerarRelatorioPedidoCompra(@PathVariable Long id) {
         try {
             // Agora passa apenas o ID
-            byte[] pdfBytes = jasperVendasReportService.generateOrcamentoReport(id);
+            byte[] pdfBytes = jasperComprasReportService.generatePedidoCompraReport(id);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);

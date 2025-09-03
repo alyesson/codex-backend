@@ -95,4 +95,16 @@ public class PedidoCompraService {
         Optional<CotacaoCompra> objSolicitacao = cotacaoCompraRepository.findById(id);
         objSolicitacao.orElseThrow(() -> new ObjectNotFoundException("Não existe cotação de compra para o número " + id));
     }
+
+    public void finalizaPedido(Long id, Situacao situacao, LocalDate dataEntregaReal, String justificativa) {
+        PedidoCompra pedidoCompra = findById(id);
+        pedidoCompra.setSituacao(situacao);
+        pedidoCompra.setDataEntregaReal(dataEntregaReal);
+
+        if (justificativa != null && !justificativa.trim().isEmpty()) {
+            pedidoCompra.setJustificativa(justificativa);
+        }
+
+        pedidoCompraRepository.save(pedidoCompra);
+    }
 }

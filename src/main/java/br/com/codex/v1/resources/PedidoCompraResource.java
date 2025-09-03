@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.compras.PedidoCompra;
 import br.com.codex.v1.domain.compras.PedidoItensCompra;
 import br.com.codex.v1.domain.dto.PedidoCompraDto;
 import br.com.codex.v1.domain.dto.PedidoItensCompraDto;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.service.PedidoCompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,6 +56,13 @@ public class PedidoCompraResource {
     @PutMapping(value = "/{id}")
     public ResponseEntity<PedidoCompraDto> atualizarSituacao(@PathVariable Long id, @RequestParam String situacao, @RequestParam(required = false) String justificativa) {
         pedidoCompraService.update(id, situacao, justificativa);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @PutMapping(value = "/finaliza_pedido/{id}")
+    public ResponseEntity<PedidoCompraDto> finalizaPedido(@PathVariable Long id, @RequestParam Situacao situacao, @RequestParam("dataEntregaReal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataEntregaReal, @RequestParam(required = false) String justificativa) {
+        pedidoCompraService.finalizaPedido(id, situacao, dataEntregaReal, justificativa);
         return ResponseEntity.ok().build();
     }
 
