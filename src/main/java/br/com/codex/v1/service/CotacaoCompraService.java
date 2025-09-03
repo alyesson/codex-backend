@@ -93,4 +93,8 @@ public class CotacaoCompraService {
         Optional<SolicitacaoCompra> objSolicitacao = solicitacaoCompraRepository.findById(id);
         objSolicitacao.orElseThrow(() -> new ObjectNotFoundException("Não existe solicitacao de compra para o número " + id));
     }
+
+    public List<CotacaoCompra> findAllBySituacaoAndYear() {
+        return cotacaoCompraRepository.findAllBySituacaoAndYear(anoAtual, "Aprovada");
+    }
 }

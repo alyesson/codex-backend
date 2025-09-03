@@ -45,6 +45,15 @@ public class CotacaoCompraResource {
         return ResponseEntity.ok().body(listDto);
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
+    @GetMapping(value = "/situacao_cotacoes_ano")
+    public ResponseEntity <List<CotacaoCompraDto>> findAllBySituacaoAndYear(){
+        List<CotacaoCompra> objCotacao = cotacaoCompraService.findAllBySituacaoAndYear();
+        List<CotacaoCompraDto> listDto = objCotacao.stream().map(CotacaoCompraDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping(value = "/cotacoes_periodo")
     public ResponseEntity<List<CotacaoCompraDto>> findAllCotacaoPeriodo(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,

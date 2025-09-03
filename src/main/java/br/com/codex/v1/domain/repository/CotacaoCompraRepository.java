@@ -23,4 +23,7 @@ public interface CotacaoCompraRepository extends JpaRepository<CotacaoCompra, Lo
 
     @Query("SELECT c FROM CotacaoCompra c WHERE c.dataAbertura BETWEEN :dataInicial AND :dataFinal")
     List<CotacaoCompra> findAllCotacoesPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
+
+    @Query("SELECT c FROM CotacaoCompra c WHERE YEAR(c.dataAbertura) = :ano AND c.situacao = :situacao")
+    List<CotacaoCompra> findAllBySituacaoAndYear(@Param("ano") Integer ano, @Param("situacao") String situacao);
 }
