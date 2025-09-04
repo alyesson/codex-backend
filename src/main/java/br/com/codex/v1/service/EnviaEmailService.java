@@ -50,8 +50,7 @@ public class EnviaEmailService implements EmailService {
                 message = message.replace("{{#urgente}}", "").replace("{{/urgente}}", "");
             }
 
-            String subject = "📦 Solicitação de Compra #" + solicitacaoCompraDto.getId() +
-                    " - " + solicitacaoCompraDto.getSolicitante();
+            String subject = "📦 Solicitação de Compra #" + solicitacaoCompraDto.getId() + " - " + solicitacaoCompraDto.getSolicitante();
 
             // Criar mensagem MIME
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
