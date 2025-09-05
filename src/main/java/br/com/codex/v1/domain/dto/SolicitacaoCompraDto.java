@@ -34,6 +34,7 @@ public class SolicitacaoCompraDto implements Serializable {
     protected String itemEstoque;
     private List<SolicitacaoItensCompraDto> itens;
     protected String situacao;
+    protected String email;
 
     public SolicitacaoCompraDto() {
         super();
@@ -51,6 +52,7 @@ public class SolicitacaoCompraDto implements Serializable {
         this.opcaoMarca = obj.getOpcaoMarca();
         this.itemEstoque = obj.getItemEstoque();
         this.situacao = obj.getSituacao();
+        this.email = obj.getEmail();
     }
 
     public void setMotivoCompra(String motivoCompra) {

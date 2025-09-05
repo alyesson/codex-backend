@@ -1,6 +1,8 @@
 package br.com.codex.v1.domain.cadastros;
 
 import br.com.codex.v1.domain.dto.DepartamentoDto;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class Departamento implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -38,38 +42,6 @@ public class Departamento implements Serializable {
         this.codigo = obj.getCodigo();
         this.descricao = obj.getDescricao();
         this.centroCusto = obj.getCentroCusto();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getCentroCusto() {
-        return centroCusto;
-    }
-
-    public void setCentroCusto(String centroCusto) {
-        this.centroCusto = centroCusto;
     }
 
     @Override

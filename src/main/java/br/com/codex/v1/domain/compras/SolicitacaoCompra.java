@@ -36,6 +36,7 @@ public class SolicitacaoCompra implements Serializable {
     @OneToMany(mappedBy = "solicitacaoCompra")
     protected List<SolicitacaoItensCompra> solicitacaoItensCompra = new ArrayList<>();
     protected String situacao;
+    protected String email;
 
     public SolicitacaoCompra() {
         super();
@@ -43,7 +44,7 @@ public class SolicitacaoCompra implements Serializable {
 
     public SolicitacaoCompra(Long id, String solicitante, String departamento, LocalDate dataSolicitacao,
                        String centroCusto, String motivoCompra, String destinoMaterial, String urgente,
-                       String opcaoMarca, String itemEstoque, String situacao) {
+                       String opcaoMarca, String itemEstoque, String situacao, String email) {
         this.id = id;
         this.solicitante = solicitante;
         this.departamento = departamento;
@@ -55,6 +56,7 @@ public class SolicitacaoCompra implements Serializable {
         this.opcaoMarca = opcaoMarca;
         this.itemEstoque = itemEstoque;
         this.situacao  = situacao;
+        this.email = email;
     }
 
     public SolicitacaoCompra(SolicitacaoCompraDto obj) {
@@ -69,6 +71,7 @@ public class SolicitacaoCompra implements Serializable {
         this.opcaoMarca = obj.getOpcaoMarca();
         this.itemEstoque = obj.getItemEstoque();
         this.situacao = obj.getSituacao();
+        this.email = obj.getEmail();
     }
 
     @Override

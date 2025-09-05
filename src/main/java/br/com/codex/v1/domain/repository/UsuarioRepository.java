@@ -28,4 +28,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query("SELECT COUNT(c) FROM Usuario c WHERE 3 MEMBER OF c.perfis")
     int countByPerfis(@Param("perfis") String perfis);
+
+    @Query("SELECT d FROM Usuario d WHERE d.departamento =:departamento")
+    List<Usuario> findByDepartamento(@Param("departamento") String departamento);
 }
