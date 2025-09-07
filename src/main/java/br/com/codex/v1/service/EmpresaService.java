@@ -95,4 +95,8 @@ public class EmpresaService {
         Optional<Empresa> objCnpj = empresaRepository.findByCnpj(cnpj);
         return objCnpj.orElseThrow(() -> new ObjectNotFoundException("Nenhuma empresa encontrada com o CNPJ "+ objCnpj));
     }
+
+    public List<Empresa> findAllByTipoEmpresa() {
+        return empresaRepository.findAllByTipoEmpresa();
+    }
 }

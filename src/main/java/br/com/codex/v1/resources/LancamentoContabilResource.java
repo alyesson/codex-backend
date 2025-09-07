@@ -33,13 +33,6 @@ public class LancamentoContabilResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<LancamentoContabilDto> update(@PathVariable Long id, @Valid @RequestBody LancamentoContabilDto lancamentoContabilDto){
-        LancamentoContabil obj = lancamentoContabilService.update(id, lancamentoContabilDto);
-        return ResponseEntity.ok().body(new LancamentoContabilDto(obj));
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping("/periodo_ano_mes")
     public ResponseEntity<List<LancamentoContabilDto>> findAllByYearAndMonth(@RequestParam Integer ano, @RequestParam Integer mes){
         List<LancamentoContabil> list = lancamentoContabilService.findAllByYearAndMonth(ano, mes);
@@ -59,6 +52,13 @@ public class LancamentoContabilResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<LancamentoContabilDto> update(@PathVariable Long id, @Valid @RequestBody LancamentoContabilDto lancamentoContabilDto){
+        LancamentoContabil obj = lancamentoContabilService.update(id, lancamentoContabilDto);
+        return ResponseEntity.ok().body(new LancamentoContabilDto(obj));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<LancamentoContabilDto> findById(@PathVariable Long id){
         LancamentoContabil obj = lancamentoContabilService.findById(id);
@@ -71,5 +71,4 @@ public class LancamentoContabilResource {
         lancamentoContabilService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }

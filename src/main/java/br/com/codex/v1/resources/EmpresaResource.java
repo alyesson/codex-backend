@@ -37,6 +37,27 @@ public class EmpresaResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<EmpresaDto>> findAll(){
+        List<Empresa> list = empresaService.findAll();
+        List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @GetMapping(value = "/data_base")
+    public ResponseEntity<List<EmpresaDto>> findAllByDataBase(){
+        List<Empresa> list = empresaService.findAllByDataBase();
+        List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @GetMapping(value = "/tipo_empresa")
+    public ResponseEntity<List<EmpresaDto>> findAllByTipoEmpresa(){
+        List<Empresa> list = empresaService.findAllByTipoEmpresa();
+        List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<EmpresaDto> update(@PathVariable Long id, @Valid @RequestBody EmpresaDto empresaDto){
@@ -61,19 +82,5 @@ public class EmpresaResource {
     public ResponseEntity<EmpresaDto> findByCnpj(@PathVariable String cnpj){
         Empresa objEmpresa = empresaService.findByCnpj(cnpj);
         return ResponseEntity.ok().body(new EmpresaDto(objEmpresa));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<EmpresaDto>> findAll(){
-        List<Empresa> list = empresaService.findAll();
-        List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @GetMapping(value = "/data_base")
-    public ResponseEntity<List<EmpresaDto>> findAllByDataBase(){
-        List<Empresa> list = empresaService.findAllByDataBase();
-        List<EmpresaDto> listDto = list.stream().map(EmpresaDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
     }
 }

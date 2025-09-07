@@ -2,6 +2,8 @@ package br.com.codex.v1.domain.contabilidade;
 
 import br.com.codex.v1.domain.dto.LancamentoContabilDto;
 import br.com.codex.v1.domain.fiscal.ImportarXml;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -11,6 +13,8 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class LancamentoContabil implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -45,7 +49,9 @@ public class LancamentoContabil implements Serializable {
     public LancamentoContabil() {
     }
 
-    public LancamentoContabil(Long id, Date dataLancamento, BigDecimal valor, Contas contaDebito, Contas contaCredito, HistoricoPadrao historicoPadrao, ImportarXml notaFiscalOrigem, String complementoHistorico) {
+    public LancamentoContabil(Long id, Date dataLancamento, BigDecimal valor, Contas contaDebito,
+                              Contas contaCredito, HistoricoPadrao historicoPadrao,
+                              ImportarXml notaFiscalOrigem, String complementoHistorico) {
         this.id = id;
         this.dataLancamento = dataLancamento;
         this.valor = valor;
@@ -61,70 +67,6 @@ public class LancamentoContabil implements Serializable {
         this.dataLancamento = obj.getDataLancamento();
         this.valor = obj.getValor();
         this.complementoHistorico = obj.getComplementoHistorico();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getDataLancamento() {
-        return dataLancamento;
-    }
-
-    public void setDataLancamento(Date dataLancamento) {
-        this.dataLancamento = dataLancamento;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
-
-    public Contas getContaDebito() {
-        return contaDebito;
-    }
-
-    public void setContaDebito(Contas contaDebito) {
-        this.contaDebito = contaDebito;
-    }
-
-    public Contas getContaCredito() {
-        return contaCredito;
-    }
-
-    public void setContaCredito(Contas contaCredito) {
-        this.contaCredito = contaCredito;
-    }
-
-    public HistoricoPadrao getHistoricoPadrao() {
-        return historicoPadrao;
-    }
-
-    public void setHistoricoPadrao(HistoricoPadrao historicoPadrao) {
-        this.historicoPadrao = historicoPadrao;
-    }
-
-    public ImportarXml getNotaFiscalOrigem() {
-        return notaFiscalOrigem;
-    }
-
-    public void setNotaFiscalOrigem(ImportarXml notaFiscalOrigem) {
-        this.notaFiscalOrigem = notaFiscalOrigem;
-    }
-
-    public String getComplementoHistorico() {
-        return complementoHistorico;
-    }
-
-    public void setComplementoHistorico(String complementoHistorico) {
-        this.complementoHistorico = complementoHistorico;
     }
 
     @Override

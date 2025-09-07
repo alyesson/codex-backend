@@ -37,7 +37,9 @@ public class Contas implements Serializable {
         super();
     }
 
-    public Contas(Long id, String conta, String nome, String reduzido, String utilidade, String saldo, String tipo, String natureza, Date inclusao, String situacao, String observacao) {
+    public Contas(Long id, String conta, String nome, String reduzido, String utilidade,
+                  String saldo, String tipo, String natureza, Date inclusao,
+                  String situacao, String observacao) {
         this.id = id;
         this.conta = conta;
         this.nome = nome;

@@ -12,4 +12,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
 
     @Query("SELECT e FROM Empresa e WHERE e.possuiBase = true")
     List<Empresa> findAllByDataBase();
+
+    @Query("SELECT e FROM Empresa e WHERE e.tipoEmpresa IN ('Matriz', 'Filial')")
+    List<Empresa> findAllByTipoEmpresa();
 }

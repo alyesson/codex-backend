@@ -1,22 +1,22 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
 import br.com.codex.v1.service.JasperComprasReportService;
 import br.com.codex.v1.service.JasperVendasReportService;
+import br.com.codex.v1.service.LancamentoContabilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 
 @RestController
-@RequestMapping("/api/relatorios")
+@RequestMapping("v1/api/relatorios")
 public class RelatorioResource {
 
     @Autowired
@@ -24,6 +24,17 @@ public class RelatorioResource {
 
     @Autowired
     JasperComprasReportService jasperComprasReportService;
+
+    @Autowired
+    private LancamentoContabilService lancamentoContabilService;
+
+    @GetMapping("/balanco-patrimonial")
+    public ResponseEntity<BalancoPatrimonialDto> getBalancoPatrimonial(
+            @RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal) {
+
+        BalancoPatrimonialDto balanco = lancamentoContabilService.gerarBalancoPatrimonial(dataInicial, dataFinal);
+        return ResponseEntity.ok().body(balanco);
+    }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
     @GetMapping("/venda/{id}")
