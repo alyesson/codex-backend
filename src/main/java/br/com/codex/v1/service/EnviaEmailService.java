@@ -15,6 +15,7 @@ import javax.mail.internet.MimeMessage;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ public class EnviaEmailService implements EmailService {
     private String remetente;
 
     private static final String NOME_DEPARTAMENTO = "Compras";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public String sendSimpleMail(SolicitacaoCompraDto solicitacaoCompraDto) {
 
@@ -60,7 +62,7 @@ public class EnviaEmailService implements EmailService {
             // Preencher o template com os dados
             String message = templateContent
                     .replace("{{solicitante}}", solicitacaoCompraDto.getSolicitante())
-                    .replace("{{dataSolicitacao}}", solicitacaoCompraDto.getDataSolicitacao().toString())
+                    .replace("{{dataSolicitacao}}", solicitacaoCompraDto.getDataSolicitacao().format(formatter))
                     .replace("{{departamento}}", solicitacaoCompraDto.getDepartamento())
                     .replace("{{centroCusto}}", solicitacaoCompraDto.getCentroCusto())
                     .replace("{{motivoCompra}}", solicitacaoCompraDto.getMotivoCompra())
@@ -83,8 +85,8 @@ public class EnviaEmailService implements EmailService {
             helper.setText(message, true);
 
             // Adicionar imagem da assinatura
-            ClassPathResource imageResource = new ClassPathResource("/templates/assinatura_ti.png");
-            helper.addInline("assinaturaImagem", imageResource);
+            //ClassPathResource imageResource = new ClassPathResource("/templates/assinatura_ti.png");
+            //helper.addInline("assinaturaImagem", imageResource);
 
             javaMailSender.send(mimeMessage);
             return "E-mail enviado com sucesso para " + destinatarios;

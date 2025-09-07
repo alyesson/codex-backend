@@ -70,10 +70,6 @@
             border-top: 2px solid #eee;
             text-align: center;
         }
-        .assinatura img {
-            max-width: 200px;
-            height: auto;
-        }
         .badge {
             background: #e8f5e9;
             color: #2e7d32;
@@ -83,6 +79,35 @@
             font-weight: 600;
             display: inline-block;
             margin-top: 10px;
+        }
+        /* Novos estilos para a assinatura */
+        .assinatura-digital {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            display: inline-block;
+        }
+        .nome-sistema {
+            font-size: 18px;
+            font-weight: bold;
+            color: #32625a;
+            margin-bottom: 5px;
+        }
+        .detalhes-sistema {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .icones-assinatura {
+            margin: 10px 0;
+        }
+        .icone {
+            display: inline-block;
+            margin: 0 10px;
+            color: #34dbbf;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -133,10 +158,21 @@
     <div class="footer">
         <div class="assinatura">
             <p style="margin: 0; color: #666; font-size: 14px;">Atenciosamente,</p>
-            <p style="margin: 5px 0 15px 0; color: #32625a; font-weight: 600; font-size: 16px;">
-                Sistema Codex
-            </p>
-            <img src="cid:assinaturaImagem" alt="Assinatura Codex">
+
+            <!-- Assinatura em HTML (substitui a imagem) -->
+            <div class="assinatura-digital">
+                <div class="nome-sistema">Sistema Codex 💻</div>
+                <div class="icones-assinatura">
+                    <span class="icone">✓ Seguro</span>
+                    <span class="icone">⚡ Rápido</span>
+                    <span class="icone">🔒 Confiável</span>
+                </div>
+                <div class="detalhes-sistema">
+                    Sistema de Gestão Integrada<br>
+                    <span style="color: #34dbbf;">codexsolucoesemti@gmail.com</span> • www.codexsolucoes.com.br
+                </div>
+            </div>
+
             <p style="margin: 10px 0 0 0; color: #999; font-size: 12px;">
                 Email automático - Não responder
             </p>
