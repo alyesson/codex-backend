@@ -3,17 +3,14 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.domain.contabilidade.*;
 import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.fiscal.ImportarXml;
-import br.com.codex.v1.domain.repository.ContasRepository;
-import br.com.codex.v1.domain.repository.HistoricoPadraoRepository;
-import br.com.codex.v1.domain.repository.LancamentoContabilRepository;
-import br.com.codex.v1.domain.repository.ImportarXmlRepository;
+import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.cache.annotation.Cacheable;
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +29,12 @@ public class LancamentoContabilService {
 
     @Autowired
     private ImportarXmlRepository importarXmlRepository;
+
+    @Autowired
+    private ConfiguracaoContabilRepository configuracaoContabilRepository;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     public List<LancamentoContabil> findAllByYearAndMonth(Integer ano, Integer mes) {
         return lancamentoContabilRepository.findAllByYearAndMonth(ano, mes);
@@ -122,6 +125,265 @@ public class LancamentoContabilService {
         return new BalancoPatrimonialDto(ativo, passivo, patrimonio);
     }
 
+    @Cacheable(value = "/relatorios", key = "#empresaId + '-' + #dataInicial.toString() + '-' + #dataFinal.toString()")
+    public DREDto gerarDRE(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) {
+
+        if (dataInicial.isAfter(dataFinal)) {
+            throw new IllegalArgumentException("Data inicial não pode ser após data final");
+        }
+
+        if (!empresaRepository.existsById(empresaId)) {
+            throw new ObjectNotFoundException("Empresa não encontrada");
+        }
+
+        List<ConfiguracaoContabil> configs = configuracaoContabilRepository.findByEmpresaId(empresaId);
+
+        if (!configs.isEmpty()) {
+            return gerarDREComConfiguracao(dataInicial, dataFinal, configs);
+        }
+
+        // 2. Se não houver configuração, usa auto-detecção
+        return gerarDREAutoDetectado(dataInicial, dataFinal);
+    }
+
+    private List<GrupoContabilDto> classificarPorConfiguracao(Map<Contas, BigDecimal> saldos, List<Contas> todasContas, List<ConfiguracaoContabil> configs, String tipo) {
+
+        List<GrupoContabilDto> grupos = new ArrayList<>();
+
+        // Filtra configurações do tipo especificado
+        List<ConfiguracaoContabil> configsFiltradas = configs.stream()
+                .filter(c -> tipo.equals(c.getTipo()))
+                .collect(Collectors.toList());
+
+        for (ConfiguracaoContabil config : configsFiltradas) {
+            List<Contas> contasFiltradas = filtrarContas(todasContas, config);
+            List<ItemContabilDto> itens = new ArrayList<>();
+
+            for (Contas conta : contasFiltradas) {
+                BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+                if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                    itens.add(new ItemContabilDto(conta.getNome(), saldo.abs()));
+                }
+            }
+
+            if (!itens.isEmpty()) {
+                grupos.add(new GrupoContabilDto(
+                        config.getNomeGrupo() != null ? config.getNomeGrupo() : config.getValor(),
+                        itens
+                ));
+            }
+        }
+
+        return grupos;
+    }
+
+    private List<Contas> filtrarContas(List<Contas> todasContas, ConfiguracaoContabil config) {
+        switch (config.getCriterio()) {
+            case "PREFIXO_CODIGO":
+                return todasContas.stream()
+                        .filter(c -> c.getConta().startsWith(config.getValor()))
+                        .collect(Collectors.toList());
+
+            case "TIPO":
+                return todasContas.stream()
+                        .filter(c -> config.getValor().equals(c.getTipo()))
+                        .collect(Collectors.toList());
+
+            case "NATUREZA":
+                return todasContas.stream()
+                        .filter(c -> config.getValor().equals(c.getNatureza()))
+                        .collect(Collectors.toList());
+
+            case "UTILIDADE":
+                return todasContas.stream()
+                        .filter(c -> config.getValor().equals(c.getUtilidade()))
+                        .collect(Collectors.toList());
+
+            default:
+                return new ArrayList<>();
+        }
+    }
+
+    private List<GrupoContabilDto> autoDetectarReceitas(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<GrupoContabilDto> grupos = new ArrayList<>();
+
+        // Tenta vários critérios diferentes
+        List<Contas> contasReceitas = todasContas.stream()
+                .filter(c ->
+                        // Critério 1: Código começa com padrões comuns de receita
+                        c.getConta().startsWith("4.") ||
+                                c.getConta().startsWith("3.1") ||
+                                // Critério 2: Nome contém palavras-chave de receita
+                                c.getNome().toLowerCase().contains("venda") ||
+                                c.getNome().toLowerCase().contains("receita") ||
+                                c.getNome().toLowerCase().contains("faturamento") ||
+                                // Critério 3: Tipo indica receita
+                                "Receitas".equals(c.getTipo())
+                )
+                .collect(Collectors.toList());
+
+        // Agrupa por subcategoria
+        Map<String, List<Contas>> agrupadas = contasReceitas.stream()
+                .collect(Collectors.groupingBy(this::determinarCategoriaReceita));
+
+        for (Map.Entry<String, List<Contas>> entry : agrupadas.entrySet()) {
+            List<ItemContabilDto> itens = new ArrayList<>();
+            for (Contas conta : entry.getValue()) {
+                BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+                if (saldo.compareTo(BigDecimal.ZERO) > 0) { // Receitas são positivas
+                    itens.add(new ItemContabilDto(conta.getNome(), saldo));
+                }
+            }
+            if (!itens.isEmpty()) {
+                grupos.add(new GrupoContabilDto(entry.getKey(), itens));
+            }
+        }
+
+        return grupos;
+    }
+
+    private String determinarCategoriaReceita(Contas conta) {
+        if (conta.getNome().toLowerCase().contains("venda")) return "Vendas";
+        if (conta.getNome().toLowerCase().contains("serviço")) return "Serviços";
+        if (conta.getNome().toLowerCase().contains("juros")) return "Receitas Financeiras";
+        return "Outras Receitas";
+    }
+
+    private DREDto gerarDREComConfiguracao(LocalDate dataInicial, LocalDate dataFinal, List<ConfiguracaoContabil> configs) {
+        // 1. Buscar lançamentos do período
+        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
+
+        // 2. Calcular saldos das contas
+        Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
+
+        // 3. Buscar estrutura de contas DO BANCO
+        List<Contas> todasContas = contasRepository.findAll();
+
+        // 4. Classificar baseado na configuração
+        List<GrupoContabilDto> receitas = classificarPorConfiguracao(saldosContas, todasContas, configs, "RECEITA");
+        List<GrupoContabilDto> custos = classificarPorConfiguracao(saldosContas, todasContas, configs, "CUSTO");
+        List<GrupoContabilDto> despesas = classificarPorConfiguracao(saldosContas, todasContas, configs, "DESPESA");
+
+        // 5. Retornar DRE estruturado
+        return new DREDto(receitas, custos, despesas);
+    }
+
+    private DREDto gerarDREAutoDetectado(LocalDate dataInicial, LocalDate dataFinal) {
+        // 1. Buscar lançamentos do período
+        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
+
+        // 2. Calcular saldos das contas
+        Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
+
+        // 3. Buscar estrutura de contas DO BANCO
+        List<Contas> todasContas = contasRepository.findAll();
+
+        // 4. Auto-detecta basedo em padrões comuns
+        List<GrupoContabilDto> receitas = autoDetectarReceitas(saldosContas, todasContas);
+        List<GrupoContabilDto> custos = autoDetectarCustos(saldosContas, todasContas);
+        List<GrupoContabilDto> despesas = autoDetectarDespesas(saldosContas, todasContas);
+
+        // 5. Retornar DRE estruturado
+        return new DREDto(receitas, custos, despesas);
+    }
+
+    private List<GrupoContabilDto> autoDetectarCustos(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<GrupoContabilDto> grupos = new ArrayList<>();
+
+        // Tenta vários critérios diferentes para custos
+        List<Contas> contasCustos = todasContas.stream()
+                .filter(c ->
+                        // Critério 1: Código começa com padrões comuns de custo
+                        c.getConta().startsWith("5.") ||
+                                c.getConta().startsWith("3.2") ||
+                                // Critério 2: Nome contém palavras-chave de custo
+                                c.getNome().toLowerCase().contains("custo") ||
+                                c.getNome().toLowerCase().contains("cmv") ||
+                                c.getNome().toLowerCase().contains("mercadoria") ||
+                                // Critério 3: Tipo indica custo
+                                "Custos".equals(c.getTipo())
+                )
+                .collect(Collectors.toList());
+
+        // Agrupa por subcategoria
+        Map<String, List<Contas>> agrupadas = contasCustos.stream()
+                .collect(Collectors.groupingBy(this::determinarCategoriaCusto));
+
+        for (Map.Entry<String, List<Contas>> entry : agrupadas.entrySet()) {
+            List<ItemContabilDto> itens = new ArrayList<>();
+            for (Contas conta : entry.getValue()) {
+                BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+                if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                    itens.add(new ItemContabilDto(conta.getNome(), saldo.abs()));
+                }
+            }
+            if (!itens.isEmpty()) {
+                grupos.add(new GrupoContabilDto(entry.getKey(), itens));
+            }
+        }
+
+        return grupos;
+    }
+
+    private List<GrupoContabilDto> autoDetectarDespesas(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<GrupoContabilDto> grupos = new ArrayList<>();
+
+        // Tenta vários critérios diferentes para despesas
+        List<Contas> contasDespesas = todasContas.stream()
+                .filter(c ->
+                        // Critério 1: Código começa com padrões comuns de despesa
+                        c.getConta().startsWith("6.") ||
+                                c.getConta().startsWith("2.1") ||
+                                // Critério 2: Nome contém palavras-chave de despesa
+                                c.getNome().toLowerCase().contains("despesa") ||
+                                c.getNome().toLowerCase().contains("salário") ||
+                                c.getNome().toLowerCase().contains("aluguel") ||
+                                c.getNome().toLowerCase().contains("energia") ||
+                                c.getNome().toLowerCase().contains("água") ||
+                                c.getNome().toLowerCase().contains("telefone") ||
+                                // Critério 3: Tipo indica despesa
+                                "Despesas".equals(c.getTipo())
+                )
+                .collect(Collectors.toList());
+
+        // Agrupa por subcategoria
+        Map<String, List<Contas>> agrupadas = contasDespesas.stream()
+                .collect(Collectors.groupingBy(this::determinarCategoriaDespesa));
+
+        for (Map.Entry<String, List<Contas>> entry : agrupadas.entrySet()) {
+            List<ItemContabilDto> itens = new ArrayList<>();
+            for (Contas conta : entry.getValue()) {
+                BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+                if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                    itens.add(new ItemContabilDto(conta.getNome(), saldo.abs()));
+                }
+            }
+            if (!itens.isEmpty()) {
+                grupos.add(new GrupoContabilDto(entry.getKey(), itens));
+            }
+        }
+
+        return grupos;
+    }
+
+    private String determinarCategoriaCusto(Contas conta) {
+        if (conta.getNome().toLowerCase().contains("mercadoria")) return "Custo de Mercadorias";
+        if (conta.getNome().toLowerCase().contains("produção")) return "Custo de Produção";
+        if (conta.getNome().toLowerCase().contains("serviço")) return "Custo de Serviços";
+        return "Outros Custos";
+    }
+
+    private String determinarCategoriaDespesa(Contas conta) {
+        if (conta.getNome().toLowerCase().contains("salário") || conta.getNome().toLowerCase().contains("pro labore"))
+            return "Despesas com Pessoal";
+        if (conta.getNome().toLowerCase().contains("aluguel")) return "Despesas de Aluguel";
+        if (conta.getNome().toLowerCase().contains("energia") || conta.getNome().toLowerCase().contains("água") || conta.getNome().toLowerCase().contains("telefone"))
+            return "Despesas Operacionais";
+        if (conta.getNome().toLowerCase().contains("juros") || conta.getNome().toLowerCase().contains("financeir"))
+            return "Despesas Financeiras";
+        return "Outras Despesas";
+    }
+
     private Map<Contas, BigDecimal> calcularSaldosContas(List<LancamentoContabil> lancamentos) {
         Map<Contas, BigDecimal> saldos = new HashMap<>();
 
@@ -187,67 +449,6 @@ public class LancamentoContabilService {
             }
         }
 
-        return grupos;
-    }
-
-    public DREDto gerarDRE(LocalDate dataInicial, LocalDate dataFinal) {
-        // 1. Buscar lançamentos do período
-        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
-
-        // 2. Calcular saldos das contas
-        Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
-
-        // 3. Buscar estrutura de contas DO BANCO
-        List<Contas> todasContas = contasRepository.findAll();
-
-        // 4. Classificar dinamicamente as contas de resultado
-        List<GrupoContabilDto> receitas = classificarContasResultado(saldosContas, todasContas, "4"); // Receitas
-        List<GrupoContabilDto> custos = classificarContasResultado(saldosContas, todasContas, "5");   // Custos
-        List<GrupoContabilDto> despesas = classificarContasResultado(saldosContas, todasContas, "6"); // Despesas
-
-        // 5. Retornar DRE estruturado
-        return new DREDto(receitas, custos, despesas);
-    }
-
-    private List<GrupoContabilDto> classificarContasResultado(
-            Map<Contas, BigDecimal> saldos,
-            List<Contas> todasContas,
-            String classe) {
-
-        List<GrupoContabilDto> grupos = new ArrayList<>();
-
-        // Busca todas as contas desta classe (ex: "4" para Receitas)
-        List<Contas> contasDaClasse = todasContas.stream()
-                .filter(conta -> conta.getConta().startsWith(classe + "."))
-                .collect(Collectors.toList());
-
-        // Agrupa por subclasse (ex: "4.01", "4.02", etc.)
-        Map<String, List<Contas>> contasPorSubclasse = contasDaClasse.stream()
-                .collect(Collectors.groupingBy(conta -> {
-                    String[] partes = conta.getConta().split("\\.");
-                    return partes.length >= 2 ? partes[0] + "." + partes[1] : conta.getConta();
-                }));
-
-        // Cria os grupos
-        for (Map.Entry<String, List<Contas>> entry : contasPorSubclasse.entrySet()) {
-            String subclasse = entry.getKey();
-            List<Contas> contasDoGrupo = entry.getValue();
-
-            List<ItemContabilDto> itens = new ArrayList<>();
-
-            for (Contas conta : contasDoGrupo) {
-                BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
-                // Para contas de resultado, normalmente usamos valores absolutos
-                if (saldo.compareTo(BigDecimal.ZERO) != 0) {
-                    itens.add(new ItemContabilDto(conta.getNome(), saldo.abs()));
-                }
-            }
-
-            if (!itens.isEmpty()) {
-                String nomeGrupo = contasDoGrupo.get(0).getNome();
-                grupos.add(new GrupoContabilDto(nomeGrupo, itens));
-            }
-        }
         return grupos;
     }
 
