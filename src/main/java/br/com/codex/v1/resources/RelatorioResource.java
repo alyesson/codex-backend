@@ -3,6 +3,7 @@ package br.com.codex.v1.resources;
 import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
 import br.com.codex.v1.domain.dto.DREDto;
 import br.com.codex.v1.service.JasperComprasReportService;
+import br.com.codex.v1.service.JasperContabilidadeReportService;
 import br.com.codex.v1.service.JasperVendasReportService;
 import br.com.codex.v1.service.LancamentoContabilService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class RelatorioResource {
     JasperComprasReportService jasperComprasReportService;
 
     @Autowired
+    JasperContabilidadeReportService jasperContabilidadeReportService;
+
+    @Autowired
     private LancamentoContabilService lancamentoContabilService;
 
     @GetMapping("/balanco-patrimonial")
@@ -44,9 +48,25 @@ public class RelatorioResource {
     @GetMapping("/dre")
     public ResponseEntity<DREDto> getDRE(
             @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
-        DREDto dre = lancamentoContabilService.gerarDRE(dataInicial, dataFinal);
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam("empresaId") Long empresaId) {
+
+        DREDto dre = lancamentoContabilService.gerarDRE(dataInicial, dataFinal, empresaId);
         return ResponseEntity.ok().body(dre);
+    }
+
+    @GetMapping(value = "/dre/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getDREPdf(
+            @RequestParam("dataInicial") LocalDate dataInicial,
+            @RequestParam("dataFinal") LocalDate dataFinal,
+            @RequestParam("empresaId") Long empresaId) {
+
+        DREDto dre = lancamentoContabilService.gerarDRE(dataInicial, dataFinal, empresaId);
+        byte[] pdf = jasperContabilidadeReportService.gerarPdfDRE(dre);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dre.pdf")
+                .body(pdf);
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
