@@ -82,8 +82,9 @@ public class ImportarXmlService {
             }
 
             ImportarXml nota = new ImportarXml();
-            String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
-            nota.setDataImportacao(java.sql.Date.valueOf(dataAtual));
+            //String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+            LocalDate dataAtual = LocalDate.now();
+            nota.setDataImportacao(dataAtual);
             nota.setXml(xml);
 
             /*
@@ -290,8 +291,9 @@ public class ImportarXmlService {
         }
 
         ImportarXml nota = new ImportarXml();
-        String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
-        nota.setDataImportacao(java.sql.Date.valueOf(dataAtual));
+        //String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+        LocalDate dataAtual = LocalDate.now();
+        nota.setDataImportacao(dataAtual);
         nota.setXml(xml);
 
         /*

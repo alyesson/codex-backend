@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.dto.MotivoAcertoDto;
 import br.com.codex.v1.domain.estoque.MotivoAcerto;
 import br.com.codex.v1.service.LancamentoContabilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,8 +45,9 @@ public class LancamentoContabilResource {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping("/periodo_ano")
-    public ResponseEntity<List<LancamentoContabilDto>> findAllByYearRange(@RequestParam("dataInicial") Date dataInicial,
-                                                                          @RequestParam("dataFinal") Date dataFinal){
+    public ResponseEntity<List<LancamentoContabilDto>> findAllByYearRange(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal){
         List<LancamentoContabil> list = lancamentoContabilService.findAllByYearRange(dataInicial, dataFinal);
         List<LancamentoContabilDto> listDto = list.stream().map(LancamentoContabilDto::new).collect(Collectors.toList());
 

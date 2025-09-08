@@ -8,6 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class LancamentoContabilDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Date dataLancamento;
+    private LocalDate dataLancamento;
     private BigDecimal valor;
     private Long contaDebitoId;
     private String contaDebitoNome;

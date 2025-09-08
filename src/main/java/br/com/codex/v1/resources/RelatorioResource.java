@@ -1,10 +1,12 @@
 package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
+import br.com.codex.v1.domain.dto.DREDto;
 import br.com.codex.v1.service.JasperComprasReportService;
 import br.com.codex.v1.service.JasperVendasReportService;
 import br.com.codex.v1.service.LancamentoContabilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("v1/api/relatorios")
@@ -30,10 +34,19 @@ public class RelatorioResource {
 
     @GetMapping("/balanco-patrimonial")
     public ResponseEntity<BalancoPatrimonialDto> getBalancoPatrimonial(
-            @RequestParam("dataInicial") Date dataInicial, @RequestParam("dataFinal") Date dataFinal) {
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
         BalancoPatrimonialDto balanco = lancamentoContabilService.gerarBalancoPatrimonial(dataInicial, dataFinal);
         return ResponseEntity.ok().body(balanco);
+    }
+
+    @GetMapping("/dre")
+    public ResponseEntity<DREDto> getDRE(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+        DREDto dre = lancamentoContabilService.gerarDRE(dataInicial, dataFinal);
+        return ResponseEntity.ok().body(dre);
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")

@@ -1,11 +1,8 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.contabilidade.*;
-import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
-import br.com.codex.v1.domain.dto.GrupoContabilDto;
-import br.com.codex.v1.domain.dto.ItemContabilDto;
+import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.fiscal.ImportarXml;
-import br.com.codex.v1.domain.dto.LancamentoContabilDto;
 import br.com.codex.v1.domain.repository.ContasRepository;
 import br.com.codex.v1.domain.repository.HistoricoPadraoRepository;
 import br.com.codex.v1.domain.repository.LancamentoContabilRepository;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +37,7 @@ public class LancamentoContabilService {
         return lancamentoContabilRepository.findAllByYearAndMonth(ano, mes);
     }
 
-    public List<LancamentoContabil> findAllByYearRange(Date anoInicio, Date anoFim) {
+    public List<LancamentoContabil> findAllByYearRange(LocalDate anoInicio, LocalDate anoFim) {
         return lancamentoContabilRepository.findAllByYearRange(anoInicio, anoFim);
     }
 
@@ -105,7 +103,7 @@ public class LancamentoContabilService {
         return lancamentoContabilRepository.save(lancamento);
     }
 
-    public BalancoPatrimonialDto gerarBalancoPatrimonial(Date dataInicial, Date dataFinal) {
+    public BalancoPatrimonialDto gerarBalancoPatrimonial(LocalDate dataInicial, LocalDate dataFinal) {
         // 1. Buscar lançamentos do período
         List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
 
@@ -192,7 +190,67 @@ public class LancamentoContabilService {
         return grupos;
     }
 
-    // Métudo auxiliar para debug - pode ser removido depois
+    public DREDto gerarDRE(LocalDate dataInicial, LocalDate dataFinal) {
+        // 1. Buscar lançamentos do período
+        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
+
+        // 2. Calcular saldos das contas
+        Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
+
+        // 3. Buscar estrutura de contas DO BANCO
+        List<Contas> todasContas = contasRepository.findAll();
+
+        // 4. Classificar dinamicamente as contas de resultado
+        List<GrupoContabilDto> receitas = classificarContasResultado(saldosContas, todasContas, "4"); // Receitas
+        List<GrupoContabilDto> custos = classificarContasResultado(saldosContas, todasContas, "5");   // Custos
+        List<GrupoContabilDto> despesas = classificarContasResultado(saldosContas, todasContas, "6"); // Despesas
+
+        // 5. Retornar DRE estruturado
+        return new DREDto(receitas, custos, despesas);
+    }
+
+    private List<GrupoContabilDto> classificarContasResultado(
+            Map<Contas, BigDecimal> saldos,
+            List<Contas> todasContas,
+            String classe) {
+
+        List<GrupoContabilDto> grupos = new ArrayList<>();
+
+        // Busca todas as contas desta classe (ex: "4" para Receitas)
+        List<Contas> contasDaClasse = todasContas.stream()
+                .filter(conta -> conta.getConta().startsWith(classe + "."))
+                .collect(Collectors.toList());
+
+        // Agrupa por subclasse (ex: "4.01", "4.02", etc.)
+        Map<String, List<Contas>> contasPorSubclasse = contasDaClasse.stream()
+                .collect(Collectors.groupingBy(conta -> {
+                    String[] partes = conta.getConta().split("\\.");
+                    return partes.length >= 2 ? partes[0] + "." + partes[1] : conta.getConta();
+                }));
+
+        // Cria os grupos
+        for (Map.Entry<String, List<Contas>> entry : contasPorSubclasse.entrySet()) {
+            String subclasse = entry.getKey();
+            List<Contas> contasDoGrupo = entry.getValue();
+
+            List<ItemContabilDto> itens = new ArrayList<>();
+
+            for (Contas conta : contasDoGrupo) {
+                BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+                // Para contas de resultado, normalmente usamos valores absolutos
+                if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                    itens.add(new ItemContabilDto(conta.getNome(), saldo.abs()));
+                }
+            }
+
+            if (!itens.isEmpty()) {
+                String nomeGrupo = contasDoGrupo.get(0).getNome();
+                grupos.add(new GrupoContabilDto(nomeGrupo, itens));
+            }
+        }
+        return grupos;
+    }
+
     private void logContasPorGrupo(Map<String, List<Contas>> contasPorSubclasse) {
         for (Map.Entry<String, List<Contas>> entry : contasPorSubclasse.entrySet()) {
             System.out.println("Grupo: " + entry.getKey());

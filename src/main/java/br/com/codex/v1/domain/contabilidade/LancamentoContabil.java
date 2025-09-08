@@ -10,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -23,7 +24,7 @@ public class LancamentoContabil implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date dataLancamento;
+    private LocalDate dataLancamento;
 
     @Column(precision = 20, scale = 2)
     private BigDecimal valor;
@@ -49,7 +50,7 @@ public class LancamentoContabil implements Serializable {
     public LancamentoContabil() {
     }
 
-    public LancamentoContabil(Long id, Date dataLancamento, BigDecimal valor, Contas contaDebito,
+    public LancamentoContabil(Long id, LocalDate dataLancamento, BigDecimal valor, Contas contaDebito,
                               Contas contaCredito, HistoricoPadrao historicoPadrao,
                               ImportarXml notaFiscalOrigem, String complementoHistorico) {
         this.id = id;
