@@ -100,33 +100,13 @@ public class JasperComprasReportService {
             List<CotacaoItensCompra> itens = cotacaoItensCompraRepository.findByCotacaoCompraId(cotacaoCompraId);
 
             Map<String, Object> parameters = new HashMap<>();
-
-            // PARÂMETRO PARA O RELATÓRIO PRINCIPAL
             parameters.put("P_CODIGO", cotacaoCompraId);
             parameters.put("P_CODIGOID", cotacaoCompraId);
+            parameters.put("SUBREPORT_DIR", "reports/");
 
-            parameters.put("id", cotacaoCompra.getId());
-            parameters.put("cnpj", cotacaoCompra.getCnpj());
-            parameters.put("comprador", cotacaoCompra.getComprador());
-            parameters.put("condicoes_pagamento", cotacaoCompra.getCondicoesPagamento());
-            parameters.put("contato", cotacaoCompra.getContato());
-            parameters.put("data_abertura", cotacaoCompra.getDataAbertura());
-            parameters.put("endereco", cotacaoCompra.getEndereco());
-            parameters.put("fornecedor", cotacaoCompra.getFornecedor());
-            parameters.put("ie", cotacaoCompra.getIe());
-            parameters.put("link_compra", cotacaoCompra.getLinkCompra());
-            parameters.put("numero_solicitacao", cotacaoCompra.getNumeroSolicitacao());
-            parameters.put("observacao", cotacaoCompra.getObservacao());
-            parameters.put("prazo_entrega", cotacaoCompra.getPrazoEntrega());
-            parameters.put("situacao", cotacaoCompra.getSituacao());
-            parameters.put("solicitante", cotacaoCompra.getSolicitante());
-            parameters.put("validade", cotacaoCompra.getValidade());
-            parameters.put("valor_cotado", cotacaoCompra.getValorCotado());
-            parameters.put("REPORT_CONNECTION", connection);
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("src/main/resources/reports/cotacao_compra_template.jasper"));
+            JasperReport jasperReport = loadReport("cotacao_compra_template.jasper");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
-
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (Exception e) {
@@ -155,45 +135,13 @@ public class JasperComprasReportService {
             List<PedidoItensCompra> itens = pedidoItensCompraRepository.findByPedidoCompraId(pedidoCompraId);
 
             Map<String, Object> parameters = new HashMap<>();
-
-            // PARÂMETRO PARA O RELATÓRIO PRINCIPAL
             parameters.put("P_CODIGO", pedidoCompraId);
             parameters.put("P_CODIGOID", pedidoCompraId);
 
-            parameters.put("id", pedidoCompra.getId());
-            parameters.put("aprovador", pedidoCompra.getAprovador());
-            parameters.put("centro_custo", pedidoCompra.getCentroCusto());
-            parameters.put("cnpj", pedidoCompra.getCnpj());
-            parameters.put("comprador", pedidoCompra.getComprador());
-            parameters.put("condicoes_pagamento", pedidoCompra.getCondicoesPagamento());
-            parameters.put("contato", pedidoCompra.getContato());
-            parameters.put("data_aprovacao", pedidoCompra.getDataAprovacao());
-            parameters.put("data_entrega_prevista", pedidoCompra.getDataEntregaPrevista());
-            parameters.put("data_entrega_real", pedidoCompra.getDataEntregaReal());
-            parameters.put("data_pedido", pedidoCompra.getDataPedido());
-            parameters.put("departamento", pedidoCompra.getDepartamento());
-            parameters.put("forma_pagamento", pedidoCompra.getFormaPagamento());
-            parameters.put("endereco", pedidoCompra.getEndereco());
-            parameters.put("fornecedor", pedidoCompra.getFornecedor());
-            parameters.put("ie", pedidoCompra.getIe());
-            parameters.put("justificativa", pedidoCompra.getJustificativa());
-            parameters.put("link_compra", pedidoCompra.getLinkCompra());
-            parameters.put("numero_cotacao", pedidoCompra.getNumeroCotacao());
-            parameters.put("numero_parcelas", pedidoCompra.getNumeroParcelas());
-            parameters.put("numero_requisicao", pedidoCompra.getNumeroRequisicao());
-            parameters.put("observacao", pedidoCompra.getObservacao());
-            parameters.put("situacao", converterSituacaoParaTexto(pedidoCompra.getSituacao()));
-            parameters.put("solicitante", pedidoCompra.getSolicitante());
-            parameters.put("validade", pedidoCompra.getValidade());
-            parameters.put("valor_pedido", pedidoCompra.getValorPedido());
-            parameters.put("valor_frete", pedidoCompra.getValorFrete());
-            parameters.put("valor_desconto", pedidoCompra.getValorDesconto());
-            parameters.put("valor_total", pedidoCompra.getValorTotal());
-            parameters.put("REPORT_CONNECTION", connection);
+            parameters.put("SUBREPORT_DIR", "reports/");
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("src/main/resources/reports/pedido_compra_template.jasper"));
+            JasperReport jasperReport = loadReport("pedido_compra_template.jasper");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
-
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (Exception e) {
