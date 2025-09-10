@@ -125,7 +125,7 @@ public class LancamentoContabilService {
         return new BalancoPatrimonialDto(ativo, passivo, patrimonio);
     }
 
-    @Cacheable(value = "/relatorios", key = "#empresaId + '-' + #dataInicial.toString() + '-' + #dataFinal.toString()")
+    @Cacheable(value = "relatorios", key = "#empresaId + '-' + #dataInicial.toString() + '-' + #dataFinal.toString()")
     public DREDto gerarDRE(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) {
 
         if (dataInicial.isAfter(dataFinal)) {
