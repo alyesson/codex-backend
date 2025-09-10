@@ -1,11 +1,11 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.configuration.StartupInitializerDev;
 import br.com.codex.v1.domain.compras.*;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.repository.CotacaoItensCompraRepository;
 import br.com.codex.v1.domain.repository.PedidoItensCompraRepository;
 import br.com.codex.v1.domain.repository.SolicitacaoItensCompraRepository;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -14,10 +14,13 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -57,36 +60,22 @@ public class JasperComprasReportService {
 
             SolicitacaoCompra solicitacaoCompra = solicitacaoCompraService.findById(solicitacaoCompraId);
             if (solicitacaoCompra == null) {
-                throw new RuntimeException("Solicitacao de compra não encontrada com ID: " + solicitacaoCompraId);
+                throw new ObjectNotFoundException("Solicitacao de compra não encontrada com ID: " + solicitacaoCompraId);
             }
             // Busca os Itens pelo SolicitacaoCompraItemRepository
             List<SolicitacaoItensCompra> itens = solicitacaoItensCompraRepository.findBySolicitacaoCompraId(solicitacaoCompraId);
 
             Map<String, Object> parameters = new HashMap<>();
-
-            // PARÂMETRO PARA O RELATÓRIO PRINCIPAL
             parameters.put("P_CODIGO", solicitacaoCompraId);
             parameters.put("P_CODIGOID", solicitacaoCompraId);
+            parameters.put("SUBREPORT_DIR", "reports/");
 
-            parameters.put("id", solicitacaoCompra.getId());
-            parameters.put("solicitante", solicitacaoCompra.getSolicitante());
-            parameters.put("data_solicitacao", solicitacaoCompra.getDataSolicitacao());
-            parameters.put("departamento", solicitacaoCompra.getDepartamento());
-            parameters.put("destino_material", solicitacaoCompra.getDestinoMaterial());
-            parameters.put("item_estoque", solicitacaoCompra.getItemEstoque());
-            parameters.put("situacao", solicitacaoCompra.getSituacao());
-            parameters.put("motivo_compra", solicitacaoCompra.getMotivoCompra());
-            parameters.put("opcao_marca", solicitacaoCompra.getOpcaoMarca());
-            parameters.put("urgente", solicitacaoCompra.getUrgente());
-            parameters.put("REPORT_CONNECTION", connection);
-
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("src/main/resources/reports/solicitacao_compra_template.jasper"));
+            JasperReport jasperReport = loadReport("solicitacao_compra_template.jasper");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
-
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar Pdf: " + e.getMessage(), e);
+            throw new ObjectNotFoundException("Erro ao gerar Pdf: " + e.getMessage(), e);
         } finally {
             if (connection != null) {
                 try { connection.close();
@@ -222,5 +211,22 @@ public class JasperComprasReportService {
     private String converterSituacaoParaTexto(Situacao situacao) {
         if (situacao == null) return "DESCONHECIDA";
         return situacao.getDescricao();
+    }
+
+    private JasperReport loadReport(String reportName) {
+        try {
+            Resource resource = new ClassPathResource("reports/" + reportName);
+
+            if (!resource.exists()) {
+                throw new RuntimeException("Relatório não encontrado: reports/" + reportName);
+            }
+
+            try (InputStream stream = resource.getInputStream()) {
+                return (JasperReport) JRLoader.loadObject(stream);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao carregar relatório: " + reportName, e);
+        }
     }
 }

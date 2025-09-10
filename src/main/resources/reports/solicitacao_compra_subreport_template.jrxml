@@ -44,26 +44,30 @@
 			</staticText>
 			<staticText>
 				<reportElement x="175" y="0" width="60" height="18" uuid="f1bf5d8f-8d38-4b99-969d-d5fd08c2a35d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="393" y="0" width="33" height="18" uuid="48b3e5c1-0593-402b-a1c0-a1634d71d5d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Quant.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="509" y="0" width="33" height="18" uuid="69ddc067-b22c-4018-afed-563241608a45"/>
+				<reportElement x="509" y="0" width="45" height="18" uuid="69ddc067-b22c-4018-afed-563241608a45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="435" y="0" width="59" height="18" uuid="e5e0e7f4-a4fc-4b94-90ed-873b617bbf35"/>
-				<text><![CDATA[Uni. Comer]]></text>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Uni. Com]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="27" splitType="Stretch">
 			<line>
-				<reportElement x="0" y="26" width="554" height="1" uuid="449baefe-160a-477e-924b-085a4a8b777a"/>
+				<reportElement x="0" y="26" width="552" height="1" uuid="449baefe-160a-477e-924b-085a4a8b777a"/>
 			</line>
 			<line>
 				<reportElement x="58" y="0" width="1" height="26" uuid="af2b3888-ffe1-45b0-958f-bed05c52c705"/>

@@ -2,6 +2,9 @@ package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
 import br.com.codex.v1.domain.dto.DREDto;
+import br.com.codex.v1.resources.exceptions.ResourceExceptionHandler;
+import br.com.codex.v1.resources.exceptions.StandardError;
+import br.com.codex.v1.resources.exceptions.ValidationError;
 import br.com.codex.v1.service.JasperComprasReportService;
 import br.com.codex.v1.service.JasperContabilidadeReportService;
 import br.com.codex.v1.service.JasperVendasReportService;
@@ -107,7 +110,6 @@ public class RelatorioResource {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR')")
     @GetMapping("/solicitacao_compra/{id}")
     public ResponseEntity<byte[]> gerarRelatorioSolicitacaoCompra(@PathVariable Long id) {
         try {
