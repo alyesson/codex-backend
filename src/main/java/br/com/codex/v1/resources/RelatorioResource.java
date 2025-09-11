@@ -1,5 +1,6 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.dto.BalanceteDto;
 import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
 import br.com.codex.v1.domain.dto.DFCDto;
 import br.com.codex.v1.domain.dto.DREDto;
@@ -85,8 +86,8 @@ public class RelatorioResource {
 
     @GetMapping(value = "/dfc/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> getDFCPdf(
-            @RequestParam("dataInicial") LocalDate dataInicial,
-            @RequestParam("dataFinal") LocalDate dataFinal,
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
             @RequestParam("empresaId") Long empresaId) throws Exception {
 
         DFCDto dfc = lancamentoContabilService.gerarDFC(dataInicial, dataFinal, empresaId);
@@ -94,6 +95,32 @@ public class RelatorioResource {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dfc.pdf")
+                .body(pdf);
+    }
+
+    @GetMapping("/balancete")
+    public ResponseEntity<BalanceteDto> getBalancete(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam("nivelDetalhe") String nivelDetalhe,
+            @RequestParam(value = "empresaId", required = false) Long empresaId) {
+
+        BalanceteDto balancete = lancamentoContabilService.gerarBalancete(dataInicial, dataFinal, nivelDetalhe, empresaId);
+        return ResponseEntity.ok().body(balancete);
+    }
+
+    @GetMapping(value = "/balancete/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getBalancetePdf(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam("nivelDetalhe") String nivelDetalhe,
+            @RequestParam(value = "empresaId", required = false) Long empresaId) throws Exception {
+
+        BalanceteDto balancete = lancamentoContabilService.gerarBalancete(dataInicial, dataFinal, nivelDetalhe, empresaId);
+        byte[] pdf = jasperContabilidadeReportService.gerarPdfBalancete(balancete);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=balancete.pdf")
                 .body(pdf);
     }
 

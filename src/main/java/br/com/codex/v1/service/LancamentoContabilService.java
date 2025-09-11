@@ -386,6 +386,163 @@ public class LancamentoContabilService {
         return fluxo;
     }
 
+    public BalanceteDto gerarBalancete(LocalDate dataInicial, LocalDate dataFinal,String nivelDetalhe, Long empresaId) {
+        // 1. Validar parâmetros
+        if (dataInicial.isAfter(dataFinal)) {
+            throw new IllegalArgumentException("Data inicial não pode ser após data final");
+        }
+
+        // 2. Buscar lançamentos do período
+        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
+
+        // 3. Calcular saldos das contas
+        Map<Contas, SaldoConta> saldosContas = calcularSaldosContasDetalhado(lancamentos);
+
+        // 4. Buscar estrutura de contas
+        List<Contas> todasContas = contasRepository.findAll();
+
+        // 5. Processar contas conforme nível de detalhe
+        List<ContaBalanceteDto> contasProcessadas = processarContasBalancete(todasContas, saldosContas, nivelDetalhe);
+
+        // 6. Calcular resumo
+        ResumoBalanceteDto resumo = calcularResumoBalancete(contasProcessadas);
+
+        // 7. Retornar balancete
+        return new BalanceteDto(contasProcessadas, resumo, nivelDetalhe, dataInicial, dataFinal);
+    }
+
+    private Map<Contas, SaldoConta> calcularSaldosContasDetalhado(List<LancamentoContabil> lancamentos) {
+        Map<Contas, SaldoConta> saldos = new HashMap<>();
+
+        for (LancamentoContabil lancamento : lancamentos) {
+            Contas contaDebito = lancamento.getContaDebito();
+            Contas contaCredito = lancamento.getContaCredito();
+            BigDecimal valor = lancamento.getValor();
+
+            // Atualiza saldo da conta débito
+            if (contaDebito != null) {
+                SaldoConta saldoConta = saldos.getOrDefault(contaDebito, new SaldoConta());
+                saldoConta.debito = saldoConta.debito.add(valor);
+                saldoConta.saldo = saldoConta.saldo.add(valor);
+                saldos.put(contaDebito, saldoConta);
+            }
+
+            // Atualiza saldo da conta crédito
+            if (contaCredito != null) {
+                SaldoConta saldoConta = saldos.getOrDefault(contaCredito, new SaldoConta());
+                saldoConta.credito = saldoConta.credito.add(valor);
+                saldoConta.saldo = saldoConta.saldo.subtract(valor);
+                saldos.put(contaCredito, saldoConta);
+            }
+        }
+
+        return saldos;
+    }
+
+    private List<ContaBalanceteDto> processarContasBalancete(List<Contas> todasContas, Map<Contas, SaldoConta> saldos, String nivelDetalhe) {
+        List<ContaBalanceteDto> contasProcessadas = new ArrayList<>();
+
+        // Ordenar contas por código
+        List<Contas> contasOrdenadas = todasContas.stream()
+                .sorted(Comparator.comparing(Contas::getConta))
+                .toList();
+
+        // Agrupar por nível sintético se necessário
+        if ("1".equals(nivelDetalhe)) {
+            Map<String, SaldoConta> saldosAgrupados = new HashMap<>();
+            Map<String, String> descricoesAgrupadas = new HashMap<>();
+
+            for (Contas conta : contasOrdenadas) {
+                String codigoGrupo = extrairCodigoGrupo(conta.getConta());
+                SaldoConta saldoConta = saldos.getOrDefault(conta, new SaldoConta());
+
+                SaldoConta saldoGrupo = saldosAgrupados.getOrDefault(codigoGrupo, new SaldoConta());
+                saldoGrupo.debito = saldoGrupo.debito.add(saldoConta.debito);
+                saldoGrupo.credito = saldoGrupo.credito.add(saldoConta.credito);
+                saldoGrupo.saldo = saldoGrupo.saldo.add(saldoConta.saldo);
+                saldosAgrupados.put(codigoGrupo, saldoGrupo);
+
+                // Manter a descrição do primeiro elemento do grupo
+                if (!descricoesAgrupadas.containsKey(codigoGrupo)) {
+                    descricoesAgrupadas.put(codigoGrupo, conta.getNome());
+                }
+            }
+
+            // Criar DTOs agrupados
+            for (Map.Entry<String, SaldoConta> entry : saldosAgrupados.entrySet()) {
+                String codigo = entry.getKey();
+                SaldoConta saldo = entry.getValue();
+
+                if (saldo.debito.compareTo(BigDecimal.ZERO) != 0 ||
+                        saldo.credito.compareTo(BigDecimal.ZERO) != 0) {
+
+                    contasProcessadas.add(new ContaBalanceteDto(
+                            codigo,
+                            descricoesAgrupadas.get(codigo),
+                            saldo.debito,
+                            saldo.credito,
+                            saldo.saldo,
+                            1 // Nível sintético
+                    ));
+                }
+            }
+        } else {
+            // Nível analítico - todas as contas
+            for (Contas conta : contasOrdenadas) {
+                SaldoConta saldo = saldos.getOrDefault(conta, new SaldoConta());
+
+                if (saldo.debito.compareTo(BigDecimal.ZERO) != 0 ||
+                        saldo.credito.compareTo(BigDecimal.ZERO) != 0) {
+
+                    contasProcessadas.add(new ContaBalanceteDto(
+                            conta.getConta(),
+                            conta.getNome(),
+                            saldo.debito,
+                            saldo.credito,
+                            saldo.saldo,
+                            2 // Nível analítico
+                    ));
+                }
+            }
+        }
+
+        return contasProcessadas;
+    }
+
+    private String extrairCodigoGrupo(String codigoCompleto) {
+        // Extrai os dois primeiros níveis (ex: "1.01" de "1.01.001")
+        String[] partes = codigoCompleto.split("\\.");
+        if (partes.length >= 2) {
+            return partes[0] + "." + partes[1];
+        }
+        return codigoCompleto;
+    }
+
+    private ResumoBalanceteDto calcularResumoBalancete(List<ContaBalanceteDto> contas) {
+        BigDecimal totalDebito = contas.stream()
+                .map(ContaBalanceteDto::getDebito)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalCredito = contas.stream()
+                .map(ContaBalanceteDto::getCredito)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal saldoFinal = contas.stream()
+                .map(ContaBalanceteDto::getSaldo)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new ResumoBalanceteDto(totalDebito, totalCredito, saldoFinal);
+    }
+
+    private static class SaldoConta {
+        BigDecimal debito = BigDecimal.ZERO;
+        BigDecimal credito = BigDecimal.ZERO;
+        BigDecimal saldo = BigDecimal.ZERO;
+    }
+
     private BigDecimal calcularTotalFluxo(List<FluxoCaixaItemDto> fluxo) {
         return fluxo.stream()
                 .map(FluxoCaixaItemDto::getValor)

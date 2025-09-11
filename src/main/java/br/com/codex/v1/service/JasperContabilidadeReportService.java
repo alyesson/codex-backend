@@ -1,9 +1,6 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.dto.DFCDto;
-import br.com.codex.v1.domain.dto.DREDto;
-import br.com.codex.v1.domain.dto.GrupoContabilDto;
-import br.com.codex.v1.domain.dto.ItemContabilDto;
+import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -19,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +95,29 @@ public class JasperContabilidadeReportService {
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
 
         // Exportar para PDF
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    public byte[] gerarPdfBalancete(BalanceteDto balancete) throws Exception {
+        InputStream jasperStream = this.getClass().getResourceAsStream("/reports/balancete.jasper");
+
+        if (jasperStream == null) {
+            throw new RuntimeException("Relatório Balancete não encontrado");
+        }
+
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("CONTAS", new JRBeanCollectionDataSource(balancete.getContas()));
+        parametros.put("TOTAL_DEBITO", balancete.getResumo().getTotalDebito());
+        parametros.put("TOTAL_CREDITO", balancete.getResumo().getTotalCredito());
+        parametros.put("SALDO_FINAL", balancete.getResumo().getSaldoFinal());
+        parametros.put("DATA_INICIAL", balancete.getDataInicial().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_FINAL", balancete.getDataFinal().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("NIVEL_DETALHE", "1".equals(balancete.getNivelDetalhe()) ? "Sintético" : "Analítico");
+        parametros.put("DATA_EMISSAO", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
