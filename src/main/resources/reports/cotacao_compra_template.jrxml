@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="572"/>
+	<property name="ireport.y" value="20"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -52,9 +52,6 @@
 	<field name="link_compra" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="numero_solicitacao" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="observacao" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -73,13 +70,22 @@
 	<field name="valor_cotado" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="justificativa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero_solicitacao" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero_ordem" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<title>
 		<band height="78" splitType="Stretch">
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="4" width="552" height="70" uuid="89ccb6f8-7bb2-4c76-b0cc-815412b55863"/>
 			</rectangle>
 			<frame>
-				<reportElement mode="Opaque" x="87" y="11" width="384" height="56" backcolor="#FFFFFF" uuid="0f155bad-9af5-4d08-aa31-c64fb98cccca"/>
+				<reportElement mode="Opaque" x="87" y="11" width="421" height="56" backcolor="#FFFFFF" uuid="0f155bad-9af5-4d08-aa31-c64fb98cccca"/>
 			</frame>
 			<image>
 				<reportElement x="8" y="6" width="65" height="34" uuid="4b3cddf2-7dcc-4026-a72c-6a860c76c347"/>

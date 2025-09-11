@@ -104,7 +104,6 @@ public class JasperComprasReportService {
             parameters.put("P_CODIGOID", cotacaoCompraId);
             parameters.put("SUBREPORT_DIR", "reports/");
 
-
             JasperReport jasperReport = loadReport("cotacao_compra_template.jasper");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
             return JasperExportManager.exportReportToPdf(jasperPrint);

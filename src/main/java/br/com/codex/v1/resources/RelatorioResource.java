@@ -137,7 +137,7 @@ public class RelatorioResource {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("filename", "cotação_compra_" + id + ".pdf");
+            headers.setContentDispositionFormData("filename", "cotacao_compra_" + id + ".pdf");
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
