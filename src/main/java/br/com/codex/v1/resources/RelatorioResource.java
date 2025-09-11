@@ -1,6 +1,7 @@
 package br.com.codex.v1.resources;
 
 import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
+import br.com.codex.v1.domain.dto.DFCDto;
 import br.com.codex.v1.domain.dto.DREDto;
 import br.com.codex.v1.resources.exceptions.ResourceExceptionHandler;
 import br.com.codex.v1.resources.exceptions.StandardError;
@@ -69,6 +70,30 @@ public class RelatorioResource {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dre.pdf")
+                .body(pdf);
+    }
+
+    @GetMapping("/dfc")
+    public ResponseEntity<DFCDto> getDFC(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam("empresaId") Long empresaId) {
+
+        DFCDto dfc = lancamentoContabilService.gerarDFC(dataInicial, dataFinal, empresaId);
+        return ResponseEntity.ok().body(dfc);
+    }
+
+    @GetMapping(value = "/dfc/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getDFCPdf(
+            @RequestParam("dataInicial") LocalDate dataInicial,
+            @RequestParam("dataFinal") LocalDate dataFinal,
+            @RequestParam("empresaId") Long empresaId) throws Exception {
+
+        DFCDto dfc = lancamentoContabilService.gerarDFC(dataInicial, dataFinal, empresaId);
+        byte[] pdf = jasperContabilidadeReportService.gerarPdfDFC(dfc);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dfc.pdf")
                 .body(pdf);
     }
 

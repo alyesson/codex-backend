@@ -287,6 +287,127 @@ public class LancamentoContabilService {
         return new DREDto(receitas, custos, despesas);
     }
 
+    public DFCDto gerarDFC(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) {
+        // 1. Validar parâmetros
+        if (dataInicial.isAfter(dataFinal)) {
+            throw new IllegalArgumentException("Data inicial não pode ser após data final");
+        }
+
+        if (!empresaRepository.existsById(empresaId)) {
+            throw new ObjectNotFoundException("Empresa não encontrada");
+        }
+
+        // 2. Buscar lançamentos do período
+        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
+
+        // 3. Calcular saldos das contas
+        Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
+
+        // 4. Buscar estrutura de contas
+        List<Contas> todasContas = contasRepository.findAll();
+
+        // 5. Classificar fluxos
+        List<FluxoCaixaItemDto> fluxoOperacional = classificarFluxoOperacional(saldosContas, todasContas);
+        List<FluxoCaixaItemDto> fluxoInvestimento = classificarFluxoInvestimento(saldosContas, todasContas);
+        List<FluxoCaixaItemDto> fluxoFinanciamento = classificarFluxoFinanciamento(saldosContas, todasContas);
+
+        // 6. Calcular totais
+        BigDecimal totalOperacional = calcularTotalFluxo(fluxoOperacional);
+        BigDecimal totalInvestimento = calcularTotalFluxo(fluxoInvestimento);
+        BigDecimal totalFinanciamento = calcularTotalFluxo(fluxoFinanciamento);
+
+        // 7. Calcular saldos de caixa
+        BigDecimal saldoInicial = calcularSaldoInicialCaixa(dataInicial, empresaId);
+        BigDecimal variacaoPeriodo = totalOperacional.add(totalInvestimento).add(totalFinanciamento);
+        BigDecimal saldoFinal = saldoInicial.add(variacaoPeriodo);
+
+        // 8. Retornar DFC
+        return new DFCDto(fluxoOperacional, fluxoInvestimento, fluxoFinanciamento,
+                totalOperacional, totalInvestimento, totalFinanciamento,
+                saldoInicial, variacaoPeriodo, saldoFinal);
+    }
+
+    private List<FluxoCaixaItemDto> classificarFluxoOperacional(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<FluxoCaixaItemDto> fluxo = new ArrayList<>();
+
+        // Identificar contas de fluxo operacional (ex: contas que começam com 6, 7, etc.)
+        List<Contas> contasOperacionais = todasContas.stream()
+                .filter(c -> c.getConta().startsWith("6.") || c.getConta().startsWith("7."))
+                .toList();
+
+        for (Contas conta : contasOperacionais) {
+            BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+            if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                fluxo.add(new FluxoCaixaItemDto(conta.getNome(), saldo));
+            }
+        }
+
+        return fluxo;
+    }
+
+    private List<FluxoCaixaItemDto> classificarFluxoInvestimento(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<FluxoCaixaItemDto> fluxo = new ArrayList<>();
+
+        // Identificar contas de investimento (ex: contas de ativo imobilizado, investimentos)
+        List<Contas> contasInvestimento = todasContas.stream()
+                .filter(c -> c.getConta().startsWith("2.2") || c.getConta().startsWith("2.3") ||
+                        c.getNome().toLowerCase().contains("investimento") ||
+                        c.getNome().toLowerCase().contains("imobilizado"))
+                .toList();
+
+        for (Contas conta : contasInvestimento) {
+            BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+            if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                fluxo.add(new FluxoCaixaItemDto(conta.getNome(), saldo));
+            }
+        }
+
+        return fluxo;
+    }
+
+    private List<FluxoCaixaItemDto> classificarFluxoFinanciamento(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<FluxoCaixaItemDto> fluxo = new ArrayList<>();
+
+        // Identificar contas de financiamento (ex: empréstimos, financiamentos, capital)
+        List<Contas> contasFinanciamento = todasContas.stream()
+                .filter(c -> c.getConta().startsWith("2.1") ||
+                        c.getNome().toLowerCase().contains("empréstimo") ||
+                        c.getNome().toLowerCase().contains("financiamento") ||
+                        c.getNome().toLowerCase().contains("capital"))
+                .toList();
+
+        for (Contas conta : contasFinanciamento) {
+            BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+            if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                fluxo.add(new FluxoCaixaItemDto(conta.getNome(), saldo));
+            }
+        }
+
+        return fluxo;
+    }
+
+    private BigDecimal calcularTotalFluxo(List<FluxoCaixaItemDto> fluxo) {
+        return fluxo.stream()
+                .map(FluxoCaixaItemDto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal calcularSaldoInicialCaixa(LocalDate dataInicial, Long empresaId) {
+        // Buscar saldo inicial de caixa (contas que começam com 1.01)
+        LocalDate dataInicioPeriodo = dataInicial.minusYears(1); // Ajuste conforme necessário
+
+        List<LancamentoContabil> lancamentosPeriodoAnterior = findAllByYearRange(
+                dataInicioPeriodo, dataInicial.minusDays(1));
+
+        Map<Contas, BigDecimal> saldosPeriodoAnterior = calcularSaldosContas(lancamentosPeriodoAnterior);
+
+        // Filtrar apenas contas de caixa
+        return saldosPeriodoAnterior.entrySet().stream()
+                .filter(entry -> entry.getKey().getConta().startsWith("1.01"))
+                .map(Map.Entry::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     private List<GrupoContabilDto> autoDetectarCustos(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
         List<GrupoContabilDto> grupos = new ArrayList<>();
 

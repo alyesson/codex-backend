@@ -1,20 +1,34 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.dto.DFCDto;
 import br.com.codex.v1.domain.dto.DREDto;
 import br.com.codex.v1.domain.dto.GrupoContabilDto;
 import br.com.codex.v1.domain.dto.ItemContabilDto;
+import br.com.codex.v1.domain.repository.EmpresaRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JasperContabilidadeReportService {
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     public byte[] gerarPdfDRE(DREDto dre) {
         try {
@@ -51,8 +65,42 @@ public class JasperContabilidadeReportService {
         }
     }
 
-    private void adicionarSecao(Document document, String titulo, List<GrupoContabilDto> grupos)
-            throws DocumentException {
+    public byte[] gerarPdfDFC(DFCDto dfc) throws Exception {
+        // Carregar o relatório Jasper
+        InputStream jasperStream = this.getClass().getResourceAsStream("/reports/dfc.jasper");
+
+        if (jasperStream == null) {
+            throw new RuntimeException("Relatório DFC não encontrado");
+        }
+
+        // Preparar parâmetros
+        Map<String, Object> parametros = new HashMap<>();
+
+        // Adicionar dados do DFC como parâmetros
+        parametros.put("FLUXO_OPERACIONAL", new JRBeanCollectionDataSource(dfc.getFluxoOperacional()));
+        parametros.put("FLUXO_INVESTIMENTO", new JRBeanCollectionDataSource(dfc.getFluxoInvestimento()));
+        parametros.put("FLUXO_FINANCIAMENTO", new JRBeanCollectionDataSource(dfc.getFluxoFinanciamento()));
+
+        parametros.put("TOTAL_OPERACIONAL", dfc.getTotalOperacional());
+        parametros.put("TOTAL_INVESTIMENTO", dfc.getTotalInvestimento());
+        parametros.put("TOTAL_FINANCIAMENTO", dfc.getTotalFinanciamento());
+
+        parametros.put("SALDO_INICIAL", dfc.getSaldoInicial());
+        parametros.put("VARIACAO_PERIODO", dfc.getVariacaoPeriodo());
+        parametros.put("SALDO_FINAL", dfc.getSaldoFinal());
+
+        // Data atual para o relatório
+        parametros.put("DATA_EMISSAO", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+
+        // Compilar e preencher o relatório
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+
+        // Exportar para PDF
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    private void adicionarSecao(Document document, String titulo, List<GrupoContabilDto> grupos) throws DocumentException {
 
         if (grupos == null || grupos.isEmpty()) return;
 
