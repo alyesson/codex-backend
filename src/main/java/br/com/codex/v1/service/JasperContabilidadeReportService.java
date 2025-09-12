@@ -16,11 +16,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class JasperContabilidadeReportService {
@@ -28,39 +27,57 @@ public class JasperContabilidadeReportService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
-    public byte[] gerarPdfDRE(DREDto dre) {
-        try {
-            Document document = new Document(PageSize.A4.rotate()); // PDF horizontal
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    public byte[] gerarPdfDRE(DREDto dre) throws Exception {
+        InputStream jasperStream = this.getClass().getResourceAsStream("/reports/dre.jasper");
 
-            PdfWriter.getInstance(document, outputStream);
-            document.open();
-
-            // Adicionar título
-            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-            Paragraph title = new Paragraph("DEMONSTRAÇÃO DO RESULTADO DO EXERCÍCIO (DRE)", titleFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            title.setSpacingAfter(20);
-            document.add(title);
-
-            // Adicionar receitas
-            adicionarSecao(document, "RECEITAS", dre.getReceitas());
-
-            // Adicionar custos
-            adicionarSecao(document, "CUSTOS", dre.getCustos());
-
-            // Adicionar despesas
-            adicionarSecao(document, "DESPESAS", dre.getDespesas());
-
-            // Adicionar totais
-            adicionarTotais(document, dre);
-
-            document.close();
-            return outputStream.toByteArray();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar PDF do DRE", e);
+        if (jasperStream == null) {
+            throw new RuntimeException("Relatório DRE não encontrado");
         }
+
+        Map<String, Object> parametros = new HashMap<>();
+
+        // Parâmetros básicos
+        parametros.put("DATA_INICIAL", dre.getDataInicial().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_FINAL", dre.getDataFinal().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_EMISSAO", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("EMPRESA_NOME", dre.getEmpresaNome());
+
+        // ✅ ACHATAR a estrutura para o relatório
+        parametros.put("RECEITAS", new JRBeanCollectionDataSource(achatarGrupos(dre.getReceitas())));
+        parametros.put("CUSTOS", new JRBeanCollectionDataSource(achatarGrupos(dre.getCustos())));
+        parametros.put("DESPESAS", new JRBeanCollectionDataSource(achatarGrupos(dre.getDespesas())));
+
+        // Totais
+        parametros.put("TOTAL_RECEITAS", dre.getTotalReceitas());
+        parametros.put("TOTAL_CUSTOS", dre.getTotalCustos());
+        parametros.put("TOTAL_DESPESAS", dre.getTotalDespesas());
+        parametros.put("RESULTADO_OPERACIONAL", dre.getResultadoOperacional());
+        parametros.put("RESULTADO_LIQUIDO", dre.getResultadoLiquido());
+
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    private List<ItemRelatorioDto> achatarGrupos(List<GrupoContabilDto> grupos) {
+        List<ItemRelatorioDto> itensAchatados = new ArrayList<>();
+
+        if (grupos != null) {
+            for (GrupoContabilDto grupo : grupos) {
+                // Adiciona o nome do grupo como um item
+                itensAchatados.add(new ItemRelatorioDto(grupo.getNome(), grupo.getTotal(), "GRUPO"));
+
+                // Adiciona os itens do grupo
+                if (grupo.getItens() != null) {
+                    for (ItemContabilDto item : grupo.getItens()) {
+                        itensAchatados.add(new ItemRelatorioDto(item.getNome(), item.getValor(), "ITEM"));
+                    }
+                }
+            }
+        }
+
+        return itensAchatados;
     }
 
     public byte[] gerarPdfDFC(DFCDto dfc) throws Exception {
@@ -75,6 +92,8 @@ public class JasperContabilidadeReportService {
         Map<String, Object> parametros = new HashMap<>();
 
         // Adicionar dados do DFC como parâmetros
+        parametros.put("DATA_INICIAL", dfc.getDataInicial().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_FINAL", dfc.getDataFinal().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         parametros.put("FLUXO_OPERACIONAL", new JRBeanCollectionDataSource(dfc.getFluxoOperacional()));
         parametros.put("FLUXO_INVESTIMENTO", new JRBeanCollectionDataSource(dfc.getFluxoInvestimento()));
         parametros.put("FLUXO_FINANCIAMENTO", new JRBeanCollectionDataSource(dfc.getFluxoFinanciamento()));

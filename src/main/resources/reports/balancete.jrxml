@@ -22,27 +22,27 @@
 	<title>
 		<band height="120" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="50" y="0" width="486" height="30" backcolor="#D3CDCD" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"/>
+				<reportElement mode="Opaque" x="50" y="6" width="486" height="30" backcolor="#D3CDCD" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BALANÇO DE VERIFICAÇÃO (BALANCETE)]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="43" width="300" height="20" uuid="c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f"/>
+				<reportElement x="0" y="47" width="300" height="20" uuid="c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f"/>
 				<textFieldExpression><![CDATA["Período: " + $P{DATA_INICIAL} + " a " + $P{DATA_FINAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="63" width="300" height="20" uuid="d3e4f5a6-b7c4-4d8e-9f0a-1b2c3d4e5f6a"/>
+				<reportElement x="0" y="67" width="300" height="20" uuid="d3e4f5a6-b7c4-4d8e-9f0a-1b2c3d4e5f6a"/>
 				<textFieldExpression><![CDATA["Nível: " + $P{NIVEL_DETALHE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="423" y="43" width="132" height="20" uuid="e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b"/>
+				<reportElement x="423" y="47" width="132" height="20" uuid="e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Emissão: " + $P{DATA_EMISSAO}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="90" width="555" height="1" uuid="f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c"/>
+				<reportElement x="0" y="94" width="555" height="1" uuid="f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c"/>
 			</line>
 		</band>
 	</title>

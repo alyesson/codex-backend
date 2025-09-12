@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dfc" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="00d87f20-062e-4d52-a7c7-fb97dd5202b9">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="63"/>
+	<parameter name="DATA_INICIAL" class="java.lang.String"/>
+	<parameter name="DATA_FINAL" class="java.lang.String"/>
+	<parameter name="DATA_EMISSAO" class="java.lang.String"/>
+	<parameter name="SALDO_INICIAL" class="java.math.BigDecimal"/>
+	<parameter name="VARIACAO_PERIODO" class="java.math.BigDecimal"/>
+	<parameter name="SALDO_FINAL" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_OPERACIONAL" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_INVESTIMENTO" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_FINANCIAMENTO" class="java.math.BigDecimal"/>
+	<field name="descricao" class="java.lang.String">
+		<fieldDescription><![CDATA[descricao != null ? descricao : ""]]></fieldDescription>
+	</field>
+	<field name="valor" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[valor != null ? valor : java.math.BigDecimal.ZERO]]></fieldDescription>
+	</field>
+	<field name="tipo" class="java.lang.String">
+		<fieldDescription><![CDATA[tipo != null ? tipo : ""]]></fieldDescription>
+	</field>
+	<title>
+		<band height="100">
+			<rectangle radius="5">
+				<reportElement x="0" y="0" width="555" height="40" backcolor="#F5F5F5" uuid="11111111-1111-1111-1111-111111111111"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="30" uuid="22222222-2222-2222-2222-222222222222"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[DEMONSTRAÇÃO DO FLUXO DE CAIXA (DFC)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="10" y="50" width="300" height="20" uuid="33333333-3333-3333-3333-333333333333"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período: " + ($P{DATA_INICIAL} != null ? $P{DATA_INICIAL} : "") + " a " + ($P{DATA_FINAL} != null ? $P{DATA_FINAL} : "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="355" y="50" width="190" height="20" uuid="44444444-4444-4444-4444-444444444444"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Emissão: " + ($P{DATA_EMISSAO} != null ? $P{DATA_EMISSAO} : "")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="80" width="555" height="1" uuid="55555555-5555-5555-5555-555555555555"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31">
+			<rectangle radius="3">
+				<reportElement x="0" y="2" width="555" height="25" backcolor="#E8E8E8" uuid="66666666-6666-6666-6666-666666666666"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="7" width="330" height="15" uuid="77777777-7777-7777-7777-777777777777"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="7" width="120" height="15" uuid="88888888-8888-8888-8888-888888888888"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29">
+			<rectangle radius="5">
+				<reportElement x="0" y="2" width="555" height="25" backcolor="#F9F9F9" uuid="99999999-9999-9999-9999-999999999999">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField>
+				<reportElement x="20" y="7" width="330" height="15" uuid="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"/>
+				<textFieldExpression><![CDATA[$F{descricao} != null ? $F{descricao} : "(sem descrição)"]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="370" y="7" width="120" height="15" uuid="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{valor} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($F{valor}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="200">
+			<rectangle radius="5">
+				<reportElement x="0" y="3" width="555" height="180" backcolor="#F8F8F8" uuid="cccccccc-cccc-cccc-cccc-cccccccccccc"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="23" width="200" height="20" uuid="dddddddd-dddd-dddd-dddd-dddddddddddd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fluxo Operacional:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="53" width="200" height="20" uuid="eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fluxo Investimento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="83" width="200" height="20" uuid="ffffffff-ffff-ffff-ffff-ffffffffffff"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fluxo Financiamento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="370" y="23" width="120" height="20" uuid="11112222-1111-2222-1111-222211112222"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOTAL_OPERACIONAL} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_OPERACIONAL}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="53" width="120" height="20" uuid="33334444-3333-4444-3333-444433334444"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOTAL_INVESTIMENTO} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_INVESTIMENTO}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="83" width="120" height="20" uuid="55556666-5555-6666-5555-666655556666"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOTAL_FINANCIAMENTO} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_FINANCIAMENTO}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="113" width="535" height="1" uuid="77778888-7777-8888-7777-888877778888"/>
+			</line>
+			<staticText>
+				<reportElement x="20" y="123" width="200" height="20" uuid="99990000-9999-0000-9999-000099990000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Variação Líquida:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="370" y="123" width="120" height="20" uuid="aaaabbbb-aaaa-bbbb-aaaa-bbbbaaaabbbb"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{VARIACAO_PERIODO} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{VARIACAO_PERIODO}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="153" width="200" height="25" uuid="ccccdddd-cccc-dddd-cccc-ddddccccdddd"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO FINAL:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="370" y="153" width="120" height="25" uuid="ddddeeee-dddd-eeee-dddd-eeeeddddeeee"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SALDO_FINAL} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{SALDO_FINAL}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="15" width="555" height="20" uuid="eeeeffff-eeee-ffff-eeee-ffffeeeeffff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Nenhum movimento de fluxo de caixa no período]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

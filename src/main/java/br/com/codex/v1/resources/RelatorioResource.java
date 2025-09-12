@@ -1,9 +1,12 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.configuration.StartupInitializerDev;
+import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.dto.BalanceteDto;
 import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
 import br.com.codex.v1.domain.dto.DFCDto;
 import br.com.codex.v1.domain.dto.DREDto;
+import br.com.codex.v1.domain.repository.EmpresaRepository;
 import br.com.codex.v1.resources.exceptions.ResourceExceptionHandler;
 import br.com.codex.v1.resources.exceptions.StandardError;
 import br.com.codex.v1.resources.exceptions.ValidationError;
@@ -11,6 +14,8 @@ import br.com.codex.v1.service.JasperComprasReportService;
 import br.com.codex.v1.service.JasperContabilidadeReportService;
 import br.com.codex.v1.service.JasperVendasReportService;
 import br.com.codex.v1.service.LancamentoContabilService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +33,7 @@ import java.time.ZoneId;
 @RestController
 @RequestMapping("v1/api/relatorios")
 public class RelatorioResource {
+    private static final Logger logger = LoggerFactory.getLogger(RelatorioResource.class);
 
     @Autowired
     private JasperVendasReportService jasperVendasReportService;
@@ -40,6 +46,9 @@ public class RelatorioResource {
 
     @Autowired
     private LancamentoContabilService lancamentoContabilService;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     @GetMapping("/balanco-patrimonial")
     public ResponseEntity<BalancoPatrimonialDto> getBalancoPatrimonial(
@@ -62,16 +71,33 @@ public class RelatorioResource {
 
     @GetMapping(value = "/dre/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> getDREPdf(
-            @RequestParam("dataInicial") LocalDate dataInicial,
-            @RequestParam("dataFinal") LocalDate dataFinal,
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
             @RequestParam("empresaId") Long empresaId) {
 
-        DREDto dre = lancamentoContabilService.gerarDRE(dataInicial, dataFinal, empresaId);
-        byte[] pdf = jasperContabilidadeReportService.gerarPdfDRE(dre);
+        try {
+            // 1. Gerar os dados da DRE
+            DREDto dre = lancamentoContabilService.gerarDRE(dataInicial, dataFinal, empresaId);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dre.pdf")
-                .body(pdf);
+            // 2. Buscar o nome da empresa
+            String nomeEmpresa = empresaRepository.findById(empresaId)
+                    .map(Empresa::getRazaoSocial)
+                    .orElse("Empresa não encontrada");
+
+            // 3. Setar o nome da empresa no DTO
+            dre.setEmpresaNome(nomeEmpresa);
+
+            // 4. Gerar o PDF
+            byte[] pdf = jasperContabilidadeReportService.gerarPdfDRE(dre);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dre.pdf")
+                    .body(pdf);
+
+        } catch (Exception e) {
+            logger.error("Erro ao gerar PDF da DRE", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/dfc")

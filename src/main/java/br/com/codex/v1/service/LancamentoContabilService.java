@@ -1,5 +1,6 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.contabilidade.*;
 import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.fiscal.ImportarXml;
@@ -139,11 +140,11 @@ public class LancamentoContabilService {
         List<ConfiguracaoContabil> configs = configuracaoContabilRepository.findByEmpresaId(empresaId);
 
         if (!configs.isEmpty()) {
-            return gerarDREComConfiguracao(dataInicial, dataFinal, configs);
+            return gerarDREComConfiguracao(dataInicial, dataFinal, configs, empresaId);
         }
 
         // 2. Se não houver configuração, usa auto-detecção
-        return gerarDREAutoDetectado(dataInicial, dataFinal);
+        return gerarDREAutoDetectado(dataInicial, dataFinal, empresaId);
     }
 
     private List<GrupoContabilDto> classificarPorConfiguracao(Map<Contas, BigDecimal> saldos, List<Contas> todasContas, List<ConfiguracaoContabil> configs, String tipo) {
@@ -249,42 +250,52 @@ public class LancamentoContabilService {
         return "Outras Receitas";
     }
 
-    private DREDto gerarDREComConfiguracao(LocalDate dataInicial, LocalDate dataFinal, List<ConfiguracaoContabil> configs) {
-        // 1. Buscar lançamentos do período
+    private DREDto gerarDREComConfiguracao(LocalDate dataInicial, LocalDate dataFinal, List<ConfiguracaoContabil> configs, Long empresaId) {
+        // 1. Buscar nome da empresa
+        String nomeEmpresa = empresaRepository.findById(empresaId)
+                .map(Empresa::getRazaoSocial)
+                .orElse("Empresa não encontrada");
+
+        // 2. Buscar lançamentos do período
         List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
 
-        // 2. Calcular saldos das contas
+        // 3. Calcular saldos das contas
         Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
 
-        // 3. Buscar estrutura de contas DO BANCO
+        // 4. Buscar estrutura de contas DO BANCO
         List<Contas> todasContas = contasRepository.findAll();
 
-        // 4. Classificar baseado na configuração
+        // 5. Classificar baseado na configuração
         List<GrupoContabilDto> receitas = classificarPorConfiguracao(saldosContas, todasContas, configs, "RECEITA");
         List<GrupoContabilDto> custos = classificarPorConfiguracao(saldosContas, todasContas, configs, "CUSTO");
         List<GrupoContabilDto> despesas = classificarPorConfiguracao(saldosContas, todasContas, configs, "DESPESA");
 
-        // 5. Retornar DRE estruturado
-        return new DREDto(receitas, custos, despesas);
+        // 6. Retornar DRE estruturado com nome da empresa
+        return new DREDto(receitas, custos, despesas, dataInicial, dataFinal, nomeEmpresa);
     }
 
-    private DREDto gerarDREAutoDetectado(LocalDate dataInicial, LocalDate dataFinal) {
-        // 1. Buscar lançamentos do período
+    private DREDto gerarDREAutoDetectado(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) {
+        // 1. Buscar nome da empresa
+        String nomeEmpresa = empresaRepository.findById(empresaId)
+                .map(Empresa::getRazaoSocial)
+                .orElse("Empresa não encontrada");
+
+        // 2. Buscar lançamentos do período
         List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
 
-        // 2. Calcular saldos das contas
+        // 3. Calcular saldos das contas
         Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
 
-        // 3. Buscar estrutura de contas DO BANCO
+        // 4. Buscar estrutura de contas DO BANCO
         List<Contas> todasContas = contasRepository.findAll();
 
-        // 4. Auto-detecta basedo em padrões comuns
+        // 5. Auto-detecta basedo em padrões comuns
         List<GrupoContabilDto> receitas = autoDetectarReceitas(saldosContas, todasContas);
         List<GrupoContabilDto> custos = autoDetectarCustos(saldosContas, todasContas);
         List<GrupoContabilDto> despesas = autoDetectarDespesas(saldosContas, todasContas);
 
-        // 5. Retornar DRE estruturado
-        return new DREDto(receitas, custos, despesas);
+        // 6. Retornar DRE estruturado com nome da empresa
+        return new DREDto(receitas, custos, despesas, dataInicial, dataFinal, nomeEmpresa);
     }
 
     public DFCDto gerarDFC(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) {
@@ -324,7 +335,7 @@ public class LancamentoContabilService {
         // 8. Retornar DFC
         return new DFCDto(fluxoOperacional, fluxoInvestimento, fluxoFinanciamento,
                 totalOperacional, totalInvestimento, totalFinanciamento,
-                saldoInicial, variacaoPeriodo, saldoFinal);
+                saldoInicial, variacaoPeriodo, saldoFinal, dataInicial, dataFinal);
     }
 
     private List<FluxoCaixaItemDto> classificarFluxoOperacional(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {

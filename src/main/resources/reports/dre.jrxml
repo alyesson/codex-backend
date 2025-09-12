@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dre" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d6c0d2ae-29e8-4672-bce6-742702d5387c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="dreDataset" uuid="a5b6c7d8-e9f0-4a1b-2c3d-4e5f6a7b8c9d">
+		<field name="nome" class="java.lang.String"/>
+		<field name="valor" class="java.math.BigDecimal"/>
+		<field name="tipo" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="DATA_INICIAL" class="java.lang.String"/>
+	<parameter name="DATA_FINAL" class="java.lang.String"/>
+	<parameter name="DATA_EMISSAO" class="java.lang.String"/>
+	<parameter name="EMPRESA_NOME" class="java.lang.String"/>
+	<parameter name="TOTAL_RECEITAS" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_CUSTOS" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_DESPESAS" class="java.math.BigDecimal"/>
+	<parameter name="RESULTADO_OPERACIONAL" class="java.math.BigDecimal"/>
+	<parameter name="RESULTADO_LIQUIDO" class="java.math.BigDecimal"/>
+	<parameter name="RECEITAS" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="CUSTOS" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="DESPESAS" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="122">
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="3" width="535" height="25" backcolor="#D7D7D7" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEMONSTRAÇÃO DO RESULTADO DO EXERCÍCIO (DRE)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="43" width="555" height="20" uuid="c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EMPRESA_NOME} != null ? $P{EMPRESA_NOME} : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="74" width="300" height="20" uuid="d3e4f5a6-b7c4-4d8e-9f0a-1b2c3d4e5f6a"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA["Período: " + ($P{DATA_INICIAL} != null ? $P{DATA_INICIAL} : "") + " a " + ($P{DATA_FINAL} != null ? $P{DATA_FINAL} : "")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="400" y="74" width="155" height="20" uuid="e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Emissão: " + ($P{DATA_EMISSAO} != null ? $P{DATA_EMISSAO} : "")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="104" width="555" height="1" uuid="f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="802">
+			<staticText>
+				<reportElement x="0" y="10" width="555" height="25" uuid="a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECEITAS]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="0" y="35" width="555" height="150" uuid="b9c0d1e2-f3a4-4b5c-6d7e-8f9a0b1c2d3e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dreDataset" uuid="c6297c4e-6c41-4862-911f-6d61b7c9e1a6">
+						<dataSourceExpression><![CDATA[$P{RECEITAS}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="555">
+						<textField isBlankWhenNull="true">
+							<reportElement x="20" y="0" width="400" height="20" uuid="c0d1e2f3-a4b5-4c6d-7e8f-9a0b1c2d3e4f"/>
+							<textFieldExpression><![CDATA[$F{nome} != null ? $F{nome} : ""]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="420" y="0" width="120" height="20" uuid="d1e2f3a4-b5c6-4d7e-8f9a-0b1c2d3e4f5a"/>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$F{valor} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($F{valor}) : "¤ 0,00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="185" width="120" height="25" uuid="e2f3a4b5-c6d7-4e8f-9a0b-1c2d3e4f5a6b"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total: " + ($P{TOTAL_RECEITAS} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_RECEITAS}) : "¤ 0,00")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="210" width="555" height="1" uuid="f3a4b5c6-d7e8-4f9a-0b1c-2d3e4f5a6b7c"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="220" width="555" height="25" uuid="a4b5c6d7-e8f9-4a0b-1c2d-3e4f5a6b7c8d"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUSTOS]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="0" y="245" width="555" height="150" uuid="b5c6d7e8-f9a0-4b1c-2d3e-4f5a6b7c8d9e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dreDataset" uuid="f06abc4a-fda4-4c6f-80e6-8b86917c5d8f">
+						<dataSourceExpression><![CDATA[$P{CUSTOS}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="555">
+						<textField isBlankWhenNull="true">
+							<reportElement x="20" y="0" width="400" height="20" uuid="c6d7e8f9-a0b1-4c2d-3e4f-5a6b7c8d9e0f"/>
+							<textFieldExpression><![CDATA[$F{nome} != null ? $F{nome} : ""]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="420" y="0" width="120" height="20" uuid="d7e8f9a0-b1c2-4d3e-4f5a-6b7c8d9e0f1a"/>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$F{valor} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($F{valor}) : "¤ 0,00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="395" width="120" height="25" uuid="e8f9a0b1-c2d3-4e4f-5a6b-7c8d9e0f1a2b"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total: " + ($P{TOTAL_CUSTOS} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_CUSTOS}) : "¤ 0,00")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="420" width="555" height="1" uuid="f9a0b1c2-d3e4-4f5a-6b7c-8d9e0f1a2b3c"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="430" width="555" height="25" uuid="a0b1c2d3-e4f5-4a6b-7c8d-9e0f1a2b3c4d"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESPESAS]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="0" y="455" width="555" height="150" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dreDataset" uuid="84385d16-83b5-4488-9180-db6bed7ad269">
+						<dataSourceExpression><![CDATA[$P{DESPESAS}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="555">
+						<textField isBlankWhenNull="true">
+							<reportElement x="20" y="0" width="400" height="20" uuid="c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f"/>
+							<textFieldExpression><![CDATA[$F{nome} != null ? $F{nome} : ""]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="420" y="0" width="120" height="20" uuid="d3e4f5a6-b7c4-4d8e-9f0a-1b2c3d4e5f6a"/>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$F{valor} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($F{valor}) : "¤ 0,00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="605" width="120" height="25" uuid="e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total: " + ($P{TOTAL_DESPESAS} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_DESPESAS}) : "¤ 0,00")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="630" width="555" height="2" uuid="f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="640" width="555" height="25" uuid="a6b7c8d9-e0f1-4a2b-3c4d-5e6f7a8b9c0d"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESULTADOS]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="20" y="665" width="400" height="25" uuid="b7c8d9e0-f1a2-4b3c-4d5e-6f7a8b9c0d1e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Resultado Operacional (Receitas - Custos - Despesas)"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="665" width="120" height="25" uuid="c8d9e0f1-a2b3-4c4d-5e6f-7a8b9c0d1e2f"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RESULTADO_OPERACIONAL} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{RESULTADO_OPERACIONAL}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="20" y="690" width="400" height="30" uuid="d9e0f1a2-b3c4-4d5e-6f7a-8b9c0d1e2f3a"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RESULTADO LÍQUIDO"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="690" width="120" height="30" uuid="e0f1a2b3-c4d5-4e6f-7a8b-9c0d1e2f3a4b"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RESULTADO_LIQUIDO} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{RESULTADO_LIQUIDO}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="15" width="555" height="20" uuid="eeeeffff-eeee-ffff-eeee-ffffeeeeffff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Nenhum dado disponível para o período selecionado]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

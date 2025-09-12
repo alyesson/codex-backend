@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,15 +20,22 @@ public class DREDto {
     private BigDecimal totalDespesas;
     private BigDecimal resultadoOperacional;
     private BigDecimal resultadoLiquido;
+    private LocalDate dataInicial;
+    private LocalDate dataFinal;
+    private String empresaNome;
 
     // Construtores
     public DREDto() {
     }
 
-    public DREDto(List<GrupoContabilDto> receitas, List<GrupoContabilDto> custos, List<GrupoContabilDto> despesas) {
+    public DREDto(List<GrupoContabilDto> receitas, List<GrupoContabilDto> custos, List<GrupoContabilDto> despesas,
+                  LocalDate dataInicial, LocalDate dataFinal, String empresaNome) {
         this.receitas = receitas;
         this.custos = custos;
         this.despesas = despesas;
+        this.dataInicial = dataInicial;
+        this.dataFinal = dataFinal;
+        this.empresaNome = empresaNome;
         this.totalReceitas = calcularTotalReceitas();
         this.totalCustos = calcularTotalCustos();
         this.totalDespesas = calcularTotalDespesas();
