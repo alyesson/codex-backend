@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="balancete" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="19d393f2-858d-444c-8058-a4b3fdcb978b">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DATA_INICIAL" class="java.lang.String"/>
+	<parameter name="DATA_FINAL" class="java.lang.String"/>
+	<parameter name="NIVEL_DETALHE" class="java.lang.String"/>
+	<parameter name="DATA_EMISSAO" class="java.lang.String"/>
+	<parameter name="TOTAL_DEBITO" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL_CREDITO" class="java.math.BigDecimal"/>
+	<parameter name="SALDO_FINAL" class="java.math.BigDecimal"/>
+	<field name="codigo" class="java.lang.String"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="debito" class="java.math.BigDecimal"/>
+	<field name="credito" class="java.math.BigDecimal"/>
+	<field name="saldo" class="java.math.BigDecimal"/>
+	<field name="nivel" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="0" width="486" height="30" backcolor="#D3CDCD" uuid="b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BALANÇO DE VERIFICAÇÃO (BALANCETE)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="43" width="300" height="20" uuid="c2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f"/>
+				<textFieldExpression><![CDATA["Período: " + $P{DATA_INICIAL} + " a " + $P{DATA_FINAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="63" width="300" height="20" uuid="d3e4f5a6-b7c4-4d8e-9f0a-1b2c3d4e5f6a"/>
+				<textFieldExpression><![CDATA["Nível: " + $P{NIVEL_DETALHE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="423" y="43" width="132" height="20" uuid="e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Emissão: " + $P{DATA_EMISSAO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="90" width="555" height="1" uuid="f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="80" height="20" uuid="a6b7c8d9-e0f1-4a2b-3c4d-5e6f7a8b9c0d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Conta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="10" width="200" height="20" uuid="b7c8d9e0-f1a2-4b3c-4d5e-6f7a8b9c0d1e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="10" width="80" height="20" uuid="c8d9e0f1-a2b3-4c4d-5e6f-7a8b9c0d1e2f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Débito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="10" width="80" height="20" uuid="d9e0f1a2-b3c4-4d5e-6f7a-8b9c0d1e2f3a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Crédito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="10" width="80" height="20" uuid="e0f1a2b3-c4d5-4e6f-7a8b-9c0d1e2f3a4b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="35" width="555" height="1" uuid="f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="2" width="80" height="20" uuid="a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="2" width="200" height="20" uuid="b3c4d5e6-f7a8-4b9c-0d1e-2f3a4b5c6d7e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="2" width="80" height="20" uuid="c4d5e6f7-a8b9-4c0d-1e2f-3a4b5c6d7e8f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{debito} != null ? new java.text.DecimalFormat("#,##0.00").format($F{debito}) : "0,00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="2" width="80" height="20" uuid="d5e6f7a8-b9c0-4d1e-2f3a-4b5c6d7e8f9a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{credito} != null ? new java.text.DecimalFormat("#,##0.00").format($F{credito}) : "0,00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="2" width="80" height="20" uuid="e6f7a8b9-c0d1-4e2f-3a4b-5c6d7e8f9a0b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{saldo} != null ? new java.text.DecimalFormat("#,##0.00").format($F{saldo}) : "0,00"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="100" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="f7a8b9c0-d1e2-4f3a-4b5c-6d7e8f9a0b1c"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="10" width="280" height="20" uuid="a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAIS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="10" width="80" height="20" uuid="b9c0d1e2-f3a4-4b5c-6d7e-8f9a0b1c2d3e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOTAL_DEBITO} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_DEBITO}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="10" width="80" height="20" uuid="c0d1e2f3-a4b5-4c6d-7e8f-9a0b1c2d3e4f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOTAL_CREDITO} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{TOTAL_CREDITO}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="10" width="80" height="20" uuid="d1e2f3a4-b5c6-4d7e-8f9a-0b1c2d3e4f5a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SALDO_FINAL} != null ? new java.text.DecimalFormat("¤ #,##0.00;¤ -#,##0.00").format($P{SALDO_FINAL}) : "¤ 0,00"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

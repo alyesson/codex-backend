@@ -115,9 +115,13 @@ public class JasperContabilidadeReportService {
         parametros.put("NIVEL_DETALHE", "1".equals(balancete.getNivelDetalhe()) ? "Sintético" : "Analítico");
         parametros.put("DATA_EMISSAO", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(balancete.getContas());
         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
 
+        // AQUI VOCÊ USA O DATA SOURCE EM VEZ DO JREmptyDataSource ↓
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+
+        // Exportar para PDF
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
