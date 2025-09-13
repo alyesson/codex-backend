@@ -59,6 +59,15 @@ public class RelatorioResource {
         return ResponseEntity.ok().body(balanco);
     }
 
+    @GetMapping("/balanco-patrimonial/pdf")
+    public ResponseEntity<BalancoPatrimonialDto> getBalancoPatrimonialPdf(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        BalancoPatrimonialDto balanco = lancamentoContabilService.gerarBalancoPatrimonialPdf(dataInicial, dataFinal);
+        return ResponseEntity.ok().body(balanco);
+    }
+
     @GetMapping("/dre")
     public ResponseEntity<DREDto> getDRE(
             @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
