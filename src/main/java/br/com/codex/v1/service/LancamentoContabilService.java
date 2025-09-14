@@ -35,6 +35,9 @@ public class LancamentoContabilService {
     private ConfiguracaoContabilRepository configuracaoContabilRepository;
 
     @Autowired
+    private JasperContabilidadeReportService jasperContabilidadeReportService;
+
+    @Autowired
     private EmpresaRepository empresaRepository;
 
     public List<LancamentoContabil> findAllByYearAndMonth(Integer ano, Integer mes) {
@@ -123,7 +126,15 @@ public class LancamentoContabilService {
         List<GrupoContabilDto> patrimonio = classificarContasDinamicamente(saldosContas, todasContas, "3");
 
         // 5. Retornar resposta estruturada
-        return new BalancoPatrimonialDto(ativo, passivo, patrimonio);
+        return new BalancoPatrimonialDto(ativo, passivo, patrimonio,dataInicial, dataFinal);
+    }
+
+    public byte[] gerarBalancoPatrimonialPdf(LocalDate dataInicial, LocalDate dataFinal) throws Exception {
+        // 1. Gerar os dados do balanço
+        BalancoPatrimonialDto balanco = gerarBalancoPatrimonial(dataInicial, dataFinal);
+
+        // 2. Usar o Jasper para gerar PDF
+        return jasperContabilidadeReportService.gerarPdfBalancoPatrimonial(balanco);
     }
 
     @Cacheable(value = "relatorios", key = "#empresaId + '-' + #dataInicial.toString() + '-' + #dataFinal.toString()")

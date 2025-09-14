@@ -27,6 +27,44 @@ public class JasperContabilidadeReportService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
+    public byte[] gerarPdfBalancoPatrimonial(BalancoPatrimonialDto balanco) throws Exception {
+        InputStream jasperStream = this.getClass().getResourceAsStream("/reports/balanco-patrimonial.jasper");
+
+        if (jasperStream == null) {
+            throw new RuntimeException("Relatório Balanço Patrimonial não encontrado");
+        }
+
+        Map<String, Object> parametros = new HashMap<>();
+
+        // Parâmetros básicos
+        parametros.put("DATA_INICIAL", balanco.getDataInicial().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_FINAL", balanco.getDataFinal().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_EMISSAO", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+        // DataSources
+        parametros.put("ATIVO", new JRBeanCollectionDataSource(achatarGrupos(balanco.getAtivo())));
+        parametros.put("PASSIVO", new JRBeanCollectionDataSource(achatarGrupos(balanco.getPassivo())));
+        parametros.put("PATRIMONIO", new JRBeanCollectionDataSource(achatarGrupos(balanco.getPatrimonio())));
+
+        // Totais
+        parametros.put("TOTAL_ATIVO", calcularTotal(balanco.getAtivo()));
+        parametros.put("TOTAL_PASSIVO", calcularTotal(balanco.getPassivo()));
+        parametros.put("TOTAL_PATRIMONIO", calcularTotal(balanco.getPatrimonio()));
+
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    private BigDecimal calcularTotal(List<GrupoContabilDto> grupos) {
+        if (grupos == null || grupos.isEmpty()) return BigDecimal.ZERO;
+        return grupos.stream()
+                .map(GrupoContabilDto::getTotal)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     public byte[] gerarPdfDRE(DREDto dre) throws Exception {
         InputStream jasperStream = this.getClass().getResourceAsStream("/reports/dre.jasper");
 
@@ -144,7 +182,7 @@ public class JasperContabilidadeReportService {
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
-    private void adicionarSecao(Document document, String titulo, List<GrupoContabilDto> grupos) throws DocumentException {
+    /*private void adicionarSecao(Document document, String titulo, List<GrupoContabilDto> grupos) throws DocumentException {
 
         if (grupos == null || grupos.isEmpty()) return;
 
@@ -232,5 +270,5 @@ public class JasperContabilidadeReportService {
     private String formatarValor(BigDecimal valor) {
         if (valor == null) return "R$ 0,00";
         return String.format("R$ %,.2f", valor);
-    }
+    }*/
 }

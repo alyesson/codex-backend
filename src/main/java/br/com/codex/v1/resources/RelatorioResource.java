@@ -59,13 +59,22 @@ public class RelatorioResource {
         return ResponseEntity.ok().body(balanco);
     }
 
-    @GetMapping("/balanco-patrimonial/pdf")
-    public ResponseEntity<BalancoPatrimonialDto> getBalancoPatrimonialPdf(
+    @GetMapping(value = "/balanco-patrimonial/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getBalancoPatrimonialPdf(
             @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
             @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
-        BalancoPatrimonialDto balanco = lancamentoContabilService.gerarBalancoPatrimonialPdf(dataInicial, dataFinal);
-        return ResponseEntity.ok().body(balanco);
+        try {
+            byte[] pdf = lancamentoContabilService.gerarBalancoPatrimonialPdf(dataInicial, dataFinal);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=balanco-patrimonial.pdf")
+                    .body(pdf);
+
+        } catch (Exception e) {
+            logger.error("Erro ao gerar PDF do Balanço Patrimonial", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/dre")

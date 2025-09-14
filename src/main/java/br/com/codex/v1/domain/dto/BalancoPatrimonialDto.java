@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,16 +17,21 @@ public class BalancoPatrimonialDto {
     private List<GrupoContabilDto> patrimonio;
     private BigDecimal totalAtivo;
     private BigDecimal totalPassivoPatrimonio;
+    private LocalDate dataInicial;
+    private LocalDate dataFinal;
 
     public BalancoPatrimonialDto() {
     }
 
-    public BalancoPatrimonialDto(List<GrupoContabilDto> ativo, List<GrupoContabilDto> passivo, List<GrupoContabilDto> patrimonio) {
+    public BalancoPatrimonialDto(List<GrupoContabilDto> ativo, List<GrupoContabilDto> passivo,
+                                 List<GrupoContabilDto> patrimonio, LocalDate dataInicial, LocalDate dataFinal) {
         this.ativo = ativo;
         this.passivo = passivo;
         this.patrimonio = patrimonio;
         this.totalAtivo = calcularTotalAtivo();
         this.totalPassivoPatrimonio = calcularTotalPassivoPatrimonio();
+        this.dataInicial = dataInicial;
+        this.dataFinal = dataFinal;
     }
 
     public void setAtivo(List<GrupoContabilDto> ativo) {
