@@ -182,6 +182,41 @@ public class JasperContabilidadeReportService {
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
+    public byte[] gerarPdfDLPA(DLPADto dlpa) throws Exception {
+        InputStream jasperStream = this.getClass().getResourceAsStream("/reports/dlpa.jasper");
+
+        Map<String, Object> parametros = new HashMap<>();
+
+        // Parâmetros básicos
+        parametros.put("DATA_INICIAL", dlpa.getDataInicial().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_FINAL", dlpa.getDataFinal().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("DATA_EMISSAO", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("EMPRESA_NOME", dlpa.getEmpresaNome());
+
+        // Calcular totais dos itens filtrados
+        BigDecimal totalAjustes = dlpa.getItens().stream()
+                .filter(item -> "AJUSTE".equals(item.getTipo()))
+                .map(ItemDLPADto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalDistribuicoes = dlpa.getItens().stream()
+                .filter(item -> "DISTRIBUICAO".equals(item.getTipo()))
+                .map(ItemDLPADto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Totais
+        parametros.put("SALDO_INICIAL", dlpa.getSaldoInicial());
+        parametros.put("LUCRO_PREJUIZO_PERIODO", dlpa.getLucroPrejuizoPeriodo());
+        parametros.put("DISTRIBUICOES", totalDistribuicoes);
+        parametros.put("AJUSTES", totalAjustes);
+        parametros.put("SALDO_FINAL", dlpa.getSaldoFinal());
+
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
     /*private void adicionarSecao(Document document, String titulo, List<GrupoContabilDto> grupos) throws DocumentException {
 
         if (grupos == null || grupos.isEmpty()) return;

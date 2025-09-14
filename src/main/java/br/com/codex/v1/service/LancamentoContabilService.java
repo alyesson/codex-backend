@@ -752,6 +752,129 @@ public class LancamentoContabilService {
         return grupos;
     }
 
+    // Adicionar estes métodos na classe LancamentoContabilService
+
+    public DLPADto gerarDLPA(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) {
+        // 1. Validar parâmetros
+        if (dataInicial.isAfter(dataFinal)) {
+            throw new IllegalArgumentException("Data inicial não pode ser após data final");
+        }
+
+        if (!empresaRepository.existsById(empresaId)) {
+            throw new ObjectNotFoundException("Empresa não encontrada");
+        }
+
+        // 2. Buscar lançamentos do período
+        List<LancamentoContabil> lancamentos = findAllByYearRange(dataInicial, dataFinal);
+
+        // 3. Calcular saldos das contas
+        Map<Contas, BigDecimal> saldosContas = calcularSaldosContas(lancamentos);
+
+        // 4. Buscar estrutura de contas
+        List<Contas> todasContas = contasRepository.findAll();
+
+        // 5. Calcular itens da DLPA
+        List<ItemDLPADto> itens = calcularItensDLPA(saldosContas, todasContas);
+
+        // 6. Calcular saldos
+        BigDecimal saldoInicial = calcularSaldoInicialDLPA(dataInicial, empresaId);
+        BigDecimal lucroPrejuizoPeriodo = calcularLucroPrejuizoPeriodo(itens);
+        BigDecimal distribuicoes = calcularDistribuicoes(itens);
+        BigDecimal ajustes = calcularAjustes(itens);
+
+        BigDecimal saldoFinal = saldoInicial
+                .add(lucroPrejuizoPeriodo)
+                .subtract(distribuicoes)
+                .add(ajustes);
+
+        // 7. Buscar nome da empresa
+        String nomeEmpresa = empresaRepository.findById(empresaId)
+                .map(Empresa::getRazaoSocial)
+                .orElse("Empresa não encontrada");
+
+        return new DLPADto(itens, saldoInicial, lucroPrejuizoPeriodo,
+                distribuicoes, ajustes, saldoFinal,
+                dataInicial, dataFinal, nomeEmpresa);
+    }
+
+    private List<ItemDLPADto> calcularItensDLPA(Map<Contas, BigDecimal> saldos, List<Contas> todasContas) {
+        List<ItemDLPADto> itens = new ArrayList<>();
+
+        // Identificar contas de lucros/prejuízos (contas que começam com 3)
+        List<Contas> contasResultado = todasContas.stream()
+                .filter(c -> c.getConta().startsWith("3."))
+                .toList();
+
+        for (Contas conta : contasResultado) {
+            BigDecimal saldo = saldos.getOrDefault(conta, BigDecimal.ZERO);
+            if (saldo.compareTo(BigDecimal.ZERO) != 0) {
+                String tipo = determinarTipoItemDLPA(conta);
+                itens.add(new ItemDLPADto(conta.getNome(), saldo.abs(), tipo));
+            }
+        }
+
+        // Adicionar distribuições e ajustes (exemplos)
+        itens.add(new ItemDLPADto("Dividendos Distribuídos", BigDecimal.ZERO, "DISTRIBUICAO"));
+        itens.add(new ItemDLPADto("Ajustes de Exercícios Anteriores", BigDecimal.ZERO, "AJUSTE"));
+
+        return itens;
+    }
+
+    private String determinarTipoItemDLPA(Contas conta) {
+        if (conta.getConta().startsWith("3.1")) return "RECEITA";
+        if (conta.getConta().startsWith("3.2") || conta.getConta().startsWith("3.3")) return "DESPESA";
+        return "OUTRO";
+    }
+
+    private BigDecimal calcularSaldoInicialDLPA(LocalDate dataInicial, Long empresaId) {
+        // Buscar saldo inicial da conta de lucros acumulados (3.4.01)
+        LocalDate dataInicioPeriodo = dataInicial.minusYears(1);
+
+        List<LancamentoContabil> lancamentosPeriodoAnterior = findAllByYearRange(
+                dataInicioPeriodo, dataInicial.minusDays(1));
+
+        Map<Contas, BigDecimal> saldosPeriodoAnterior = calcularSaldosContas(lancamentosPeriodoAnterior);
+
+        return saldosPeriodoAnterior.entrySet().stream()
+                .filter(entry -> entry.getKey().getConta().startsWith("3.4.01"))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(BigDecimal.ZERO);
+    }
+
+    private BigDecimal calcularLucroPrejuizoPeriodo(List<ItemDLPADto> itens) {
+        BigDecimal receitas = itens.stream()
+                .filter(item -> "RECEITA".equals(item.getTipo()))
+                .map(ItemDLPADto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal despesas = itens.stream()
+                .filter(item -> "DESPESA".equals(item.getTipo()))
+                .map(ItemDLPADto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return receitas.subtract(despesas);
+    }
+
+    private BigDecimal calcularDistribuicoes(List<ItemDLPADto> itens) {
+        return itens.stream()
+                .filter(item -> "DISTRIBUICAO".equals(item.getTipo()))
+                .map(ItemDLPADto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal calcularAjustes(List<ItemDLPADto> itens) {
+        return itens.stream()
+                .filter(item -> "AJUSTE".equals(item.getTipo()))
+                .map(ItemDLPADto::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public byte[] gerarDLPAPdf(LocalDate dataInicial, LocalDate dataFinal, Long empresaId) throws Exception {
+        DLPADto dlpa = gerarDLPA(dataInicial, dataFinal, empresaId);
+        return jasperContabilidadeReportService.gerarPdfDLPA(dlpa);
+    }
+
     private void logContasPorGrupo(Map<String, List<Contas>> contasPorSubclasse) {
         for (Map.Entry<String, List<Contas>> entry : contasPorSubclasse.entrySet()) {
             System.out.println("Grupo: " + entry.getKey());

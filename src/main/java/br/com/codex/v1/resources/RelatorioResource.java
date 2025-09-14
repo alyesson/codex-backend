@@ -2,10 +2,7 @@ package br.com.codex.v1.resources;
 
 import br.com.codex.v1.configuration.StartupInitializerDev;
 import br.com.codex.v1.domain.cadastros.Empresa;
-import br.com.codex.v1.domain.dto.BalanceteDto;
-import br.com.codex.v1.domain.dto.BalancoPatrimonialDto;
-import br.com.codex.v1.domain.dto.DFCDto;
-import br.com.codex.v1.domain.dto.DREDto;
+import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
 import br.com.codex.v1.resources.exceptions.ResourceExceptionHandler;
 import br.com.codex.v1.resources.exceptions.StandardError;
@@ -166,6 +163,35 @@ public class RelatorioResource {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=balancete.pdf")
                 .body(pdf);
+    }
+
+    @GetMapping("/dlpa")
+    public ResponseEntity<DLPADto> getDLPA(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam("empresaId") Long empresaId) {
+
+        DLPADto dlpa = lancamentoContabilService.gerarDLPA(dataInicial, dataFinal, empresaId);
+        return ResponseEntity.ok().body(dlpa);
+    }
+
+    @GetMapping(value = "/dlpa/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getDLPAPdf(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam("empresaId") Long empresaId) {
+
+        try {
+            byte[] pdf = lancamentoContabilService.gerarDLPAPdf(dataInicial, dataFinal, empresaId);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dlpa.pdf")
+                    .body(pdf);
+
+        } catch (Exception e) {
+            logger.error("Erro ao gerar PDF da DLPA", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_VENDAS', 'VENDAS')")
