@@ -30,7 +30,7 @@ public class XmlNotaFiscal implements Serializable {
     @Column(nullable = false)
     protected LocalDateTime dataCriacao;
 
-    @Column(length = 3)
+    @Column(length = 60)
     protected String tipoDocumento;
 
     public XmlNotaFiscal() {

@@ -11,6 +11,7 @@ import br.com.codex.v1.domain.dto.NotaFiscalDto;
 import br.com.codex.v1.domain.financeiro.ContaReceber;
 import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import br.com.codex.v1.domain.repository.*;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.codex.v1.utilitario.Base64Util;
 import br.com.swconsultoria.certificado.Certificado;
 import br.com.swconsultoria.certificado.CertificadoService;
@@ -42,6 +43,7 @@ import br.com.swconsultoria.nfe.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -1280,37 +1282,62 @@ public class NotaFiscalService {
         dto.setCstat(retorno.getProtNFe().getInfProt().getCStat());
         dto.setNumeroProtocolo(retorno.getProtNFe().getInfProt().getNProt());
         dto.setMotivoProtocolo(retorno.getProtNFe().getInfProt().getXMotivo());
+        System.out.println("Motivo real nota: "+ dto.getMotivoProtocolo());
 
-        try {
-            // Converter o protNFe para o tipo correto antes de gerar o nfeProc
-            br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe protNFe = new br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe();
-            protNFe.setVersao(retorno.getProtNFe().getVersao());
+        // Converter o protNFe para o tipo correto antes de gerar o nfeProc
+        br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe protNFe = new br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe();
+        protNFe.setVersao(retorno.getProtNFe().getVersao());
 
-            br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe.InfProt infProt =
-                    new br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe.InfProt();
-            infProt.setId(retorno.getProtNFe().getInfProt().getId());
-            infProt.setTpAmb(retorno.getProtNFe().getInfProt().getTpAmb());
-            infProt.setVerAplic(retorno.getProtNFe().getInfProt().getVerAplic());
-            infProt.setChNFe(retorno.getProtNFe().getInfProt().getChNFe());
-            infProt.setDhRecbto(retorno.getProtNFe().getInfProt().getDhRecbto());
-            infProt.setNProt(retorno.getProtNFe().getInfProt().getNProt());
-            infProt.setDigVal(retorno.getProtNFe().getInfProt().getDigVal());
-            infProt.setCStat(retorno.getProtNFe().getInfProt().getCStat());
-            infProt.setXMotivo(retorno.getProtNFe().getInfProt().getXMotivo());
-            protNFe.setInfProt(infProt);
+        br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe.InfProt infProt = new br.com.swconsultoria.nfe.schema_4.enviNFe.TProtNFe.InfProt();
 
-            // Gera e salva o XML completo (nfeProc)
-            String xml = XmlNfeUtil.criaNfeProc(enviNFe, protNFe);
-            salvaNotaFiscal(dto);
-            salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
-            salvarXmlEmArquivo(xml, dto.getChave());
-            lancaContasReceber(dto);
-            importarXmlService.obterXmlCompletoAutomatico(xml);
-        } catch (Exception e) {
-            logger.error("Erro ao converter protNFe", e);
-            throw new NfeException("Erro ao processar retorno da SEFAZ: ", e);
-        }
+        if(dto.getMotivoProtocolo().equals("Autorizado o uso da NF-e")){
+            try {
+                infProt.setId(retorno.getProtNFe().getInfProt().getId());
+                infProt.setTpAmb(retorno.getProtNFe().getInfProt().getTpAmb());
+                infProt.setVerAplic(retorno.getProtNFe().getInfProt().getVerAplic());
+                infProt.setChNFe(retorno.getProtNFe().getInfProt().getChNFe());
+                infProt.setDhRecbto(retorno.getProtNFe().getInfProt().getDhRecbto());
+                infProt.setNProt(retorno.getProtNFe().getInfProt().getNProt());
+                infProt.setDigVal(retorno.getProtNFe().getInfProt().getDigVal());
+                infProt.setCStat(retorno.getProtNFe().getInfProt().getCStat());
+                infProt.setXMotivo(retorno.getProtNFe().getInfProt().getXMotivo());
+                protNFe.setInfProt(infProt);
 
+                // Gera e salva o XML completo (nfeProc)
+                String xml = XmlNfeUtil.criaNfeProc(enviNFe, protNFe);
+                salvaNotaFiscal(dto);
+                salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
+                salvarXmlEmArquivo(xml, dto.getChave());
+                lancaContasReceber(dto);
+                importarXmlService.obterXmlCompletoAutomatico(xml);
+            } catch (Exception e) {
+                logger.error("Erro ao converter protNFe", e);
+                throw new NfeException("Erro ao processar retorno da SEFAZ: ", e);
+            }
+        }else{
+            try {
+                infProt.setId(retorno.getProtNFe().getInfProt().getId());
+                infProt.setTpAmb(retorno.getProtNFe().getInfProt().getTpAmb());
+                infProt.setVerAplic(retorno.getProtNFe().getInfProt().getVerAplic());
+                infProt.setChNFe(retorno.getProtNFe().getInfProt().getChNFe());
+                infProt.setDhRecbto(retorno.getProtNFe().getInfProt().getDhRecbto());
+                infProt.setNProt(retorno.getProtNFe().getInfProt().getNProt());
+                infProt.setDigVal(retorno.getProtNFe().getInfProt().getDigVal());
+                infProt.setCStat(retorno.getProtNFe().getInfProt().getCStat());
+                infProt.setXMotivo(retorno.getProtNFe().getInfProt().getXMotivo());
+                protNFe.setInfProt(infProt);
+
+                // Gera e salva o XML completo (nfeProc)
+                String xml = XmlNfeUtil.criaNfeProc(enviNFe, protNFe);
+                salvaNotaFiscal(dto);
+                salvarXmlNotaFiscal(dto.getChave() + "-proc", xml);
+                salvarXmlEmArquivo(xml, dto.getChave());
+                importarXmlService.obterXmlCompletoAutomatico(xml);
+            } catch (Exception e) {
+                logger.error("Erro ao converter protNFe", e);
+                throw new NfeException("Erro ao processar retorno da SEFAZ: ", e);
+            }
+       }
         return dto;
     }
 
@@ -1340,8 +1367,8 @@ public class NotaFiscalService {
         if (protocolo == null || protocolo.trim().isEmpty()) {
             throw new NfeException("Protocolo inválido: " + protocolo);
         }
-        if (motivo == null || motivo.trim().isEmpty() || motivo.length() > 255) {
-            throw new NfeException("Motivo inválido: deve ter entre 1 e 255 caracteres");
+        if (motivo == null || motivo.trim().isEmpty() || motivo.length() < 15 || motivo.length() > 255) {
+            throw new NfeException("Motivo inválido: deve ter entre 15 e 255 caracteres");
         }
         if (cnpj == null || cnpj.length() < 14) {
             throw new NfeException("CNPJ inválido: " + cnpj);
@@ -1362,12 +1389,6 @@ public class NotaFiscalService {
         String xmlEvento = XmlNfeUtil.objectToXml(envEvento, config.getEncode());
         xmlEvento = Assinar.assinaNfe(config, xmlEvento, AssinaturaEnum.EVENTO);
 
-        // Valida o XML
-        /*if (!new Validar().isValidXml(config, xmlEvento, ServicosEnum.CANCELAMENTO)) {
-            logger.error("XML inválido para cancelamento: {}", xmlEvento);
-            throw new NfeException("Erro na validação do XML de cancelamento");
-        }*/
-
         // Envia o evento
         TRetEnvEvento retorno = Nfe.cancelarNfe(config, envEvento, true, DocumentoEnum.NFE);
 
@@ -1378,7 +1399,10 @@ public class NotaFiscalService {
 
         // Gera e salva o procEventoNFe
         String xmlProcEvento = CancelamentoUtil.criaProcEventoCancelamento(config, envEvento, retorno.getRetEvento().get(0));
-        salvarXmlNotaFiscal(retorno.getRetEvento().get(0).getInfEvento().getId(), xmlProcEvento);
+        //salvarXmlNotaFiscal(retorno.getRetEvento().get(0).getInfEvento().getId(), xmlProcEvento);
+        String chaveAcesso = retorno.getRetEvento().get(0).getInfEvento().getChNFe();
+        salvarXmlNotaFiscalCancelada(chaveAcesso + "-proc-canc", xmlProcEvento);
+        importarXmlService.obterXmlCompletoAutomatico(xmlProcEvento);
 
         return retorno;
     }
@@ -1495,6 +1519,29 @@ public class NotaFiscalService {
             xmlNotaFiscalRepository.save(xmlNotaFiscal);
             logger.info("XML salvo com sucesso para a chave: {}", chaveAcesso);
         } catch (Exception e) {
+            throw new NfeException("Erro ao salvar XML no banco de dados: " + e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    private void salvarXmlNotaFiscalCancelada(String chaveAcesso, String xmlContent) throws NfeException {
+        try {
+            if (chaveAcesso == null || chaveAcesso.trim().isEmpty()) {
+                throw new IllegalArgumentException("Chave de acesso não pode ser nula ou vazia");
+            }
+
+            XmlNotaFiscal xmlNotaFiscal = new XmlNotaFiscal();
+            xmlNotaFiscal.setChaveAcesso(chaveAcesso);
+            xmlNotaFiscal.setXmlContent(xmlContent);
+            xmlNotaFiscal.setDataCriacao(LocalDateTime.now());
+            xmlNotaFiscal.setTipoDocumento("PROC-EVENTO-CANC");
+
+            xmlNotaFiscalRepository.save(xmlNotaFiscal);
+
+            logger.info("XML salvo com sucesso para chave: {}", chaveAcesso);
+
+        } catch (Exception e) {
+            logger.error("Erro ao salvar XML no banco de dados para chave: {}", chaveAcesso, e);
             throw new NfeException("Erro ao salvar XML no banco de dados: " + e.getMessage(), e);
         }
     }
