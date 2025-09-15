@@ -1460,7 +1460,6 @@ public class NotaFiscalService {
         }
 
         // Envia o evento usando a classe Nfe (que deve ser pública)
-        // Esta é a forma correta de enviar eventos segundo a API
         br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento retorno = Nfe.cce(config, envEvento, true);
 
         // Verifica o retorno
@@ -1481,32 +1480,48 @@ public class NotaFiscalService {
     @Transactional
     public TRetInutNFe inutilizarNotaFiscal(String cnpj, String justificativa, String ano, String serie, String numInicial, String numFinal, ConfiguracoesNfe config) throws NfeException, JAXBException {
         logger.info("Inutilizando faixa de numeração para NF-e, série: {}, numInicial: {}, numFinal: {}", serie, numInicial, numFinal);
-        TInutNFe inutNFe = new TInutNFe();
-        inutNFe.setVersao(ConstantesUtil.VERSAO.NFE);
 
-        TInutNFe.InfInut infInut = new TInutNFe.InfInut();
-        infInut.setId("ID" + config.getEstado().getCodigoUF() + cnpj + "55" + serie + numInicial + numFinal);
-        infInut.setTpAmb(config.getAmbiente().getCodigo());
-        infInut.setXServ("INUTILIZAR");
-        infInut.setCNPJ(cnpj);
-        infInut.setMod("55"); // NF-e
-        infInut.setSerie(serie);
-        infInut.setNNFIni(numInicial);
-        infInut.setNNFFin(numFinal);
-        infInut.setXJust(justificativa);
-        infInut.setAno(ano);
-        inutNFe.setInfInut(infInut);
-
-        TRetInutNFe retorno = Nfe.inutilizacao(config, inutNFe, DocumentoEnum.NFE, true);
-
-        if (!"102".equals(retorno.getInfInut().getCStat())) {
-            throw new NfeException("Erro ao inutilizar NF-e: " + retorno.getInfInut().getXMotivo());
+        // Valida parâmetros
+        if (cnpj == null || cnpj.length() < 14) {
+            throw new NfeException("CNPJ inválido: " + cnpj);
+        }
+        if (justificativa == null || justificativa.trim().isEmpty() || justificativa.length() > 255) {
+            throw new NfeException("Justificativa inválida: deve ter entre 1 e 255 caracteres");
         }
 
-        String xml = XmlNfeUtil.objectToXml(retorno, config.getEncode());
-        salvarXmlNotaFiscal(infInut.getId(), xml);
+        try {
+            // Converter parâmetros
+            int serieInt = Integer.parseInt(serie);
+            int numInicialInt = Integer.parseInt(numInicial);
+            int numFinalInt = Integer.parseInt(numFinal);
 
-        return retorno;
+            // Usar a utilitário da SWConsultoria para criar o objeto corretamente
+            TInutNFe inutNFe = InutilizacaoUtil.montaInutilizacao(
+                    DocumentoEnum.NFE,
+                    cnpj,
+                    serieInt,
+                    numInicialInt,
+                    numFinalInt,
+                    justificativa,
+                    LocalDateTime.now(), // dataInutilizacao (usa data atual)
+                    config
+            );
+
+            // Usar o métudo da biblioteca
+            TRetInutNFe retorno = Nfe.inutilizacao(config, inutNFe, DocumentoEnum.NFE, true);
+
+            if (!"102".equals(retorno.getInfInut().getCStat())) {
+                throw new NfeException("Erro ao inutilizar NF-e: " + retorno.getInfInut().getXMotivo());
+            }
+
+            String xml = XmlNfeUtil.objectToXml(retorno, config.getEncode());
+            salvarXmlNotaFiscal(retorno.getInfInut().getId(), xml);
+
+            return retorno;
+
+        } catch (NumberFormatException e) {
+            throw new NfeException("Parâmetro numérico inválido: " + e.getMessage());
+        }
     }
 
     /**
@@ -1539,7 +1554,6 @@ public class NotaFiscalService {
             xmlNotaFiscal.setXmlContent(xmlContent);
             xmlNotaFiscal.setDataCriacao(LocalDateTime.now());
             xmlNotaFiscal.setTipoDocumento("PROC-EVENTO-CANC");
-
             xmlNotaFiscalRepository.save(xmlNotaFiscal);
 
             logger.info("XML salvo com sucesso para chave: {}", chaveAcesso);

@@ -1,12 +1,8 @@
 package br.com.codex.v1.resources;
 
-import br.com.codex.v1.configuration.StartupInitializerDev;
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
-import br.com.codex.v1.resources.exceptions.ResourceExceptionHandler;
-import br.com.codex.v1.resources.exceptions.StandardError;
-import br.com.codex.v1.resources.exceptions.ValidationError;
 import br.com.codex.v1.service.JasperComprasReportService;
 import br.com.codex.v1.service.JasperContabilidadeReportService;
 import br.com.codex.v1.service.JasperVendasReportService;
@@ -23,9 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 @RestController
 @RequestMapping("v1/api/relatorios")

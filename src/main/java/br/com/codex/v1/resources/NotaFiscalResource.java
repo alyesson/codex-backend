@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigInteger;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -78,15 +80,22 @@ public class NotaFiscalResource {
      */
     @PostMapping("/inutilizar")
     public ResponseEntity<TRetInutNFe> inutilizarNotaFiscal(
-            @RequestParam String cnpj, @RequestParam String justificativa,
-            @RequestParam String ano, @RequestParam String serie,
-            @RequestParam String numInicial, @RequestParam String numFinal) throws Exception {
+            @RequestParam String cnpj,
+            @RequestParam String justificativa,
+            @RequestParam String ano,
+            @RequestParam String serie,
+            @RequestParam String numInicial,
+            @RequestParam String numFinal) throws Exception {
+
+        // Decodifica a justificativa (vem codificada da URL)
+        String justificativaDecodificada = URLDecoder.decode(justificativa, StandardCharsets.UTF_8.name());
 
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setDocumentoEmitente(cnpj);
 
         ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-        TRetInutNFe retorno = notaFiscalService.inutilizarNotaFiscal(cnpj, justificativa, ano, serie, numInicial, numFinal, config);
+        TRetInutNFe retorno = notaFiscalService.inutilizarNotaFiscal(
+                cnpj, justificativaDecodificada, ano, serie, numInicial, numFinal, config);
         return ResponseEntity.ok(retorno);
     }
 
