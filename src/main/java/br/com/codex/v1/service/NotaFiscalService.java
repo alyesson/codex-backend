@@ -1402,7 +1402,7 @@ public class NotaFiscalService {
         //salvarXmlNotaFiscal(retorno.getRetEvento().get(0).getInfEvento().getId(), xmlProcEvento);
         String chaveAcesso = retorno.getRetEvento().get(0).getInfEvento().getChNFe();
         salvarXmlNotaFiscalCancelada(chaveAcesso + "-proc-canc", xmlProcEvento);
-        importarXmlService.obterXmlCompletoAutomatico(xmlProcEvento);
+        notaFiscalRepository.alteraStatus(chaveAcesso);//aqui altera o statua da nota fiscal de "Autorizada" para "Cancelada"
 
         return retorno;
     }

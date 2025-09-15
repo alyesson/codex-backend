@@ -2,6 +2,7 @@ package br.com.codex.v1.domain.repository;
 
 import br.com.codex.v1.domain.fiscal.NotaFiscal;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +24,8 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
 
     @Query("SELECT DISTINCT n.cfop FROM NotaFiscalItem n JOIN n.notaFiscal nf WHERE nf.emissao BETWEEN :dataInicio AND :dataFim")
     Set<Integer> findDistinctCfopSaidaByPeriodo(@Param("dataInicio") LocalDate inicio, @Param("dataFim") LocalDate fim);
+
+    @Modifying
+    @Query("UPDATE NotaFiscal n SET n.cstat = '135' WHERE n.chave = :chave")
+    void alteraStatus(@Param("chave") String chaveAcesso);
 }

@@ -161,9 +161,9 @@ public class NotaFiscalResource {
     public ResponseEntity<br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento> cancelarNotaFiscal(
             @PathVariable String chave, @RequestParam String protocolo, @RequestParam String motivo, @RequestParam String cnpj) throws Exception {
 
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(cnpj);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
+        //NotaFiscalDto dto = new NotaFiscalDto();
+        //dto.setDocumentoEmitente(cnpj);
+        //ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
         br.com.swconsultoria.nfe.schema.envEventoCancNFe.TRetEnvEvento retorno = notaFiscalService.cancelarNotaFiscal(chave, protocolo, motivo, cnpj);
 
         return ResponseEntity.ok(retorno);
