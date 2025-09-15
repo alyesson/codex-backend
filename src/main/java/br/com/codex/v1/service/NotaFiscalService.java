@@ -1411,7 +1411,7 @@ public class NotaFiscalService {
      * Emite uma Carta de Correção Eletrônica (CC-e) para uma NF-e.
      */
     @Transactional
-    public br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento cartaCorrecao(String chave, String cnpj, String correcao, ConfiguracoesNfe config) throws NfeException, JAXBException {
+    public br.com.swconsultoria.nfe.schema.envcce.TRetEnvEvento cartaCorrecao(String chave, String cnpj, String correcao) throws NfeException, JAXBException {
         logger.info("Emitindo Carta de Correção para NF-e, chave: {}", chave);
 
         // Valida parâmetros
@@ -1424,6 +1424,10 @@ public class NotaFiscalService {
         if (correcao == null || correcao.trim().isEmpty() || correcao.length() > 1000) {
             throw new NfeException("Correção inválida: deve ter entre 1 e 1000 caracteres");
         }
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setDocumentoEmitente(cnpj); // Defina o CNPJ do e
+        ConfiguracoesNfe config = iniciarConfiguracoes(dto);
 
         // Determina o número sequencial
         String sequencia = determinarProximoSequencial(chave);

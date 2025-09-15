@@ -173,11 +173,15 @@ public class NotaFiscalResource {
      * Emite uma Carta de Correção para uma NF-e.
      */
     @PostMapping("/{chave}/carta_correcao")
-    public ResponseEntity<TRetEnvEvento> cartaCorrecao(@PathVariable String chave, @RequestParam String correcao, @RequestParam String cnpj) throws Exception {
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setDocumentoEmitente(cnpj);
-        ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
-        TRetEnvEvento retorno = notaFiscalService.cartaCorrecao(chave, cnpj, correcao, config);
+    public ResponseEntity<TRetEnvEvento> cartaCorrecao(@PathVariable String chave, @RequestBody Map<String, String> request) throws Exception {
+
+        String correcao = request.get("correcao");
+        String cnpj = request.get("cnpj");
+
+        //NotaFiscalDto dto = new NotaFiscalDto();
+        //dto.setDocumentoEmitente(cnpj);
+        //ConfiguracoesNfe config = notaFiscalService.iniciarConfiguracoes(dto);
+        TRetEnvEvento retorno = notaFiscalService.cartaCorrecao(chave, cnpj, correcao);
         return ResponseEntity.ok(retorno);
     }
 
