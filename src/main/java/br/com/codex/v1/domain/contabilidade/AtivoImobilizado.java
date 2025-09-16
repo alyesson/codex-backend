@@ -25,7 +25,7 @@ public class AtivoImobilizado implements Serializable {
     private Long id;
     @Column(length = 10)
     private String codigoBem;
-    @Column(length = 5)
+    @Column(length = 15)
     private String numeroSerie;
     @Column(length = 9)
     private int notaFiscal;
