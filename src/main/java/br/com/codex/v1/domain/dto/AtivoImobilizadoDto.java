@@ -79,9 +79,13 @@ public class AtivoImobilizadoDto implements Serializable {
         this.vidaUtilMeses = obj.getVidaUtilMeses();
     }
 
+    public void setCodigoBem(String codigoBem){ this.codigoBem = maximizarPalavras(codigoBem); }
+
     public void setNumeroSerie(String numeroSerie){ this.numeroSerie = maximizarPalavras(numeroSerie); }
 
     public void setDescricaoDoBem(String descricaoDoBem) {
         this.descricaoDoBem = capitalizarPalavras(descricaoDoBem);
     }
+
+    public void setNumeroPatrimonio(String numeroPatrimonio){ this.numeroPatrimonio = maximizarPalavras(numeroPatrimonio); }
 }

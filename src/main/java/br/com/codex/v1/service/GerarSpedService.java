@@ -17,6 +17,14 @@ import br.com.codex.v1.service.spedicms.Bloco0Service;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.bo.GerarEfdIcms;
 import br.com.swconsultoria.efd.icms.registros.EfdIcms;
+import br.com.swconsultoria.efd.icms.registros.blocoB.BlocoB;
+import br.com.swconsultoria.efd.icms.registros.blocoC.BlocoC;
+import br.com.swconsultoria.efd.icms.registros.blocoD.BlocoD;
+import br.com.swconsultoria.efd.icms.registros.blocoE.BlocoE;
+import br.com.swconsultoria.efd.icms.registros.blocoG.BlocoG;
+import br.com.swconsultoria.efd.icms.registros.blocoH.BlocoH;
+import br.com.swconsultoria.efd.icms.registros.blocoK.BlocoK;
+import br.com.swconsultoria.efd.icms.registros.bloco1.Bloco1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,15 +69,12 @@ public class GerarSpedService {
         LocalDate dataInicial = requestDto.getDataInicio();
         LocalDate dataFinal = requestDto.getDataFim();
 
-        LocalDate dataInicial1 = requestDto.getDataInicio();
-        LocalDate dataFinal1 = requestDto.getDataFim();
-
         try {
             logger.info("Extraindo dados das Notas Entrada");
             List<NotaEntradaSpedDto> listaNotasEntrada = efdNota.getListaNotasEntrada(dataInicial, dataFinal);
 
             logger.info("Extraindo dados das Notas Saída");
-            List<NotaSaidaSpedDto> listaNotasSaida = efdNota.getListaNotasSaida(dataInicial1, dataFinal1);
+            List<NotaSaidaSpedDto> listaNotasSaida = efdNota.getListaNotasSaida(dataInicial, dataFinal);
 
             logger.info(("Extraindo unidades de medida"));
             List<String> listaUnidadesMedida = produtoService.findByUnidadeComercial();
@@ -91,17 +96,51 @@ public class GerarSpedService {
 
             System.out.println("Preenchendo os Blocos...");
             EfdIcms efd = new EfdIcms();
+
+            // Bloco 0 - já implementado
             efd.setBloco0(bloco0Service.getBloco(requestDto, listaNotasSaida, listaUnidadesMedida,
                     listaProdutos, listaAtivosImobilizados, listaCfop, listaInfoFisco, listaInfoComp, contasService));
 
-            /*efd.setBlocoB(BlocoBService.getBloco());
-            efd.setBlocoC(BlocoCService.getBloco(listaNotasSaida));
-            efd.setBlocoD(BlocoDService.getBloco(listaNotasEntrada));
-            efd.setBlocoE(BlocoEService.getBloco());
-            efd.setBlocoG(BlocoGService.getBloco());
-            efd.setBlocoH(BlocoHService.getBloco());
-            efd.setBlocoK(BlocoKService.getBloco());
-            efd.setBloco1(Bloco1Service.getBloco());*/
+            // Bloco B - Registro de Apuração do ISS
+            // Você precisa criar o serviço para preencher este bloco
+            BlocoB blocoB = new BlocoB();
+            // blocoB = seuServiceBlocoB.preencherBlocoB(dados);
+            efd.setBlocoB(blocoB);
+
+            // Bloco C - Documentos Fiscais I - Mercadorias (ICMS/IPI)
+            BlocoC blocoC = new BlocoC();
+            // Implementar preenchimento com notas de saída
+            efd.setBlocoC(blocoC);
+
+            // Bloco D - Documentos Fiscais II - Serviços (ICMS)
+            BlocoD blocoD = new BlocoD();
+            // Implementar preenchimento com notas de entrada
+            efd.setBlocoD(blocoD);
+
+            // Bloco E - Apuração do ICMS e do IPI
+            BlocoE blocoE = new BlocoE();
+            // Implementar preenchimento
+            efd.setBlocoE(blocoE);
+
+            // Bloco G - Controle do Crédito de ICMS do Ativo Permanente (CIAP)
+            BlocoG blocoG = new BlocoG();
+            // Implementar preenchimento com ativos imobilizados
+            efd.setBlocoG(blocoG);
+
+            // Bloco H - Inventário Físico
+            BlocoH blocoH = new BlocoH();
+            // Implementar preenchimento
+            efd.setBlocoH(blocoH);
+
+            // Bloco K - Controle da Produção e do Estoque
+            BlocoK blocoK = new BlocoK();
+            // Implementar preenchimento
+            efd.setBlocoK(blocoK);
+
+            // Bloco 1 - Outras Informações
+            Bloco1 bloco1 = new Bloco1();
+            // Implementar preenchimento
+            efd.setBloco1(bloco1);
 
             System.out.println("Gerando contadores e conteudo...");
             StringBuilder sb = new StringBuilder();
@@ -113,6 +152,7 @@ public class GerarSpedService {
             System.out.println("Processo Finalizado. Arquivo Gerado em: "+caminhoArquivo);
 
         } catch (Exception e) {
+            logger.error("Erro ao gerar SPED EFD ICMS", e);
             e.printStackTrace();
         }
     }
