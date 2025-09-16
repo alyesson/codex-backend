@@ -3,7 +3,7 @@ package br.com.codex.v1.utilitario;
 public class CapitalizarPalavras {
 
     /**
-     Este métudo deixa as palavras de uma frase com a primeira letra em maiúscula d ecada palavra
+     Este métudo deixa as palavras de uma frase com a primeira letra em maiúscula de cada palavra
      */
 
     public static String capitalizarPalavras(String frase) {

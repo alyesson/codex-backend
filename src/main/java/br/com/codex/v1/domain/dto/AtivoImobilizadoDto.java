@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+import static br.com.codex.v1.utilitario.MaximizarPalavras.maximizarPalavras;
 
 @Getter
 @Setter
@@ -78,6 +79,7 @@ public class AtivoImobilizadoDto implements Serializable {
         this.vidaUtilMeses = obj.getVidaUtilMeses();
     }
 
+    public void setNumeroSerie(String numeroSerie){ this.numeroSerie = maximizarPalavras(numeroSerie); }
 
     public void setDescricaoDoBem(String descricaoDoBem) {
         this.descricaoDoBem = capitalizarPalavras(descricaoDoBem);
