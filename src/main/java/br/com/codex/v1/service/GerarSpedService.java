@@ -14,6 +14,7 @@ import br.com.codex.v1.domain.repository.InformacaoesAdicionaisFiscoRepository;
 import br.com.codex.v1.domain.repository.InformacaoesComplementaresRepository;
 import br.com.codex.v1.domain.repository.ProdutoRepository;
 import br.com.codex.v1.service.spedicms.Bloco0Service;
+import br.com.codex.v1.service.spedicms.BlocoBService;
 import br.com.codex.v1.utilitario.Util;
 import br.com.swconsultoria.efd.icms.bo.GerarEfdIcms;
 import br.com.swconsultoria.efd.icms.registros.EfdIcms;
@@ -64,6 +65,9 @@ public class GerarSpedService {
     @Autowired
     private Bloco0Service bloco0Service;
 
+    //@Autowired
+    //private BlocoBService blocoBService;
+
     public void gerarBlocos(GerarSpedRequestDto requestDto){
 
         LocalDate dataInicial = requestDto.getDataInicio();
@@ -102,10 +106,7 @@ public class GerarSpedService {
                     listaProdutos, listaAtivosImobilizados, listaCfop, listaInfoFisco, listaInfoComp, contasService));
 
             // Bloco B - Registro de Apuração do ISS
-            // Você precisa criar o serviço para preencher este bloco
-            BlocoB blocoB = new BlocoB();
-            // blocoB = seuServiceBlocoB.preencherBlocoB(dados);
-            efd.setBlocoB(blocoB);
+            //efd.setBlocoB(blocoBService.getBloco(requestDto, listaNotasSaida, listaNotasEntrada));
 
             // Bloco C - Documentos Fiscais I - Mercadorias (ICMS/IPI)
             BlocoC blocoC = new BlocoC();
