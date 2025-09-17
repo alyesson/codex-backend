@@ -180,6 +180,9 @@ public class NotaFiscalServico implements Serializable {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
+    @Column(name = "situacao", length = 15)
+    private String situacao;
+
     @PrePersist
     protected void onCreate() {
         dataCriacao = LocalDateTime.now();
@@ -210,7 +213,7 @@ public class NotaFiscalServico implements Serializable {
                              BigDecimal valorLiquido, Integer naturezaOperacao, Integer regimeEspecialTributacao,
                              Integer opcaoSimplesNacional, Integer incentivadorCultural, BigDecimal deducoesPermitidas,
                              BigDecimal baseCalculo, BigDecimal aliquota, BigDecimal valorIss, Boolean issReter,
-                             LocalDateTime dataCriacao, LocalDateTime dataAtualizacao) {
+                             LocalDateTime dataCriacao, LocalDateTime dataAtualizacao, String situacao) {
         this.id = id;
         this.dataEmissao = dataEmissao;
         this.competencia = competencia;
@@ -264,6 +267,7 @@ public class NotaFiscalServico implements Serializable {
         this.issReter = issReter;
         this.dataCriacao = dataCriacao;
         this.dataAtualizacao = dataAtualizacao;
+        this.situacao = situacao;
     }
 
     public NotaFiscalServico(NotaFiscalServicoDto obj) {
@@ -325,5 +329,6 @@ public class NotaFiscalServico implements Serializable {
 
         this.dataCriacao = obj.getDataCriacao();
         this.dataAtualizacao = obj.getDataAtualizacao();
+        this.situacao = obj.getSituacao();
     }
 }
