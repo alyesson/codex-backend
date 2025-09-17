@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+
 @Getter
 @Setter
 public class NotaFiscalServicoDto implements Serializable {
@@ -140,5 +142,13 @@ public class NotaFiscalServicoDto implements Serializable {
 
         this.dataCriacao = obj.getDataCriacao();
         this.dataAtualizacao = obj.getDataAtualizacao();
+    }
+
+    public void setPrestadorRazaoSocial(String prestadorRazaoSocial) {
+        this.prestadorRazaoSocial = capitalizarPalavras(prestadorRazaoSocial);
+    }
+
+    public void setDescricaoServico(String descricaoServico) {
+        this.descricaoServico = capitalizarPalavras(descricaoServico);
     }
 }
