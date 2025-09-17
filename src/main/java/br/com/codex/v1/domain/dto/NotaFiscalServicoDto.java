@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.fiscal.NotaFiscalServico;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,9 +49,15 @@ public class NotaFiscalServicoDto implements Serializable {
     private String discriminacaoServicos;
     private String codigoServico;
     private String descricaoServico;
-    private String detalhamentoConstrucaoCivil;
+    private String codigoObra;
+    private String codigoArt;
 
     // Valores e Tributos
+    private BigDecimal valorPis;
+    private BigDecimal valorCofins;
+    private BigDecimal valorIr;
+    private BigDecimal valorInss;
+    private BigDecimal valorCsll;
     private BigDecimal valorServicos;
     private BigDecimal descontoIncondicionado;
     private BigDecimal descontoCondicionado;
@@ -106,8 +113,14 @@ public class NotaFiscalServicoDto implements Serializable {
         this.discriminacaoServicos = obj.getDiscriminacaoServicos();
         this.codigoServico = obj.getCodigoServico();
         this.descricaoServico = obj.getDescricaoServico();
-        this.detalhamentoConstrucaoCivil = obj.getDetalhamentoConstrucaoCivil();
+        this.codigoObra = obj.getCodigoObra();
+        this.codigoArt = obj.getCodigoArt();
 
+        this.valorPis = obj.getValorPis();
+        this.valorCofins = obj.getValorCofins();
+        this.valorIr = obj.getValorIr();
+        this.valorInss = obj.getValorInss();
+        this.valorCsll = obj.getValorCsll();
         this.valorServicos = obj.getValorServicos();
         this.descontoIncondicionado = obj.getDescontoIncondicionado();
         this.descontoCondicionado = obj.getDescontoCondicionado();

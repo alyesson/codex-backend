@@ -31,6 +31,16 @@ public class NotaFiscalServicoResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FISCAL', 'FISCAL')")
+    @GetMapping(value = "/periodo")
+    public ResponseEntity<List<NotaFiscalServicoDto>> findByPeriodo(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+        List<NotaFiscalServico> list = notaFiscalServicoService.findByPeriodo(dataInicial, dataFinal);
+        List<NotaFiscalServicoDto> listDto = list.stream().map(NotaFiscalServicoDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FISCAL')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<NotaFiscalServicoDto> delete(@PathVariable Long id) {
@@ -49,16 +59,6 @@ public class NotaFiscalServicoResource {
     @GetMapping(value = "/ano/{year}")
     public ResponseEntity<List<NotaFiscalServicoDto>> findByYear(@PathVariable Integer year) {
         List<NotaFiscalServico> list = notaFiscalServicoService.findByYear(year);
-        List<NotaFiscalServicoDto> listDto = list.stream().map(NotaFiscalServicoDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FISCAL', 'FISCAL')")
-    @GetMapping(value = "/periodo")
-    public ResponseEntity<List<NotaFiscalServicoDto>> findByPeriodo(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
-        List<NotaFiscalServico> list = notaFiscalServicoService.findByPeriodo(dataInicial, dataFinal);
         List<NotaFiscalServicoDto> listDto = list.stream().map(NotaFiscalServicoDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }

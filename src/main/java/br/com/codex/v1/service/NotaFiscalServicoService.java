@@ -17,9 +17,9 @@ public class NotaFiscalServicoService {
     @Autowired
     private NotaFiscalServicoRepository repository;
 
-    public NotaFiscalServico create(NotaFiscalServicoDto dto) {
-        NotaFiscalServico obj = new NotaFiscalServico();
-        mapDtoToEntity(dto, obj);
+    public NotaFiscalServico create(NotaFiscalServicoDto notaServicoDto) {
+        notaServicoDto.setId(null);
+        NotaFiscalServico obj = new NotaFiscalServico(notaServicoDto);
         return repository.save(obj);
     }
 
@@ -42,60 +42,5 @@ public class NotaFiscalServicoService {
 
     public List<NotaFiscalServico> findByPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
         return repository.findByCompetenciaBetween(dataInicial, dataFinal);
-    }
-
-    private void mapDtoToEntity(NotaFiscalServicoDto dto, NotaFiscalServico obj) {
-        obj.setDataEmissao(dto.getDataEmissao());
-        obj.setCompetencia(dto.getCompetencia());
-        obj.setCodigoVerificacao(dto.getCodigoVerificacao());
-        obj.setNumeroNfse(dto.getNumeroNfse());
-        obj.setNumeroRps(dto.getNumeroRps());
-        obj.setNumeroNfseSubstituida(dto.getNumeroNfseSubstituida());
-        obj.setLocalPrestacao(dto.getLocalPrestacao());
-
-        // Mapear dados do prestador
-        obj.setPrestadorRazaoSocial(dto.getPrestadorRazaoSocial());
-        obj.setPrestadorNomeFantasia(dto.getPrestadorNomeFantasia());
-        obj.setPrestadorCnpjCpf(dto.getPrestadorCnpjCpf());
-        obj.setPrestadorInscricaoMunicipal(dto.getPrestadorInscricaoMunicipal());
-        obj.setPrestadorMunicipio(dto.getPrestadorMunicipio());
-        obj.setPrestadorEndereco(dto.getPrestadorEndereco());
-        obj.setPrestadorComplemento(dto.getPrestadorComplemento());
-        obj.setPrestadorTelefone(dto.getPrestadorTelefone());
-        obj.setPrestadorEmail(dto.getPrestadorEmail());
-
-        // Mapear dados do tomador
-        obj.setTomadorRazaoSocial(dto.getTomadorRazaoSocial());
-        obj.setTomadorCnpjCpf(dto.getTomadorCnpjCpf());
-        obj.setTomadorInscricaoMunicipal(dto.getTomadorInscricaoMunicipal());
-        obj.setTomadorMunicipio(dto.getTomadorMunicipio());
-        obj.setTomadorEndereco(dto.getTomadorEndereco());
-        obj.setTomadorComplemento(dto.getTomadorComplemento());
-        obj.setTomadorTelefone(dto.getTomadorTelefone());
-        obj.setTomadorEmail(dto.getTomadorEmail());
-
-        // Mapear dados do serviço
-        obj.setDiscriminacaoServicos(dto.getDiscriminacaoServicos());
-        obj.setCodigoServico(dto.getCodigoServico());
-        obj.setDescricaoServico(dto.getDescricaoServico());
-        obj.setDetalhamentoConstrucaoCivil(dto.getDetalhamentoConstrucaoCivil());
-
-        // Mapear valores e tributos
-        obj.setValorServicos(dto.getValorServicos());
-        obj.setDescontoIncondicionado(dto.getDescontoIncondicionado());
-        obj.setDescontoCondicionado(dto.getDescontoCondicionado());
-        obj.setRetencoesFederais(dto.getRetencoesFederais());
-        obj.setOutrasRetencoes(dto.getOutrasRetencoes());
-        obj.setIssRetido(dto.getIssRetido());
-        obj.setValorLiquido(dto.getValorLiquido());
-        obj.setNaturezaOperacao(dto.getNaturezaOperacao());
-        obj.setRegimeEspecialTributacao(dto.getRegimeEspecialTributacao());
-        obj.setOpcaoSimplesNacional(dto.getOpcaoSimplesNacional());
-        obj.setIncentivadorCultural(dto.getIncentivadorCultural());
-        obj.setDeducoesPermitidas(dto.getDeducoesPermitidas());
-        obj.setBaseCalculo(dto.getBaseCalculo());
-        obj.setAliquota(dto.getAliquota());
-        obj.setValorIss(dto.getValorIss());
-        obj.setIssReter(dto.getIssReter());
     }
 }

@@ -104,10 +104,28 @@ public class NotaFiscalServico implements Serializable {
     @Column(name = "descricao_servico", length = 200)
     private String descricaoServico;
 
-    @Column(name = "detalhamento_construcao_civil", columnDefinition = "TEXT")
-    private String detalhamentoConstrucaoCivil;
+    @Column(name = "codigo_obra", length = 20)
+    private String codigoObra;
+
+    @Column(name = "codigo_art", length = 20)
+    private String codigoArt;
 
     // Valores e Tributos
+    @Column(name = "valor_pis", precision = 15, scale = 2)
+    private BigDecimal valorPis;
+
+    @Column(name = "valor_cofins", precision = 15, scale = 2)
+    private BigDecimal valorCofins;
+
+    @Column(name = "valor_ir", precision = 15, scale = 2)
+    private BigDecimal valorIr;
+
+    @Column(name = "valor_inss", precision = 15, scale = 2)
+    private BigDecimal valorInss;
+
+    @Column(name = "valor_csll", precision = 15, scale = 2)
+    private BigDecimal valorCsll;
+
     @Column(name = "valor_servicos", precision = 15, scale = 2)
     private BigDecimal valorServicos;
 
@@ -185,7 +203,8 @@ public class NotaFiscalServico implements Serializable {
                              String tomadorRazaoSocial, String tomadorCnpjCpf, String tomadorInscricaoMunicipal,
                              String tomadorMunicipio, String tomadorEndereco, String tomadorComplemento,
                              String tomadorTelefone, String tomadorEmail, String discriminacaoServicos,
-                             String codigoServico, String descricaoServico, String detalhamentoConstrucaoCivil,
+                             String codigoServico, String descricaoServico, String codigoObra, String codigoArt,
+                             BigDecimal valorPis, BigDecimal valorCofins, BigDecimal valorIr, BigDecimal valorInss, BigDecimal valorCsll,
                              BigDecimal valorServicos, BigDecimal descontoIncondicionado, BigDecimal descontoCondicionado,
                              BigDecimal retencoesFederais, BigDecimal outrasRetencoes, BigDecimal issRetido,
                              BigDecimal valorLiquido, Integer naturezaOperacao, Integer regimeEspecialTributacao,
@@ -220,7 +239,13 @@ public class NotaFiscalServico implements Serializable {
         this.discriminacaoServicos = discriminacaoServicos;
         this.codigoServico = codigoServico;
         this.descricaoServico = descricaoServico;
-        this.detalhamentoConstrucaoCivil = detalhamentoConstrucaoCivil;
+        this.codigoObra = codigoObra;
+        this.codigoArt = codigoArt;
+        this.valorPis = valorPis;
+        this.valorCofins = valorCofins;
+        this.valorIr = valorIr;
+        this.valorInss = valorInss;
+        this.valorCsll = valorCsll;
         this.valorServicos = valorServicos;
         this.descontoIncondicionado = descontoIncondicionado;
         this.descontoCondicionado = descontoCondicionado;
@@ -273,8 +298,14 @@ public class NotaFiscalServico implements Serializable {
         this.discriminacaoServicos = obj.getDiscriminacaoServicos();
         this.codigoServico = obj.getCodigoServico();
         this.descricaoServico = obj.getDescricaoServico();
-        this.detalhamentoConstrucaoCivil = obj.getDetalhamentoConstrucaoCivil();
+        this.codigoObra = obj.getCodigoObra();
+        this.codigoArt = obj.getCodigoArt();
 
+        this.valorPis = obj.getValorPis();
+        this.valorCofins = obj.getValorCofins();
+        this.valorIr = obj.getValorIr();
+        this.valorInss = obj.getValorInss();
+        this.valorCsll = obj.getValorCsll();
         this.valorServicos = obj.getValorServicos();
         this.descontoIncondicionado = obj.getDescontoIncondicionado();
         this.descontoCondicionado = obj.getDescontoCondicionado();
