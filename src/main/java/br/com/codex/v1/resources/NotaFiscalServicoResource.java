@@ -62,4 +62,14 @@ public class NotaFiscalServicoResource {
         List<NotaFiscalServicoDto> listDto = list.stream().map(NotaFiscalServicoDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
+
+    // No controlador NotaFiscalServicoResource
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FISCAL', 'FISCAL')")
+    @PatchMapping(value = "/{id}/cancelar")
+    public ResponseEntity<NotaFiscalServicoDto> cancelar(
+            @PathVariable Long id,
+            @RequestParam String justificativa) {
+        NotaFiscalServico obj = notaFiscalServicoService.cancelar(id, justificativa);
+        return ResponseEntity.ok().body(new NotaFiscalServicoDto(obj));
+    }
 }

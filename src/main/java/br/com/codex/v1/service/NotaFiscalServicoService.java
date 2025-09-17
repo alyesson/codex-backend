@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,5 +43,14 @@ public class NotaFiscalServicoService {
 
     public List<NotaFiscalServico> findByPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
         return repository.findByCompetenciaBetween(dataInicial, dataFinal);
+    }
+
+    // No serviço NotaFiscalServicoService
+    public NotaFiscalServico cancelar(Long id, String justificativa) {
+        NotaFiscalServico obj = findById(id);
+        obj.setSituacao("Cancelada");
+        obj.setJustificativaCancelamento(justificativa);
+        obj.setDataCancelamento(LocalDateTime.now());
+        return notaFiscalServicoRepository.save(obj);
     }
 }
