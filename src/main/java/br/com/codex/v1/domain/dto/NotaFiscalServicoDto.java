@@ -80,6 +80,8 @@ public class NotaFiscalServicoDto implements Serializable {
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
     private String situacao;
+    private String justificativaCancelamento;
+    private LocalDate dataCancelamento;
 
     public NotaFiscalServicoDto() {
     }
@@ -144,6 +146,8 @@ public class NotaFiscalServicoDto implements Serializable {
         this.dataCriacao = obj.getDataCriacao();
         this.dataAtualizacao = obj.getDataAtualizacao();
         this.situacao = obj.getSituacao();
+        this.justificativaCancelamento = obj.getJustificativaCancelamento();
+        this.dataCancelamento = obj.getDataCancelamento();
     }
 
     public void setPrestadorRazaoSocial(String prestadorRazaoSocial) {

@@ -16,21 +16,21 @@ import java.util.Optional;
 public class NotaFiscalServicoService {
 
     @Autowired
-    private NotaFiscalServicoRepository repository;
+    private NotaFiscalServicoRepository notaFiscalServicoRepository;
 
     public NotaFiscalServico create(NotaFiscalServicoDto notaServicoDto) {
         notaServicoDto.setId(null);
         NotaFiscalServico obj = new NotaFiscalServico(notaServicoDto);
-        return repository.save(obj);
+        return notaFiscalServicoRepository.save(obj);
     }
 
     public void delete(Long id) {
         NotaFiscalServico obj = findById(id);
-        repository.delete(obj);
+        notaFiscalServicoRepository.delete(obj);
     }
 
     public NotaFiscalServico findById(Long id) {
-        Optional<NotaFiscalServico> obj = repository.findById(id);
+        Optional<NotaFiscalServico> obj = notaFiscalServicoRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Nota Fiscal de Serviço não encontrada! Id: " + id + ", Tipo: " + NotaFiscalServico.class.getName()));
     }
@@ -38,11 +38,11 @@ public class NotaFiscalServicoService {
     public List<NotaFiscalServico> findByYear(Integer year) {
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);
-        return repository.findByCompetenciaBetween(startDate, endDate);
+        return notaFiscalServicoRepository.findByCompetenciaBetween(startDate, endDate);
     }
 
     public List<NotaFiscalServico> findByPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
-        return repository.findByCompetenciaBetween(dataInicial, dataFinal);
+        return notaFiscalServicoRepository.findByCompetenciaBetween(dataInicial, dataFinal);
     }
 
     // No serviço NotaFiscalServicoService
@@ -50,7 +50,7 @@ public class NotaFiscalServicoService {
         NotaFiscalServico obj = findById(id);
         obj.setSituacao("Cancelada");
         obj.setJustificativaCancelamento(justificativa);
-        obj.setDataCancelamento(LocalDateTime.now());
+        obj.setDataCancelamento(LocalDate.now());
         return notaFiscalServicoRepository.save(obj);
     }
 }

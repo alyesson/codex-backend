@@ -183,6 +183,12 @@ public class NotaFiscalServico implements Serializable {
     @Column(name = "situacao", length = 15)
     private String situacao;
 
+    @Column(name = "justificativa_cancelamento")
+    private String justificativaCancelamento;
+
+    @Column(name = "data_cancelamento")
+    private LocalDate dataCancelamento;
+
     @PrePersist
     protected void onCreate() {
         dataCriacao = LocalDateTime.now();
@@ -213,7 +219,7 @@ public class NotaFiscalServico implements Serializable {
                              BigDecimal valorLiquido, Integer naturezaOperacao, Integer regimeEspecialTributacao,
                              Integer opcaoSimplesNacional, Integer incentivadorCultural, BigDecimal deducoesPermitidas,
                              BigDecimal baseCalculo, BigDecimal aliquota, BigDecimal valorIss, Boolean issReter,
-                             LocalDateTime dataCriacao, LocalDateTime dataAtualizacao, String situacao) {
+                             LocalDateTime dataCriacao, LocalDateTime dataAtualizacao, String situacao, String justificativaCancelamento, LocalDate dataCancelamento) {
         this.id = id;
         this.dataEmissao = dataEmissao;
         this.competencia = competencia;
@@ -268,6 +274,8 @@ public class NotaFiscalServico implements Serializable {
         this.dataCriacao = dataCriacao;
         this.dataAtualizacao = dataAtualizacao;
         this.situacao = situacao;
+        this.justificativaCancelamento = justificativaCancelamento;
+        this.dataCancelamento = dataCancelamento;
     }
 
     public NotaFiscalServico(NotaFiscalServicoDto obj) {
@@ -330,5 +338,7 @@ public class NotaFiscalServico implements Serializable {
         this.dataCriacao = obj.getDataCriacao();
         this.dataAtualizacao = obj.getDataAtualizacao();
         this.situacao = obj.getSituacao();
+        this.justificativaCancelamento = obj.getJustificativaCancelamento();
+        this.dataCancelamento = obj.getDataCancelamento();
     }
 }
