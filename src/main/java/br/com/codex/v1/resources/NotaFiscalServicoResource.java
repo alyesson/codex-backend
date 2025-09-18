@@ -63,7 +63,6 @@ public class NotaFiscalServicoResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    // No controlador NotaFiscalServicoResource
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_FISCAL', 'FISCAL')")
     @PatchMapping(value = "/{id}/cancelar")
     public ResponseEntity<NotaFiscalServicoDto> cancelar(@PathVariable Long id,  @RequestParam String justificativa) {

@@ -45,7 +45,6 @@ public class NotaFiscalServicoService {
         return notaFiscalServicoRepository.findByCompetenciaBetween(dataInicial, dataFinal);
     }
 
-    // No serviço NotaFiscalServicoService
     public NotaFiscalServico cancelar(Long id, String justificativa) {
         NotaFiscalServico obj = findById(id);
         obj.setSituacao("Cancelada");
