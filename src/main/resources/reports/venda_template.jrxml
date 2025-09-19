@@ -66,15 +66,16 @@
 	</field>
 	<title>
 		<band height="88" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="0" y="4" width="553" height="82" uuid="89ccb6f8-7bb2-4c76-b0cc-815412b55863"/>
+			</rectangle>
 			<frame>
 				<reportElement mode="Opaque" x="80" y="7" width="400" height="73" backcolor="#FFFFFF" uuid="0f155bad-9af5-4d08-aa31-c64fb98cccca"/>
 			</frame>
 			<image>
-				<reportElement x="8" y="2" width="68" height="40" uuid="4b3cddf2-7dcc-4026-a72c-6a860c76c347"/>
+				<reportElement x="8" y="6" width="68" height="40" uuid="4b3cddf2-7dcc-4026-a72c-6a860c76c347"/>
+				<imageExpression><![CDATA["reports/logo.png"]]></imageExpression>
 			</image>
-			<rectangle radius="10">
-				<reportElement mode="Transparent" x="0" y="4" width="553" height="82" uuid="89ccb6f8-7bb2-4c76-b0cc-815412b55863"/>
-			</rectangle>
 		</band>
 	</title>
 	<detail>
