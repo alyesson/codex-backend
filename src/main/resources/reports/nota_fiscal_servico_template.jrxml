@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nota_fiscal_servico_template" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="757dccbf-4163-4d04-a3f7-5d83b4d90f57">
-	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="20"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="P_CODIGO" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[SELECT * FROM nota_fiscal_servico WHERE id=$P{P_CODIGO};]]>
@@ -175,35 +175,13 @@
 	<field name="justificativa_cancelamento" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<title>
-		<band height="41">
-			<image>
-				<reportElement x="3" y="3" width="55" height="35" uuid="51318aae-73a3-4914-bbd9-6a3c3cd0199a"/>
-				<imageExpression><![CDATA["reports/logo.png"]]></imageExpression>
-			</image>
-			<staticText>
-				<reportElement mode="Opaque" x="103" y="3" width="376" height="24" backcolor="#CCCCCC" uuid="e82a71ca-1ba8-4381-99b0-d000b18cfa40"/>
-				<textElement>
-					<font size="18"/>
-				</textElement>
-				<text><![CDATA[NOTA FISCAL ELETRÔNICA DE SERVIÇOS]]></text>
-			</staticText>
-		</band>
-	</title>
 	<detail>
 		<band height="802" splitType="Stretch">
 			<rectangle>
 				<reportElement mode="Transparent" x="0" y="4" width="555" height="792" uuid="f6ae9eba-7157-4735-9e7d-bf5e5676488f"/>
 			</rectangle>
-			<staticText>
-				<reportElement mode="Opaque" x="1" y="5" width="553" height="17" backcolor="#CCCCCC" uuid="4bfbb271-83fb-48ca-a80b-009bd18fea5f"/>
-				<textElement textAlignment="Center">
-					<font size="13"/>
-				</textElement>
-				<text><![CDATA[Dados da Nota]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="270" y="36" width="100" height="17" uuid="8e3714b9-1a66-4270-b76c-a37930ff6be1"/>
+				<reportElement x="270" y="36" width="89" height="17" uuid="8e3714b9-1a66-4270-b76c-a37930ff6be1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" isBold="true"/>
 				</textElement>
@@ -912,6 +890,17 @@
 			<line>
 				<reportElement x="0" y="755" width="554" height="1" uuid="44985a3d-f752-46f5-b1ba-00c4886e271c"/>
 			</line>
+			<image>
+				<reportElement x="0" y="5" width="55" height="35" uuid="51318aae-73a3-4914-bbd9-6a3c3cd0199a"/>
+				<imageExpression><![CDATA["reports/logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="97" y="6" width="376" height="24" backcolor="#CCCCCC" uuid="e82a71ca-1ba8-4381-99b0-d000b18cfa40"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[NOTA FISCAL ELETRÔNICA DE SERVIÇOS]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>
