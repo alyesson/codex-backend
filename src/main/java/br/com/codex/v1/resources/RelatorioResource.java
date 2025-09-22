@@ -3,18 +3,13 @@ package br.com.codex.v1.resources;
 import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.dto.*;
 import br.com.codex.v1.domain.repository.EmpresaRepository;
-import br.com.codex.v1.service.JasperComprasReportService;
-import br.com.codex.v1.service.JasperContabilidadeReportService;
-import br.com.codex.v1.service.JasperVendasReportService;
-import br.com.codex.v1.service.LancamentoContabilService;
+import br.com.codex.v1.service.*;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +25,13 @@ public class RelatorioResource {
     private JasperVendasReportService jasperVendasReportService;
 
     @Autowired
-    JasperComprasReportService jasperComprasReportService;
+    private JasperComprasReportService jasperComprasReportService;
 
     @Autowired
-    JasperContabilidadeReportService jasperContabilidadeReportService;
+    private JasperContabilidadeReportService jasperContabilidadeReportService;
+
+    @Autowired
+    private JasperNotaServicoReportService jasperNotaServicoReportService;
 
     @Autowired
     private LancamentoContabilService lancamentoContabilService;
@@ -240,7 +238,7 @@ public class RelatorioResource {
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(("Erro ao gerar Pdf do solicitacao de compra: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
+                    .body(("Erro ao gerar Pdf da solicitacao de compra: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -279,6 +277,28 @@ public class RelatorioResource {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(("Erro ao gerar Pdf do pedido de compra: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    @GetMapping("/nota_servico/{id}")
+    public ResponseEntity<byte[]> gerarRelatorioNotaServico(@PathVariable Long id) {
+        try {
+            byte[] pdfBytes = jasperNotaServicoReportService.generateNotaFiscalServicoReport(id);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.builder("attachment")
+                    .filename("nota_servico_" + id + ".pdf").build());
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(("Nota fiscal não encontrada: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Erro ao gerar PDF: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
         }
     }
 }
