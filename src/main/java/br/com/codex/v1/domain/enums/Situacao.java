@@ -4,7 +4,7 @@ public enum Situacao {
 
     ABERTO(0, "ABERTO"), CANCELADO(1, "CANCELADO"), ATUANDO(2, "ATUANDO"), FECHADO(3, "FECHADO"),
     PENDENTE(4, "PENDENTE"), APROVADO(5, "APROVADO"), REJEITADO(6, "REJEITADO"), DEVOLUCAO(7, "DEVOLUCAO"),
-    FINALIZADO(8, "FINALIZADO");
+    FINALIZADO(8, "FINALIZADO"), EM_SEPARACAO(9, "EM_SEPARACAO");
 
     private Integer codigo;
     private String descricao;
