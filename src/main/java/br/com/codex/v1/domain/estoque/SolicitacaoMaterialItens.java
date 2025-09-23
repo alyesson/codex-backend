@@ -3,10 +3,7 @@ package br.com.codex.v1.domain.estoque;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -25,17 +22,22 @@ public class SolicitacaoMaterialItens implements Serializable {
     private String descricao;
     private Integer quantidade;
     private String unidadeMedida;
+    @ManyToOne
+    @JoinColumn(name = "solicitacaoMaterial_id")
+    private SolicitacaoMaterial solicitacaoMaterial;
 
     public SolicitacaoMaterialItens() {
         super();
     }
 
-    public SolicitacaoMaterialItens(Long id, String codigo, String descricao, Integer quantidade, String unidadeMedida) {
+    public SolicitacaoMaterialItens(Long id, String codigo, String descricao, Integer quantidade, String unidadeMedida,
+                                    SolicitacaoMaterial solicitacaoMaterial) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
         this.quantidade = quantidade;
         this.unidadeMedida = unidadeMedida;
+        this.solicitacaoMaterial = solicitacaoMaterial;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.estoque;
 
+import br.com.codex.v1.domain.dto.SolicitacaoMaterialDto;
 import br.com.codex.v1.domain.enums.Prioridade;
 import br.com.codex.v1.domain.enums.Situacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -55,5 +57,31 @@ public class SolicitacaoMaterial implements Serializable {
         this.localEntrega = localEntrega;
         this.observacao = observacao;
         this.motivoSolicitacao = motivoSolicitacao;
+    }
+
+    public SolicitacaoMaterial(SolicitacaoMaterialDto obj) {
+        this.id = obj.getId();
+        this.solicitante = obj.getSolicitante();
+        this.email = obj.getEmail();
+        this.departamento = obj.getDepartamento();
+        this.centroCusto = obj.getCentroCusto();
+        this.dataSolicitacao = obj.getDataSolicitacao();
+        this.situacao = obj.getSituacao();
+        this.prioridade = obj.getPrioridade();
+        this.localEntrega = obj.getLocalEntrega();
+        this.observacao = obj.getObservacao();
+        this.motivoSolicitacao = obj.getMotivoSolicitacao();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SolicitacaoMaterial that = (SolicitacaoMaterial) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
