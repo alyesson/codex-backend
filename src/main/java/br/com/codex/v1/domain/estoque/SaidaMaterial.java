@@ -1,6 +1,9 @@
 package br.com.codex.v1.domain.estoque;
 
 import br.com.codex.v1.domain.dto.SaidaMaterialDto;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +15,8 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class SaidaMaterial implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,7 +37,8 @@ public class SaidaMaterial implements Serializable {
         super();
     }
 
-    public SaidaMaterial(Long id, String codigoProduto, String produto, String motivoAcerto, String lote, Date dataSaida, Integer quantidade, String autor, String solicitante) {
+    public SaidaMaterial(Long id, String codigoProduto, String produto, String motivoAcerto,
+                         String lote, Date dataSaida, Integer quantidade, String autor, String solicitante) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.motivoAcerto = motivoAcerto;
@@ -56,78 +62,6 @@ public class SaidaMaterial implements Serializable {
         this.solicitante = obj.getSolicitante();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigoProduto() {
-        return codigoProduto;
-    }
-
-    public void setCodigoProduto(String codigoProduto) {
-        this.codigoProduto = codigoProduto;
-    }
-
-    public String getProduto() {
-        return produto;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
-    public String getMotivoAcerto() {
-        return motivoAcerto;
-    }
-
-    public void setMotivoAcerto(String motivoAcerto) {
-        this.motivoAcerto = motivoAcerto;
-    }
-
-    public void setProduto(String produto) {
-        this.produto = produto;
-    }
-
-    public String getLote() {
-        return lote;
-    }
-
-    public void setLote(String lote) {
-        this.lote = lote;
-    }
-
-    public Date getDataSaida() {
-        return dataSaida;
-    }
-
-    public void setDataSaida(Date dataSaida) {
-        this.dataSaida = dataSaida;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-    
-    public String getSolicitante() {
-        return solicitante;
-    }
-
-    public void setSolicitante(String solicitante) {
-        this.solicitante = solicitante;
-    }
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
