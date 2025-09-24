@@ -1,5 +1,6 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.dto.SolicitacaoMaterialItensDto;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterial;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterialItens;
 import br.com.codex.v1.domain.dto.SolicitacaoMaterialDto;
@@ -25,9 +26,18 @@ public class SolicitacaoMaterialService {
         LocalDate currentDay = LocalDate.now();
         solicitacaoMaterialDto.setId(null);
         solicitacaoMaterialDto.setDataSolicitacao(currentDay);
-        SolicitacaoMaterial obj = new SolicitacaoMaterial(solicitacaoMaterialDto);
-        obj = repository.save(obj);
-        return obj;
+        SolicitacaoMaterial solicitacaoMaterial = new SolicitacaoMaterial(solicitacaoMaterialDto);
+        solicitacaoMaterial = repository.save(solicitacaoMaterial);
+
+        for(SolicitacaoMaterialItensDto itemDto : solicitacaoMaterialDto.getItens()){
+            SolicitacaoMaterialItens item = new SolicitacaoMaterialItens();
+            item.setCodigo(itemDto.getCodigo());
+            item.setDescricao(itemDto.getDescricao());
+            item.setQuantidade(itemDto.getQuantidade());
+            item.setUnidadeMedida(itemDto.getUnidadeMedida());
+            itensRepository.save(item);
+        }
+        return solicitacaoMaterial;
     }
 
     public List<SolicitacaoMaterial> findAllByYear() {
