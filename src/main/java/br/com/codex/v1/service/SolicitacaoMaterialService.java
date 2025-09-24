@@ -35,6 +35,7 @@ public class SolicitacaoMaterialService {
             item.setDescricao(itemDto.getDescricao());
             item.setQuantidade(itemDto.getQuantidade());
             item.setUnidadeMedida(itemDto.getUnidadeMedida());
+            item.setSolicitacaoMaterial(solicitacaoMaterial);
             itensRepository.save(item);
         }
         return solicitacaoMaterial;
