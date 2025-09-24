@@ -39,6 +39,9 @@ public class RelatorioResource {
     @Autowired
     private EmpresaRepository empresaRepository;
 
+    @Autowired
+    private JasperEstoqueReportService jasperEstoqueReportService;
+
     @GetMapping("/balanco-patrimonial")
     public ResponseEntity<BalancoPatrimonialDto> getBalancoPatrimonial(
             @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
@@ -299,6 +302,24 @@ public class RelatorioResource {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(("Erro ao gerar PDF: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    @GetMapping("/solicitacao_material/{id}")
+    public ResponseEntity<byte[]> gerarRelatorioSolicitacaoMaterial(@PathVariable Long id) {
+        try {
+            // Agora passa apenas o ID
+            byte[] pdfBytes = jasperEstoqueReportService.generateSolicitacaoMaterialReport(id);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "solicitacao_material_" + id + ".pdf");
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Erro ao gerar Pdf da solicitacao de material: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
         }
     }
 }
