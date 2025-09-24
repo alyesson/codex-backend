@@ -21,8 +21,11 @@ public class SolicitacaoMaterialService {
     @Autowired
     private SolicitacaoMaterialItensRepository itensRepository;
 
-    public SolicitacaoMaterial create(SolicitacaoMaterialDto dto) {
-        SolicitacaoMaterial obj = new SolicitacaoMaterial(dto);
+    public SolicitacaoMaterial create(SolicitacaoMaterialDto solicitacaoMaterialDto) {
+        LocalDate currentDay = LocalDate.now();
+        solicitacaoMaterialDto.setId(null);
+        solicitacaoMaterialDto.setDataSolicitacao(currentDay);
+        SolicitacaoMaterial obj = new SolicitacaoMaterial(solicitacaoMaterialDto);
         obj = repository.save(obj);
         return obj;
     }
@@ -32,9 +35,9 @@ public class SolicitacaoMaterialService {
         return repository.findAllByYear(currentYear);
     }
 
-    public List<SolicitacaoMaterial> findAllByYearUsuario(String solicitante) {
+    public List<SolicitacaoMaterial> findAllByYearUsuario(String email) {
         int currentYear = LocalDate.now().getYear();
-        return repository.findAllByYearUsuario(currentYear, solicitante);
+        return repository.findAllByYearUsuario(currentYear, email);
     }
 
     public List<SolicitacaoMaterial> findAllBySituacao(Integer situacao) {

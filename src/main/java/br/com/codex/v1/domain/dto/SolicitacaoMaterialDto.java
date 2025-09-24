@@ -11,6 +11,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class SolicitacaoMaterialDto implements Serializable {
     private String email;
     private String departamento;
     private String centroCusto;
-    private String dataSolicitacao;
+    private LocalDate dataSolicitacao;
     private Situacao situacao;
     private Prioridade prioridade;
     private String localEntrega;

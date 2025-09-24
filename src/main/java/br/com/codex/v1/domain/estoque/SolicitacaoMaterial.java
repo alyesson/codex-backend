@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,7 @@ public class SolicitacaoMaterial implements Serializable {
     private String email;
     private String departamento;
     private String centroCusto;
-    private String dataSolicitacao;
+    private LocalDate dataSolicitacao;
     private Situacao situacao;
     private Prioridade prioridade;
     private String localEntrega;
@@ -44,7 +45,7 @@ public class SolicitacaoMaterial implements Serializable {
     }
 
     public SolicitacaoMaterial(Long id, String solicitante, String email, String departamento,
-                               String centroCusto, String dataSolicitacao, Situacao situacao, Prioridade prioridade,
+                               String centroCusto, LocalDate dataSolicitacao, Situacao situacao, Prioridade prioridade,
                                String localEntrega, String observacao, String motivoSolicitacao) {
         this.id = id;
         this.solicitante = solicitante;

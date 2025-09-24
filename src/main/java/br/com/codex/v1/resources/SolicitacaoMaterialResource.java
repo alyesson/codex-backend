@@ -40,9 +40,8 @@ public class SolicitacaoMaterialResource {
     }
 
     @GetMapping("/solicitacao_usuario_ano")
-    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllByYearUsuario(
-            @RequestParam(value = "solicitante") String solicitante) {
-        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllByYearUsuario(solicitante);
+    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllByYearUsuario(@RequestParam(value = "email") String email) {
+        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllByYearUsuario(email);
         List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
