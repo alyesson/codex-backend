@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EntradaMaterialRepository extends JpaRepository<EntradaMaterial, Long> {
+
     boolean existsByNotaFiscalAndCodigoProduto(Integer notaFiscal,String codigoProduto);
+
     Optional<EntradaMaterial> findByLote(String lote);
 
     @Query(value = "SELECT p FROM EntradaMaterial p WHERE p.codigoProduto=:codigoProduto and p.lote=:lote")
@@ -21,4 +23,6 @@ public interface EntradaMaterialRepository extends JpaRepository<EntradaMaterial
 
     @Query("SELECT a FROM EntradaMaterial a WHERE a.dataEntrada BETWEEN :dataInicial AND :dataFinal")
     List<EntradaMaterial> findAllEntradaPeriodo(@Param("dataInicial") Date dataInicial, @Param("dataFinal") Date dataFinal);
+
+    Optional<EntradaMaterial> findByCodigoProduto(String codigoProduto);
 }

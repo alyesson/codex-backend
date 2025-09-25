@@ -30,27 +30,6 @@ public class EntradaMaterialResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
-    @PutMapping(value = "/ajusta_estoque/{codigoProduto}/{lote}/{quantidade}")
-    public ResponseEntity<EntradaMaterialDto> incluiSaldo(@PathVariable String codigoProduto, @PathVariable String lote, @PathVariable int quantidade) {
-        EntradaMaterial materialObj = entradaMaterialService.ajustaSaldo(codigoProduto, lote, quantidade);
-        return ResponseEntity.ok().body(new EntradaMaterialDto(materialObj));
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<EntradaMaterialDto> delete(@PathVariable Long id){
-        entradaMaterialService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<EntradaMaterialDto> findById(@PathVariable Long id){
-        EntradaMaterial objEntrada = entradaMaterialService.findById(id);
-        return ResponseEntity.ok().body(new EntradaMaterialDto(objEntrada));
-    }
-
     //Lista todos os produtos, incluindo os zerados
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_VENDAS', 'GERENTE_COMPRAS', 'GERENTE_VENDAS', 'VENDEDOR', 'COMPRADOR')")
     @GetMapping
@@ -76,5 +55,33 @@ public class EntradaMaterialResource {
         List<EntradaMaterial> list = entradaMaterialService.findAllEntradaPeriodo(dataInicial, dataFinal);
         List<EntradaMaterialDto> listDto = list.stream().map(EntradaMaterialDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
+    @PutMapping(value = "/ajusta_estoque/{codigoProduto}/{lote}/{quantidade}")
+    public ResponseEntity<EntradaMaterialDto> incluiSaldo(@PathVariable String codigoProduto, @PathVariable String lote, @PathVariable int quantidade) {
+        EntradaMaterial materialObj = entradaMaterialService.ajustaSaldo(codigoProduto, lote, quantidade);
+        return ResponseEntity.ok().body(new EntradaMaterialDto(materialObj));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE')")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<EntradaMaterialDto> delete(@PathVariable Long id){
+        entradaMaterialService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA')")
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<EntradaMaterialDto> findById(@PathVariable Long id){
+        EntradaMaterial objEntrada = entradaMaterialService.findById(id);
+        return ResponseEntity.ok().body(new EntradaMaterialDto(objEntrada));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUISTA', 'GERENTE_VENDAS', 'VENDEDOR')")
+    @GetMapping(value = "/produto/{codigoProduto}")
+    public ResponseEntity<EntradaMaterialDto> findByCodigoProduto(@PathVariable String codigoProduto){ // CORRIGI: mesmo nome
+        EntradaMaterial entraObj = entradaMaterialService.findByCodigoProduto(codigoProduto);
+        return ResponseEntity.ok().body(new EntradaMaterialDto(entraObj));
     }
 }

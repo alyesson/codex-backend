@@ -89,8 +89,8 @@ public class EntradaMaterialService {
         }
     }
 
-    private Produto findByCodigoProduto(String codigoProduto) {
-        Optional<Produto> codigo = produtoRepository.findByCodigo(codigoProduto);
+    public EntradaMaterial findByCodigoProduto(String codigoProduto) {
+        Optional<EntradaMaterial> codigo = entradaMaterialRepository.findByCodigoProduto(codigoProduto);
         return codigo.orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado com esse código"));
     }
 
