@@ -21,6 +21,7 @@ public class SolicitacaoMaterialItensDto implements Serializable {
     private String descricao;
     private Integer quantidade;
     private String unidadeMedida;
+    private String situacao;
     private SolicitacaoMaterialDto solicitacaoMaterial;
 
     public SolicitacaoMaterialItensDto() {
@@ -33,18 +34,7 @@ public class SolicitacaoMaterialItensDto implements Serializable {
         this.descricao = obj.getDescricao();
         this.quantidade = obj.getQuantidade();
         this.unidadeMedida = obj.getUnidadeMedida();
+        this.situacao = obj.getSituacao();
         this.solicitacaoMaterial = new SolicitacaoMaterialDto(obj.getSolicitacaoMaterial());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        SolicitacaoMaterialItensDto that = (SolicitacaoMaterialItensDto) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

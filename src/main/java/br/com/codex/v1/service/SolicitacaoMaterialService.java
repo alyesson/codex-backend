@@ -1,6 +1,7 @@
 package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.dto.SolicitacaoMaterialItensDto;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterial;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterialItens;
 import br.com.codex.v1.domain.dto.SolicitacaoMaterialDto;
@@ -51,13 +52,17 @@ public class SolicitacaoMaterialService {
         return repository.findAllByYearUsuario(currentYear, email);
     }
 
-    public List<SolicitacaoMaterial> findAllBySituacao(Integer situacao) {
+    public List<SolicitacaoMaterial> findAllBySituacao(Situacao situacao) {
         int currentYear = LocalDate.now().getYear();
         return repository.findAllBySituacao(situacao, currentYear);
     }
 
-    public void update(Long id, Integer situacao) {
+    public void update(Long id, Situacao situacao) {
         repository.saveSituacao(id, situacao);
+    }
+
+    public void updateItens(Long id, String situacao) {
+        itensRepository.saveSituacaoItens(id, situacao);
     }
 
     public List<SolicitacaoMaterialItens> findAllItensBySolicitacaoId(Long id) {

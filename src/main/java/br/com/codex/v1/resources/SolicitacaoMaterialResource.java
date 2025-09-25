@@ -1,5 +1,6 @@
 package br.com.codex.v1.resources;
 
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterial;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterialItens;
 import br.com.codex.v1.domain.dto.SolicitacaoMaterialDto;
@@ -46,18 +47,25 @@ public class SolicitacaoMaterialResource {
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @GetMapping("/situacao")
-    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacao(@RequestParam(value = "situacao") Integer situacao) {
+    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacao(@RequestParam(value = "situacao") Situacao situacao) {
         List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllBySituacao(situacao);
         List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SolicitacaoMaterialDto> update(@PathVariable Long id, @RequestParam Integer situacao) {
+    public ResponseEntity<SolicitacaoMaterialDto> update(@PathVariable Long id, @RequestParam Situacao situacao) {
         solicitacaoMaterialService.update(id, situacao);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @PutMapping(value = "/situacao/{id}")
+    public ResponseEntity<SolicitacaoMaterialItensDto> updateItens(@PathVariable Long id, @RequestParam String situacao) {
+        solicitacaoMaterialService.updateItens(id, situacao);
         return ResponseEntity.ok().build();
     }
 

@@ -22,6 +22,7 @@ public class SolicitacaoMaterialItens implements Serializable {
     private String descricao;
     private Integer quantidade;
     private String unidadeMedida;
+    private String situacao;
     @ManyToOne
     @JoinColumn(name = "solicitacaoMaterial_id")
     private SolicitacaoMaterial solicitacaoMaterial;
@@ -31,12 +32,13 @@ public class SolicitacaoMaterialItens implements Serializable {
     }
 
     public SolicitacaoMaterialItens(Long id, String codigo, String descricao, Integer quantidade, String unidadeMedida,
-                                    SolicitacaoMaterial solicitacaoMaterial) {
+                                    String situacao, SolicitacaoMaterial solicitacaoMaterial) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
         this.quantidade = quantidade;
         this.unidadeMedida = unidadeMedida;
+        this.situacao = situacao;
         this.solicitacaoMaterial = solicitacaoMaterial;
     }
 

@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.repository;
 
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,10 +24,10 @@ public interface SolicitacaoMaterialRepository extends JpaRepository<Solicitacao
     @Modifying
     @Transactional
     @Query("UPDATE SolicitacaoMaterial u SET u.situacao = :situacao WHERE u.id = :id")
-    void saveSituacao(@Param("id") Long id, @Param("situacao") Integer situacao);
+    void saveSituacao(@Param("id") Long id, @Param("situacao") Situacao situacao);
 
     @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.situacao = :situacao AND YEAR(s.dataSolicitacao) = :anoAtual ORDER BY s.dataSolicitacao DESC")
-    List<SolicitacaoMaterial> findAllBySituacao(@Param("situacao") Integer situacao, @Param("anoAtual") int anoAtual);
+    List<SolicitacaoMaterial> findAllBySituacao(@Param("situacao") Situacao situacao, @Param("anoAtual") int anoAtual);
 
     @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.dataSolicitacao BETWEEN :dataInicial AND :dataFinal")
     List<SolicitacaoMaterial> findAllSolicitacaoPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
