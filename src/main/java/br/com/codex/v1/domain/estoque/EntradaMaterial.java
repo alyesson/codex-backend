@@ -21,23 +21,24 @@ public class EntradaMaterial implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
-    protected String codigoProduto;
-    protected String produto;
-    protected Date dataEntrada;
-    protected String fornecedor;
-    protected String cnpjFornecedor;
-    protected Integer quantidade;
-    protected Integer notaFiscal;
-    protected Date dataNota;
-    protected BigDecimal valorProduto;
-    protected BigDecimal valorNota;
-    protected String lote;
-    protected String validade;
-    protected String autor;
-    protected String motivoAcerto;
-    protected String unidadeComercial;
-    protected Integer quantidadePorUnidade;
+    private Long id;
+    private String codigoProduto;
+    private String produto;
+    private Date dataEntrada;
+    private String fornecedor;
+    private String cnpjFornecedor;
+    private Integer quantidade;
+    private Integer notaFiscal;
+    private Date dataNota;
+    private BigDecimal valorProduto;
+    private BigDecimal valorNota;
+    private String lote;
+    private String validade;
+    private String autor;
+    private String motivoAcerto;
+    private String unidadeComercial;
+    private Integer quantidadePorUnidade;
+    private String local;
 
     public EntradaMaterial() {
         super();
@@ -46,7 +47,8 @@ public class EntradaMaterial implements Serializable {
     public EntradaMaterial(Long id, String codigoProduto, String produto, Date dataEntrada, String fornecedor,
                            String cnpjFornecedor, Integer quantidade, Integer notaFiscal, Date dataNota,
                            BigDecimal valorProduto, BigDecimal valorNota, String lote, String validade,
-                           String autor, String motivoAcerto, String unidadeComercial, Integer quantidadePorUnidade) {
+                           String autor, String motivoAcerto, String unidadeComercial, Integer quantidadePorUnidade,
+                           String local) {
         this.id = id;
         this.codigoProduto = codigoProduto;
         this.produto = produto;
@@ -64,6 +66,7 @@ public class EntradaMaterial implements Serializable {
         this.motivoAcerto = motivoAcerto;
         this.unidadeComercial = unidadeComercial;
         this.quantidadePorUnidade = quantidadePorUnidade;
+        this.local = local;
     }
 
     public EntradaMaterial(EntradaMaterialDto obj) {
@@ -84,6 +87,7 @@ public class EntradaMaterial implements Serializable {
         this.motivoAcerto = obj.getMotivoAcerto();
         this.unidadeComercial = obj.getUnidadeComercial();
         this.quantidadePorUnidade = obj.getQuantidadePorUnidade();
+        this.local = obj.getLocal();
     }
 
     @Override

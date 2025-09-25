@@ -17,25 +17,26 @@ public class EntradaMaterialDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    protected Long id;
+    private Long id;
     @NotNull(message = "Código do produto não pode estar em branco")
-    protected String codigoProduto;
+    private String codigoProduto;
     @NotNull(message = "Descrição do produto não pode estar em branco")
-    protected String produto;
-    protected Date dataEntrada;
-    protected String fornecedor;
-    protected String cnpjFornecedor;
-    protected Integer quantidade;
-    protected Integer notaFiscal;
-    protected Date dataNota;
-    protected BigDecimal valorProduto;
-    protected BigDecimal valorNota;
-    protected String lote;
-    protected String validade;
-    protected String autor;
-    protected String motivoAcerto;
-    protected String unidadeComercial;
-    protected Integer quantidadePorUnidade;
+    private String produto;
+    private Date dataEntrada;
+    private String fornecedor;
+    private String cnpjFornecedor;
+    private Integer quantidade;
+    private Integer notaFiscal;
+    private Date dataNota;
+    private BigDecimal valorProduto;
+    private BigDecimal valorNota;
+    private String lote;
+    private String validade;
+    private String autor;
+    private String motivoAcerto;
+    private String unidadeComercial;
+    private Integer quantidadePorUnidade;
+    private String local;
 
 
     public EntradaMaterialDto() {
@@ -60,5 +61,6 @@ public class EntradaMaterialDto implements Serializable {
         this.motivoAcerto = obj.getMotivoAcerto();
         this.unidadeComercial = obj.getUnidadeComercial();
         this.quantidadePorUnidade = obj.getQuantidadePorUnidade();
+        this.local = obj.getLocal();
     }
 }
