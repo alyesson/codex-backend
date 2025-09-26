@@ -53,8 +53,11 @@ public class SolicitacaoMaterialService {
     }
 
     public List<SolicitacaoMaterial> findAllBySituacao(Situacao situacao) {
-        int currentYear = LocalDate.now().getYear();
-        return repository.findAllBySituacao(situacao, currentYear);
+        return repository.findAllBySituacao(situacao);
+    }
+
+    public List<SolicitacaoMaterial> findAllBySituacaoEmSeparacaoSeparado() {
+        return repository.findAllBySituacaoEmSeparacaoSeparado();
     }
 
     public void update(Long id, Situacao situacao) {

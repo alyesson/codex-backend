@@ -56,6 +56,24 @@ public class SolicitacaoMaterialResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @GetMapping("/situacao_em_separacao_separado")
+    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacaoEmSeparacaoSeparado() {
+        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllBySituacaoEmSeparacaoSeparado();
+        List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @GetMapping("/solicitacao_periodo")
+    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllSolicitacaoPeriodo(
+            @RequestParam("dataInicial") LocalDate dataInicial,
+            @RequestParam("dataFinal") LocalDate dataFinal) {
+        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllSolicitacaoPeriodo(dataInicial, dataFinal);
+        List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<SolicitacaoMaterialDto> update(@PathVariable Long id, @RequestParam Situacao situacao) {
         solicitacaoMaterialService.update(id, situacao);
@@ -80,15 +98,5 @@ public class SolicitacaoMaterialResource {
     public ResponseEntity<SolicitacaoMaterialDto> findById(@PathVariable Long id) {
         SolicitacaoMaterial obj = solicitacaoMaterialService.findById(id);
         return ResponseEntity.ok().body(new SolicitacaoMaterialDto(obj));
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_COMPRAS', 'COMPRADOR', 'GERENTE_ESTOQUE', 'ESTOQUE')")
-    @GetMapping("/solicitacao_periodo")
-    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllSolicitacaoPeriodo(
-            @RequestParam("dataInicial") LocalDate dataInicial,
-            @RequestParam("dataFinal") LocalDate dataFinal) {
-        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllSolicitacaoPeriodo(dataInicial, dataFinal);
-        List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
     }
 }
