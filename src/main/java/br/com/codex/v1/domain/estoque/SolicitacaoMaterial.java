@@ -30,6 +30,7 @@ public class SolicitacaoMaterial implements Serializable {
     private String departamento;
     private String centroCusto;
     private LocalDate dataSolicitacao;
+    private LocalDate dataEntrega;
     private Situacao situacao;
     private Prioridade prioridade;
     private String localEntrega;
@@ -45,14 +46,16 @@ public class SolicitacaoMaterial implements Serializable {
     }
 
     public SolicitacaoMaterial(Long id, String solicitante, String email, String departamento,
-                               String centroCusto, LocalDate dataSolicitacao, Situacao situacao, Prioridade prioridade,
-                               String localEntrega, String observacao, String motivoSolicitacao) {
+                               String centroCusto, LocalDate dataSolicitacao, LocalDate dataEntrega,
+                               Situacao situacao, Prioridade prioridade, String localEntrega,
+                               String observacao, String motivoSolicitacao) {
         this.id = id;
         this.solicitante = solicitante;
         this.email = email;
         this.departamento = departamento;
         this.centroCusto = centroCusto;
         this.dataSolicitacao = dataSolicitacao;
+        this.dataEntrega = dataEntrega;
         this.situacao = situacao;
         this.prioridade = prioridade;
         this.localEntrega = localEntrega;
@@ -67,6 +70,7 @@ public class SolicitacaoMaterial implements Serializable {
         this.departamento = obj.getDepartamento();
         this.centroCusto = obj.getCentroCusto();
         this.dataSolicitacao = obj.getDataSolicitacao();
+        this.dataEntrega = obj.getDataEntrega();
         this.situacao = obj.getSituacao();
         this.prioridade = obj.getPrioridade();
         this.localEntrega = obj.getLocalEntrega();

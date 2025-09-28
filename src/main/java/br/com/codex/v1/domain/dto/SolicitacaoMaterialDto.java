@@ -29,6 +29,7 @@ public class SolicitacaoMaterialDto implements Serializable {
     private String departamento;
     private String centroCusto;
     private LocalDate dataSolicitacao;
+    private LocalDate dataEntrega;
     private Situacao situacao;
     private Prioridade prioridade;
     private String localEntrega;
@@ -47,6 +48,7 @@ public class SolicitacaoMaterialDto implements Serializable {
         this.departamento = obj.getDepartamento();
         this.centroCusto = obj.getCentroCusto();
         this.dataSolicitacao = obj.getDataSolicitacao();
+        this.dataEntrega = obj.getDataEntrega();
         this.situacao = obj.getSituacao();
         this.prioridade = obj.getPrioridade();
         this.localEntrega = obj.getLocalEntrega();

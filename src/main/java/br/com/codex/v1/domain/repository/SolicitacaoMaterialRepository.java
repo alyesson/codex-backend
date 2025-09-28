@@ -26,11 +26,19 @@ public interface SolicitacaoMaterialRepository extends JpaRepository<Solicitacao
     @Query("UPDATE SolicitacaoMaterial u SET u.situacao = :situacao WHERE u.id = :id")
     void saveSituacao(@Param("id") Long id, @Param("situacao") Situacao situacao);
 
-    @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.situacao = :situacao AND YEAR(s.dataSolicitacao) = YEAR(CURRENT_DATE) ORDER BY s.dataSolicitacao DESC")
-    List<SolicitacaoMaterial> findAllBySituacao(@Param("situacao") Situacao situacao);
+    @Modifying
+    @Transactional
+    @Query("UPDATE SolicitacaoMaterial u SET u.situacao = :situacao, u.dataEntrega = :dataEntrega WHERE u.id = :id")
+    void saveSituacaoEntregue(@Param("id") Long id, @Param("dataEntrega") LocalDate dataEntrega, @Param("situacao") Situacao situacao);
+
+    @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.situacao IN (0, 9) AND YEAR(s.dataSolicitacao) = YEAR(CURRENT_DATE) ORDER BY s.dataSolicitacao DESC")
+    List<SolicitacaoMaterial> findAllBySituacaoAbertoEmSeparacao();
 
     @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.situacao IN (9, 10) AND YEAR(s.dataSolicitacao) = YEAR(CURRENT_DATE) ORDER BY s.dataSolicitacao DESC")
     List<SolicitacaoMaterial> findAllBySituacaoEmSeparacaoSeparado();
+
+    @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.situacao IN (10, 11) AND YEAR(s.dataSolicitacao) = YEAR(CURRENT_DATE) ORDER BY s.dataSolicitacao DESC")
+    List<SolicitacaoMaterial> findAllBySituacaoEntregue();
 
     @Query("SELECT s FROM SolicitacaoMaterial s WHERE s.dataSolicitacao BETWEEN :dataInicial AND :dataFinal")
     List<SolicitacaoMaterial> findAllSolicitacaoPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);

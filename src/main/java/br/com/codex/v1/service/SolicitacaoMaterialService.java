@@ -52,15 +52,24 @@ public class SolicitacaoMaterialService {
         return repository.findAllByYearUsuario(currentYear, email);
     }
 
-    public List<SolicitacaoMaterial> findAllBySituacao(Situacao situacao) {
-        return repository.findAllBySituacao(situacao);
+    public List<SolicitacaoMaterial> findAllBySituacaoAbertoEmSeparacao() {
+        return repository.findAllBySituacaoAbertoEmSeparacao();
     }
 
     public List<SolicitacaoMaterial> findAllBySituacaoEmSeparacaoSeparado() {
         return repository.findAllBySituacaoEmSeparacaoSeparado();
     }
 
+    public List<SolicitacaoMaterial> findAllBySituacaoEntregue() {
+        return repository.findAllBySituacaoEntregue();
+    }
+
     public void update(Long id, Situacao situacao) {
+
+        if(situacao.getCodigo() == 11){
+            LocalDate dataAtual = LocalDate.now();
+            repository.saveSituacaoEntregue(id, dataAtual, situacao);
+        }
         repository.saveSituacao(id, situacao);
     }
 

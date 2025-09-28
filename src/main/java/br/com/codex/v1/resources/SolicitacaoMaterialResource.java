@@ -48,9 +48,9 @@ public class SolicitacaoMaterialResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
-    @GetMapping("/situacao")
-    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacao(@RequestParam(value = "situacao") Situacao situacao) {
-        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllBySituacao(situacao);
+    @GetMapping("/situacao_aberta_em_separacao")
+    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacaoAbertoEmSeparacao() {
+        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllBySituacaoAbertoEmSeparacao();
         List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
@@ -59,6 +59,14 @@ public class SolicitacaoMaterialResource {
     @GetMapping("/situacao_em_separacao_separado")
     public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacaoEmSeparacaoSeparado() {
         List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllBySituacaoEmSeparacaoSeparado();
+        List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_ESTOQUE', 'ESTOQUE')")
+    @GetMapping("/situacao_entregue")
+    public ResponseEntity<List<SolicitacaoMaterialDto>> findAllBySituacaoEntregue() {
+        List<SolicitacaoMaterial> list = solicitacaoMaterialService.findAllBySituacaoEntregue();
         List<SolicitacaoMaterialDto> listDto = list.stream().map(SolicitacaoMaterialDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
