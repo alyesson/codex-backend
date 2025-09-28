@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="624"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -20,7 +20,8 @@
 	</parameter>
 	<parameter name="P_CODIGO" class="java.lang.Long" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[Select * from orcamento WHERE id = $P{P_CODIGO}]]>
+		<![CDATA[SELECT sc.*, e.* FROM orcamento sc CROSS JOIN empresa e
+WHERE sc.id = $P{P_CODIGO}]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -64,21 +65,128 @@
 	<field name="vendedor" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="bairro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="celular" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="classificacao_financeira" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cnae" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cnpj" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codigo_cidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="complemento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email_contato" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="endereco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inscricao_estadual" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inscricao_estadual_st" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inscricao_municipal" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="jdbc_url" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome_fantasia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="possui_base" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="razao_social" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="regime_tributario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="suframa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telefone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_empresa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="uf" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<title>
 		<band height="88" splitType="Stretch">
-			<frame>
-				<reportElement mode="Opaque" x="80" y="8" width="400" height="73" backcolor="#FFFFFF" uuid="0f155bad-9af5-4d08-aa31-c64fb98cccca"/>
-			</frame>
-			<image>
-				<reportElement x="8" y="3" width="68" height="40" uuid="4b3cddf2-7dcc-4026-a72c-6a860c76c347"/>
-			</image>
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="4" width="552" height="82" uuid="89ccb6f8-7bb2-4c76-b0cc-815412b55863"/>
 			</rectangle>
+			<textField>
+				<reportElement x="105" y="51" width="110" height="17" uuid="5155726c-a03e-4044-83ca-a3ad8cac6936"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cnpj}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="4" y="13" width="65" height="34" uuid="ae965d44-08b9-4076-b0eb-67d548d9304e"/>
+				<imageExpression><![CDATA["reports/logo.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="215" y="51" width="90" height="17" uuid="c07069c9-36e3-454a-9a17-72f2f9b0f8c8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{inscricao_estadual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="51" width="34" height="17" uuid="05235cc9-5dfe-4756-b1c6-a46097199eef"/>
+				<textFieldExpression><![CDATA[$F{uf}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="306" y="51" width="168" height="17" uuid="8f8354b9-0abb-43cc-a8c3-cb887d6e0f91"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="105" y="16" width="369" height="17" uuid="2849865e-5411-4eda-aa9c-18fa9d922288"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{razao_social}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="474" y="51" width="11" height="17" uuid="97de7903-4f9a-4f7e-85e8-15d11a781404"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="33" width="369" height="17" uuid="3f2cc688-8104-453c-9d91-b8ba881137d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{endereco}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<detail>
 		<band height="169" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="0" y="3" width="555" height="41" uuid="18ef62e0-a6b0-4fd6-9319-469b40ada420"/>
+			</rectangle>
 			<staticText>
 				<reportElement x="6" y="56" width="74" height="20" uuid="17e00f99-e81f-48bb-bbd6-fa13f5e66a53"/>
 				<textElement verticalAlignment="Middle">
@@ -164,17 +272,14 @@
 				<reportElement mode="Transparent" x="0" y="48" width="555" height="93" uuid="eed6b8fd-9644-47fe-903e-b97d760cf842"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="151" y="7" width="119" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
+				<reportElement x="164" y="7" width="119" height="30" uuid="40de0265-349e-494d-8101-fb4cab335fd6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Orçamento Nº]]></text>
 			</staticText>
-			<rectangle radius="10">
-				<reportElement mode="Transparent" x="0" y="3" width="555" height="41" uuid="18ef62e0-a6b0-4fd6-9319-469b40ada420"/>
-			</rectangle>
 			<textField>
-				<reportElement x="270" y="7" width="100" height="30" uuid="399fb8f9-e1c2-4fcc-aad9-a9d993e1f42c"/>
+				<reportElement x="283" y="7" width="100" height="30" uuid="399fb8f9-e1c2-4fcc-aad9-a9d993e1f42c"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font size="15" isBold="true"/>
 				</textElement>

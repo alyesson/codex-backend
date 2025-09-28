@@ -1,13 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="requisicao_material_itens_template" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f87b5286-4d62-432f-b684-28a6e00a2ad9">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="P_CODIGOID" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="P_CODIGOID" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM solicitacao_material_itens WHERE solicitacao_material_id = $P{P_CODIGOID}]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descricao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantidade" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unidade_medida" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="solicitacao_material_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="situacao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
+	<columnHeader>
+		<band height="19">
+			<rectangle radius="10">
+				<reportElement mode="Opaque" x="0" y="0" width="554" height="18" backcolor="#A9E2FF" uuid="8a5d9725-a508-4462-a0ad-b3dad481db11"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="490" y="1" width="59" height="17" uuid="2fd0277b-edc7-4cc9-9853-a0ed35af33d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Uni. Com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="1" width="60" height="17" uuid="47458cb5-4037-4b7a-8935-0bb29d6f1dd5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="1" width="58" height="17" uuid="7f906e64-86dc-407b-a330-9933b199275b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="401" y="0" width="33" height="18" uuid="c3233444-bb62-40ee-83ff-fb55ad9847ff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Quant.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="27" splitType="Stretch">
+			<line>
+				<reportElement x="397" y="-1" width="1" height="26" uuid="65b05fbf-e6be-4498-87ee-5b5fff22e742"/>
+			</line>
+			<line>
+				<reportElement x="490" y="0" width="1" height="26" uuid="4e5c5f96-3028-4b18-823a-a36e85c13987"/>
+			</line>
+			<line>
+				<reportElement x="65" y="0" width="1" height="26" uuid="ddbba0b5-3277-4912-9a91-51ff828c7161"/>
+			</line>
+			<line>
+				<reportElement x="0" y="26" width="554" height="1" uuid="417bea99-1174-4a56-9db4-f2f99adb86d9"/>
+			</line>
+		</band>
 	</detail>
 </jasperReport>
