@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="requisicao_material_template" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c267bf7-251b-43de-ba94-8f1d0160cb24">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="92"/>
+	<property name="ireport.y" value="44"/>
 	<parameter name="P_CODIGO" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["D:\\Codex Web\\V_1.0.0\\codex-backend\\src\\main\\resources\\reports\\"]]></defaultValueExpression>
@@ -278,7 +278,7 @@ CROSS JOIN empresa e WHERE sm.id = $P{P_CODIGO}]]>
 				<text><![CDATA[ITENS SOLICITADOS]]></text>
 			</staticText>
 		</band>
-		<band height="498">
+		<band height="498" splitType="Stretch">
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="3" width="555" height="493" uuid="7be9276f-e88e-4c96-99e7-f0fa1e3df4b2"/>
 			</rectangle>
@@ -291,7 +291,7 @@ CROSS JOIN empresa e WHERE sm.id = $P{P_CODIGO}]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "solicitacao_material_itens_template.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="122">
+		<band height="122" splitType="Stretch">
 			<rectangle radius="10">
 				<reportElement mode="Transparent" x="0" y="3" width="553" height="116" uuid="ab550b47-f6db-4d86-bc37-091140b3e2ba"/>
 			</rectangle>
