@@ -5,7 +5,7 @@
 	<property name="com.jasperassistant.designer.GridColor" value="FFCCCCCC"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="96"/>
 	<parameter name="CODIGO_VENDA" class="java.lang.String"/>
 	<parameter name="DATA_EMISSAO" class="java.sql.Date"/>
 	<parameter name="VENDEDOR" class="java.lang.String"/>
@@ -163,7 +163,7 @@ CROSS JOIN empresa e WHERE sc.id = $P{P_CODIGO}]]>
 			</textField>
 			<textField>
 				<reportElement x="323" y="43" width="178" height="17" uuid="be94917e-0363-48ad-8f2a-b387654d089b"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{cidade}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -178,6 +178,7 @@ CROSS JOIN empresa e WHERE sc.id = $P{P_CODIGO}]]>
 			</staticText>
 			<textField>
 				<reportElement x="511" y="43" width="34" height="17" uuid="875a9097-56f7-42a7-9345-588326620e21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{uf}]]></textFieldExpression>
 			</textField>
 		</band>

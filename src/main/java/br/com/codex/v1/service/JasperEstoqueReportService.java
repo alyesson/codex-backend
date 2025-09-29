@@ -58,7 +58,7 @@ public class JasperEstoqueReportService {
             parameters.put("P_CODIGOID", solicitacaoMaterialId);
             parameters.put("SUBREPORT_DIR", "reports/");
 
-            JasperReport jasperReport = loadReport("requisicao_material_template.jasper");
+            JasperReport jasperReport = loadReport("solicitacao_material_template.jasper");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
@@ -68,7 +68,7 @@ public class JasperEstoqueReportService {
             if (connection != null) {
                 try { connection.close();
                 } catch (SQLException e) {
-                    logger.error("Erro ao gerar PDF de requisição de material: " +e);
+                    logger.error("Erro ao gerar PDF de solicitação de material: " +e);
                 }
             }
         }

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="requisicao_material_template" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c267bf7-251b-43de-ba94-8f1d0160cb24">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="92"/>
 	<parameter name="P_CODIGO" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["D:\\Codex Web\\V_1.0.0\\codex-backend\\src\\main\\resources\\reports\\"]]></defaultValueExpression>
@@ -152,16 +152,17 @@ CROSS JOIN empresa e WHERE sm.id = $P{P_CODIGO}]]>
 				<textFieldExpression><![CDATA[$F{inscricao_estadual}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="346" y="49" width="149" height="17" uuid="f1f9943c-02e2-41e6-a34e-fb39880196ae"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="353" y="49" width="96" height="17" uuid="f1f9943c-02e2-41e6-a34e-fb39880196ae"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{cidade}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="504" y="49" width="34" height="17" uuid="236cf0d7-370f-464c-a678-f5317441f742"/>
+				<reportElement x="460" y="49" width="34" height="17" uuid="236cf0d7-370f-464c-a678-f5317441f742"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{uf}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="494" y="49" width="11" height="17" uuid="e928c3cf-a18f-46a5-b430-69d157a22e9c"/>
+				<reportElement x="449" y="49" width="11" height="17" uuid="e928c3cf-a18f-46a5-b430-69d157a22e9c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[-]]></text>
 			</staticText>
@@ -278,17 +279,17 @@ CROSS JOIN empresa e WHERE sm.id = $P{P_CODIGO}]]>
 			</staticText>
 		</band>
 		<band height="498">
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="0" y="3" width="555" height="493" uuid="7be9276f-e88e-4c96-99e7-f0fa1e3df4b2"/>
+			</rectangle>
 			<subreport>
-				<reportElement x="2" y="4" width="549" height="491" uuid="199cb7a5-67b1-4c57-bcfa-f82d6b7969b7"/>
+				<reportElement x="0" y="3" width="555" height="491" isPrintWhenDetailOverflows="true" uuid="199cb7a5-67b1-4c57-bcfa-f82d6b7969b7"/>
 				<subreportParameter name="P_CODIGOID">
 					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "requisicao_material_itens_template.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "solicitacao_material_itens_template.jasper"]]></subreportExpression>
 			</subreport>
-			<rectangle radius="10">
-				<reportElement mode="Transparent" x="0" y="2" width="553" height="493" uuid="7be9276f-e88e-4c96-99e7-f0fa1e3df4b2"/>
-			</rectangle>
 		</band>
 		<band height="122">
 			<rectangle radius="10">

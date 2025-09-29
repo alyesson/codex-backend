@@ -44,7 +44,7 @@
 				<text><![CDATA[Uni. Com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="183" y="1" width="60" height="17" uuid="47458cb5-4037-4b7a-8935-0bb29d6f1dd5"/>
+				<reportElement x="195" y="1" width="60" height="17" uuid="47458cb5-4037-4b7a-8935-0bb29d6f1dd5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
@@ -54,7 +54,7 @@
 				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="401" y="0" width="33" height="18" uuid="c3233444-bb62-40ee-83ff-fb55ad9847ff"/>
+				<reportElement x="424" y="0" width="33" height="18" uuid="c3233444-bb62-40ee-83ff-fb55ad9847ff"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Quant.]]></text>
 			</staticText>
@@ -74,6 +74,26 @@
 			<line>
 				<reportElement x="0" y="26" width="554" height="1" uuid="417bea99-1174-4a56-9db4-f2f99adb86d9"/>
 			</line>
+			<textField>
+				<reportElement x="0" y="6" width="65" height="20" uuid="8e307acd-e559-414f-9a42-7f0f00c24138"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="6" width="327" height="20" uuid="cb7e6721-c254-45e9-b8c6-0d50aa5e4c2e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="6" width="92" height="20" uuid="cc9536ae-d88a-4698-a5f4-f0e19f7b9855"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="491" y="6" width="64" height="20" uuid="ee5b3f9a-08c5-4965-859e-b59cb33ead93"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{unidade_medida}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>
