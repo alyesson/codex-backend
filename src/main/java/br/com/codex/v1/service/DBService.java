@@ -6,10 +6,9 @@ import br.com.codex.v1.domain.cadastros.Empresa;
 import br.com.codex.v1.domain.cadastros.TabelaCfop;
 import br.com.codex.v1.domain.cadastros.Usuario;
 import br.com.codex.v1.domain.enums.Perfil;
-import br.com.codex.v1.domain.repository.AmbienteNotaFiscalRepository;
-import br.com.codex.v1.domain.repository.EmpresaRepository;
-import br.com.codex.v1.domain.repository.TabelaCfopRepository;
-import br.com.codex.v1.domain.repository.UsuarioRepository;
+import br.com.codex.v1.domain.estoque.MotivoAcerto;
+import br.com.codex.v1.domain.repository.*;
+import br.com.codex.v1.utilitario.ImportaMotivosAcerto;
 import br.com.codex.v1.utilitario.ImportaTabelaCfop;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,9 @@ public class DBService {
 
     @Autowired
     private ImportaTabelaCfop importaTabelaCfop;
+
+    @Autowired
+    private ImportaMotivosAcerto importaMotivosAcerto;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -75,6 +77,12 @@ public class DBService {
             //Adiciona o ambiente de nota fiscal padrão
             AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
             em.persist(ambienteNotaFiscal);
+
+            //Cria alguns motivos de acerto
+            List<MotivoAcerto> listaMotivos = criaListaMotivoAcerto();
+            for(MotivoAcerto motivos : listaMotivos){
+                em.persist(motivos);
+            }
 
             List<TabelaCfop> cfops = criarListaCfopCompleta(); // Métudo que retorna todos CFOPs
             for (TabelaCfop cfop : cfops) {
@@ -126,6 +134,9 @@ public class DBService {
             AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
             ambienteNotaFiscalRepository.save(ambienteNotaFiscal);
 
+            //Importa Motivos Acerto
+            importaMotivosAcerto.importarMotivosAcerto();
+
             // Importa CFOPs
             importaTabelaCfop.importarCfops();
     }
@@ -162,13 +173,27 @@ public class DBService {
         AmbienteNotaFiscal ambienteNotaFiscal = new AmbienteNotaFiscal(null, 2);
         ambienteNotaFiscalRepository.save(ambienteNotaFiscal);
 
+        //Importa Motivos Acerto
+        importaMotivosAcerto.importarMotivosAcerto();
+
         // Importa CFOPs
         importaTabelaCfop.importarCfops();
     }
 
+    private List<MotivoAcerto> criaListaMotivoAcerto(){
+        List<MotivoAcerto> listaMotivoAcerto = new ArrayList<>();
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1000", "Entrada De Material Com Nota Fiscal"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1001", "Entrada De Material Sem Nota Fiscal"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1002", "Devolução"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1003", "Material Danificado"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1004", "Material Extraviado"));
+
+        return listaMotivoAcerto;
+    }
+
     private List<TabelaCfop> criarListaCfopCompleta() {
         List<TabelaCfop> listaCfops = new ArrayList<>();
-        listaCfops.add(new TabelaCfop(null, 11,"COMPRA PARA INDUSTRIALIZAÇÃO, PRODUÇÃO RURAL, COMERCIALIZAÇÃO OU PRESTAÇÃO DE SERVIÇO", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 11,"Compra para industrialização, produção rural, comercialização ou prestação de serviços", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1101,"Compra para industrialização ou produção rural", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1102,"Compra para comercialização", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1111,"Compra para industrialização de mercadoria recebida anteriormente em consignação industrial", "Interno", "Entrada"));
@@ -183,7 +208,7 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 1125,"Industrialização efetuada por outra empresa quando a mercadoria remetida para utilização no processo de industrialização não transitou pelo estabelecimento adquirente da mercadoria", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1126,"Compra para utilização na prestação de serviço sujeita ao ICMS - Classificam-se neste código as entradas de mercadorias a serem utilizadas nas prestações de serviços sujeitas ao ICMS. ( Efeitos a partir de 1° de janeiro de 2011 )", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1128,"Compra para utilização na prestação de serviço sujeita ao ISSQN - Classificam-se neste código as entradas de mercadorias a serem utilizadas nas prestações de serviços sujeitas ao ISSQN. ( Efeitos a partir de 1° de janeiro de 2011 )", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 115,"TRANSFERÊNCIAS PARA INDUSTRIALIZAÇÃO, PRODUÇÃO RURAL, COMERCIALIZAÇÃO OU PRESTAÇÃO DE SERVIÇOS", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 115,"Transferências para industrialização, produção rural, comercialização ou prestação de serviços", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1151,"Transferência para industrialização ou produção rural", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1152,"Transferência para comercialização", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1153,"Transferência de energia elétrica para distribuição", "Interno", "Entrada"));

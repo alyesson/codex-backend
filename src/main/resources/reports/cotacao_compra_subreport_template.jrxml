@@ -59,26 +59,32 @@
 			</staticText>
 			<staticText>
 				<reportElement x="175" y="0" width="60" height="18" uuid="f1bf5d8f-8d38-4b99-969d-d5fd08c2a35d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="314" y="0" width="33" height="18" uuid="48b3e5c1-0593-402b-a1c0-a1634d71d5d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Quant.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="355" y="0" width="36" height="18" uuid="10e2f4b3-6b18-4d84-9852-037b1aec97c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Vlr. Unit]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="509" y="0" width="33" height="18" uuid="69ddc067-b22c-4018-afed-563241608a45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="406" y="2" width="32" height="18" uuid="6f7af540-53a0-413d-991e-91e1af04ea65"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Frete]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="452" y="1" width="30" height="18" uuid="e5469ad0-d052-4d70-9f0b-2cf50b27cb73"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Desc.]]></text>
 			</staticText>
 		</band>
