@@ -111,7 +111,7 @@ public class CadastroColaboradores implements Serializable {
     protected String contaBanco;
     @Column(length = 10)
     protected BigDecimal salarioColaborador;
-    @Column(length = 35)
+    @Column(length = 75)
     protected String jornada;
     @Column(length = 60)
     protected String nomePai;
