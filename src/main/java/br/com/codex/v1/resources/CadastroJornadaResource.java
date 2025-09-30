@@ -31,6 +31,14 @@ public class CadastroJornadaResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @GetMapping(value = "/codigo_jornada")
+    public ResponseEntity<List<CadastroJornadaDto>> findByNumeroNotaFiscal(@RequestParam(value = "codigoJornada") String codigoJornada){
+        List<CadastroJornada> list = cadastroJornadaService.findAllByCodigoJornada(codigoJornada);
+        List<CadastroJornadaDto> objList = list.stream().map(CadastroJornadaDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(objList);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<CadastroJornadaDto> update(@PathVariable Long id, @Valid @RequestBody CadastroJornadaDto cadastroJornadaDto){
         CadastroJornada obj = cadastroJornadaService.update(id, cadastroJornadaDto);
@@ -38,9 +46,9 @@ public class CadastroJornadaResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH')")
-    @DeleteMapping(value = "/{codigo_jornada}")
-    public ResponseEntity<CadastroJornadaDto> delete(@PathVariable String codigo_jornada){
-        cadastroJornadaService.deleteByCodigoJornada(codigo_jornada);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<CadastroJornadaDto> delete(@PathVariable Long id){
+        cadastroJornadaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -57,13 +65,5 @@ public class CadastroJornadaResource {
         List<CadastroJornada> list = cadastroJornadaService.findAll();
         List<CadastroJornadaDto> listDto = list.stream().map(CadastroJornadaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
-    @GetMapping(value = "/codigo_jornada")
-    public ResponseEntity<List<CadastroJornadaDto>> findByNumeroNotaFiscal(@RequestParam(value = "codigoJornada") String codigoJornada){
-        List<CadastroJornada> list = cadastroJornadaService.findAllByCodigoJornada(codigoJornada);
-        List<CadastroJornadaDto> objList = list.stream().map(CadastroJornadaDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(objList);
     }
 }

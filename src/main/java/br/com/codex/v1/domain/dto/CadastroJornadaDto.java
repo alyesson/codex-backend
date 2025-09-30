@@ -1,6 +1,9 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.rh.CadastroJornada;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,7 +11,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
+import static br.com.codex.v1.utilitario.RemoveEspacoBranco.removerEspacos;
 
+@Getter
+@Setter
 public class CadastroJornadaDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -50,115 +56,11 @@ public class CadastroJornadaDto implements Serializable {
         this.ultimaModificacao = obj.getUltimaModificacao();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigoJornada() {
-        return codigoJornada;
-    }
-
     public void setCodigoJornada(String codigoJornada) {
-        this.codigoJornada = codigoJornada;
-    }
-
-    public String getDescricaoJornada() {
-        return descricaoJornada;
+        this.codigoJornada = removerEspacos(codigoJornada);
     }
 
     public void setDescricaoJornada(String descricaoJornada) {
         this.descricaoJornada = capitalizarPalavras(descricaoJornada);
-    }
-
-    public Integer getTipoJornada() {
-        return tipoJornada;
-    }
-
-    public void setTipoJornada(Integer tipoJornada) {
-        this.tipoJornada = tipoJornada;
-    }
-
-    public String getDiaJornada() {
-        return diaJornada;
-    }
-
-    public void setDiaJornada(String diaJornada) {
-        this.diaJornada = diaJornada;
-    }
-
-    public Integer getTipoHorario() {
-        return tipoHorario;
-    }
-
-    public void setTipoHorario(Integer tipoHorario) {
-        this.tipoHorario = tipoHorario;
-    }
-
-    public LocalTime getInicioExpediente() {
-        return inicioExpediente;
-    }
-
-    public void setInicioExpediente(LocalTime inicioExpediente) {
-        this.inicioExpediente = inicioExpediente;
-    }
-
-    public LocalTime getInicioAlmoco() {
-        return inicioAlmoco;
-    }
-
-    public void setInicioAlmoco(LocalTime inicioAlmoco) {
-        this.inicioAlmoco = inicioAlmoco;
-    }
-
-    public LocalTime getFimAlmoco() {
-        return fimAlmoco;
-    }
-
-    public void setFimAlmoco(LocalTime fimAlmoco) {
-        this.fimAlmoco = fimAlmoco;
-    }
-
-    public LocalTime getFimExpediente() {
-        return fimExpediente;
-    }
-
-    public void setFimExpediente(LocalTime fimExpediente) {
-        this.fimExpediente = fimExpediente;
-    }
-
-    public String getJornadaSemanal() {
-        return jornadaSemanal;
-    }
-
-    public void setJornadaSemanal(String jornadaSemanal) {
-        this.jornadaSemanal = jornadaSemanal;
-    }
-
-    public String getJornadaMensal() {
-        return jornadaMensal;
-    }
-
-    public void setJornadaMensal(String jornadaMensal) {
-        this.jornadaMensal = jornadaMensal;
-    }
-
-    public String getAutorAltera() {
-        return autorAltera;
-    }
-
-    public void setAutorAltera(String autorAltera) {
-        this.autorAltera = autorAltera;
-    }
-
-    public LocalDate getUltimaModificacao() {
-        return ultimaModificacao;
-    }
-
-    public void setUltimaModificacao(LocalDate ultimaModificacao) {
-        this.ultimaModificacao = ultimaModificacao;
     }
 }

@@ -35,8 +35,8 @@ public class CadastroJornadaService {
             return obj.orElseThrow(() -> new ObjectNotFoundException("Jornada não encontrada"));
         }
 
-        public void deleteByCodigoJornada(String codigoJornada) {
-            cadastroJornadaRepository.deleteByCodigoJornada(codigoJornada);
+        public void deleteById(Long id) {
+            cadastroJornadaRepository.deleteById(id);
         }
 
         public List<CadastroJornada> findAll(){
