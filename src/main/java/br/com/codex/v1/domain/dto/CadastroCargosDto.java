@@ -28,6 +28,7 @@ public class CadastroCargosDto implements Serializable {
     private String descricaoCbo;
     private String escolaridade;
     private BigDecimal salario;
+    private String situacao;
 
     public CadastroCargosDto() {
         super();
@@ -41,6 +42,7 @@ public class CadastroCargosDto implements Serializable {
         this.descricaoCbo = obj.getDescricaoCbo();
         this.escolaridade = obj.getEscolaridade();
         this.salario = obj.getSalario();
+        this.situacao = obj.getSituacao();
     }
 
     public void setDescricaoCargo(String descricaoCargo) {

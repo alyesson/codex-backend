@@ -31,12 +31,13 @@ public class CadastroCargos implements Serializable {
     private String descricaoCbo;
     private String escolaridade;
     private BigDecimal salario;
+    private String situacao;
 
     public CadastroCargos() {
         super();
     }
 
-    public CadastroCargos(Long id, String codigoCargo, String descricaoCargo, String codCbo, String descricaoCbo, String escolaridade, BigDecimal salario) {
+    public CadastroCargos(Long id, String codigoCargo, String descricaoCargo, String codCbo, String descricaoCbo, String escolaridade, BigDecimal salario, String situacao) {
         this.id = id;
         this.codigoCargo = codigoCargo;
         this.descricaoCargo = descricaoCargo;
@@ -44,6 +45,7 @@ public class CadastroCargos implements Serializable {
         this.descricaoCbo = descricaoCbo;
         this.escolaridade = escolaridade;
         this.salario = salario;
+        this.situacao = situacao;
     }
 
     public CadastroCargos(CadastroCargosDto obj) {
@@ -54,6 +56,7 @@ public class CadastroCargos implements Serializable {
         this.descricaoCbo = obj.getDescricaoCbo();
         this.escolaridade = obj.getEscolaridade();
         this.salario = obj.getSalario();
+        this.situacao = obj.getSituacao();
     }
 
     @Override
