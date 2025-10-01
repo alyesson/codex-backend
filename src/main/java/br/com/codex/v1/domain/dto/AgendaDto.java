@@ -2,6 +2,8 @@ package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.cadastros.Agenda;
 import br.com.codex.v1.utilitario.CapitalizarPalavras;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,8 @@ import java.util.Objects;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
+@Getter
+@Setter
 public class AgendaDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -40,60 +44,8 @@ public class AgendaDto implements Serializable {
         this.dataHoraFim = obj.getDataHoraFim();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTituloAgenda() {
-        return tituloAgenda;
-    }
-
     public void setTituloAgenda(String tituloAgenda) {
         this.tituloAgenda = capitalizarPalavras(tituloAgenda);
-    }
-
-    public String getNomeReserva() {
-        return nomeReserva;
-    }
-
-    public void setNomeReserva(String nomeReserva) {
-        this.nomeReserva = nomeReserva;
-    }
-
-    public String getSala() {
-        return sala;
-    }
-
-    public void setSala(String sala) {
-        this.sala = sala;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-
-    public void setCor(String cor) {
-        this.cor = cor;
-    }
-
-    public LocalDateTime getDataHoraInicio() {
-        return dataHoraInicio;
-    }
-
-    public void setDataHoraInicio(LocalDateTime dataHoraInicio) {
-        this.dataHoraInicio = dataHoraInicio;
-    }
-
-    public LocalDateTime getDataHoraFim() {
-        return dataHoraFim;
-    }
-
-    public void setDataHoraFim(LocalDateTime dataHoraFim) {
-        this.dataHoraFim = dataHoraFim;
     }
 
 }
