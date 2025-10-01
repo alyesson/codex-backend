@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
+import br.com.codex.v1.domain.rh.CadastroCargos;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,14 +33,14 @@ public class CadastroCargosDto implements Serializable {
         super();
     }
 
-    public CadastroCargosDto(Long id, String codigoCargo, String descricaoCargo, String codCbo, String descricaoCbo, String escolaridade, BigDecimal salario) {
-        this.id = id;
-        this.codigoCargo = codigoCargo;
-        this.descricaoCargo = descricaoCargo;
-        this.codCbo = codCbo;
-        this.descricaoCbo = descricaoCbo;
-        this.escolaridade = escolaridade;
-        this.salario = salario;
+    public CadastroCargosDto(CadastroCargos obj) {
+        this.id = obj.getId();
+        this.codigoCargo = obj.getCodigoCargo();
+        this.descricaoCargo = obj.getDescricaoCargo();
+        this.codCbo = obj.getCodCbo();
+        this.descricaoCbo = obj.getDescricaoCbo();
+        this.escolaridade = obj.getEscolaridade();
+        this.salario = obj.getSalario();
     }
 
     public void setDescricaoCargo(String descricaoCargo) {

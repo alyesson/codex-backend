@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.rh;
 
+import br.com.codex.v1.domain.dto.CadastroCargosDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,6 +44,16 @@ public class CadastroCargos implements Serializable {
         this.descricaoCbo = descricaoCbo;
         this.escolaridade = escolaridade;
         this.salario = salario;
+    }
+
+    public CadastroCargos(CadastroCargosDto obj) {
+        this.id = obj.getId();
+        this.codigoCargo = obj.getCodigoCargo();
+        this.descricaoCargo = obj.getDescricaoCargo();
+        this.codCbo = obj.getCodCbo();
+        this.descricaoCbo = obj.getDescricaoCbo();
+        this.escolaridade = obj.getEscolaridade();
+        this.salario = obj.getSalario();
     }
 
     @Override
