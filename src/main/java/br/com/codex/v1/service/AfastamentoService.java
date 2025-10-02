@@ -32,7 +32,7 @@ public class AfastamentoService {
 
     public Afastamento findById(Long id) {
         Optional<Afastamento> obj = afastamentoRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Ativo imobilizado não encontrado"));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Lançamento não encontrado"));
     }
 
     public void delete(Long id) {
