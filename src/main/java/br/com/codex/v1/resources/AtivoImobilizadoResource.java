@@ -29,6 +29,14 @@ public class AtivoImobilizadoResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
+    @GetMapping
+    public ResponseEntity<List<AtivoImobilizadoDto>> findAll(){
+        List<AtivoImobilizado> list = ativoImobilizadoService.findAll();
+        List<AtivoImobilizadoDto> listDto = list.stream().map(AtivoImobilizadoDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO', 'GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<AtivoImobilizadoDto> update(@PathVariable Long id, @Valid @RequestBody AtivoImobilizadoDto ativoImobilizadoDto){
@@ -46,15 +54,7 @@ public class AtivoImobilizadoResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<AtivoImobilizadoDto> findById(@PathVariable Long id){
-        AtivoImobilizado objGrupo = ativoImobilizadoService.findById(id);
-        return ResponseEntity.ok().body(new AtivoImobilizadoDto(objGrupo));
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SISTEMA', 'SOCIO','GERENTE_CONTABILIDADE', 'CONTABILIDADE')")
-    @GetMapping
-    public ResponseEntity<List<AtivoImobilizadoDto>> findAll(){
-        List<AtivoImobilizado> list = ativoImobilizadoService.findAll();
-        List<AtivoImobilizadoDto> listDto = list.stream().map(AtivoImobilizadoDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
+        AtivoImobilizado obj = ativoImobilizadoService.findById(id);
+        return ResponseEntity.ok().body(new AtivoImobilizadoDto(obj));
     }
 }
