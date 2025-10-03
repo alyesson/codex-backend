@@ -25,6 +25,8 @@ public class ValeTransporteDto implements Serializable {
 
     private String colaboradorCpf;
 
+    private String colaboradorDepartamento;
+
     @NotNull(message = "Data de início é obrigatória")
     @FutureOrPresent(message = "Data de início deve ser hoje ou no futuro")
     private LocalDate dataInicio;
@@ -68,6 +70,7 @@ public class ValeTransporteDto implements Serializable {
         this.colaboradorId = obj.getColaborador().getId();
         this.colaboradorNome = obj.getColaborador().getNomeColaborador();
         this.colaboradorCpf = obj.getColaborador().getCpf();
+        this.colaboradorDepartamento = obj.getColaborador().getNomeDepartamento();
         this.dataInicio = obj.getDataInicio();
         this.dataFim = obj.getDataFim();
         this.valorDiario = obj.getValorDiario();
