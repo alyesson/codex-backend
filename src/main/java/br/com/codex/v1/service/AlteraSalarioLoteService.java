@@ -30,4 +30,9 @@ public class AlteraSalarioLoteService {
     public List<AlteraSalarioLote> findAllByDataAlteracao(Date dataInicial, Date dataFinal){
         return alteraSalarioLoteRepository.findByDataAlteracao(dataInicial, dataFinal);
     }
+
+    public AlteraSalarioLote findById(Long id) {
+        Optional<AlteraSalarioLote> obj = alteraSalarioLoteRepository.findById(id);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Alteração de salário não encontrada! Id: " + id));
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +78,16 @@ public class CadastroColaboradoresService {
         return objColaboradores.orElseThrow(() ->
                 new ObjectNotFoundException("O funcionário " + nomeColaborador + " não foi encontrado na base de dados")
         );
+    }
+
+    @Transactional
+    public CadastroColaboradores alteraSalario(String cpf, BigDecimal novoSalario, BigDecimal novoSalarioHora) {
+        CadastroColaboradores colaborador = cadastroColaboradoresRepository.findByCpf(cpf)
+                .orElseThrow(() -> new RuntimeException("Colaborador não encontrado com CPF: " + cpf));
+
+        colaborador.setSalarioColaborador(novoSalario);
+        colaborador.setSalarioHora(novoSalarioHora);
+
+        return cadastroColaboradoresRepository.save(colaborador);
     }
 }

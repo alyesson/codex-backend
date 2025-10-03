@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -50,6 +51,14 @@ public class CadastroColaboradoresResource {
     public ResponseEntity<CadastroColaboradoresDto> findById(@PathVariable Long id){
         CadastroColaboradores objColaborador = cadastroColaboradoresService.findById(id);
         return ResponseEntity.ok().body(new CadastroColaboradoresDto(objColaborador));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @PutMapping(value = "/altera_salario/{cpf}/{salario}/{salario_hora}")
+    public ResponseEntity<CadastroColaboradoresDto> updateSalario(
+            @PathVariable String cpf, @PathVariable BigDecimal salario, @PathVariable BigDecimal salario_hora) {
+        CadastroColaboradores obj = cadastroColaboradoresService.alteraSalario(cpf, salario, salario_hora);
+        return ResponseEntity.ok().body(new CadastroColaboradoresDto(obj));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")

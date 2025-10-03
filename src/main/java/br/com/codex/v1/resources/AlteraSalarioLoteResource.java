@@ -45,4 +45,10 @@ public class AlteraSalarioLoteResource {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @GetMapping("/{id}")
+    public ResponseEntity<AlteraSalarioLoteDto> findById(@PathVariable Long id) {
+        AlteraSalarioLote obj = alteraSalarioLoteService.findById(id);
+        return ResponseEntity.ok().body(new AlteraSalarioLoteDto(obj));
+    }
 }
