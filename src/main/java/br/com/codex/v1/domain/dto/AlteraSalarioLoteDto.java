@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,8 +29,8 @@ public class AlteraSalarioLoteDto implements Serializable {
     private LocalDate dataAlteracao;
     @NotBlank(message = "Motivo do reajuste não pode ficar em branco")
     private String motivo;
-    @NotBlank(message = "Percentual do reajuste não pode ficar em branco")
-    private float reajuste;
+    @NotNull(message = "Percentual do reajuste não pode ficar em branco")
+    private BigDecimal reajuste;
 
     public AlteraSalarioLoteDto() {
         super();

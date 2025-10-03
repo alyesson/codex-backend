@@ -29,14 +29,14 @@ public class AlteraSalarioLote implements Serializable {
     private BigDecimal salarioReajustado;
     private LocalDate dataAlteracao;
     private String motivo;
-    private float reajuste;
+    private BigDecimal reajuste;
 
     public AlteraSalarioLote() {
         super();
     }
 
     public AlteraSalarioLote(Long id, String funcionario, BigDecimal salarioAntigo, BigDecimal salarioReajustado,
-                             LocalDate dataAlteracao, String motivo, float reajuste) {
+                             LocalDate dataAlteracao, String motivo, BigDecimal reajuste) {
         this.id = id;
         this.funcionario = funcionario;
         this.salarioAntigo = salarioAntigo;
