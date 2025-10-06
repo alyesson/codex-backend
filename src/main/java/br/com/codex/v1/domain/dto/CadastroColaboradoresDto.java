@@ -145,7 +145,6 @@ public class CadastroColaboradoresDto implements Serializable {
     protected BigDecimal pensaoAlimenticia;
     protected BigDecimal salarioFamilia;
 
-
     public CadastroColaboradoresDto() {
         super();
     }

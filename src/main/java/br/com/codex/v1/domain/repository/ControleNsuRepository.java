@@ -4,10 +4,12 @@ import br.com.codex.v1.domain.contabilidade.ControleNsu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.Optional;
 
+@Repository
 public interface ControleNsuRepository extends JpaRepository<ControleNsu, Long> {
 
     Optional<ControleNsu> findByCnpjAndAmbiente(String cnpj, String ambiente);

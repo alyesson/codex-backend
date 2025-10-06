@@ -21,4 +21,6 @@ public interface CadastroColaboradoresRepository extends JpaRepository<CadastroC
     List<CadastroColaboradores> findAllColaboradoresComSituacaoDesligado();
 
     Optional<CadastroColaboradores> findByNomeColaborador(String nomeColaborador);
+
+    CadastroColaboradores findByNumeroPis(String pis);
 }

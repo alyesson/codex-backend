@@ -3,10 +3,12 @@ package br.com.codex.v1.domain.repository;
 import br.com.codex.v1.domain.contabilidade.Contas;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ContasRepository extends JpaRepository<Contas, Long> {
 
     //Optional<Contas> findByConta(String conta);

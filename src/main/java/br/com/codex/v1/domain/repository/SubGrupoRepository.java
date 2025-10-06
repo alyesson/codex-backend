@@ -4,10 +4,12 @@ import br.com.codex.v1.domain.estoque.SubGrupo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface SubGrupoRepository extends JpaRepository<SubGrupo, Long> {
     Optional<SubGrupo> findByCodigoSubGrupo(String codigoSubGrupo);
 

@@ -4,10 +4,12 @@ import br.com.codex.v1.domain.estoque.SaidaMaterial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
 
+@Repository
 public interface SaidaMaterialRepository extends JpaRepository<SaidaMaterial, Long> {
     @Query(value = "SELECT s FROM SaidaMaterial s WHERE YEAR(s.dataSaida) =:anoAtual")
     List<SaidaMaterial> findAllByYear(@Param("anoAtual") Integer anoAtual);

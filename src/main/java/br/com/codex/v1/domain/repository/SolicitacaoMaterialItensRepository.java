@@ -1,15 +1,16 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.estoque.SolicitacaoMaterialItens;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Repository
 public interface SolicitacaoMaterialItensRepository extends JpaRepository<SolicitacaoMaterialItens, Long> {
 
     List<SolicitacaoMaterialItens> findBySolicitacaoMaterialId(Long id);

@@ -1,15 +1,16 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.vendas.Orcamento;
 import br.com.codex.v1.domain.vendas.Venda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Repository
 public interface VendaRepository extends JpaRepository<Venda, Long> {
     @Query("SELECT v FROM Venda v WHERE YEAR(v.dataEmissao) = :ano")
     List<Venda> findAllByYear(@Param("ano") Integer ano);

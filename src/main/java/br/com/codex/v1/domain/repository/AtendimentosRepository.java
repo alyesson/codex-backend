@@ -1,18 +1,16 @@
 package br.com.codex.v1.domain.repository;
 
-import br.com.codex.v1.domain.enums.Prioridade;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.ti.Atendimentos;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
+@Repository
 public interface AtendimentosRepository extends JpaRepository<Atendimentos, Long> {
 
     @Query("SELECT c FROM Atendimentos c WHERE YEAR(c.dataAbertura) = :ano and MONTH(c.dataAbertura) = :mes AND c.solicitante=:solicitante")
