@@ -357,7 +357,4 @@ public class EspelhoPontoService {
 
         return espelhos.stream().map(EspelhoPontoDto::new).collect(Collectors.toList());
     }
-
-    // MÉTODOS AUXILIARES (lerArquivoPonto, agruparRegistros, identificarInconsistencias, calcularTotaisGerais)
-    // ... implementação similar à anterior
 }

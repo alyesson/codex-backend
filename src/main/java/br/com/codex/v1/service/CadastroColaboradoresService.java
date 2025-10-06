@@ -90,4 +90,24 @@ public class CadastroColaboradoresService {
 
         return cadastroColaboradoresRepository.save(colaborador);
     }
+
+    public CadastroColaboradores findByNumeroPis(String pis) {
+        // Se veio com 12 dígitos (do AFD), remove o primeiro zero
+        String pisParaBusca = pis;
+        if (pis.length() == 12 && pis.startsWith("0")) {
+            pisParaBusca = pis.substring(1);
+            System.out.println("🔄 Convertendo PIS de 12 para 11 dígitos: " + pis + " → " + pisParaBusca);
+        }
+
+        // Valida se tem 11 dígitos
+        if (pisParaBusca.length() != 11 || !pisParaBusca.matches("\\d{11}")) {
+            throw new IllegalArgumentException("PIS deve conter 11 dígitos: " + pisParaBusca);
+        }
+
+        CadastroColaboradores colaborador = cadastroColaboradoresRepository.findByNumeroPis(pisParaBusca);
+        if (colaborador == null) {
+            throw new ObjectNotFoundException("Funcionário não encontrado para o PIS: " + pisParaBusca);
+        }
+        return colaborador;
+    }
 }

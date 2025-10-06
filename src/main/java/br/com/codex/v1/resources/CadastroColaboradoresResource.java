@@ -33,6 +33,29 @@ public class CadastroColaboradoresResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @GetMapping(value = "/situacao_colaboradores")
+    public ResponseEntity<Map<String, Long>> findAllColaboradoresSituacao() {
+        Map<String, Long> contagemSituacao = cadastroColaboradoresService.countBySituacaoAtual();
+        return ResponseEntity.ok().body(contagemSituacao);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @GetMapping(value = "/situacao_contratados")
+    public ResponseEntity<List<CadastroColaboradoresDto>> findAllColaboradoresAtivos() {
+        List<CadastroColaboradores> list = cadastroColaboradoresService.findAllColaboradoresAtivos("Contratado");
+        List<CadastroColaboradoresDto> listDto = list.stream().map(CadastroColaboradoresDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @GetMapping(value = "/situacao_desligados")
+    public ResponseEntity<List<CadastroColaboradoresDto>> findAllColaboradoresDemitidos(){
+        List<CadastroColaboradores> list = cadastroColaboradoresService.findAllColaboradoresComSituacaoDesligado("Desligado");
+        List<CadastroColaboradoresDto> listDto = list.stream().map(CadastroColaboradoresDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<CadastroColaboradoresDto> update (@PathVariable Long id, @Valid @RequestBody CadastroColaboradoresDto cadastroColaboradoresDto){
         CadastroColaboradores obj = cadastroColaboradoresService.update(id, cadastroColaboradoresDto);
@@ -69,25 +92,16 @@ public class CadastroColaboradoresResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
-    @GetMapping(value = "/situacao_colaboradores")
-    public ResponseEntity<Map<String, Long>> findAllColaboradoresSituacao() {
-        Map<String, Long> contagemSituacao = cadastroColaboradoresService.countBySituacaoAtual();
-        return ResponseEntity.ok().body(contagemSituacao);
+    @GetMapping(value = "/cpf/{cpf}")
+    public ResponseEntity<CadastroColaboradoresDto> findByCpf(@PathVariable String cpf){
+        CadastroColaboradores objNomeColaborador = cadastroColaboradoresService.findByCpf(cpf);
+        return ResponseEntity.ok().body(new CadastroColaboradoresDto(objNomeColaborador));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
-    @GetMapping(value = "/situacao_contratados")
-    public ResponseEntity<List<CadastroColaboradoresDto>> findAllColaboradoresAtivos() {
-        List<CadastroColaboradores> list = cadastroColaboradoresService.findAllColaboradoresAtivos("Contratado");
-        List<CadastroColaboradoresDto> listDto = list.stream().map(CadastroColaboradoresDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
-    @GetMapping(value = "/situacao_desligados")
-    public ResponseEntity<List<CadastroColaboradoresDto>> findAllColaboradoresDemitidos(){
-        List<CadastroColaboradores> list = cadastroColaboradoresService.findAllColaboradoresComSituacaoDesligado("Desligado");
-        List<CadastroColaboradoresDto> listDto = list.stream().map(CadastroColaboradoresDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDto);
+    @GetMapping(value = "/numero_pis/{pis}")
+    public ResponseEntity<CadastroColaboradoresDto> findByNumeroPis(@PathVariable String pis){
+        CadastroColaboradores objNomeColaborador = cadastroColaboradoresService.findByNumeroPis(pis);
+        return ResponseEntity.ok().body(new CadastroColaboradoresDto(objNomeColaborador));
     }
 }

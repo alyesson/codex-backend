@@ -3,6 +3,7 @@ package br.com.codex.v1.domain.repository;
 import br.com.codex.v1.domain.rh.CadastroColaboradores;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,5 +23,6 @@ public interface CadastroColaboradoresRepository extends JpaRepository<CadastroC
 
     Optional<CadastroColaboradores> findByNomeColaborador(String nomeColaborador);
 
-    CadastroColaboradores findByNumeroPis(String pis);
+    @Query("SELECT c FROM CadastroColaboradores c WHERE c.numeroPis = :pis")
+    CadastroColaboradores findByNumeroPis(@Param("pis") String pis);
 }
