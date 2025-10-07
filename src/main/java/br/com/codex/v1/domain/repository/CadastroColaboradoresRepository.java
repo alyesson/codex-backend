@@ -4,10 +4,12 @@ import br.com.codex.v1.domain.rh.CadastroColaboradores;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface CadastroColaboradoresRepository extends JpaRepository<CadastroColaboradores, Long> {
 
     Optional<CadastroColaboradores> findByCpf(String cpf);

@@ -4,6 +4,8 @@ import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.rh.CadastroColaboradores;
 import br.com.codex.v1.domain.rh.CadastroJornada;
 import br.com.codex.v1.domain.rh.EspelhoPonto;
+import br.com.codex.v1.utilitario.LocalTimeDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,10 +27,19 @@ public class EspelhoPontoDto implements Serializable {
     private CadastroColaboradores colaborador;
     private CadastroJornada jornada;
     private LocalDate data;
+
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime entrada;
+
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime saidaAlmoco;
+
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime retornoAlmoco;
+
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime saida;
+
     private Integer horasTrabalhadasMinutos;
     private Integer horasExtrasMinutos;
     private Integer horasFaltantesMinutos;
@@ -45,7 +56,6 @@ public class EspelhoPontoDto implements Serializable {
     public EspelhoPontoDto(EspelhoPonto obj) {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
-        this.jornada = obj.getJornada();
         this.data = obj.getData();
         this.entrada = obj.getEntrada();
         this.saidaAlmoco = obj.getSaidaAlmoco();

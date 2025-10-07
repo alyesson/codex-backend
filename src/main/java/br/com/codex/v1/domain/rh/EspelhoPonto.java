@@ -31,10 +31,6 @@ public class EspelhoPonto implements Serializable {
     @JoinColumn(name = "colaborador_id", nullable = false)
     private CadastroColaboradores colaborador;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jornada_id")
-    private CadastroJornada jornada;
-
     @Column(name = "data_referencia", nullable = false)
     private LocalDate data;
 
@@ -77,7 +73,6 @@ public class EspelhoPonto implements Serializable {
     public EspelhoPonto(EspelhoPontoDto obj) {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
-        this.jornada = obj.getJornada();
         this.data = obj.getData();
         this.entrada = obj.getEntrada();
         this.saidaAlmoco = obj.getSaidaAlmoco();
