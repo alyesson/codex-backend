@@ -328,11 +328,76 @@ public class CalculoDaFolhaProventosQuinzenal {
     }
 
     private ResultadoCalculoProvento calcularAdicionalNoturno(BigDecimal horasNoturnas, BigDecimal dsrNoturno, BigDecimal percentualAdicional) {
-        BigDecimal horasTotais = horasNoturnas.add(dsrNoturnos);
+        BigDecimal horasTotais = horasNoturnas.add(dsrNoturno);
         BigDecimal valorAdicional = horasTotais.multiply(salarioPorHora)
                 .multiply(percentualAdicional.divide(new BigDecimal("100")))
                 .setScale(2, RoundingMode.HALF_UP);
         return new ResultadoCalculoProvento(horasTotais, valorAdicional, "Adicional Noturno");
+    }
+
+    private ResultadoCalculoProvento calcularHorasRepousoNoturno(String horaEntrada, String horaSaida, String tipoJornada) {
+        try {
+            LocalTime inicioNoturno = LocalTime.parse("22:00");
+            LocalTime saida = LocalTime.parse(horaSaida);
+            LocalTime meiaNoite = LocalTime.parse("00:00");
+            LocalTime cincoHoras = LocalTime.parse("05:00");
+
+            Duration duracaoNoturna;
+
+            if ("12 x 36".equals(tipoJornada)) {
+                // Cálculo específico para jornada 12x36
+                if (saida.isBefore(cincoHoras)) {
+                    // Trabalhou após meia-noite (turno que passa da meia-noite)
+                    LocalTime vinteHoras = LocalTime.parse("20:00");
+                    Duration das20as22 = Duration.between(vinteHoras, inicioNoturno);
+                    Duration das22aMeiaNoite = Duration.between(inicioNoturno, meiaNoite);
+                    Duration depoisMeiaNoite = Duration.between(meiaNoite, saida);
+
+                    duracaoNoturna = das20as22.plus(das22aMeiaNoite).plus(depoisMeiaNoite);
+                } else {
+                    // Turno normal noturno
+                    duracaoNoturna = Duration.between(inicioNoturno, saida);
+                }
+            } else {
+                // Cálculo para outras jornadas
+                if (saida.isBefore(cincoHoras) || saida.isBefore(inicioNoturno)) {
+                    // Trabalhou após meia-noite
+                    Duration das22aMeiaNoite = Duration.between(inicioNoturno, meiaNoite);
+                    Duration depoisMeiaNoite = Duration.between(meiaNoite, saida);
+                    duracaoNoturna = das22aMeiaNoite.plus(depoisMeiaNoite);
+                } else {
+                    // Turno normal noturno
+                    duracaoNoturna = Duration.between(inicioNoturno, saida);
+                }
+            }
+
+            // Aplica fator de redução da hora noturna (52:30 para 60:00)
+            BigDecimal minutosNoturnos = BigDecimal.valueOf(duracaoNoturna.toMinutes());
+            BigDecimal horasNoturnasReduzidas = minutosNoturnos
+                    .divide(new BigDecimal("52.5"), 4, RoundingMode.HALF_UP) // Converte para horas noturnas
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            // Calcula dias não úteis no mês (domingos e feriados)
+            int diasNaoUteis = calcularDiasNaoUteisNoMes();
+
+            // Calcula horas noturnas totais no mês
+            BigDecimal horasMes = horasNoturnasReduzidas.multiply(BigDecimal.valueOf(diasNaoUteis))
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            // Calcula valor total
+            BigDecimal valorTotal = horasMes.multiply(salarioPorHora)
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            return new ResultadoCalculoProvento(horasMes, valorTotal, "DSR Noturno");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResultadoCalculoProvento(
+                    BigDecimal.ZERO,
+                    BigDecimal.ZERO,
+                    "Erro no cálculo DSR Noturno: " + e.getMessage()
+            );
+        }
     }
 
     private ResultadoCalculoProvento calcularProLabore() {
