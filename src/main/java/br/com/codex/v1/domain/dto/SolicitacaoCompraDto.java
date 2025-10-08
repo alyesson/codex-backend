@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.compras.SolicitacaoCompra;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,15 +23,15 @@ public class SolicitacaoCompraDto implements Serializable {
     protected String solicitante;
     protected String departamento;
     protected LocalDate dataSolicitacao;
-    @NotNull(message = "Centro de custo não pode estar em branco")
+    @NotBlank(message = "Centro de custo não pode estar em branco")
     protected String centroCusto;
     protected String motivoCompra;
     protected String destinoMaterial;
-    @NotNull(message = "Campo é urgente não pode estar em branco")
+    @NotBlank(message = "Campo é urgente não pode estar em branco")
     protected String urgente;
-    @NotNull(message = "Campo opção de marca não pode estar em branco")
+    @NotBlank(message = "Campo opção de marca não pode estar em branco")
     protected String opcaoMarca;
-    @NotNull(message = "Campo item de estoque não pode estar em branco")
+    @NotBlank(message = "Campo item de estoque não pode estar em branco")
     protected String itemEstoque;
     private List<SolicitacaoItensCompraDto> itens;
     protected String situacao;

@@ -23,9 +23,6 @@ import java.util.Optional;
 @Service
 public class PedidoCompraService {
 
-    int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
-    LocalDate data = LocalDate.now();
-
     @Autowired
     private PedidoCompraRepository pedidoCompraRepository;
 
@@ -68,10 +65,14 @@ public class PedidoCompraService {
     }
 
     public List<PedidoCompra> findAllByYear() {
+        int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+
         return pedidoCompraRepository.findAllByYear(anoAtual);
     }
 
     public void aprovaPedido(Long id, String situacao, String aprovador,String justificativa) {
+        LocalDate data = LocalDate.now();
+
         PedidoCompra pedidoCompra = findById(id);
         pedidoCompra.setSituacao(Situacao.valueOf(situacao));
         pedidoCompra.setDataAprovacao(data);

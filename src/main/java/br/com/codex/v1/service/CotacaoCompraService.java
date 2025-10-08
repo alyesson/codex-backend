@@ -21,9 +21,6 @@ import java.util.Optional;
 @Service
 public class CotacaoCompraService {
 
-    int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
-    LocalDate data = LocalDate.now();
-
     @Autowired
     private CotacaoCompraRepository cotacaoCompraRepository;
 
@@ -34,6 +31,8 @@ public class CotacaoCompraService {
     private SolicitacaoCompraRepository solicitacaoCompraRepository;
 
     public CotacaoCompra create(CotacaoCompraDto cotacaoCompradto) {
+
+        LocalDate data = LocalDate.now();
 
         findByIdSolicitacao(Long.valueOf(cotacaoCompradto.getNumeroSolicitacao()));
 
@@ -66,6 +65,7 @@ public class CotacaoCompraService {
     }
 
     public List<CotacaoCompra> findAllByYear() {
+        int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
         return cotacaoCompraRepository.findAllByYear(anoAtual);
     }
 
@@ -95,6 +95,7 @@ public class CotacaoCompraService {
     }
 
     public List<CotacaoCompra> findAllBySituacaoAndYear() {
+        int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
         return cotacaoCompraRepository.findAllBySituacaoAndYear(anoAtual, "Aprovada");
     }
 }

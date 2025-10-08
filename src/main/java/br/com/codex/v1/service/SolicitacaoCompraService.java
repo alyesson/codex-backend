@@ -19,9 +19,6 @@ import java.util.Optional;
 @Service
 public class SolicitacaoCompraService {
 
-    int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
-    LocalDate data = LocalDate.now();
-
     @Autowired
     private SolicitacaoCompraRepository solicitacaoCompraRepository;
 
@@ -32,6 +29,9 @@ public class SolicitacaoCompraService {
     private EnviaEmailService enviaEmailService;
 
     public SolicitacaoCompra create(SolicitacaoCompraDto solicitacaoCompradto) {
+
+        LocalDate data = LocalDate.now();
+
         solicitacaoCompradto.setId(null);
         solicitacaoCompradto.setDataSolicitacao(data);
         SolicitacaoCompra objSolicitacaoCompra = new SolicitacaoCompra(solicitacaoCompradto);
@@ -63,10 +63,16 @@ public class SolicitacaoCompraService {
     }
 
     public List<SolicitacaoCompra> findAllByYearUsuario(String centroCustoUsuario, String solicitante) {
+
+        int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+
         return solicitacaoCompraRepository.findAllByYearUsuario(anoAtual, centroCustoUsuario, solicitante);
     }
 
     public List<SolicitacaoCompra> findAllByYear() {
+
+        int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+
         return solicitacaoCompraRepository.findAllByYear(anoAtual);
     }
 
@@ -75,6 +81,9 @@ public class SolicitacaoCompraService {
     }
 
     public List<SolicitacaoCompra> findAllBySituacao() {
+
+        int anoAtual = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date(System.currentTimeMillis())));
+
         return solicitacaoCompraRepository.findAllBysituacao(anoAtual);
     }
 
