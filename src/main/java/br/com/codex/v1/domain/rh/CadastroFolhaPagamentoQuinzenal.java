@@ -2,6 +2,7 @@ package br.com.codex.v1.domain.rh;
 
 import br.com.codex.v1.domain.cadastros.Departamento;
 import br.com.codex.v1.domain.dto.CadastroFolhaPagamentoQuinzenalDto;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.financeiro.CentroCusto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -78,6 +79,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
 
     private String empresa;
     private String cnpj;
+    private Situacao situacao;
 
     @JsonIgnore
     @OneToMany(mappedBy = "cadastroFolhaPagamentoQuinzenal")
@@ -94,7 +96,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
                                            CentroCusto centroCusto, String tipoSalario, BigDecimal transporteDia,
                                            BigDecimal totalVencimentos, BigDecimal totalDescontos, BigDecimal valorLiquido,
                                            BigDecimal baseCalculoIrrf, BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts,
-                                           String empresa, String cnpj) {
+                                           String empresa, String cnpj, Situacao situacao) {
         this.id = id;
         this.colaborador = colaborador;
         this.departamento = departamento;
@@ -119,6 +121,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.baseCalculoFgts = baseCalculoFgts;
         this.empresa = empresa;
         this.cnpj = cnpj;
+        this.situacao = situacao;
     }
 
     public CadastroFolhaPagamentoQuinzenal(CadastroFolhaPagamentoQuinzenalDto obj) {
@@ -146,6 +149,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.baseCalculoFgts = obj.getBaseCalculoFgts();
         this.empresa = obj.getEmpresa();
         this.cnpj = obj.getCnpj();
+        this.situacao = obj.getSituacao();
     }
 
     @Override

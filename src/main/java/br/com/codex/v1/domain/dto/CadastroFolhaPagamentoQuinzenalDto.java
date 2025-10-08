@@ -1,6 +1,7 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.cadastros.Departamento;
+import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.financeiro.CentroCusto;
 import br.com.codex.v1.domain.rh.CadastroColaboradores;
 import br.com.codex.v1.domain.rh.CadastroFolhaPagamentoQuinzenal;
@@ -52,6 +53,7 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
     private BigDecimal baseCalculoFgts;
     private String empresa;
     private String cnpj;
+    private Situacao situacao;
     private List<CadastroFolhaPagamentoQuinzenalEventosDto> eventos;
 
     public CadastroFolhaPagamentoQuinzenalDto() {
@@ -83,5 +85,6 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
         this.baseCalculoFgts = obj.getBaseCalculoFgts();
         this.empresa = obj.getEmpresa();
         this.cnpj = obj.getCnpj();
+        this.situacao = obj.getSituacao();
     }
 }
