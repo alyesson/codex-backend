@@ -97,7 +97,7 @@ public class CadastroColaboradores implements Serializable {
     protected String ufRg;
     @Column(length = 11)
     protected Date expedicaoRg;
-    @Column(length = 3)
+    @Column(length = 20)
     protected String orgaoEmissorRg;
     @Column(length = 12)
     protected String cpf;
