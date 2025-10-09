@@ -110,4 +110,9 @@ public class CadastroColaboradoresService {
         }
         return colaborador;
     }
+
+    public CadastroColaboradores findByNumeroMatricula(String matricula) {
+        Optional<CadastroColaboradores> obj = cadastroColaboradoresRepository.findByNumeroMatricula(matricula);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Funcionário não encontrado"));
+    }
 }

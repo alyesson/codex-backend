@@ -99,6 +99,13 @@ public class CadastroColaboradoresResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @GetMapping(value = "/matricula/{matricula}")
+    public ResponseEntity<CadastroColaboradoresDto> findByMatricula(@PathVariable String matricula){
+        CadastroColaboradores objNomeColaborador = cadastroColaboradoresService.findByNumeroMatricula(matricula);
+        return ResponseEntity.ok().body(new CadastroColaboradoresDto(objNomeColaborador));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping(value = "/numero_pis/{pis}")
     public ResponseEntity<CadastroColaboradoresDto> findByNumeroPis(@PathVariable String pis){
         CadastroColaboradores objNomeColaborador = cadastroColaboradoresService.findByNumeroPis(pis);

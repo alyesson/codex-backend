@@ -27,4 +27,6 @@ public interface CadastroColaboradoresRepository extends JpaRepository<CadastroC
 
     @Query("SELECT c FROM CadastroColaboradores c WHERE c.numeroPis = :pis")
     CadastroColaboradores findByNumeroPis(@Param("pis") String pis);
+
+    Optional<CadastroColaboradores> findByNumeroMatricula(String matricula);
 }
