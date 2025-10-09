@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package Utilitarios;
+package br.com.codex.v1.utilitario;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,7 +11,7 @@ import java.util.Set;
  */
 public class Calendario {
 
-        // feriados que acontecem todo ano na mesma data, gerar lista para o ano específico
+        // feriados que acontecem tudo ano na mesma data, gerar lista para o ano específico
         public Set<LocalDate> getFeriadosFixos(int year) {
             
             Set<LocalDate> dates = new HashSet<>();
