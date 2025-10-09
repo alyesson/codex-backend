@@ -3,6 +3,7 @@ package br.com.codex.v1.utilitario;
 import br.com.codex.v1.domain.repository.EventosFolhaRepository;
 import br.com.codex.v1.domain.rh.EventosFolha;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -28,10 +28,9 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
-    @NotBlank(message = "Funcionário não pode estar em branco")
-    private CadastroColaboradores colaborador;
-    private Departamento departamento;
+    private String colaborador;
+    private String departamento;
+    private String centroCusto;
     private LocalDate admissao;
     private String codigoCbo;
     private String descricaoCbo;
@@ -42,7 +41,6 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
     private String nomeBanco;
     private String agencia;
     private String numeroConta;
-    private CentroCusto centroCusto;
     private String tipoSalario;
     private BigDecimal transporteDia;
     private BigDecimal totalVencimentos;
@@ -64,6 +62,7 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
         this.departamento = obj.getDepartamento();
+        this.centroCusto = obj.getCentroCusto();
         this.admissao = obj.getAdmissao();
         this.codigoCbo = obj.getCodigoCbo();
         this.descricaoCbo = obj.getDescricaoCbo();
@@ -74,7 +73,6 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
         this.nomeBanco = obj.getNomeBanco();
         this.agencia = obj.getAgencia();
         this.numeroConta = obj.getNumeroConta();
-        this.centroCusto = obj.getCentroCusto();
         this.tipoSalario = obj.getTipoSalario();
         this.transporteDia = obj.getTransporteDia();
         this.totalVencimentos = obj.getTotalVencimentos();

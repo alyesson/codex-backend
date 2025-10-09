@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.cadastros.Departamento;
 import br.com.codex.v1.domain.dto.CadastroFolhaPagamentoQuinzenalDto;
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.financeiro.CentroCusto;
+import br.com.codex.v1.domain.repository.CadastroFolhaPagamentoQuinzenalEventosRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,14 +29,9 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "colaborador_id", nullable = false)
-    private CadastroColaboradores colaborador;
-
-    @OneToOne
-    @JoinColumn(name = "departamento_id", nullable = false)
-    private Departamento departamento;
-
+    private String colaborador;
+    private String departamento;
+    private String centroCusto;
     private LocalDate admissao;
     private String codigoCbo;
     private String descricaoCbo;
@@ -51,11 +47,6 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
     private String nomeBanco;
     private String agencia;
     private String numeroConta;
-
-    @OneToOne
-    @JoinColumn(name = "centro_custo_id", nullable = false)
-    private CentroCusto centroCusto;
-
     private String tipoSalario;
     private BigDecimal transporteDia;
 
@@ -89,17 +80,17 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         super();
     }
 
-    public CadastroFolhaPagamentoQuinzenal(Long id, CadastroColaboradores colaborador, Departamento departamento,
+    public CadastroFolhaPagamentoQuinzenal(Long id, String colaborador, String departamento, String centroCusto,
                                            LocalDate admissao, String codigoCbo, String descricaoCbo,
                                            String matriculaColaborador, BigDecimal salarioBase, BigDecimal salarioHora,
                                            String jornada, String nomeBanco, String agencia, String numeroConta,
-                                           CentroCusto centroCusto, String tipoSalario, BigDecimal transporteDia,
-                                           BigDecimal totalVencimentos, BigDecimal totalDescontos, BigDecimal valorLiquido,
-                                           BigDecimal baseCalculoIrrf, BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts,
-                                           String empresa, String cnpj, Situacao situacao) {
+                                           String tipoSalario, BigDecimal transporteDia, BigDecimal totalVencimentos,
+                                           BigDecimal totalDescontos, BigDecimal valorLiquido, BigDecimal baseCalculoIrrf,
+                                           BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts, String empresa, String cnpj, Situacao situacao) {
         this.id = id;
         this.colaborador = colaborador;
         this.departamento = departamento;
+        this.centroCusto = centroCusto;
         this.admissao = admissao;
         this.codigoCbo = codigoCbo;
         this.descricaoCbo = descricaoCbo;
@@ -110,7 +101,6 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.nomeBanco = nomeBanco;
         this.agencia = agencia;
         this.numeroConta = numeroConta;
-        this.centroCusto = centroCusto;
         this.tipoSalario = tipoSalario;
         this.transporteDia = transporteDia;
         this.totalVencimentos = totalVencimentos;
@@ -128,6 +118,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
         this.departamento = obj.getDepartamento();
+        this.centroCusto = obj.getCentroCusto();
         this.admissao = obj.getAdmissao();
         this.codigoCbo = obj.getCodigoCbo();
         this.descricaoCbo = obj.getDescricaoCbo();
@@ -138,7 +129,6 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.nomeBanco = obj.getNomeBanco();
         this.agencia = obj.getAgencia();
         this.numeroConta = obj.getNumeroConta();
-        this.centroCusto = obj.getCentroCusto();
         this.tipoSalario = obj.getTipoSalario();
         this.transporteDia = obj.getTransporteDia();
         this.totalVencimentos = obj.getTotalVencimentos();
@@ -151,6 +141,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.cnpj = obj.getCnpj();
         this.situacao = obj.getSituacao();
     }
+
 
     @Override
     public boolean equals(Object o) {
