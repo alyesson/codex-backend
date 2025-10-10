@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.FolhaQuinzenaEventos;
+import br.com.codex.v1.domain.rh.FolhaQuinzenalEventos;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +27,7 @@ public class FolhaQuinzenalEventosDto implements Serializable {
         super();
     }
 
-    public FolhaQuinzenalEventosDto(FolhaQuinzenaEventos obj) {
+    public FolhaQuinzenalEventosDto(FolhaQuinzenalEventos obj) {
         this.id = obj.getId();
         this.codigoEvento = obj.getCodigoEvento();
         this.descricaoEvento = obj.getDescricaoEvento();

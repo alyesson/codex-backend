@@ -70,7 +70,7 @@ public class FolhaQuinzenal implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "folhaQuinzenal")
-    private List<FolhaQuinzenaEventos> eventos = new ArrayList<>();
+    private List<FolhaQuinzenalEventos> eventos = new ArrayList<>();
 
     public FolhaQuinzenal() {
         super();

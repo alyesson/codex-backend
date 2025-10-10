@@ -3,7 +3,7 @@ package br.com.codex.v1.resources;
 import br.com.codex.v1.domain.dto.FolhaQuinzenalDto;
 import br.com.codex.v1.domain.dto.FolhaQuinzenalEventosDto;
 import br.com.codex.v1.domain.rh.FolhaQuinzenal;
-import br.com.codex.v1.domain.rh.FolhaQuinzenaEventos;
+import br.com.codex.v1.domain.rh.FolhaQuinzenalEventos;
 import br.com.codex.v1.service.FolhaQuinzenalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ public class FolhaQuinzenalResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping("/{id}/eventos")
     public ResponseEntity<List<FolhaQuinzenalEventosDto>> findEventosByFolhaId(@PathVariable Long id) {
-        List<FolhaQuinzenaEventos> eventos = folhaQuinzenalService.findAllEventosByCadastroFolhaPagamentoQuinzenalId(id);
+        List<FolhaQuinzenalEventos> eventos = folhaQuinzenalService.findAllEventosByCadastroFolhaPagamentoQuinzenalId(id);
         List<FolhaQuinzenalEventosDto> listDto = eventos.stream().map(FolhaQuinzenalEventosDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }

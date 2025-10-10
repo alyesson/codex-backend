@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class FolhaQuinzenaEventos implements Serializable {
+public class FolhaQuinzenalEventos implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -34,13 +34,13 @@ public class FolhaQuinzenaEventos implements Serializable {
     @JoinColumn(name = "folhaQuinzenal_id")
     private FolhaQuinzenal folhaQuinzenal;
 
-    public FolhaQuinzenaEventos() {
+    public FolhaQuinzenalEventos() {
         super();
     }
 
-    public FolhaQuinzenaEventos(Long id, String codigoEvento, String descricaoEvento, String referencia,
-                                BigDecimal vencimentos, BigDecimal descontos,
-                                FolhaQuinzenal folhaQuinzenal) {
+    public FolhaQuinzenalEventos(Long id, String codigoEvento, String descricaoEvento, String referencia,
+                                 BigDecimal vencimentos, BigDecimal descontos,
+                                 FolhaQuinzenal folhaQuinzenal) {
         this.id = id;
         this.codigoEvento = codigoEvento;
         this.descricaoEvento = descricaoEvento;
@@ -53,7 +53,7 @@ public class FolhaQuinzenaEventos implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FolhaQuinzenaEventos that = (FolhaQuinzenaEventos) o;
+        FolhaQuinzenalEventos that = (FolhaQuinzenalEventos) o;
         return Objects.equals(id, that.id);
     }
 

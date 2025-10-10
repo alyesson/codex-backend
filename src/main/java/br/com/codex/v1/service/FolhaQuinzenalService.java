@@ -5,7 +5,7 @@ import br.com.codex.v1.domain.dto.FolhaQuinzenalEventosDto;
 import br.com.codex.v1.domain.repository.FolhaQuinzenalEventosRepository;
 import br.com.codex.v1.domain.repository.FolhaQuinzenalRepository;
 import br.com.codex.v1.domain.rh.FolhaQuinzenal;
-import br.com.codex.v1.domain.rh.FolhaQuinzenaEventos;
+import br.com.codex.v1.domain.rh.FolhaQuinzenalEventos;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class FolhaQuinzenalService {
 
         //Salvando eventos
         for(FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
-            FolhaQuinzenaEventos eventos = new FolhaQuinzenaEventos();
+            FolhaQuinzenalEventos eventos = new FolhaQuinzenalEventos();
             eventos.setCodigoEvento(eventosDto.getCodigoEvento());
             eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
             eventos.setReferencia(eventosDto.getReferencia());
@@ -54,7 +54,7 @@ public class FolhaQuinzenalService {
 
         // Salva os novos eventos
         for (FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
-            FolhaQuinzenaEventos eventos = new FolhaQuinzenaEventos();
+            FolhaQuinzenalEventos eventos = new FolhaQuinzenalEventos();
             eventos.setCodigoEvento(eventosDto.getCodigoEvento());
             eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
             eventos.setReferencia(eventosDto.getReferencia());
@@ -81,7 +81,7 @@ public class FolhaQuinzenalService {
         return objFolhaQuinzenal.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento quinzenal não encontrado"));
     }
 
-    public List<FolhaQuinzenaEventos> findAllEventosByCadastroFolhaPagamentoQuinzenalId(Long eventoId) {
+    public List<FolhaQuinzenalEventos> findAllEventosByCadastroFolhaPagamentoQuinzenalId(Long eventoId) {
         return folhaQuinzenalEventosRepository.findAllEventosByCadastroFolhaPagamentoQuinzenalId(eventoId);
     }
 
