@@ -28,7 +28,6 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String colaborador;
     private String departamento;
     private String centroCusto;
