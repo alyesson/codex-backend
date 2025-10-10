@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class CadastroFolhaPagamentoQuinzenalEventos implements Serializable {
+public class FolhaQuinzenaEventos implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -31,29 +31,29 @@ public class CadastroFolhaPagamentoQuinzenalEventos implements Serializable {
     private BigDecimal descontos;
 
     @ManyToOne
-    @JoinColumn(name = "cadastroFolhaPagamentoQuinzenal_id")
-    private CadastroFolhaPagamentoQuinzenal cadastroFolhaPagamentoQuinzenal;
+    @JoinColumn(name = "folhaQuinzenal_id")
+    private FolhaQuinzenal folhaQuinzenal;
 
-    public CadastroFolhaPagamentoQuinzenalEventos() {
+    public FolhaQuinzenaEventos() {
         super();
     }
 
-    public CadastroFolhaPagamentoQuinzenalEventos(Long id, String codigoEvento, String descricaoEvento, String referencia,
-                                                  BigDecimal vencimentos, BigDecimal descontos,
-                                                  CadastroFolhaPagamentoQuinzenal cadastroFolhaPagamentoQuinzenal) {
+    public FolhaQuinzenaEventos(Long id, String codigoEvento, String descricaoEvento, String referencia,
+                                BigDecimal vencimentos, BigDecimal descontos,
+                                FolhaQuinzenal folhaQuinzenal) {
         this.id = id;
         this.codigoEvento = codigoEvento;
         this.descricaoEvento = descricaoEvento;
         this.referencia = referencia;
         this.vencimentos = vencimentos;
         this.descontos = descontos;
-        this.cadastroFolhaPagamentoQuinzenal = cadastroFolhaPagamentoQuinzenal;
+        this.folhaQuinzenal = folhaQuinzenal;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CadastroFolhaPagamentoQuinzenalEventos that = (CadastroFolhaPagamentoQuinzenalEventos) o;
+        FolhaQuinzenaEventos that = (FolhaQuinzenaEventos) o;
         return Objects.equals(id, that.id);
     }
 

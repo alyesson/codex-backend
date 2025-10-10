@@ -1,0 +1,91 @@
+package br.com.codex.v1.service;
+
+import br.com.codex.v1.domain.dto.FolhaQuinzenalDto;
+import br.com.codex.v1.domain.dto.FolhaQuinzenalEventosDto;
+import br.com.codex.v1.domain.repository.FolhaQuinzenalEventosRepository;
+import br.com.codex.v1.domain.repository.FolhaQuinzenalRepository;
+import br.com.codex.v1.domain.rh.FolhaQuinzenal;
+import br.com.codex.v1.domain.rh.FolhaQuinzenaEventos;
+import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class FolhaQuinzenalService {
+
+    @Autowired
+    private FolhaQuinzenalRepository folhaQuinzenalRepository;
+
+    @Autowired
+    private FolhaQuinzenalEventosRepository folhaQuinzenalEventosRepository;
+
+    public FolhaQuinzenal create (FolhaQuinzenalDto folhaQuinzenalDto){
+
+        folhaQuinzenalDto.setId(null);
+        FolhaQuinzenal folhaPagamentoQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
+        folhaPagamentoQuinzenal = folhaQuinzenalRepository.save(folhaPagamentoQuinzenal);
+
+        //Salvando eventos
+        for(FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
+            FolhaQuinzenaEventos eventos = new FolhaQuinzenaEventos();
+            eventos.setCodigoEvento(eventosDto.getCodigoEvento());
+            eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
+            eventos.setReferencia(eventosDto.getReferencia());
+            eventos.setVencimentos(eventosDto.getVencimentos());
+            eventos.setDescontos(eventosDto.getDescontos());
+            eventos.setFolhaQuinzenal(folhaPagamentoQuinzenal);
+            folhaQuinzenalEventosRepository.save(eventos);
+        }
+        return folhaPagamentoQuinzenal;
+    }
+
+    public FolhaQuinzenal update(Long id, FolhaQuinzenalDto folhaQuinzenalDto) {
+        FolhaQuinzenal existingFolha = findById(id);
+
+        // Atualiza os dados principais
+        FolhaQuinzenal folhaPagamentoQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
+        folhaPagamentoQuinzenal = folhaQuinzenalRepository.save(folhaPagamentoQuinzenal);
+
+        // Remove eventos antigos
+        folhaQuinzenalEventosRepository.deleteByCadastroFolhaPagamentoQuinzenalId(folhaPagamentoQuinzenal.getId());
+
+        // Salva os novos eventos
+        for (FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
+            FolhaQuinzenaEventos eventos = new FolhaQuinzenaEventos();
+            eventos.setCodigoEvento(eventosDto.getCodigoEvento());
+            eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
+            eventos.setReferencia(eventosDto.getReferencia());
+            eventos.setVencimentos(eventosDto.getVencimentos());
+            eventos.setDescontos(eventosDto.getDescontos());
+            eventos.setFolhaQuinzenal(folhaPagamentoQuinzenal);
+            folhaQuinzenalEventosRepository.save(eventos);
+        }
+        return folhaPagamentoQuinzenal;
+    }
+
+    public void delete(Long id) {
+        FolhaQuinzenal folha = findById(id);
+
+        // Remove os eventos primeiro (devido à constraint de chave estrangeira)
+        folhaQuinzenalEventosRepository.deleteByCadastroFolhaPagamentoQuinzenalId(id);
+
+        // Remove o cadastro principal
+        folhaQuinzenalRepository.deleteById(id);
+    }
+
+    public FolhaQuinzenal findById(Long id) {
+        Optional<FolhaQuinzenal> objFolhaQuinzenal = folhaQuinzenalRepository.findById(id);
+        return objFolhaQuinzenal.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento quinzenal não encontrado"));
+    }
+
+    public List<FolhaQuinzenaEventos> findAllEventosByCadastroFolhaPagamentoQuinzenalId(Long eventoId) {
+        return folhaQuinzenalEventosRepository.findAllEventosByCadastroFolhaPagamentoQuinzenalId(eventoId);
+    }
+
+    public List<FolhaQuinzenal> findAll() {
+        return folhaQuinzenalRepository.findAll();
+    }
+}

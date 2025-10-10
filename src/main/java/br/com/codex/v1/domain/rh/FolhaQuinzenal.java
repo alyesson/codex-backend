@@ -1,10 +1,7 @@
 package br.com.codex.v1.domain.rh;
 
-import br.com.codex.v1.domain.cadastros.Departamento;
-import br.com.codex.v1.domain.dto.CadastroFolhaPagamentoQuinzenalDto;
+import br.com.codex.v1.domain.dto.FolhaQuinzenalDto;
 import br.com.codex.v1.domain.enums.Situacao;
-import br.com.codex.v1.domain.financeiro.CentroCusto;
-import br.com.codex.v1.domain.repository.CadastroFolhaPagamentoQuinzenalEventosRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class CadastroFolhaPagamentoQuinzenal implements Serializable {
+public class FolhaQuinzenal implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -72,20 +69,20 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
     private Situacao situacao;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cadastroFolhaPagamentoQuinzenal")
-    private List<CadastroFolhaPagamentoQuinzenalEventos> eventos = new ArrayList<>();
+    @OneToMany(mappedBy = "folhaQuinzenal")
+    private List<FolhaQuinzenaEventos> eventos = new ArrayList<>();
 
-    public CadastroFolhaPagamentoQuinzenal() {
+    public FolhaQuinzenal() {
         super();
     }
 
-    public CadastroFolhaPagamentoQuinzenal(Long id, String colaborador, String departamento, String centroCusto,
-                                           LocalDate admissao, String codigoCbo, String descricaoCbo,
-                                           String matriculaColaborador, BigDecimal salarioBase, BigDecimal salarioHora,
-                                           String jornada, String nomeBanco, String agencia, String numeroConta,
-                                           String tipoSalario, BigDecimal transporteDia, BigDecimal totalVencimentos,
-                                           BigDecimal totalDescontos, BigDecimal valorLiquido, BigDecimal baseCalculoIrrf,
-                                           BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts, String empresa, String cnpj, Situacao situacao) {
+    public FolhaQuinzenal(Long id, String colaborador, String departamento, String centroCusto,
+                          LocalDate admissao, String codigoCbo, String descricaoCbo,
+                          String matriculaColaborador, BigDecimal salarioBase, BigDecimal salarioHora,
+                          String jornada, String nomeBanco, String agencia, String numeroConta,
+                          String tipoSalario, BigDecimal transporteDia, BigDecimal totalVencimentos,
+                          BigDecimal totalDescontos, BigDecimal valorLiquido, BigDecimal baseCalculoIrrf,
+                          BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts, String empresa, String cnpj, Situacao situacao) {
         this.id = id;
         this.colaborador = colaborador;
         this.departamento = departamento;
@@ -113,7 +110,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
         this.situacao = situacao;
     }
 
-    public CadastroFolhaPagamentoQuinzenal(CadastroFolhaPagamentoQuinzenalDto obj) {
+    public FolhaQuinzenal(FolhaQuinzenalDto obj) {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
         this.departamento = obj.getDepartamento();
@@ -145,7 +142,7 @@ public class CadastroFolhaPagamentoQuinzenal implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CadastroFolhaPagamentoQuinzenal that = (CadastroFolhaPagamentoQuinzenal) o;
+        FolhaQuinzenal that = (FolhaQuinzenal) o;
         return Objects.equals(id, that.id);
     }
 

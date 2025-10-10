@@ -29,7 +29,7 @@ public class CadastroColaboradoresDto implements Serializable {
     @NotBlank(message = "Cargo não pode ficar em branco")
     protected String cargo;
     @NotNull(message = "Matrícula não pode ficar em branco")
-    protected int numeroMatricula;
+    protected String numeroMatricula;
     @NotNull(message = "Data da contratação não pode ficar em branco")
     protected Date dataContratacao;
     protected Date dataDemissao;

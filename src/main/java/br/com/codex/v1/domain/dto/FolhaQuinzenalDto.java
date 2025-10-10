@@ -1,29 +1,19 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.cadastros.Departamento;
 import br.com.codex.v1.domain.enums.Situacao;
-import br.com.codex.v1.domain.financeiro.CentroCusto;
-import br.com.codex.v1.domain.rh.CadastroColaboradores;
-import br.com.codex.v1.domain.rh.CadastroFolhaPagamentoQuinzenal;
-import br.com.codex.v1.domain.rh.CadastroFolhaPagamentoQuinzenalEventos;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.codex.v1.domain.rh.FolhaQuinzenal;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
-public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
+public class FolhaQuinzenalDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -52,13 +42,13 @@ public class CadastroFolhaPagamentoQuinzenalDto implements Serializable {
     private String empresa;
     private String cnpj;
     private Situacao situacao;
-    private List<CadastroFolhaPagamentoQuinzenalEventosDto> eventos;
+    private List<FolhaQuinzenalEventosDto> eventos;
 
-    public CadastroFolhaPagamentoQuinzenalDto() {
+    public FolhaQuinzenalDto() {
         super();
     }
 
-    public CadastroFolhaPagamentoQuinzenalDto(CadastroFolhaPagamentoQuinzenal obj) {
+    public FolhaQuinzenalDto(FolhaQuinzenal obj) {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
         this.departamento = obj.getDepartamento();

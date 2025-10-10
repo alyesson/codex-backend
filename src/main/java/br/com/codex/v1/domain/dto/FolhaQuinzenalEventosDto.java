@@ -1,19 +1,16 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.CadastroFolhaPagamentoQuinzenal;
-import br.com.codex.v1.domain.rh.CadastroFolhaPagamentoQuinzenalEventos;
+import br.com.codex.v1.domain.rh.FolhaQuinzenaEventos;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Getter
 @Setter
-public class CadastroFolhaPagamentoQuinzenalEventosDto implements Serializable {
+public class FolhaQuinzenalEventosDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -24,19 +21,19 @@ public class CadastroFolhaPagamentoQuinzenalEventosDto implements Serializable {
     private String referencia;
     private BigDecimal vencimentos;
     private BigDecimal descontos;
-    private CadastroFolhaPagamentoQuinzenalDto cadastroFolhaPagamentoQuinzenal;
+    private FolhaQuinzenalDto cadastroFolhaPagamentoQuinzenal;
 
-    public CadastroFolhaPagamentoQuinzenalEventosDto() {
+    public FolhaQuinzenalEventosDto() {
         super();
     }
 
-    public CadastroFolhaPagamentoQuinzenalEventosDto(CadastroFolhaPagamentoQuinzenalEventos obj) {
+    public FolhaQuinzenalEventosDto(FolhaQuinzenaEventos obj) {
         this.id = obj.getId();
         this.codigoEvento = obj.getCodigoEvento();
         this.descricaoEvento = obj.getDescricaoEvento();
         this.referencia = obj.getReferencia();
         this.vencimentos = obj.getVencimentos();
         this.descontos = obj.getDescontos();
-        this.cadastroFolhaPagamentoQuinzenal = new CadastroFolhaPagamentoQuinzenalDto(obj.getCadastroFolhaPagamentoQuinzenal());
+        this.cadastroFolhaPagamentoQuinzenal = new FolhaQuinzenalDto(obj.getFolhaQuinzenal());
     }
 }
