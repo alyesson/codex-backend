@@ -55,7 +55,7 @@ public class PedidoCompra implements Serializable {
         protected String observacao;
         protected String justificativa;
         @JsonIgnore
-        @OneToMany(mappedBy = "pedidoCompra")
+        @OneToMany(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
         protected List<PedidoItensCompra> itens = new ArrayList<>();
 
     public PedidoCompra() {

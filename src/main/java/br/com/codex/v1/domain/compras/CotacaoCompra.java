@@ -43,7 +43,7 @@ public class CotacaoCompra implements Serializable {
     protected String observacao;
     protected String justificativa;
     @JsonIgnore
-    @OneToMany(mappedBy = "cotacaoCompra")
+    @OneToMany(mappedBy = "cotacaoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<CotacaoItensCompra> cotacaoItensCompras = new ArrayList<>();
 
     public CotacaoCompra() {

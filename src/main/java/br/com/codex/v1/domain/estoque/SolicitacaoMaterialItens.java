@@ -2,6 +2,8 @@ package br.com.codex.v1.domain.estoque;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -25,6 +27,7 @@ public class SolicitacaoMaterialItens implements Serializable {
     private String situacao;
     @ManyToOne
     @JoinColumn(name = "solicitacaoMaterial_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SolicitacaoMaterial solicitacaoMaterial;
 
     public SolicitacaoMaterialItens() {

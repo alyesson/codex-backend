@@ -14,7 +14,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class FolhaQuinzenalEventos implements Serializable {
+public class FolhaQuinzenalEventosCalculada implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -33,30 +33,30 @@ public class FolhaQuinzenalEventos implements Serializable {
     private BigDecimal descontos;
 
     @ManyToOne
-    @JoinColumn(name = "folhaQuinzenal_id")
+    @JoinColumn(name = "folhaQuinzenalCalculada_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private FolhaQuinzenal folhaQuinzenal;
+    private FolhaQuinzenalCalculada folhaQuinzenalCalculada;
 
-    public FolhaQuinzenalEventos() {
+    public FolhaQuinzenalEventosCalculada() {
         super();
     }
 
-    public FolhaQuinzenalEventos(Long id, String codigoEvento, String descricaoEvento, String referencia,
-                                 BigDecimal vencimentos, BigDecimal descontos,
-                                 FolhaQuinzenal folhaQuinzenal) {
+    public FolhaQuinzenalEventosCalculada(Long id, String codigoEvento, String descricaoEvento, String referencia,
+                                          BigDecimal vencimentos, BigDecimal descontos,
+                                          FolhaQuinzenalCalculada folhaQuinzenalCalculada) {
         this.id = id;
         this.codigoEvento = codigoEvento;
         this.descricaoEvento = descricaoEvento;
         this.referencia = referencia;
         this.vencimentos = vencimentos;
         this.descontos = descontos;
-        this.folhaQuinzenal = folhaQuinzenal;
+        this.folhaQuinzenalCalculada = folhaQuinzenalCalculada;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FolhaQuinzenalEventos that = (FolhaQuinzenalEventos) o;
+        FolhaQuinzenalEventosCalculada that = (FolhaQuinzenalEventosCalculada) o;
         return Objects.equals(id, that.id);
     }
 

@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class FolhaQuinzenal implements Serializable {
+public class FolhaQuinzenalCalculada implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -69,20 +69,20 @@ public class FolhaQuinzenal implements Serializable {
     private Situacao situacao;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "folhaQuinzenal", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FolhaQuinzenalEventos> eventos = new ArrayList<>();
+    @OneToMany(mappedBy = "folhaQuinzenalCalculada", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FolhaQuinzenalEventosCalculada> eventos = new ArrayList<>();
 
-    public FolhaQuinzenal() {
+    public FolhaQuinzenalCalculada() {
         super();
     }
 
-    public FolhaQuinzenal(Long id, String colaborador, String departamento, String centroCusto,
-                          LocalDate admissao, String codigoCbo, String descricaoCbo,
-                          String matriculaColaborador, BigDecimal salarioBase, BigDecimal salarioHora,
-                          String jornada, String nomeBanco, String agencia, String numeroConta,
-                          String tipoSalario, BigDecimal transporteDia, BigDecimal totalVencimentos,
-                          BigDecimal totalDescontos, BigDecimal valorLiquido, BigDecimal baseCalculoIrrf,
-                          BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts, String empresa, String cnpj, Situacao situacao) {
+    public FolhaQuinzenalCalculada(Long id, String colaborador, String departamento, String centroCusto,
+                                   LocalDate admissao, String codigoCbo, String descricaoCbo,
+                                   String matriculaColaborador, BigDecimal salarioBase, BigDecimal salarioHora,
+                                   String jornada, String nomeBanco, String agencia, String numeroConta,
+                                   String tipoSalario, BigDecimal transporteDia, BigDecimal totalVencimentos,
+                                   BigDecimal totalDescontos, BigDecimal valorLiquido, BigDecimal baseCalculoIrrf,
+                                   BigDecimal fgtsDoMes, BigDecimal baseCalculoFgts, String empresa, String cnpj, Situacao situacao) {
         this.id = id;
         this.colaborador = colaborador;
         this.departamento = departamento;
@@ -110,7 +110,7 @@ public class FolhaQuinzenal implements Serializable {
         this.situacao = situacao;
     }
 
-    public FolhaQuinzenal(FolhaQuinzenalDto obj) {
+    public FolhaQuinzenalCalculada(FolhaQuinzenalCalculadaDto obj) {
         this.id = obj.getId();
         this.colaborador = obj.getColaborador();
         this.departamento = obj.getDepartamento();
@@ -142,7 +142,7 @@ public class FolhaQuinzenal implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FolhaQuinzenal that = (FolhaQuinzenal) o;
+        FolhaQuinzenalCalculada that = (FolhaQuinzenalCalculada) o;
         return Objects.equals(id, that.id);
     }
 

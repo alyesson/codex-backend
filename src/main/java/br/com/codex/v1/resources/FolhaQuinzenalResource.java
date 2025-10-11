@@ -31,9 +31,8 @@ public class FolhaQuinzenalResource {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
-    @PutMapping
-    public ResponseEntity<FolhaQuinzenalDto> update(@PathVariable Long id,
-                                                    @RequestBody FolhaQuinzenalDto folhaQuinzenalDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<FolhaQuinzenalDto> update(@PathVariable Long id, @RequestBody FolhaQuinzenalDto folhaQuinzenalDto) {
         FolhaQuinzenal obj = folhaQuinzenalService.update(id, folhaQuinzenalDto);
         return ResponseEntity.ok().body(new FolhaQuinzenalDto((obj)));
     }

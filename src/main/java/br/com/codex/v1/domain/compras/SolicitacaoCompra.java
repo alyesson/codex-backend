@@ -33,7 +33,7 @@ public class SolicitacaoCompra implements Serializable {
     protected String opcaoMarca;
     protected String itemEstoque;
     @JsonIgnore
-    @OneToMany(mappedBy = "solicitacaoCompra")
+    @OneToMany(mappedBy = "solicitacaoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<SolicitacaoItensCompra> solicitacaoItensCompra = new ArrayList<>();
     protected String situacao;
     protected String email;

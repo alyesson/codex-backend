@@ -38,7 +38,7 @@ public class SolicitacaoMaterial implements Serializable {
     private String motivoSolicitacao;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "solicitacaoMaterial")
+    @OneToMany(mappedBy = "solicitacaoMaterial", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SolicitacaoMaterialItens> SolicitacaoMaterialItens = new ArrayList<>();
 
     public SolicitacaoMaterial() {

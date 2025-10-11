@@ -2,6 +2,8 @@ package br.com.codex.v1.domain.compras;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -26,6 +28,7 @@ public class SolicitacaoItensCompra implements Serializable {
     protected BigDecimal precoUnitario;
     @ManyToOne
     @JoinColumn(name = "solicitacaoCompra_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SolicitacaoCompra solicitacaoCompra;
 
     public SolicitacaoItensCompra() {

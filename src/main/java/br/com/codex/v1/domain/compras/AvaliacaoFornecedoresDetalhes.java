@@ -1,11 +1,18 @@
 package br.com.codex.v1.domain.compras;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class AvaliacaoFornecedoresDetalhes implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -16,8 +23,10 @@ public class AvaliacaoFornecedoresDetalhes implements Serializable {
     protected String criterio;
     protected float peso;
     protected float nota;
+
     @ManyToOne
     @JoinColumn(name = "avaliacaoFornecedores_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     protected AvaliacaoFornecedores avaliacaoFornecedores;
 
     public AvaliacaoFornecedoresDetalhes() {
@@ -29,46 +38,6 @@ public class AvaliacaoFornecedoresDetalhes implements Serializable {
         this.criterio = criterio;
         this.peso = peso;
         this.nota = nota;
-        this.avaliacaoFornecedores = avaliacaoFornecedores;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCriterio() {
-        return criterio;
-    }
-
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-
-    public float getPeso() {
-        return peso;
-    }
-
-    public void setPeso(float peso) {
-        this.peso = peso;
-    }
-
-    public float getNota() {
-        return nota;
-    }
-
-    public void setNota(float nota) {
-        this.nota = nota;
-    }
-
-    public AvaliacaoFornecedores getAvaliacaoFornecedores() {
-        return avaliacaoFornecedores;
-    }
-
-    public void setAvaliacaoFornecedores(AvaliacaoFornecedores avaliacaoFornecedores) {
         this.avaliacaoFornecedores = avaliacaoFornecedores;
     }
 

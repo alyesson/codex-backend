@@ -2,6 +2,8 @@ package br.com.codex.v1.domain.compras;
 
 import br.com.codex.v1.domain.dto.AvaliacaoFornecedoresDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 public class AvaliacaoFornecedores implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,14 +30,15 @@ public class AvaliacaoFornecedores implements Serializable {
     protected Date dataAvaliacao;
     protected String avaliador;
     @JsonIgnore
-    @OneToMany(mappedBy = "avaliacaoFornecedores")
+    @OneToMany(mappedBy = "avaliacaoFornecedores", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<AvaliacaoFornecedoresDetalhes> avaliacaoFornecedoresItens = new ArrayList<>();
 
     public AvaliacaoFornecedores() {
         super();
     }
 
-    public AvaliacaoFornecedores(Long id, String fornecedor, int pedido, float notaMinima, float notaFinal, Date dataAvaliacao, String avaliador) {
+    public AvaliacaoFornecedores(Long id, String fornecedor, int pedido, float notaMinima,
+                                 float notaFinal, Date dataAvaliacao, String avaliador) {
         this.id = id;
         this.fornecedor = fornecedor;
         this.pedido = pedido;
@@ -51,70 +56,6 @@ public class AvaliacaoFornecedores implements Serializable {
         this.notaFinal = obj.getNotaFinal();
         this.dataAvaliacao = obj.getDataAvaliacao();
         this.avaliador = obj.getAvaliador();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFornecedor() {
-        return fornecedor;
-    }
-
-    public void setFornecedor(String fornecedor) {
-        this.fornecedor = fornecedor;
-    }
-
-    public int getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(int pedido) {
-        this.pedido = pedido;
-    }
-
-    public float getNotaMinima() {
-        return notaMinima;
-    }
-
-    public void setNotaMinima(float notaMinima) {
-        this.notaMinima = notaMinima;
-    }
-
-    public float getNotaFinal() {
-        return notaFinal;
-    }
-
-    public void setNotaFinal(float notaFinal) {
-        this.notaFinal = notaFinal;
-    }
-
-    public Date getDataAvaliacao() {
-        return dataAvaliacao;
-    }
-
-    public void setDataAvaliacao(Date dataAvaliacao) {
-        this.dataAvaliacao = dataAvaliacao;
-    }
-
-    public String getAvaliador() {
-        return avaliador;
-    }
-
-    public void setAvaliador(String avaliador) {
-        this.avaliador = avaliador;
-    }
-
-    public List<AvaliacaoFornecedoresDetalhes> getAvaliacaoFornecedoresItens() {
-        return avaliacaoFornecedoresItens;
-    }
-
-    public void setAvaliacaoFornecedoresItens(List<AvaliacaoFornecedoresDetalhes> avaliacaoFornecedoresItens) {
-        this.avaliacaoFornecedoresItens = avaliacaoFornecedoresItens;
     }
 
     @Override

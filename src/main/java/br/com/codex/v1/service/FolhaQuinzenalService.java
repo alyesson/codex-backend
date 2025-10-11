@@ -10,6 +10,7 @@ import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,15 +43,16 @@ public class FolhaQuinzenalService {
         return folhaQuinzenal;
     }
 
+    @Transactional
     public FolhaQuinzenal update(Long id, FolhaQuinzenalDto folhaQuinzenalDto) {
         FolhaQuinzenal existingFolha = findById(id);
+        folhaQuinzenalDto.setId(id);
 
-        // Atualiza os dados principais
         FolhaQuinzenal folhaQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
         folhaQuinzenal = folhaQuinzenalRepository.save(folhaQuinzenal);
 
         // Remove eventos antigos
-        folhaQuinzenalEventosRepository.deleteByFolhaQuinzenalId(folhaQuinzenal.getId());
+        folhaQuinzenalEventosRepository.deleteByFolhaQuinzenalId(id);
 
         // Salva os novos eventos
         for (FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
@@ -66,6 +68,7 @@ public class FolhaQuinzenalService {
         return folhaQuinzenal;
     }
 
+    @Transactional
     public void delete(Long id) {
         FolhaQuinzenal folha = findById(id);
 

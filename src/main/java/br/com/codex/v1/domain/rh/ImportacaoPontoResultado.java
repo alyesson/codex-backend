@@ -18,7 +18,7 @@ public class ImportacaoPontoResultado {
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private Integer totalRegistros;
-    private Integer registrosSalvos; // NOVO
+    private Integer registrosSalvos;
     private Integer espelhosProcessados;
     private List<String> erros = new ArrayList<>();
 
