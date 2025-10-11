@@ -47,7 +47,7 @@ public class FolhaQuinzenalResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @GetMapping("/{id}/eventos")
     public ResponseEntity<List<FolhaQuinzenalEventosDto>> findEventosByFolhaId(@PathVariable Long id) {
-        List<FolhaQuinzenalEventos> eventos = folhaQuinzenalService.findAllEventosByCadastroFolhaPagamentoQuinzenalId(id);
+        List<FolhaQuinzenalEventos> eventos = folhaQuinzenalService.findAllEventosByFolhaQuinzenalId(id);
         List<FolhaQuinzenalEventosDto> listDto = eventos.stream().map(FolhaQuinzenalEventosDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }

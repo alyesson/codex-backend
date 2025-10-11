@@ -25,8 +25,8 @@ public class FolhaQuinzenalService {
     public FolhaQuinzenal create (FolhaQuinzenalDto folhaQuinzenalDto){
 
         folhaQuinzenalDto.setId(null);
-        FolhaQuinzenal folhaPagamentoQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
-        folhaPagamentoQuinzenal = folhaQuinzenalRepository.save(folhaPagamentoQuinzenal);
+        FolhaQuinzenal folhaQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
+        folhaQuinzenal = folhaQuinzenalRepository.save(folhaQuinzenal);
 
         //Salvando eventos
         for(FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
@@ -36,21 +36,21 @@ public class FolhaQuinzenalService {
             eventos.setReferencia(eventosDto.getReferencia());
             eventos.setVencimentos(eventosDto.getVencimentos());
             eventos.setDescontos(eventosDto.getDescontos());
-            eventos.setFolhaQuinzenal(folhaPagamentoQuinzenal);
+            eventos.setFolhaQuinzenal(folhaQuinzenal);
             folhaQuinzenalEventosRepository.save(eventos);
         }
-        return folhaPagamentoQuinzenal;
+        return folhaQuinzenal;
     }
 
     public FolhaQuinzenal update(Long id, FolhaQuinzenalDto folhaQuinzenalDto) {
         FolhaQuinzenal existingFolha = findById(id);
 
         // Atualiza os dados principais
-        FolhaQuinzenal folhaPagamentoQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
-        folhaPagamentoQuinzenal = folhaQuinzenalRepository.save(folhaPagamentoQuinzenal);
+        FolhaQuinzenal folhaQuinzenal = new FolhaQuinzenal(folhaQuinzenalDto);
+        folhaQuinzenal = folhaQuinzenalRepository.save(folhaQuinzenal);
 
         // Remove eventos antigos
-        folhaQuinzenalEventosRepository.deleteByCadastroFolhaPagamentoQuinzenalId(folhaPagamentoQuinzenal.getId());
+        folhaQuinzenalEventosRepository.deleteByFolhaQuinzenalId(folhaQuinzenal.getId());
 
         // Salva os novos eventos
         for (FolhaQuinzenalEventosDto eventosDto : folhaQuinzenalDto.getEventos()) {
@@ -60,17 +60,17 @@ public class FolhaQuinzenalService {
             eventos.setReferencia(eventosDto.getReferencia());
             eventos.setVencimentos(eventosDto.getVencimentos());
             eventos.setDescontos(eventosDto.getDescontos());
-            eventos.setFolhaQuinzenal(folhaPagamentoQuinzenal);
+            eventos.setFolhaQuinzenal(folhaQuinzenal);
             folhaQuinzenalEventosRepository.save(eventos);
         }
-        return folhaPagamentoQuinzenal;
+        return folhaQuinzenal;
     }
 
     public void delete(Long id) {
         FolhaQuinzenal folha = findById(id);
 
         // Remove os eventos primeiro (devido à constraint de chave estrangeira)
-        folhaQuinzenalEventosRepository.deleteByCadastroFolhaPagamentoQuinzenalId(id);
+        folhaQuinzenalEventosRepository.deleteByFolhaQuinzenalId(id);
 
         // Remove o cadastro principal
         folhaQuinzenalRepository.deleteById(id);
@@ -81,8 +81,8 @@ public class FolhaQuinzenalService {
         return objFolhaQuinzenal.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento quinzenal não encontrado"));
     }
 
-    public List<FolhaQuinzenalEventos> findAllEventosByCadastroFolhaPagamentoQuinzenalId(Long eventoId) {
-        return folhaQuinzenalEventosRepository.findAllEventosByCadastroFolhaPagamentoQuinzenalId(eventoId);
+    public List<FolhaQuinzenalEventos> findAllEventosByFolhaQuinzenalId(Long eventoId) {
+        return folhaQuinzenalEventosRepository.findAllEventosByFolhaQuinzenalId(eventoId);
     }
 
     public List<FolhaQuinzenal> findAll() {

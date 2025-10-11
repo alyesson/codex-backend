@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface FolhaQuinzenalEventosRepository extends JpaRepository<FolhaQuinzenalEventos, Long> {
 
-    List<FolhaQuinzenalEventos> findAllEventosByCadastroFolhaPagamentoQuinzenalId(Long eventoId);
+    List<FolhaQuinzenalEventos> findAllEventosByFolhaQuinzenalId(Long eventoId);
 
-    void deleteByCadastroFolhaPagamentoQuinzenalId(Long id);
+    void deleteByFolhaQuinzenalId(Long id);
 }

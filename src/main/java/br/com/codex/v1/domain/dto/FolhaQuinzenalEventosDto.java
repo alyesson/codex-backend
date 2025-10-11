@@ -21,7 +21,7 @@ public class FolhaQuinzenalEventosDto implements Serializable {
     private String referencia;
     private BigDecimal vencimentos;
     private BigDecimal descontos;
-    private FolhaQuinzenalDto cadastroFolhaPagamentoQuinzenal;
+    private FolhaQuinzenalDto folhaQuinzenal;
 
     public FolhaQuinzenalEventosDto() {
         super();
@@ -34,6 +34,6 @@ public class FolhaQuinzenalEventosDto implements Serializable {
         this.referencia = obj.getReferencia();
         this.vencimentos = obj.getVencimentos();
         this.descontos = obj.getDescontos();
-        this.cadastroFolhaPagamentoQuinzenal = new FolhaQuinzenalDto(obj.getFolhaQuinzenal());
+        this.folhaQuinzenal = new FolhaQuinzenalDto(obj.getFolhaQuinzenal());
     }
 }
