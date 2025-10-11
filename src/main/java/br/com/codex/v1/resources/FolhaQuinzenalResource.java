@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("v1/api/cadastro_folha_quinzenal")
+@RequestMapping("v1/api/folha_quinzenal")
 public class FolhaQuinzenalResource {
 
     @Autowired

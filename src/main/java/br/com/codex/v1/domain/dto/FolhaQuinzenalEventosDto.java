@@ -15,7 +15,6 @@ public class FolhaQuinzenalEventosDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
     private String codigoEvento;
     private String descricaoEvento;
     private String referencia;
