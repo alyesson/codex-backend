@@ -1,17 +1,20 @@
-package br.com.codex.v1.domain.rh;
+package br.com.codex.v1.service;
 
-import br.com.codex.v1.service.CadastroColaboradoresService;
-import br.com.codex.v1.service.TabelaImpostoRendaService;
 import br.com.codex.v1.utilitario.Calendario;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class CalculoDaFolhaProventos {
+@Service
+public class CalculoDaFolhaProventosService {
 
     @Autowired
     private TabelaImpostoRendaService tabelaImpostoRendaService;
@@ -25,7 +28,12 @@ public class CalculoDaFolhaProventos {
     Integer codigoEvento, numeroDependentes;
     LocalTime horaEntrada;
     LocalTime horaSaida;
-    String tipoJornada, numeroMatricula, descricaoCargo;
+    String tipoJornada;
+
+    @Setter
+    String numeroMatricula;
+
+    String descricaoCargo;
     BigDecimal valorHoraExtra50, valorHoraExtra70, valorHoraExtra100, percentualInsalubridade, percentualPericulosidade,
     valorComissao, valeCreche, valorVendasMes, ajudaCusto, valorQuebraCaixa, valorGratificacao,horasPorMes,
     valorValeTransporte, valorValeCreche, valorReferenciaHoraNoturna, valorReferenciaHoraDiurna, valorReferenciaDsrHoraNoturna,
@@ -41,10 +49,14 @@ public class CalculoDaFolhaProventos {
         return tabelaImpostoRendaService.getSalarioMinimo();
     }
 
-    public void escolheEventos(Integer codigoEvento) {
+    public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
+
+        Map<String, BigDecimal> resultado = new HashMap<>();
 
         horaEntrada = cadastroColaboradoresService.findByNumeroMatricula(numeroMatricula).getHorarioEntrada();
         horaSaida = cadastroColaboradoresService.findByNumeroMatricula(numeroMatricula).getHorarioSaida();
+        salarioBase = cadastroColaboradoresService.findByNumeroMatricula(numeroMatricula).getSalarioColaborador();
+        valorValeTransporte = cadastroColaboradoresService.findByNumeroMatricula(numeroMatricula).getValeTransporteCusto();
 
         switch (codigoEvento) {
 
@@ -88,9 +100,11 @@ public class CalculoDaFolhaProventos {
 
                     // Calcula o valor das horas diurnas e arredonda para 2 casas decimais
                     valorReferenciaHoraDiurna = new BigDecimal(hourDiurna).multiply(new BigDecimal(workingDaysDiurno)).setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas decimais
-                    //precisa retornar aqui o resultado e colocar o retorno no evento da referência no front end, no caso valorReferenciaHoraDiurna
                     BigDecimal valorTotalHoraDiurna = valorReferenciaHoraDiurna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas decimais
-                    //precisa retornar aqui o resultado e colocar o retorno no evento dos vencimento no front end, no caso valorTotalHoraDiurna
+
+                    resultado.put("referencia", valorReferenciaHoraDiurna);
+                    resultado.put("vencimentos", valorTotalHoraDiurna);
+                    resultado.put("descontos", BigDecimal.ZERO);
 
                 } else {
                     if (horaFim.isBefore(hora22)) {
@@ -123,9 +137,11 @@ public class CalculoDaFolhaProventos {
 
                         // Calcula o valor das horas diurnas e arredonda para 2 casas decimais
                         valorReferenciaHoraDiurna = new BigDecimal(hourDiurna).multiply(new BigDecimal(workingDaysDiurno)).setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas decimais
-                        //precisa retornar aqui o resultado e colocar o retorno no evento da referência no front end, no caso valorReferenciaHoraDiurna
                         BigDecimal valorTotalHoraDiurna = valorReferenciaHoraDiurna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas decimais
-                        //precisa retornar aqui o resultado e colocar o retorno no evento dos vencimento no front end, no caso valorTotalHoraDiurna
+
+                        resultado.put("referencia", valorReferenciaHoraDiurna);
+                        resultado.put("vencimentos", valorTotalHoraDiurna);
+                        resultado.put("descontos", BigDecimal.ZERO);
 
                     } else {
                         /* Aqui eu pego 22 horas e subtraio pela hora de entrada para calcular o DSR Diurno até às 22:00 */
@@ -157,15 +173,23 @@ public class CalculoDaFolhaProventos {
 
                         // Calcula o valor das horas diurnas e arredonda para 2 casas decimais
                         valorReferenciaHoraDiurna = new BigDecimal(hourDiurna).multiply(new BigDecimal(workingDaysDiurno)).setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas decimais
-                        //precisa retornar aqui o resultado e colocar o retorno no evento da referência no front end, no caso valorReferenciaHoraDiurna
                         BigDecimal valorTotalHoraDiurna = valorReferenciaHoraDiurna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas decimais
-                        //precisa retornar aqui o resultado e colocar o retorno no evento dos vencimento no front end, no caso valorTotalHoraDiurna
+
+                        resultado.put("referencia", valorReferenciaHoraDiurna);
+                        resultado.put("vencimentos", valorTotalHoraDiurna);
+                        resultado.put("descontos", BigDecimal.ZERO);
                     }
                 }
 
             }
+            case 130 -> {
+                //Calculando Ajuda de Custo
+                resultado.put("referencia", valorValeTransporte);
+                resultado.put("vencimentos", valorValeTransporte);
+                resultado.put("descontos", BigDecimal.ZERO);
+            }
         }
+        return resultado;
 
     }
-
 }
