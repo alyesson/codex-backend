@@ -15,6 +15,7 @@ public class TabelaImpostoRendaDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    private BigDecimal salarioMinimo;
     private BigDecimal faixaSalario1;
     private BigDecimal aliquota1;
     private BigDecimal parcelaDeduzir1;
@@ -38,6 +39,7 @@ public class TabelaImpostoRendaDto implements Serializable {
 
     public TabelaImpostoRendaDto(TabelaImpostoRenda obj) {
         this.id = obj.getId();
+        this.salarioMinimo = obj.getSalarioMinimo();
         this.faixaSalario1 = obj.getFaixaSalario1();
         this.aliquota1 = obj.getAliquota1();
         this.parcelaDeduzir1 = obj.getParcelaDeduzir1();

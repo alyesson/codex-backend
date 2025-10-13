@@ -9,6 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -21,165 +22,252 @@ public class CadastroColaboradores implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    @Column(length = 100)
-    protected String nomeColaborador;
-    @Column(length = 25)
-    protected String nomeDepartamento;
-    @Column(length = 25)
-    protected String estadoCivil;
-    @Column(length = 70)
-    protected String cargo;
-    @Column(length = 10)
-    protected String numeroMatricula;
-    @Column(length = 12)
-    protected Date dataContratacao;
-    @Column(length = 10)
-    protected Date dataDemissao;
-    @Column(length = 35)
-    protected String situacaoAtual;
-    @Column(length = 10)
-    protected Date nascimento;
-    @Column(length = 15)
-    protected String numeroCelular;
-    @Column(length = 40)
-    protected String email;
-    @Column(length = 100)
-    protected String unidadeContratante;
-    @Column(length = 8)
-    protected String codCbo;
-    @Column(length = 100)
-    protected String descricaoCbo;
-    @Column(length = 150)
-    protected String logradouro;
-    @Column(length = 60)
-    protected String bairro;
-    @Column(length = 60)
-    protected String cidade;
-    @Column(length = 10)
-    protected String cep;
-    @Column(length = 2)
-    protected String uf;
-    @Column(length = 50)
-    protected String complemento;
-    @Column(length = 10)
-    protected String sexo;
-    @Column(length = 15)
-    protected String carteiraSus;
-    @Column(length = 5)
-    protected String deficiencia;
-    @Column(length = 20)
-    protected String qualDeficiencia;
-    @Column(length = 50)
-    protected String conjugeNome;
-    @Column(length = 2)
-    protected int filhos;
-    @Column(length = 10)
-    protected String habilitacao;
-    @Column(length = 20)
-    protected String tituloEleitor;
-    @Column(length = 6)
-    protected String zonaEleitor;
-    @Column(length = 6)
-    protected String secaoEleitor;
-    @Column(length = 20)
-    protected String numeroReservista;
-    @Column(length = 6)
-    protected String numeroCarteiraTrabalho;
-    @Column(length = 6)
-    protected String serieCarteiraTrabalho;
-    @Column(length = 2)
-    protected String ufCtps;
-    @Column(length = 10)
-    protected String expedicaoCtps;
-    @Column(length = 15)
-    protected String rg;
-    @Column(length = 2)
-    protected String ufRg;
-    @Column(length = 11)
-    protected Date expedicaoRg;
-    @Column(length = 20)
-    protected String orgaoEmissorRg;
-    @Column(length = 12)
-    protected String cpf;
-    @Column(length = 25)
-    protected String centroCusto;
-    @Column(length = 25)
-    protected String numeroPis;
-    @Column(length = 10)
-    protected BigDecimal ultimoSalario;
-    @Column(length = 25)
-    protected String nomeBanco;
+
     @Column(length = 6)
     protected String agenciaBanco;
-    @Column(length = 10)
-    protected String contaBanco;
-    @Column(length = 10)
-    protected BigDecimal salarioColaborador;
-    @Column(length = 75)
-    protected String jornada;
+
     @Column(length = 60)
-    protected String nomePai;
-    @Column(length = 60)
-    protected String nomeMae;
-    @Column(length = 30)
-    protected String escolaridade;
+    protected String bairro;
+
+    @Column(length = 70)
+    protected String cargo;
+
     @Column(length = 15)
-    protected String tipoCertidao;
-    @Column(length = 10)
-    protected String emissaoCertidao;
-    @Column(length = 10)
-    protected String livroCertidao;
+    protected String carteiraSus;
+
     @Column(length = 50)
     protected String cartorioCertidao;
-    @Column(length = 5)
-    protected String folhaCertidao;
-    @Column(length = 5)
-    protected String termoCertidao;
-    @Column(length = 2)
-    protected String ufCertidao;
+
+    @Column(length = 25)
+    protected String centroCusto;
+
+    @Column(length = 10)
+    protected String cep;
+
+    @Column(length = 60)
+    protected String cidade;
+
+    @Column(length = 8)
+    protected String codCbo;
+
     @Column(length = 50)
-    protected String municipioCertidao;
-    @Column(length = 30)
-    protected String tipoContrato;
+    protected String complemento;
+
     @Column(length = 50)
-    protected String modalidadeContrato;
-    @Column(length = 5)
-    protected int numeroContrato;
-    @Column(length = 5)
-    protected String numeroCartaoPonto;
+    protected String conjugeNome;
+
+    @Column(length = 10)
+    protected String contaBanco;
+
     @Column(length = 25)
     protected String contaFgts;
-    @Column(length = 3)
-    protected int diasExperiencia;
-    @Column(length = 15)
-    protected Date terminoContrato;
-    @Column(length = 250)
-    protected String tipoAdmissao;
-    @Column(length = 70)
-    protected String nomeSindicato;
+
+    @Column(length = 12)
+    protected String cpf;
+
     @Column(length = 18)
     protected String contribuicaoSindical;
+
+    @Column(length = 12)
+    protected Date dataContratacao;
+
     @Column(length = 10)
-    protected String tipoFolha;
+    protected Date dataDemissao;
+
+    @Column(length = 5)
+    protected String deficiencia;
+
+    @Column(length = 100)
+    protected String descricaoCbo;
+
+    @Column(length = 3)
+    protected int diasExperiencia;
+
+    @Column(length = 40)
+    protected String email;
+
     @Column(length = 10)
-    protected String tipoSalario;
+    protected String emissaoCertidao;
+
+    @Column(length = 30)
+    protected String escolaridade;
+
+    @Column(length = 25)
+    protected String estadoCivil;
+
+    @Column(length = 10)
+    protected String expedicaoCtps;
+
+    @Column(length = 11)
+    protected Date expedicaoRg;
+
+    @Column(length = 2)
+    protected int filhos;
+
+    @Column(length = 5)
+    protected String folhaCertidao;
+
     @Column(length = 30)
     protected String formaPagamento;
+
+    @Column(length = 10)
+    protected String habilitacao;
+
+    @Column(length = 3)
+    protected BigDecimal horaMes;
+
+    @Column(length = 3)
+    protected BigDecimal horaSemana;
+
+    @Column(length = 12)
+    private LocalTime horarioEntrada;
+
+    @Column(length = 12)
+    private LocalTime horarioSaida;
+
     @Column(length = 2)
     protected BigDecimal insalubridade;
-    @Column(length = 2)
-    protected BigDecimal periculosidade;
-    protected BigDecimal horaMes;
-    @Column(length = 2)
-    protected BigDecimal horaSemana;
+
+    @Column(length = 75)
+    protected String jornada;
+
+    @Column(length = 10)
+    protected String livroCertidao;
+
+    @Column(length = 150)
+    protected String logradouro;
+
+    @Column(length = 50)
+    protected String municipioCertidao;
+
+    @Column(length = 50)
+    protected String modalidadeContrato;
+
+    @Column(length = 10)
+    protected Date nascimento;
+
+    @Column(length = 25)
+    protected String nomeBanco;
+
+    @Column(length = 100)
+    protected String nomeColaborador;
+
+    @Column(length = 25)
+    protected String nomeDepartamento;
+
+    @Column(length = 60)
+    protected String nomeMae;
+
+    @Column(length = 60)
+    protected String nomePai;
+
+    @Column(length = 70)
+    protected String nomeSindicato;
+
     @Column(length = 6)
-    protected BigDecimal salarioHora;
-    @Column(length = 6)
-    protected BigDecimal valeTransporteCusto;
+    protected String numeroCarteiraTrabalho;
+
+    @Column(length = 5)
+    protected String numeroCartaoPonto;
+
+    @Column(length = 15)
+    protected String numeroCelular;
+
+    @Column(length = 5)
+    protected int numeroContrato;
+
+    @Column(length = 10)
+    protected String numeroMatricula;
+
+    @Column(length = 25)
+    protected String numeroPis;
+
+    @Column(length = 20)
+    protected String numeroReservista;
+
+    @Column(length = 20)
+    protected String orgaoEmissorRg;
+
     @Column(length = 10)
     protected BigDecimal pensaoAlimenticia;
+
+    @Column(length = 2)
+    protected BigDecimal periculosidade;
+
+    @Column(length = 20)
+    protected String qualDeficiencia;
+
+    @Column(length = 15)
+    protected String rg;
+
+    @Column(length = 10)
+    protected BigDecimal salarioColaborador;
+
     @Column(length = 10)
     protected BigDecimal salarioFamilia;
+
+    @Column(length = 6)
+    protected BigDecimal salarioHora;
+
+    @Column(length = 6)
+    protected String secaoEleitor;
+
+    @Column(length = 6)
+    protected String serieCarteiraTrabalho;
+
+    @Column(length = 10)
+    protected String sexo;
+
+    @Column(length = 40)
+    private String situacaoAtual;
+
+    @Column(length = 15)
+    protected Date terminoContrato;
+
+    @Column(length = 5)
+    protected String termoCertidao;
+
+    @Column(length = 20)
+    protected String tituloEleitor;
+
+    @Column(length = 250)
+    protected String tipoAdmissao;
+
+    @Column(length = 15)
+    protected String tipoCertidao;
+
+    @Column(length = 30)
+    protected String tipoContrato;
+
+    @Column(length = 10)
+    protected String tipoFolha;
+
+    @Column(length = 10)
+    protected String tipoSalario;
+
+    @Column(length = 2)
+    protected String uf;
+
+    @Column(length = 2)
+    protected String ufCtps;
+
+    @Column(length = 2)
+    protected String ufCertidao;
+
+    @Column(length = 2)
+    protected String ufRg;
+
+    @Column(length = 10)
+    protected BigDecimal ultimoSalario;
+
+    @Column(length = 100)
+    protected String unidadeContratante;
+
+    @Column(length = 6)
+    protected BigDecimal valeTransporteCusto;
+
+    @Column(length = 6)
+    protected String zonaEleitor;
 
     public CadastroColaboradores() {
         super();
@@ -204,7 +292,7 @@ public class CadastroColaboradores implements Serializable {
                                  String contribuicaoSindical, String tipoFolha, String tipoSalario, String formaPagamento,
                                  BigDecimal insalubridade, BigDecimal periculosidade, BigDecimal horaMes, BigDecimal horaSemana,
                                  BigDecimal salarioHora, BigDecimal valeTransporteCusto, BigDecimal pensaoAlimenticia,
-                                 BigDecimal salarioFamilia) {
+                                 BigDecimal salarioFamilia, LocalTime horarioEntrada, LocalTime horarioSaida) {
         this.id = id;
         this.nomeColaborador = nomeColaborador;
         this.nomeDepartamento = nomeDepartamento;
@@ -286,6 +374,8 @@ public class CadastroColaboradores implements Serializable {
         this.valeTransporteCusto = valeTransporteCusto;
         this.pensaoAlimenticia = pensaoAlimenticia;
         this.salarioFamilia = salarioFamilia;
+        this.horarioEntrada = horarioEntrada;
+        this.horarioSaida = horarioSaida;
     }
 
     public CadastroColaboradores(CadastroColaboradoresDto obj) {
@@ -370,6 +460,8 @@ public class CadastroColaboradores implements Serializable {
         this.valeTransporteCusto = obj.getValeTransporteCusto();
         this.pensaoAlimenticia = obj.getPensaoAlimenticia();
         this.salarioFamilia = obj.getSalarioFamilia();
+        this.horarioEntrada = obj.getHorarioEntrada();
+        this.horarioSaida = obj.getHorarioSaida();
     }
 
     @Override

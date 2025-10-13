@@ -1,6 +1,7 @@
 package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.rh.CadastroColaboradores;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalTime;
 
 import static br.com.codex.v1.utilitario.CapitalizarPalavras.capitalizarPalavras;
 
@@ -20,130 +22,218 @@ public class CadastroColaboradoresDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected Long id;
+
     @NotBlank(message = "Nome do colaborador não pode ficar em branco")
     protected String nomeColaborador;
+
     @NotBlank(message = "Departamento não pode ficar em branco")
     protected String nomeDepartamento;
+
     @NotBlank(message = "Estado civil não pode ficar em branco")
     protected String estadoCivil;
+
     @NotBlank(message = "Cargo não pode ficar em branco")
     protected String cargo;
+
     @NotNull(message = "Matrícula não pode ficar em branco")
     protected String numeroMatricula;
+
     @NotNull(message = "Data da contratação não pode ficar em branco")
     protected Date dataContratacao;
+
     protected Date dataDemissao;
+
     @NotBlank(message = "Campo situação atual não pode ficar em branco")
     protected String situacaoAtual;
+
     @NotNull(message = "Data de nascimento não pode ficar em branco")
     protected Date nascimento;
+
     @NotBlank(message = "Número de celular não pode ficar em branco")
     protected String numeroCelular;
+
     protected String email;
+
     @NotBlank(message = "Unidade contratante não pode ficar em branco")
     protected String unidadeContratante;
+
     @NotBlank(message = "Código do cbo não pode ficar em branco")
     protected String codCbo;
+
     @NotBlank(message = "Descrição do Cbo não pode ficar em branco")
     protected String descricaoCbo;
+
     @NotBlank(message = "Logradouro não pode ficar em branco")
     protected String logradouro;
+
     @NotBlank(message = "Bairro não pode ficar em branco")
     protected String bairro;
+
     @NotBlank(message = "Cidade não pode ficar em branco")
     protected String cidade;
+
     @NotBlank(message = "Cep não pode ficar em branco")
     protected String cep;
+
     @NotBlank(message = "Unidade federativa não pode ficar em branco")
     protected String uf;
+
     protected String complemento;
+
     @NotBlank(message = "Campo sexo não pode ficar em branco")
     protected String sexo;
+
     protected String carteiraSus;
+
     protected String deficiencia;
+
     protected String qualDeficiencia;
+
     protected String conjugeNome;
+
     protected int filhos;
+
     protected String habilitacao;
+
     @NotBlank(message = "Título de eleitor não pode ficar em branco")
     protected String tituloEleitor;
-    @NotBlank(message = "Zona eleitoral não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Zona eleitoral não pode ficar em branco")
     protected String zonaEleitor;
-    @NotBlank(message = "Seção eleitoral não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Seção eleitoral não pode ficar em branco")
     protected String secaoEleitor;
+
     protected String numeroReservista;
+
     protected String numeroCarteiraTrabalho;
+
     protected String serieCarteiraTrabalho;
+
     protected String ufCtps;
+
     protected String expedicaoCtps;
-    @NotBlank(message = "Número Rg não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Número Rg não pode ficar em branco")
     protected String rg;
+
     protected String ufRg;
+
     protected Date expedicaoRg;
-    @NotBlank(message = "Órgão emissor do rg não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Órgão emissor do rg não pode ficar em branco")
     protected String orgaoEmissorRg;
-    @NotBlank(message = "Cpf não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Cpf não pode ficar em branco")
     protected String cpf;
-    @NotBlank(message = "Centro de custo não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Centro de custo não pode ficar em branco")
     protected String centroCusto;
+
     protected String numeroPis;
+
     protected BigDecimal ultimoSalario;
-    @NotBlank(message = "Nome do banco não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Nome do banco não pode ficar em branco")
     protected String nomeBanco;
-    @NotBlank(message = "Agência bancária não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Agência bancária não pode ficar em branco")
     protected String agenciaBanco;
-    @NotBlank(message = "Conta bancária não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Conta bancária não pode ficar em branco")
     protected String contaBanco;
-    @NotNull(message = "Salário do colaborador não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Salário do colaborador não pode ficar em branco")
     protected BigDecimal salarioColaborador;
-    @NotNull(message = "Jornada de trabalho não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Jornada de trabalho não pode ficar em branco")
     protected String jornada;
+
     protected String nomePai;
+
     protected String nomeMae;
-    @NotBlank(message = "Escolaridade não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Escolaridade não pode ficar em branco")
     protected String escolaridade;
-    @NotBlank(message = "Tipo de certidão não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Tipo de certidão não pode ficar em branco")
     protected String tipoCertidao;
+
     protected String emissaoCertidao;
+
     protected String livroCertidao;
+
     protected String cartorioCertidao;
+
     protected String folhaCertidao;
+
     protected String termoCertidao;
+
     protected String ufCertidao;
+
     protected String municipioCertidao;
-    @NotBlank(message = "Tipo de contrato não pode ficar em branco não pode ficar em branco")
+    @NotBlank(message = "Tipo de contrato não pode ficar em branco")
     protected String tipoContrato;
-    @NotBlank(message = "Modalidade do contrato não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Modalidade do contrato não pode ficar em branco")
     protected String modalidadeContrato;
-    @NotNull(message = "Número do contrato não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Número do contrato não pode ficar em branco")
     protected int numeroContrato;
+
     protected String numeroCartaoPonto;
-    @NotBlank(message = "Conta do FGTS não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Conta do FGTS não pode ficar em branco")
     protected String contaFgts;
+
     protected int diasExperiencia;
+
     protected Date terminoContrato;
-    @NotBlank(message = "Tipo de admissão não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Tipo de admissão não pode ficar em branco")
     protected String tipoAdmissao;
+
     protected String nomeSindicato;
+
     protected String contribuicaoSindical;
-    @NotBlank(message = "Tipo de folha não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Tipo de folha não pode ficar em branco")
     protected String tipoFolha;
-    @NotBlank(message = "Tipo de salário não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Tipo de salário não pode ficar em branco")
     protected String tipoSalario;
-    @NotBlank(message = "Forma de pagamento não pode ficar em branco não pode ficar em branco")
+
+    @NotBlank(message = "Forma de pagamento não pode ficar em branco")
     protected String formaPagamento;
+
     protected BigDecimal insalubridade;
+
+
     protected BigDecimal periculosidade;
-    @NotNull(message = "Horas por mês não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Horas por mês não pode ficar em branco")
     protected BigDecimal horaMes;
-    @NotNull(message = "Horas por semana não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Horas por semana não pode ficar em branco")
     protected BigDecimal horaSemana;
-    @NotNull(message = "Salário hora não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Salário hora não pode ficar em branco")
     protected BigDecimal salarioHora;
-    @NotNull(message = "Vale transporte não pode ficar em branco não pode ficar em branco")
+
+    @NotNull(message = "Vale transporte não pode ficar em branco")
     protected BigDecimal valeTransporteCusto;
+
     protected BigDecimal pensaoAlimenticia;
+
     protected BigDecimal salarioFamilia;
+
+    @NotNull(message = "Horário da entrada não pode ficar em branco")
+    @JsonFormat(pattern = "HHmm")
+    private LocalTime horarioEntrada;
+
+    @NotNull(message = "Horário da saída não pode ficar em branco")
+    @JsonFormat(pattern = "HHmm")
+    private LocalTime horarioSaida;
 
     public CadastroColaboradoresDto() {
         super();
@@ -231,6 +321,8 @@ public class CadastroColaboradoresDto implements Serializable {
         this.valeTransporteCusto = obj.getValeTransporteCusto();
         this.pensaoAlimenticia = obj.getPensaoAlimenticia();
         this.salarioFamilia = obj.getSalarioFamilia();
+        this.horarioEntrada = obj.getHorarioEntrada();
+        this.horarioSaida = obj.getHorarioSaida();
     }
 
     public void setNomeColaborador(String nomeColaborador) {

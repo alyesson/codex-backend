@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.rh;
 
+import br.com.codex.v1.domain.dto.FolhaQuinzenalCalculadaDto;
 import br.com.codex.v1.domain.dto.FolhaQuinzenalDto;
 import br.com.codex.v1.domain.enums.Situacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;

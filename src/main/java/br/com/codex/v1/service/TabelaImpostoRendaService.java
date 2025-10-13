@@ -7,6 +7,7 @@ import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +41,11 @@ public class TabelaImpostoRendaService {
 
     public List<TabelaImpostoRenda> findAll(){
         return tabelaImpostoRendaRepository.findAll();
+    }
+
+    public BigDecimal getSalarioMinimo() {
+        return tabelaImpostoRendaRepository.findTopByOrderById()
+                .orElseThrow(() -> new RuntimeException("Tabela de IRRF não encontrada"))
+                .getSalarioMinimo();
     }
 }

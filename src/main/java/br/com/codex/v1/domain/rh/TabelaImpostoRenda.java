@@ -22,6 +22,9 @@ public class TabelaImpostoRenda implements Serializable {
     private Long id;
 
     @Column(precision = 10, scale = 2)
+    private BigDecimal salarioMinimo;
+
+    @Column(precision = 10, scale = 2)
     private BigDecimal faixaSalario1;
     private BigDecimal aliquota1;
     private BigDecimal parcelaDeduzir1;
@@ -61,12 +64,13 @@ public class TabelaImpostoRenda implements Serializable {
         super();
     }
 
-    public TabelaImpostoRenda(Long id, BigDecimal faixaSalario1, BigDecimal aliquota1, BigDecimal parcelaDeduzir1,
+    public TabelaImpostoRenda(Long id, BigDecimal salarioMinimo, BigDecimal faixaSalario1, BigDecimal aliquota1, BigDecimal parcelaDeduzir1,
                               BigDecimal faixaSalario2, BigDecimal aliquota2, BigDecimal parcelaDeduzir2, BigDecimal faixaSalario3,
                               BigDecimal aliquota3, BigDecimal parcelaDeduzir3, BigDecimal faixaSalario4, BigDecimal aliquota4,
                               BigDecimal parcelaDeduzir4, BigDecimal faixaSalario5, BigDecimal aliquota5,
                               BigDecimal parcelaDeduzir5, BigDecimal deducaoPorDependente) {
         this.id = id;
+        this.salarioMinimo = salarioMinimo;
         this.faixaSalario1 = faixaSalario1;
         this.aliquota1 = aliquota1;
         this.parcelaDeduzir1 = parcelaDeduzir1;
@@ -87,6 +91,7 @@ public class TabelaImpostoRenda implements Serializable {
 
     public TabelaImpostoRenda(TabelaImpostoRendaDto obj) {
         this.id = obj.getId();
+        this.salarioMinimo = obj.getSalarioMinimo();
         this.faixaSalario1 = obj.getFaixaSalario1();
         this.aliquota1 = obj.getAliquota1();
         this.parcelaDeduzir1 = obj.getParcelaDeduzir1();
