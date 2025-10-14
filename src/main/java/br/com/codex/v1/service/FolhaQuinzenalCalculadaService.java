@@ -90,9 +90,13 @@ public class FolhaQuinzenalCalculadaService {
 
         // Atualiza o evento com os resultados
         if (resultado != null) {
-            eventoDto.setReferencia(resultado.get("referencia").toString());
-            eventoDto.setVencimentos(resultado.get("vencimentos"));
-            eventoDto.setDescontos(resultado.get("descontos"));
+            BigDecimal referencia = resultado.get("referencia");
+            BigDecimal vencimentos = resultado.get("vencimentos");
+            BigDecimal descontos = resultado.get("descontos");
+
+            eventoDto.setReferencia(referencia != null ? referencia.toString() : "0");
+            eventoDto.setVencimentos(vencimentos != null ? vencimentos : BigDecimal.ZERO);
+            eventoDto.setDescontos(descontos != null ? descontos : BigDecimal.ZERO);
         }
 
         return eventoDto;
