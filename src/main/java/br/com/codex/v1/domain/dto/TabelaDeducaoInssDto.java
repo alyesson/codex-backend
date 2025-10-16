@@ -27,6 +27,7 @@ public class TabelaDeducaoInssDto implements Serializable {
     private BigDecimal faixaSalario4;
     private BigDecimal aliquota4;
     private BigDecimal parcelaDeduzir4;
+    private BigDecimal salarioFamilia;
 
     public TabelaDeducaoInssDto() {
         super();
@@ -46,5 +47,6 @@ public class TabelaDeducaoInssDto implements Serializable {
         this.faixaSalario4 = obj.getFaixaSalario4();
         this.aliquota4 = obj.getAliquota4();
         this.parcelaDeduzir4 = obj.getParcelaDeduzir4();
+        this.salarioFamilia = obj.getSalarioFamilia();
     }
 }

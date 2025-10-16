@@ -1,5 +1,6 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
 import br.com.codex.v1.utilitario.Calendario;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class CalculoDaFolhaProventosService {
 
     @Autowired
     private TabelaImpostoRendaService tabelaImpostoRendaService;
+
+    @Autowired
+    private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
 
     @Autowired
     private FolhaMensalService folhaMensalService;
@@ -40,9 +44,7 @@ public class CalculoDaFolhaProventosService {
     media50, media70, media100, mediaValorDsr, mediaAdicionalNoturnoSobreDecimoTerceiro, valorSalarioMinimo,
     mediaHorasExtras50SobreDecimoTerceiro, mediaHorasExtras70SobreDecimoTerceiro, mediaHorasExtras100SobreDecimoTerceiro,
     somaComplemento50,somaComplemento70,somaComplemento100, somaComplementoDsrDiurno,somaComplementoDsrNoturno,
-    calculoMediaDsrSobreDecioTerceiro, calculoMediaDsrNoturnoSobreDecimoTerceiro, mediaHoraExtraSalarioMaternidade50Porcento,
-    mediaHoraExtraSalarioMaternidade70Porcento, mediaHoraExtraSalarioMaternidade100Porcento, mediaValorDsrDiurnoSalarioMaternidade,
-    mediaValorDsrNoturnoSalarioMaternidade, mediaAdicionalNoturnoSalarioMaternidade, mediaComissoesAno,
+    calculoMediaDsrSobreDecioTerceiro, calculoMediaDsrNoturnoSobreDecimoTerceiro, mediaComissoesAno,
     participacaoLucros, abonoSalarial, salarioBase, salarioPorHora, faltasHorasMes;
 
     private BigDecimal obtemSalarioMinimo(){
@@ -62,17 +64,18 @@ public class CalculoDaFolhaProventosService {
         tipoJornada = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getJornada();
         percentualAdicionalNoturno = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getPercentualAdicionalNoturno();
         quantidadeHoraExtra50 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras50();
-        quantidadeHoraExtra70 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras75();
+        quantidadeHoraExtra70 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras70();
         quantidadeHoraExtra100 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras100();
         valorSalarioMinimo = tabelaImpostoRendaService.getSalarioMinimo();
         valorComissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getComissao();
         valorVendasMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getValorVendaMes();
         valorQuebraCaixa =  folhaMensalService.findByMatriculaColaborador(numeroMatricula).getQuebraCaixa();
         valorGratificacao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getGratificacao();
+        numeroDependentes = tabelaImpostoRendaService.get
 
         switch (codigoEvento) {
 
-            //Calcula Horas Normais Diurnas
+            //Calculando Horas Normais Diurnas
             case 1 -> {
 
                 LocalTime horaIni = horaEntrada;
@@ -193,7 +196,7 @@ public class CalculoDaFolhaProventosService {
                 }
             }
 
-            //Calcula Adiantamento de Salário (40%)
+            //Calculando Adiantamento de Salário (40%)
             case 2 -> {
                 //Calculando Adiantamento de Salário
                 BigDecimal adiantamentoSalarial = (salarioBase.multiply(new BigDecimal("40"))).divide(new BigDecimal("100"));
@@ -202,7 +205,7 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("descontos", BigDecimal.ZERO);
             }
 
-            //Calculando Horas Repouso Remunerado Diurno no mês
+            //Calculando Horas Repouso Remunerado Diurno (DSR) no mês
             case 5 -> {
 
                 LocalTime horaIniHRDiurno = horaEntrada;
@@ -488,7 +491,7 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("descontos", BigDecimal.ZERO);
             }
 
-            //Calculando Horas Repouso Remunerado Noturno
+            //Calculando Horas Repouso Remunerado (DSR) Noturno
             case 25 -> {
                 if (tipoJornada.equals("12 x 36")) {
 
@@ -766,10 +769,10 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("descontos", BigDecimal.ZERO);
             }
 
-            //Quantidade de horas extras 50% feitas no mês.
+            //Calculando horas extras 50% feitas no mês.
             case 98 -> {
 
-                if (percentualInsalubridade.equals("0.00")) {
+                if (percentualInsalubridade.compareTo(BigDecimal.ZERO) == 0) {
 
                     BigDecimal totalHoraExtra50 = quantidadeHoraExtra50;
                     BigDecimal valorHoraExtra50Mes = (salarioPorHora.multiply(new BigDecimal("1.5"))).multiply(totalHoraExtra50);
@@ -791,6 +794,241 @@ public class CalculoDaFolhaProventosService {
                 }
             }
 
+            //Calculando horas extras 70% feitas no mês
+            case 99 -> {
+                if (percentualInsalubridade.compareTo(BigDecimal.ZERO) == 0) {
+
+                    BigDecimal totalHoraExtra70 = quantidadeHoraExtra70;
+                    BigDecimal valorHoraExtra70Mes = (salarioPorHora.multiply(new BigDecimal("1.7"))).multiply(totalHoraExtra70).setScale(2, RoundingMode.HALF_UP);
+                    resultado.put("referencia", totalHoraExtra70);
+                    resultado.put("vencimentos", valorHoraExtra70Mes);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } else {
+
+                    BigDecimal horasTrabNoMes = horasPorMes;
+                    BigDecimal porcentoInsalubre = percentualInsalubridade; //Pega o percentual insalubre
+                    BigDecimal valorInsalubre = ((valorSalarioMinimo.multiply(porcentoInsalubre)).divide(new BigDecimal("100"),2, RoundingMode.HALF_UP)).divide(horasTrabNoMes, 2, RoundingMode.HALF_UP); // Calcula o valor da insalubridade e divide o valor pelas hora strabalhadas no mês
+
+                    BigDecimal totalHoraExtra70 = quantidadeHoraExtra70;
+                    BigDecimal valorHoraExtra70Mes = ((salarioPorHora.add(valorInsalubre)).multiply(new BigDecimal("1.7"))).multiply(totalHoraExtra70).setScale(2, RoundingMode.HALF_UP);
+                    resultado.put("referencia", totalHoraExtra70);
+                    resultado.put("vencimentos", valorHoraExtra70Mes);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                }
+            }
+
+            //Calculando horas extras 100% feitas no mês.
+            case 100 -> {
+
+                if ((percentualInsalubridade.compareTo(BigDecimal.ZERO) == 0)) {
+
+                    BigDecimal totalHoraExtra100 = quantidadeHoraExtra70;
+                    BigDecimal valorHoraExtra100Mes = (salarioPorHora.multiply(new BigDecimal("2"))).multiply(totalHoraExtra100);
+                    resultado.put("referencia", totalHoraExtra100);
+                    resultado.put("vencimentos", valorHoraExtra100Mes);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } else {
+
+                    BigDecimal horasTrabNoMes = horasPorMes;
+                    BigDecimal porcentoInsalubre = percentualInsalubridade; //Pega o percentual insalubre
+                    BigDecimal valorInsalubre = ((valorSalarioMinimo.multiply(porcentoInsalubre)).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP)).divide(horasTrabNoMes,2, RoundingMode.HALF_UP); // Calcula o valor da insalubridade e divide o valor pelas hora strabalhadas no mês
+
+                    BigDecimal totalHoraExtra100 = quantidadeHoraExtra100;
+                    BigDecimal valorHoraExtra100Mes= ((salarioPorHora.add(valorInsalubre)).multiply(new BigDecimal(2))).multiply(totalHoraExtra100).setScale(2, RoundingMode.HALF_UP);
+                    resultado.put("referencia", totalHoraExtra100);
+                    resultado.put("vencimentos", valorHoraExtra100Mes);
+                    resultado.put("descontos", BigDecimal.ZERO);
+                }
+            }
+
+            //Calculando o Salário Maternidade
+            case 101 -> {
+
+                BigDecimal salarioMaternidade = salarioBase;
+                resultado.put("vencimentos", salarioMaternidade);
+                resultado.put("descontos", BigDecimal.ZERO);
+            }
+
+            //Calculando Média Horas Extras 50% Sobre Salário Maternidade
+            case 102 -> {
+                try {
+                    LocalDate dataLimite = LocalDate.now().minusMonths(6);
+
+                    BigDecimal mediaHoraExtraSalarioMaternidade50 = folhaMensalEventosCalculadaRepository.findMediaHorasExtrasUltimosSeisMeses(numeroMatricula, 98, dataLimite);
+                    BigDecimal quantidadeMediaHoras = BigDecimal.ZERO;
+
+                    if (salarioPorHora.compareTo(BigDecimal.ZERO) > 0) {
+                        // CORREÇÃO: Para achar quantidade de horas = valor / (salarioHora * 1.5)
+                        // HE 50%: valor = horas * salarioHora * 1.5
+                        BigDecimal valorPorHoraComAdicional = salarioPorHora.multiply(new BigDecimal("1.5"));
+                        quantidadeMediaHoras = mediaHoraExtraSalarioMaternidade50.divide(valorPorHoraComAdicional, 2, RoundingMode.HALF_UP);
+                    }
+
+                    // CORREÇÃO: O valor já é a média em R$, está correto
+                    BigDecimal total = mediaHoraExtraSalarioMaternidade50.setScale(2, RoundingMode.HALF_UP);
+
+                    resultado.put("referencia", quantidadeMediaHoras);  // quantidade média de horas
+                    resultado.put("vencimentos", total);               // média em R$
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média Horas Extra 50% sobre o Salário Maternidade: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            //Calculando Média Horas Extras70% Sobre Salário Maternidade
+            case 103 -> {
+                try {
+                    LocalDate dataLimite = LocalDate.now().minusMonths(6);
+
+                    // CORREÇÃO: Evento 70 para HE 70% (padrão mais comum)
+                    BigDecimal mediaHoraExtraSalarioMaternidade70 = folhaMensalEventosCalculadaRepository.findMediaHorasExtrasUltimosSeisMeses(numeroMatricula, 99, dataLimite);
+                    BigDecimal quantidadeMediaHoras = BigDecimal.ZERO;
+
+                    if (salarioPorHora.compareTo(BigDecimal.ZERO) > 0) {
+                        // CORREÇÃO: Para achar quantidade de horas = valor / (salarioHora * 1.7)
+                        // HE 70%: valor = horas * salarioHora * 1.7
+                        BigDecimal valorPorHoraComAdicional = salarioPorHora.multiply(new BigDecimal("1.7"));
+                        quantidadeMediaHoras = mediaHoraExtraSalarioMaternidade70.divide(valorPorHoraComAdicional, 2, RoundingMode.HALF_UP);
+                    }
+
+                    BigDecimal total = mediaHoraExtraSalarioMaternidade70.setScale(2, RoundingMode.HALF_UP);
+
+                    resultado.put("referencia", quantidadeMediaHoras);  // quantidade média de horas
+                    resultado.put("vencimentos", total);               // média em R$
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média Horas Extra 70% sobre o Salário Maternidade: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            //Calculando Média Horas Extras100% Sobre Salário Maternidade
+            case 104 -> {
+                try {
+                    LocalDate dataLimite = LocalDate.now().minusMonths(6);
+
+                    // Busca a média dos últimos 6 meses de horas extras 70%
+                    BigDecimal mediaHoraExtraSalarioMaternidade50 = folhaMensalEventosCalculadaRepository.findMediaHorasExtrasUltimosSeisMeses(numeroMatricula, 100, dataLimite);
+
+                    BigDecimal adicional = new BigDecimal("2.0");
+                    BigDecimal quantidadeMediaHoras = BigDecimal.ZERO;
+
+                    if (salarioPorHora.compareTo(BigDecimal.ZERO) > 0) {
+                        quantidadeMediaHoras = mediaHoraExtraSalarioMaternidade50.divide(salarioPorHora.multiply(adicional), 2, RoundingMode.HALF_UP);
+                    }
+
+                    BigDecimal total = mediaHoraExtraSalarioMaternidade50.setScale(2, RoundingMode.HALF_UP);
+
+                    resultado.put("referencia", quantidadeMediaHoras);  // quantidade média de horas
+                    resultado.put("vencimentos", total);               // média em R$
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média Horas Extra 100% sobre o Salário Maternidade: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            // Calculando Média de DSR Diurno Sobre Salário Maternidade
+            case 105 -> {
+                try {
+                    LocalDate dataLimite = LocalDate.now().minusMonths(6);
+
+                    // CORREÇÃO: Usar métudo com data limite e evento como String
+                    BigDecimal mediaDsrDiurnoSalarioMaternidade = folhaMensalEventosCalculadaRepository
+                            .findMediaHorasExtrasUltimosSeisMeses(numeroMatricula, 5, dataLimite);
+
+                    BigDecimal valorDsrDiurnoSalarioMaternidade = mediaDsrDiurnoSalarioMaternidade.setScale(2, RoundingMode.HALF_UP);
+
+                    resultado.put("referencia", BigDecimal.ZERO);
+                    resultado.put("vencimentos", valorDsrDiurnoSalarioMaternidade);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de DSR Diurno sobre Salário Maternidade: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            // Calculando Média de DSR Noturno Sobre Salário Maternidade
+            case 106 -> {
+                try {
+                    LocalDate dataLimite = LocalDate.now().minusMonths(6);
+
+                    BigDecimal mediaDsrNoturnoSalarioMaternidade = folhaMensalEventosCalculadaRepository
+                            .findMediaHorasExtrasUltimosSeisMeses(numeroMatricula, 25, dataLimite);
+
+                    BigDecimal valorDsrNoturnoSalarioMaternidade = mediaDsrNoturnoSalarioMaternidade.setScale(2, RoundingMode.HALF_UP);
+
+                    resultado.put("referencia", BigDecimal.ZERO);
+                    resultado.put("vencimentos", valorDsrNoturnoSalarioMaternidade);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de DSR Noturno sobre Salário Maternidade: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            // Média Adicional Noturno Sobre Salário Maternidade
+            case 107 -> {
+                try {
+                    LocalDate dataLimite = LocalDate.now().minusMonths(6);
+
+                    // Busca a média em R$ dos últimos 6 meses
+                    BigDecimal mediaAdicionalNoturnoSalarioMaternidade = folhaMensalEventosCalculadaRepository
+                            .findMediaHorasExtrasUltimosSeisMeses(numeroMatricula, 14, dataLimite);
+
+                    // CORREÇÃO: Se a média já está em R$, não precisa multiplicar por salarioPorHora
+                    // Apenas aplica o adicional de 20% sobre a média
+                    BigDecimal valorComAdicional = mediaAdicionalNoturnoSalarioMaternidade
+                            .multiply(new BigDecimal("1.20")).setScale(2, RoundingMode.HALF_UP);
+
+                    // Para referência, calcula quantas horas a média representa
+                    BigDecimal horasReferencia = BigDecimal.ZERO;
+                    if (salarioPorHora.compareTo(BigDecimal.ZERO) > 0) {
+                        // Adicional noturno é 20% por hora, então: valor = horas * salarioHora * 0.20
+                        // Para achar horas: horas = valor / (salarioHora * 0.20)
+                        horasReferencia = mediaAdicionalNoturnoSalarioMaternidade.divide(salarioPorHora.multiply(new BigDecimal("0.20")), 2, RoundingMode.HALF_UP);
+                    }
+
+                    resultado.put("referencia", horasReferencia);
+                    resultado.put("vencimentos", valorComAdicional);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Adicional Noturno sobre Salário Maternidade: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            //Calculando Salário Família
+            case 133 -> {
+                try {
+
+                    BigDecimal valorDoSalarioBase = salarioBase;
+                    int filhos = Integer.parseInt(dependentesIrrf.getText());
+
+                    // CORREÇÃO: Usando o Service Spring
+                    BigDecimal valorSalFam = salarioFamiliaService
+                            .calcularSalarioFamilia(valorDoSalarioBase, filhos);
+
+                    resultado.put("referencia", BigDecimal.valueOf(filhos)); // Quantidade de filhos
+                    resultado.put("vencimentos", valorSalFam);              // Valor total
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular salário família: " + e.getMessage());
+                }
+            }
 
             //Calculando Ajuda de Custo
             case 130 -> {

@@ -2,15 +2,10 @@ package br.com.codex.v1.domain.dto;
 
 import br.com.codex.v1.domain.enums.Situacao;
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.domain.rh.FolhaMensalEventos;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,11 +14,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
-public class FolhaMensalDto implements Serializable {
+public class FolhaMensalCalculadaDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -76,13 +70,13 @@ public class FolhaMensalDto implements Serializable {
     private BigDecimal reembolsoViagem;
     private LocalDate dataProcessamento;
     private Situacao situacao;
-    private List<FolhaMensalEventosDto> eventos = new ArrayList<>();
+    private List<FolhaMensalEventosCalculadaDto> eventos = new ArrayList<>();
 
-    public FolhaMensalDto() {
+    public FolhaMensalCalculadaDto() {
         super();
     }
 
-    public FolhaMensalDto(FolhaMensal obj) {
+    public FolhaMensalCalculadaDto(FolhaMensalCalculada obj) {
         this.id = obj.getId();
         this.matriculaColaborador = obj.getMatriculaColaborador();
         this.nomeColaborador = obj.getNomeColaborador();

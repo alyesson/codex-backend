@@ -47,6 +47,9 @@ public class TabelaDeducaoInss implements Serializable {
     @Column(precision = 10, scale = 2)
     private BigDecimal parcelaDeduzir4;
 
+    @Column(precision = 10, scale = 2)
+    private BigDecimal salarioFamilia;
+
     public TabelaDeducaoInss() {
         super();
     }
@@ -54,7 +57,7 @@ public class TabelaDeducaoInss implements Serializable {
     public TabelaDeducaoInss(Long id, BigDecimal faixaSalario1, BigDecimal aliquota1, BigDecimal parcelaDeduzir1,
                              BigDecimal faixaSalario2, BigDecimal aliquota2, BigDecimal parcelaDeduzir2, BigDecimal faixaSalario3,
                              BigDecimal aliquota3, BigDecimal parcelaDeduzir3, BigDecimal faixaSalario4, BigDecimal aliquota4,
-                             BigDecimal parcelaDeduzir4) {
+                             BigDecimal parcelaDeduzir4, BigDecimal salarioFamilia) {
         this.id = id;
         this.faixaSalario1 = faixaSalario1;
         this.aliquota1 = aliquota1;
@@ -68,6 +71,7 @@ public class TabelaDeducaoInss implements Serializable {
         this.faixaSalario4 = faixaSalario4;
         this.aliquota4 = aliquota4;
         this.parcelaDeduzir4 = parcelaDeduzir4;
+        this.salarioFamilia = salarioFamilia;
     }
 
     public TabelaDeducaoInss(TabelaDeducaoInssDto obj) {
@@ -84,6 +88,7 @@ public class TabelaDeducaoInss implements Serializable {
         this.faixaSalario4 = obj.getFaixaSalario4();
         this.aliquota4 = obj.getAliquota4();
         this.parcelaDeduzir4 = obj.getParcelaDeduzir4();
+        this.salarioFamilia = obj.getSalarioFamilia();
     }
 
     @Override

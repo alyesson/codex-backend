@@ -1,5 +1,6 @@
 package br.com.codex.v1.domain.rh;
 
+import br.com.codex.v1.domain.dto.FolhaMensalCalculadaDto;
 import br.com.codex.v1.domain.dto.FolhaMensalDto;
 import br.com.codex.v1.domain.enums.Situacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,7 +20,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class FolhaMensal implements Serializable {
+public class FolhaMensalCalculada implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -143,26 +144,26 @@ public class FolhaMensal implements Serializable {
     private Situacao situacao;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "folhaMensal", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FolhaMensalEventos> eventos = new ArrayList<>();
+    @OneToMany(mappedBy = "folhaMensalCalculada", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FolhaMensalEventosCalculada> eventos = new ArrayList<>();
 
-    public FolhaMensal() {
+    public FolhaMensalCalculada() {
         super();
     }
 
-    public FolhaMensal(Long id, String matriculaColaborador, String nomeColaborador, LocalDate dataAdmissao,
-                       String departColaborador, BigDecimal salarioBase, BigDecimal salarioHora, String jornada,
-                       BigDecimal horasMes, int dependentesIrrf, BigDecimal horasSemana, BigDecimal insalubridade,
-                       BigDecimal periculosidade, BigDecimal pensaoAlimenticia, BigDecimal horasExtras50, BigDecimal salarioFamilia,
-                       BigDecimal comissao, BigDecimal quebraCaixa, BigDecimal gratificacao, String cargoFuncionario,
-                       String centroDeCusto, String contaDigito, BigDecimal horasExtras70, BigDecimal horasExtras100,
-                       BigDecimal percentualAdicionalNoturno, LocalTime horaEntrada, LocalTime horaSaida, BigDecimal valorVendaMes,
-                       BigDecimal valorValeTransporte, BigDecimal valorValAlimentacao, BigDecimal valorValeRefeicao,
-                       BigDecimal valorPlanoMedico, BigDecimal valorPlanoOdonto, BigDecimal valeFarmacia,
-                       BigDecimal emprestimoConsignado, BigDecimal contribuiSindical, BigDecimal ajudaCusto,
-                       int faltasMes, int faltasDsr, int faltasFeriados, BigDecimal abonoSalarial,
-                       BigDecimal participacaoLucrosResultado, BigDecimal faltasHorasMes, BigDecimal seguroVida,
-                       BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento, Situacao situacao) {
+    public FolhaMensalCalculada(Long id, String matriculaColaborador, String nomeColaborador, LocalDate dataAdmissao,
+                                String departColaborador, BigDecimal salarioBase, BigDecimal salarioHora, String jornada,
+                                BigDecimal horasMes, int dependentesIrrf, BigDecimal horasSemana, BigDecimal insalubridade,
+                                BigDecimal periculosidade, BigDecimal pensaoAlimenticia, BigDecimal horasExtras50, BigDecimal salarioFamilia,
+                                BigDecimal comissao, BigDecimal quebraCaixa, BigDecimal gratificacao, String cargoFuncionario,
+                                String centroDeCusto, String contaDigito, BigDecimal horasExtras70, BigDecimal horasExtras100,
+                                BigDecimal percentualAdicionalNoturno, LocalTime horaEntrada, LocalTime horaSaida, BigDecimal valorVendaMes,
+                                BigDecimal valorValeTransporte, BigDecimal valorValAlimentacao, BigDecimal valorValeRefeicao,
+                                BigDecimal valorPlanoMedico, BigDecimal valorPlanoOdonto, BigDecimal valeFarmacia,
+                                BigDecimal emprestimoConsignado, BigDecimal contribuiSindical, BigDecimal ajudaCusto,
+                                int faltasMes, int faltasDsr, int faltasFeriados, BigDecimal abonoSalarial,
+                                BigDecimal participacaoLucrosResultado, BigDecimal faltasHorasMes, BigDecimal seguroVida,
+                                BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento, Situacao situacao) {
         this.id = id;
         this.matriculaColaborador = matriculaColaborador;
         this.nomeColaborador = nomeColaborador;
@@ -213,7 +214,7 @@ public class FolhaMensal implements Serializable {
         this.situacao = situacao;
     }
 
-    public FolhaMensal(FolhaMensalDto obj) {
+    public FolhaMensalCalculada(FolhaMensalCalculadaDto obj) {
         this.id = obj.getId();
         this.matriculaColaborador = obj.getMatriculaColaborador();
         this.nomeColaborador = obj.getNomeColaborador();
@@ -267,7 +268,7 @@ public class FolhaMensal implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FolhaMensal that = (FolhaMensal) o;
+        FolhaMensalCalculada that = (FolhaMensalCalculada) o;
         return Objects.equals(id, that.id);
     }
 
