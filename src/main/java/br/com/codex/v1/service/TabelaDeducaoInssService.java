@@ -49,33 +49,4 @@ public class TabelaDeducaoInssService {
                 .orElseThrow(() -> new RuntimeException("Tabela de dedução Inss não encontrada"))
                 .getSalarioFamilia();
     }
-
-    public BigDecimal calcularSalarioFamilia(BigDecimal salarioBase, Integer numeroFilhos) {
-        try {
-            // Busca a vigência ativa mais recente
-            Optional<TabelaDeducaoInss> vigenciaAtiva = tabelaDeducaoInssRepository.findTopByOrderById();
-
-            if (vigenciaAtiva.isEmpty()) {
-                throw new RuntimeException("Não há vigência ativa para salário família");
-            }
-
-            SalarioFamilia parametros = vigenciaAtiva.get(0);
-            BigDecimal valorTotal = BigDecimal.ZERO;
-
-            // Lógica de cálculo (igual à sua, mas com Spring)
-            if (salarioBase.compareTo(parametros.getFaixa2()) > 0 &&
-                    salarioBase.compareTo(parametros.getFaixa1()) <= 0) {
-                valorTotal = parametros.getCota1();
-            } else if (salarioBase.compareTo(parametros.getFaixa2()) <= 0) {
-                valorTotal = parametros.getCota2();
-            }
-
-            // Multiplica pelo número de filhos
-            return valorTotal.multiply(BigDecimal.valueOf(numeroFilhos))
-                    .setScale(2, RoundingMode.HALF_UP);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular salário família: " + e.getMessage());
-        }
-    }
 }

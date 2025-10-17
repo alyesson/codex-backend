@@ -37,18 +37,16 @@ public class CalculoDaFolhaProventosService {
     LocalTime horaSaida;
     String tipoJornada;
 
+    LocalDate dataAdmissao;
+
     @Setter
     String numeroMatricula;
 
     String descricaoCargo;
     BigDecimal quantidadeHoraExtra50, quantidadeHoraExtra70, quantidadeHoraExtra100, percentualInsalubridade, percentualPericulosidade,
-    percentualAdicionalNoturno, valorComissao, valeCreche, valorVendasMes, ajudaCusto, valorQuebraCaixa, valorGratificacao,horasPorMes,
-    valorValeTransporte, valorValeCreche, valorReferenciaHoraNoturna, valorReferenciaHoraDiurna, valorReferenciaDsrHoraNoturna,
-    media50, media70, media100, mediaValorDsr, mediaAdicionalNoturnoSobreDecimoTerceiro, valorSalarioMinimo,
-    mediaHorasExtras50SobreDecimoTerceiro, mediaHorasExtras70SobreDecimoTerceiro, mediaHorasExtras100SobreDecimoTerceiro,
-    somaComplemento50,somaComplemento70,somaComplemento100, somaComplementoDsrDiurno,somaComplementoDsrNoturno,
-    calculoMediaDsrSobreDecioTerceiro, calculoMediaDsrNoturnoSobreDecimoTerceiro, mediaComissoesAno,
-    participacaoLucros, abonoSalarial, salarioBase, salarioPorHora, faltasHorasMes;
+    percentualAdicionalNoturno, valorComissao, valorVendasMes, valorQuebraCaixa, valorGratificacao,horasPorMes,
+    valorValeTransporte, valorReferenciaHoraNoturna, valorReferenciaHoraDiurna, valorReferenciaDsrHoraNoturna,
+    valorSalarioMinimo, valorCotaSalarioFamilia, salarioBase, salarioPorHora, faltasHorasMes, horasTrabalhadasPorMes;
 
     private BigDecimal obtemSalarioMinimo(){
         return tabelaImpostoRendaService.getSalarioMinimo();
@@ -75,7 +73,9 @@ public class CalculoDaFolhaProventosService {
         valorQuebraCaixa =  folhaMensalService.findByMatriculaColaborador(numeroMatricula).getQuebraCaixa();
         valorGratificacao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getGratificacao();
         valorSalarioMinimo = tabelaImpostoRendaService.getSalarioMinimo();
-
+        valorCotaSalarioFamilia = tabelaDeducaoInssService.getSalarioFamilia();
+        dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+        horasTrabalhadasPorMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasMes();
 
 
         switch (codigoEvento) {
@@ -1015,16 +1015,11 @@ public class CalculoDaFolhaProventosService {
             //Calculando Salário Família
             case 133 -> {
                 try {
+                    BigDecimal valorSalarioFamilia = folhaMensalService.calcularSalarioFamilia(valorCotaSalarioFamilia, numeroDependentes);
 
-                    BigDecimal valorDoSalarioBase = salarioBase;
-                    int filhos = numeroDependentes;
-
-                    // CORREÇÃO: Usando o Service Spring
-                    BigDecimal valorSalarioFamilia = folhaMensalService.calcularSalarioFamilia(valorDoSalarioBase, filhos);
-
-                    resultado.put("referencia", BigDecimal.valueOf(filhos)); // Quantidade de filhos
+                    resultado.put("referencia", BigDecimal.valueOf(numeroDependentes)); // Quantidade de filhos
                     resultado.put("vencimentos", valorSalarioFamilia);              // Valor total
-                    resultado.put("descontos", null);
+                    resultado.put("descontos", BigDecimal.ZERO);
 
                     return resultado;
 
@@ -1039,8 +1034,230 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", valorValeTransporte);
                 resultado.put("descontos", BigDecimal.ZERO);
             }
+
+            //Calculando Primeira Parcela 13°
+            case 167 -> {
+                try {
+                    LocalDate dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+
+                    // Calcular meses trabalhados considerando a regra dos 15 dias
+                    int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
+
+                    // Cálculo proporcional do 13º
+                    BigDecimal valorMensal = salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+                    BigDecimal valorProporcional = valorMensal.multiply(new BigDecimal(mesesTrabalhados));
+                    BigDecimal primeiraParcela = valorProporcional.multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
+
+                    resultado.put("referencia", new BigDecimal(mesesTrabalhados));
+                    resultado.put("vencimentos", primeiraParcela);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular primeira parcela do 13º: " + e.getMessage());
+                }
+                return resultado;
+            }
+
+            //Calculando Média de Horas Extras 50% Sobre 1° Parcela do 13°
+            case 168 -> {
+                try {
+                      Map<String, BigDecimal> resultadoHE50 = folhaMensalService.calcularMediaHE50PrimeiraParcela13(numeroMatricula, salarioPorHora);
+
+                    // Atualiza o resultado principal
+                    resultado.putAll(resultadoHE50);
+
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Horas Extras 50% Sobre 1° Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de Horas Extras 70% Sobre 1° Parcela do 13°
+            case 169 -> {
+                try {
+                    Map<String, BigDecimal> resultadoHE70 = folhaMensalService.calcularMediaHE70PrimeiraParcela13(numeroMatricula, salarioPorHora);
+
+                    // Atualiza o resultado principal
+                    resultado.putAll(resultadoHE70);
+
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Horas Extras 70% Sobre 1° Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de Horas Extras 100% Sobre 1° Parcela do 13°
+            case 170 -> {
+                try {
+                    Map<String, BigDecimal> resultadoHE100 = folhaMensalService.calcularMediaHE100PrimeiraParcela13(numeroMatricula, salarioPorHora);
+
+                    // Atualiza o resultado principal
+                    resultado.putAll(resultadoHE100);
+
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Horas Extras 100% Sobre 1° Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Décimo terceiro Adiantado
+            case 171 ->{
+                resultado.put("vencimentos", salarioBase);
+                resultado.put("descontos", BigDecimal.ZERO);
+            }
+
+            //Calculando Média de DSR Noturno Sobre 1° Parcela do 13°
+            case 177 -> {
+
+                LocalDate hoje = LocalDate.now();
+                int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao,hoje);
+
+                try {
+                    Map<String, BigDecimal> resultadoDSRNoturno = folhaMensalService.calcularMediaDSRNoturnoPrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+                    resultado.putAll(resultadoDSRNoturno);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de DSR Noturno Sobre 1° Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Insalubridade sobre Primeira Parcela do 13°
+            case 178 -> {
+
+                LocalDate hoje = LocalDate.now();
+                int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao,hoje);
+
+                try {
+
+                    Map<String, BigDecimal> resultadoInsalubridade = folhaMensalService.calcularInsalubridadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+                    resultado.putAll(resultadoInsalubridade);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Insalubridade Sobre 1° Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Periculosidade sobre Primeira Parcela do 13°
+            case 179 -> {
+
+                LocalDate hoje = LocalDate.now();
+                int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao,hoje);
+
+                try {
+                  Map<String, BigDecimal> resultadoPericulosidade = folhaMensalService.calcularPericulosidadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+                    resultado.putAll(resultadoPericulosidade);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Periculosidade Sobre 1° Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de Horas Extras 50% Sobre 2° Parcela do 13°
+            case 182 -> {
+                try {
+                    Map<String, BigDecimal> resultadoMediaHE50 = folhaMensalService.calcularMediaHE50SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+                    resultado.putAll(resultadoMediaHE50);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Horas Extras 50% para 2ª Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de Horas Extras 70% Sobre 2° Parcela do 13°
+            case 183 -> {
+                try {
+                    Map<String, BigDecimal> resultadoMediaHE70 = folhaMensalService.calcularMediaHE70SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+                    resultado.putAll(resultadoMediaHE70);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Horas Extras 70% para 2ª Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de Horas Extras 100% Sobre 2° Parcela do 13°
+            case 184 -> {
+                try {
+                    Map<String, BigDecimal> resultadoMediaHE100 = folhaMensalService.calcularMediaHE100SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+                    resultado.putAll(resultadoMediaHE100);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de Horas Extras 100% para 2ª Parcela do 13°: " + e.getMessage());
+                }
+            }
         }
         return resultado;
-
     }
+
+    //Outros métodos
+    private int calcularMesesTrabalhados13o(LocalDate dataAdmissao, LocalDate dataCalculo) {
+        int anoAtual = dataCalculo.getYear();
+        int mesesTrabalhados = 0;
+
+        // Verificar cada mês do ano
+        for (int mes = 1; mes <= 12; mes++) {
+            LocalDate primeiroDiaMes = LocalDate.of(anoAtual, mes, 1);
+            LocalDate ultimoDiaMes = primeiroDiaMes.withDayOfMonth(primeiroDiaMes.lengthOfMonth());
+
+            // Verificar se o funcionário trabalhou pelo menos 15 dias neste mês
+            if (trabalhouPeloMenos15DiasNoMes(dataAdmissao, dataCalculo, mes, anoAtual)) {
+                mesesTrabalhados++;
+            }
+        }
+
+        return mesesTrabalhados;
+    }
+
+    private boolean trabalhouPeloMenos15DiasNoMes(LocalDate dataAdmissao, LocalDate dataCalculo, int mes, int ano) {
+        LocalDate primeiroDiaMes = LocalDate.of(ano, mes, 1);
+        LocalDate ultimoDiaMes = primeiroDiaMes.withDayOfMonth(primeiroDiaMes.lengthOfMonth());
+
+        // Se o mês for no futuro, não conta
+        if (primeiroDiaMes.isAfter(dataCalculo)) {
+            return false;
+        }
+
+        // Se foi admitido durante o mês
+        if (dataAdmissao.getYear() == ano && dataAdmissao.getMonthValue() == mes) {
+            LocalDate dataInicio = dataAdmissao;
+            LocalDate dataFim = ultimoDiaMes.isAfter(dataCalculo) ? dataCalculo : ultimoDiaMes;
+
+            // Calcular dias trabalhados no mês
+            long diasTrabalhados = calcularDiasUteisTrabalhados(dataInicio, dataFim);
+            return diasTrabalhados >= 15;
+        }
+
+        // Se foi admitido antes do mês e não foi demitido
+        if (dataAdmissao.isBefore(primeiroDiaMes)) {
+            LocalDate dataFim = ultimoDiaMes.isAfter(dataCalculo) ? dataCalculo : ultimoDiaMes;
+            long diasTrabalhados = calcularDiasUteisTrabalhados(primeiroDiaMes, dataFim);
+            return diasTrabalhados >= 15;
+        }
+
+        return false;
+    }
+
+    private long calcularDiasUteisTrabalhados(LocalDate dataInicio, LocalDate dataFim) {
+        long diasTrabalhados = 0;
+        LocalDate data = dataInicio;
+
+        while (!data.isAfter(dataFim)) {
+            // Considera apenas dias de semana (segunda a sexta)
+            if (data.getDayOfWeek() != DayOfWeek.SATURDAY && data.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                diasTrabalhados++;
+            }
+            data = data.plusDays(1);
+        }
+
+        return diasTrabalhados;
+    }
+
 }
