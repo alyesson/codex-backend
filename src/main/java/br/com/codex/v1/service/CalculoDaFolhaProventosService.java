@@ -21,6 +21,9 @@ public class CalculoDaFolhaProventosService {
     private TabelaImpostoRendaService tabelaImpostoRendaService;
 
     @Autowired
+    private TabelaDeducaoInssService tabelaDeducaoInssService;
+
+    @Autowired
     private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
 
     @Autowired
@@ -66,12 +69,14 @@ public class CalculoDaFolhaProventosService {
         quantidadeHoraExtra50 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras50();
         quantidadeHoraExtra70 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras70();
         quantidadeHoraExtra100 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras100();
-        valorSalarioMinimo = tabelaImpostoRendaService.getSalarioMinimo();
+        numeroDependentes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDependentesIrrf();
         valorComissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getComissao();
         valorVendasMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getValorVendaMes();
         valorQuebraCaixa =  folhaMensalService.findByMatriculaColaborador(numeroMatricula).getQuebraCaixa();
         valorGratificacao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getGratificacao();
-        numeroDependentes = tabelaImpostoRendaService.get
+        valorSalarioMinimo = tabelaImpostoRendaService.getSalarioMinimo();
+
+
 
         switch (codigoEvento) {
 
@@ -320,7 +325,6 @@ public class CalculoDaFolhaProventosService {
 
             //Horas de Atestado Médico
             case 8 -> {
-
              BigDecimal horasDeFaltasAtestadoMedico = faltasHorasMes;
                 resultado.put("referencia", horasDeFaltasAtestadoMedico);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1013,15 +1017,14 @@ public class CalculoDaFolhaProventosService {
                 try {
 
                     BigDecimal valorDoSalarioBase = salarioBase;
-                    int filhos = Integer.parseInt(dependentesIrrf.getText());
+                    int filhos = numeroDependentes;
 
                     // CORREÇÃO: Usando o Service Spring
-                    BigDecimal valorSalFam = salarioFamiliaService
-                            .calcularSalarioFamilia(valorDoSalarioBase, filhos);
+                    BigDecimal valorSalarioFamilia = folhaMensalService.calcularSalarioFamilia(valorDoSalarioBase, filhos);
 
                     resultado.put("referencia", BigDecimal.valueOf(filhos)); // Quantidade de filhos
-                    resultado.put("vencimentos", valorSalFam);              // Valor total
-                    resultado.put("descontos", BigDecimal.ZERO);
+                    resultado.put("vencimentos", valorSalarioFamilia);              // Valor total
+                    resultado.put("descontos", null);
 
                     return resultado;
 
