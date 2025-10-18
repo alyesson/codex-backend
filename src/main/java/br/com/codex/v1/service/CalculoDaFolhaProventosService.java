@@ -32,7 +32,7 @@ public class CalculoDaFolhaProventosService {
     Calendario calendario = new Calendario();
     Set<LocalDate> feriados = new HashSet<>();
 
-    Integer codigoEvento, numeroDependentes;
+    Integer numeroDependentes;
     LocalTime horaEntrada;
     LocalTime horaSaida;
     String tipoJornada;
@@ -58,7 +58,7 @@ public class CalculoDaFolhaProventosService {
 
         horaEntrada = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHoraEntrada();
         horaSaida = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHoraSaida();
-        salarioBase = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getSalarioBase();
+
         salarioPorHora = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getSalarioHora();
         valorValeTransporte = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getValorValeTransporte();
         faltasHorasMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getFaltasHorasMes();
@@ -67,16 +67,13 @@ public class CalculoDaFolhaProventosService {
         quantidadeHoraExtra50 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras50();
         quantidadeHoraExtra70 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras70();
         quantidadeHoraExtra100 = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasExtras100();
-        numeroDependentes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDependentesIrrf();
+
         valorComissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getComissao();
         valorVendasMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getValorVendaMes();
         valorQuebraCaixa =  folhaMensalService.findByMatriculaColaborador(numeroMatricula).getQuebraCaixa();
         valorGratificacao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getGratificacao();
         valorSalarioMinimo = tabelaImpostoRendaService.getSalarioMinimo();
         valorCotaSalarioFamilia = tabelaDeducaoInssService.getSalarioFamilia();
-        dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
-        horasTrabalhadasPorMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasMes();
-
 
         switch (codigoEvento) {
 
@@ -88,10 +85,10 @@ public class CalculoDaFolhaProventosService {
                 LocalTime hora22 = LocalTime.parse("22:00");
                 LocalTime hora13 = LocalTime.parse("13:00");
 
-                // Este bloco faz o cálculo se a pessoa trabalha em horário normal, por exemplo das 08 às 18, com horário antes das 22:00
+                // Este bloco faz o cálculo se a pessoa trabalha em horário normal, por exemplo, das 08 às 18, com horário antes das 22:00
 
                 if (horaFim.isBefore(hora13)) {
-                    Duration horaNormal = Duration.between(horaIni, hora22); // Aqui eu pego a hora que entrou por exemplo 18:00 e calculo a diferença até às 22:00
+                    Duration horaNormal = Duration.between(horaIni, hora22); // Aqui eu pego a hora que entrou, por exemplo, 18:00 e calculo a diferença até às 22:00
                     LocalTime diferencaHoraNormal = LocalTime.ofNanoOfDay(horaNormal.toNanos()); // Aqui tenho a Diferença de horas Diurnas
 
                     int horas = diferencaHoraNormal.getHour() - 1; // Aqui pego o valor das horas menos o horário de almoço
@@ -1103,7 +1100,7 @@ public class CalculoDaFolhaProventosService {
                 }
             }
 
-            //Calculando Décimo terceiro Adiantado
+            //Calculando Décimo terceiro cheio Adiantado
             case 171 ->{
                 resultado.put("vencimentos", salarioBase);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1191,6 +1188,72 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new RuntimeException("Erro ao calcular Média de Horas Extras 100% para 2ª Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de DSR Diurno Sobre 2° Parcela do 13°
+            case 185 -> {
+                dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+                try {
+                     Map<String, BigDecimal> resultadoMediaDsr13 = folhaMensalService.calcularMediaDSRSegundaParcela13(numeroMatricula, dataAdmissao);
+                     resultado.putAll(resultadoMediaDsr13);
+                     return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de DSR para 2ª Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Média de DSR Noturno Sobre 2° Parcela do 13°
+            case 186 ->{
+                dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+                try {
+                    Map<String, BigDecimal> resultadoMediaDsrNoturno13 = folhaMensalService.calcularMediaDSRNoturnoSegundaParcela13(numeroMatricula, dataAdmissao);
+                    resultado.putAll(resultadoMediaDsrNoturno13);
+                    return resultado;
+
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Média de DSR Noturno para 2ª Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Insalubridade sobre Segunda Parcela do 13°
+            case 187 ->{
+                dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+                try {
+                    Map<String, BigDecimal> resultadoInsalubreSegundaParcela13 = folhaMensalService.calcularInsalubridadeSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao);
+                    resultado.putAll(resultadoInsalubreSegundaParcela13);
+                    return resultado;
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Insalubridade sobre Segunda Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando Periculosidade sobre Segunda Parcela do 13°
+            case 188 ->{
+                horasTrabalhadasPorMes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getHorasMes();
+                numeroDependentes = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDependentesIrrf();
+                salarioBase = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getSalarioBase();
+                dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+                try {
+                    Map<String, BigDecimal> resultadoPericulosoSegundaParcela13 = folhaMensalService.calcularPericulosidadeSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao,horasTrabalhadasPorMes);
+                    resultado.putAll(resultadoPericulosoSegundaParcela13);
+                    return resultado;
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Periculosidade sobre Segunda Parcela do 13°: " + e.getMessage());
+                }
+            }
+
+            //Calculando a Segunda Parcela do 13°
+            case 189 -> {
+                salarioBase = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getSalarioBase();
+                dataAdmissao = folhaMensalService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+                try {
+                    Map<String, BigDecimal> resultadoSegundaParcela13 = folhaMensalService.calcularSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao, numeroDependentes);
+                    resultado.putAll(resultadoSegundaParcela13);
+                    return resultado;
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao calcular Segunda Parcela do 13°: " + e.getMessage());
                 }
             }
         }

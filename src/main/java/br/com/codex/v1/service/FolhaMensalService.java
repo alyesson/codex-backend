@@ -2,7 +2,11 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
 import br.com.codex.v1.domain.repository.FolhaMensalRepository;
+import br.com.codex.v1.domain.repository.TabelaDeducaoInssRepository;
+import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
 import br.com.codex.v1.domain.rh.FolhaMensal;
+import br.com.codex.v1.domain.rh.TabelaDeducaoInss;
+import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +24,12 @@ public class FolhaMensalService {
 
     @Autowired
     private FolhaMensalRepository folhaMensalRepository;
+
+    @Autowired
+    private TabelaDeducaoInssRepository tabelaDeducaoInssRepository;
+
+    @Autowired
+    private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
     @Autowired
     private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
@@ -271,8 +281,8 @@ public class FolhaMensalService {
                     .multiply(new BigDecimal("0.5"))
                     .setScale(2, RoundingMode.HALF_UP);
 
-            resultado.put("referencia", new BigDecimal(mesesTrabalhados)); // meses trabalhados
-            resultado.put("vencimentos", primeiraParcela);                // valor 1ª parcela
+            resultado.put("referencia", new BigDecimal(mesesTrabalhados));
+            resultado.put("vencimentos", primeiraParcela);
             resultado.put("descontos", BigDecimal.ZERO);
 
         } catch (Exception e) {
@@ -360,7 +370,7 @@ public class FolhaMensalService {
             BigDecimal valorHoraExtra70 = valorHoraNormal.multiply(new BigDecimal("1.7")).setScale(4, RoundingMode.HALF_UP);
 
             // **3. ✅ Buscar TOTAL DE HORAS EXTRAS do ano INTEIRO (jan a dez)**
-            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 98, anoAtual);
+            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 99, anoAtual);
 
             // **4. Calcular MÉDIA MENSAL de horas extras**
             BigDecimal mediaMensalHoras = totalHorasExtrasAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
@@ -393,7 +403,7 @@ public class FolhaMensalService {
             BigDecimal valorHoraExtra100 = valorHoraNormal.multiply(new BigDecimal("2.0")).setScale(4, RoundingMode.HALF_UP);
 
             // **3. ✅ Buscar TOTAL DE HORAS EXTRAS do ano INTEIRO (jan a dez)**
-            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 98, anoAtual);
+            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 100, anoAtual);
 
             // **4. Calcular MÉDIA MENSAL de horas extras**
             BigDecimal mediaMensalHoras = totalHorasExtrasAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
@@ -412,6 +422,180 @@ public class FolhaMensalService {
         return resultado;
     }
 
+    public Map<String, BigDecimal> calcularMediaDSRSegundaParcela13(String matricula, LocalDate dataAdmissao) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
+
+            // 1. Buscar SOMA de todos os DSRs do ano (evento 5 = DSR Diurno)
+            BigDecimal somaDSRAno = folhaMensalEventosCalculadaRepository.findSomaValorHorasExtrasAno(matricula, 5, anoAtual);
+
+            // 2. Calcular meses trabalhados no ano
+            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
+
+            // 3. **CLT: Duas formas de cálculo (ambas válidas)**
+            BigDecimal mediaDSR;
+
+            // Opção A: Dividir por 11 e multiplicar por meses trabalhados
+            if (mesesTrabalhados == 12) {
+                mediaDSR = somaDSRAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP);
+            } else {
+                // Trabalhou período parcial: (soma/11) × (meses/12)
+                mediaDSR = somaDSRAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(mesesTrabalhados))
+                        .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+            }
+
+            // Opção B: Dividir por 12 e multiplicar por avos (meses trabalhados)
+            BigDecimal mediaDSROpcaoB = somaDSRAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal(mesesTrabalhados))
+                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+
+            // Usar a maior média (beneficia o trabalhador)
+            mediaDSR = mediaDSR.max(mediaDSROpcaoB);
+
+            resultado.put("referencia", BigDecimal.valueOf(mesesTrabalhados));
+            resultado.put("vencimentos", mediaDSR);
+            resultado.put("descontos", BigDecimal.ZERO);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular Média de DSR para 2ª Parcela do 13º: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public Map<String, BigDecimal> calcularMediaDSRNoturnoSegundaParcela13(String matricula, LocalDate dataAdmissao) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
+
+            // 1. Buscar SOMA de DSRs NOTURNOS do ano (evento 25 = DSR Noturno)
+            BigDecimal somaDSRNoturnoAno = folhaMensalEventosCalculadaRepository.findSomaValorHorasExtrasAno(matricula, 25, anoAtual);
+
+            // 2. Calcular meses trabalhados
+            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
+
+            // 3. Cálculo da média DSR Noturno (mesma lógica do DSR Diurno)
+            BigDecimal mediaDSRNoturno;
+
+            if (mesesTrabalhados == 12) {
+                // Trabalhou ano completo: divide por 11
+                mediaDSRNoturno = somaDSRNoturnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP);
+            } else {
+                // Trabalhou período parcial: (soma/11) × (meses/12)
+                mediaDSRNoturno = somaDSRNoturnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(mesesTrabalhados))
+                        .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+            }
+
+            resultado.put("referencia", new BigDecimal(mesesTrabalhados));
+            resultado.put("vencimentos", mediaDSRNoturno);
+            resultado.put("descontos", BigDecimal.ZERO);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular Média de DSR Noturno para 2ª Parcela do 13º: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public Map<String, BigDecimal> calcularInsalubridadeSegundaParcela13(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
+
+            // 1. Buscar valor da insalubridade (evento 46)
+            BigDecimal valorInsalubridade = folhaMensalEventosCalculadaRepository.findUltimoValorInsalubridade(matricula, 46, anoAtual);
+
+            // 2. Calcular meses trabalhados
+            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
+
+            // 3. **CLT: Insalubridade integra base do 13º**
+            BigDecimal baseCalculo13 = salarioBase.add(valorInsalubridade);
+
+            // **2ª parcela = 50% (COM descontos)**
+            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorInsalubridade);
+            BigDecimal segundaParcelaBruta = decimoTerceiroProporcional.multiply(new BigDecimal("0.5"));
+
+            resultado.put("referencia", new BigDecimal(mesesTrabalhados));
+            resultado.put("vencimentos", segundaParcelaBruta);  // ✅ PAGA na 2ª parcela
+            resultado.put("descontos", BigDecimal.ZERO);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular Insalubridade para 2ª Parcela do 13º: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public Map<String, BigDecimal> calcularSegundaParcela13(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao, Integer numeroDependentes, BigDecimal horasTrabalhadasPorMes) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
+
+            // 1. Buscar todos os adicionais que compõem a base do 13º
+            BigDecimal valorInsalubridade = folhaMensalEventosCalculadaRepository.findUltimoValorInsalubridade(matricula, 46, anoAtual);
+            if (valorInsalubridade == null) {
+                valorInsalubridade = BigDecimal.ZERO;
+            }
+
+            BigDecimal valorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
+            if (valorPericulosidade == null) {
+                valorPericulosidade = calcularAdicionalPericulosidade(matricula, salarioBase, anoAtual);
+            }
+
+            // 2. Calcular médias de horas extras para a base do 13º
+            BigDecimal mediaHE50 = calcularMediaHE50SegundaParcela13(matricula, salarioBase, horasTrabalhadasPorMes).get("vencimentos");
+            BigDecimal mediaHE70 = calcularMediaHE70SegundaParcela13(matricula, salarioBase, horasTrabalhadasPorMes).get("vencimentos");
+            BigDecimal mediaHE100 = calcularMediaHE100SegundaParcela13(matricula, salarioBase, horasTrabalhadasPorMes).get("vencimentos");
+
+            BigDecimal totalMediaHE = mediaHE50.add(mediaHE70).add(mediaHE100);
+
+            // 3. Calcular 13º proporcional COMPLETO
+            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(
+                    dataAdmissao, salarioBase, valorInsalubridade, valorPericulosidade, totalMediaHE);
+
+            // 4. Calcular 1ª parcela (já paga - 50% sem descontos)
+            BigDecimal primeiraParcela = decimoTerceiroProporcional.multiply(new BigDecimal("0.5"))
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            // 5. Calcular 2ª parcela BRUTA
+            BigDecimal segundaParcelaBruta = decimoTerceiroProporcional.subtract(primeiraParcela)
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            // 6. Aplicar descontos (INSS e IRRF) considerando dependentes
+            Map<String, BigDecimal> descontos = calcularDescontos13o(segundaParcelaBruta, numeroDependentes);
+            BigDecimal totalDescontos = descontos.get("total");
+            BigDecimal segundaParcelaLiquida = segundaParcelaBruta.subtract(totalDescontos);
+
+            // 7. Montar resultado
+            resultado.put("referencia", new BigDecimal(calcularMesesTrabalhados13o(dataAdmissao, hoje)));
+            resultado.put("vencimentos", segundaParcelaBruta);
+            resultado.put("descontos", totalDescontos);
+            resultado.put("liquido", segundaParcelaLiquida);
+            resultado.put("bruto", segundaParcelaBruta);
+
+            // Detalhamento dos descontos
+            resultado.put("inss", descontos.get("inss"));
+            resultado.put("irrf", descontos.get("irrf"));
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular 2ª Parcela do 13º: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    //---------------------------------------------Outro métodos------------------------------------------------
     private BigDecimal calcularAdicionalPericulosidade(String matricula, BigDecimal salarioBase, int anoAtual) {
         try {
             // Tentar buscar o último valor registrado (evento 47)
@@ -440,36 +624,218 @@ public class FolhaMensalService {
         }
     }
 
+    public int calcularMesesTrabalhados13o(LocalDate dataAdmissao, LocalDate dataCalculo) {
+        int anoAtual = dataCalculo.getYear();
 
-    // Métudo para calcular a 2ª parcela do 13º
-    public Map<String, BigDecimal> calcularSegundaParcela13ComHE(String matricula, BigDecimal salarioBase, BigDecimal mediaMensalHE, Integer mesesTrabalhados) {
+        // Se admitido em ano anterior, conta todos os meses até o cálculo
+        if (dataAdmissao.getYear() < anoAtual) {
+            return Math.min(dataCalculo.getMonthValue(), 12); // máximo 12 meses
+        }
 
+        // Se admitido no mesmo ano
+        if (dataAdmissao.getYear() == anoAtual) {
+            int mesAdmissao = dataAdmissao.getMonthValue();
+            int mesAtual = dataCalculo.getMonthValue();
+
+            // **CLT: Conta mês se trabalhou pelo menos 15 dias**
+            boolean contaMesAdmissao = dataAdmissao.getDayOfMonth() <= 15;
+
+            if (contaMesAdmissao) {
+                // Admitido até dia 15, conta o mês inteiro
+                return (mesAtual - mesAdmissao) + 1;
+            } else {
+                // Admitido após dia 15, não conta o mês
+                return Math.max(0, mesAtual - mesAdmissao);
+            }
+        }
+        return 0; // Admitido no futuro
+    }
+
+    public BigDecimal calcularDecimoTerceiroProporcional(LocalDate dataAdmissao, BigDecimal salarioBase, BigDecimal... adicionais) {
+        try {
+            LocalDate hoje = LocalDate.now();
+
+            // 1. Calcular meses trabalhados no ano
+            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
+
+            // 2. Somar todos os adicionais à base
+            BigDecimal remuneracaoTotal = salarioBase;
+            for (BigDecimal adicional : adicionais) {
+                if (adicional != null) {
+                    remuneracaoTotal = remuneracaoTotal.add(adicional);
+                }
+            }
+
+            // 3. Calcular 13º proporcional = (remuneração total / 12) × meses trabalhados
+            BigDecimal decimoTerceiroProporcional = remuneracaoTotal
+                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal(mesesTrabalhados));
+
+            return decimoTerceiroProporcional.setScale(2, RoundingMode.HALF_UP);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular 13º proporcional: " + e.getMessage());
+        }
+    }
+
+    public Map<String, BigDecimal> calcularPericulosidadeSegundaParcela13(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao) {
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
-            // 1. Calcular 13º integral com a média de HE
-            BigDecimal decimoTerceiroIntegral = salarioBase.add(mediaMensalHE);
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
 
-            // 2. Calcular meses trabalhados
-            //int mesesTrabalhados = calcularMesesTrabalhados13o(folhaMensalService.findByMatriculaColaborador(matricula).getDataAdmissao(),LocalDate.now());
+            // 1. Buscar valor da periculosidade (evento 47) OU calcular 30%
+            BigDecimal valorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
 
-            // 3. Calcular 13º proporcional
-            BigDecimal decimoTerceiroProporcional = decimoTerceiroIntegral.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados));
+            // Se não encontrou, calcula 30% do salário base
+            if (valorPericulosidade.compareTo(BigDecimal.ZERO) == 0) {
+                valorPericulosidade = salarioBase.multiply(new BigDecimal("0.30"))
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
 
-            // 4. Subtrair 1ª parcela (já paga)
-            BigDecimal primeiraParcela = decimoTerceiroProporcional.multiply(new BigDecimal("0.5"));
-            BigDecimal segundaParcelaBruta = decimoTerceiroProporcional.subtract(primeiraParcela);
+            // 2. Calcular 13º proporcional
+            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorPericulosidade);
 
-            resultado.put("referencia", new BigDecimal(mesesTrabalhados));
-            resultado.put("vencimentos", segundaParcelaBruta);
-            resultado.put("descontos", null);
-            resultado.put("bruto", segundaParcelaBruta);
+            resultado.put("referencia", new BigDecimal(calcularMesesTrabalhados13o(dataAdmissao, hoje)));
+            resultado.put("vencimentos", decimoTerceiroProporcional);  // ✅ PAGA na 2ª parcela
+            resultado.put("descontos", BigDecimal.ZERO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular 2ª Parcela do 13º com HE: " + e.getMessage());
+            throw new RuntimeException("Erro ao calcular Periculosidade para 2ª Parcela do 13º: " + e.getMessage());
         }
+
         return resultado;
     }
 
+    private Map<String, BigDecimal> calcularDescontos13o(BigDecimal valorBruto, Integer numeroDependentes) {
+        Map<String, BigDecimal> descontos = new HashMap<>();
 
+        try {
+            // 1. Cálculo do INSS
+            BigDecimal inss = calcularINSS(valorBruto);
+
+            // 2. Base para IRRF = Valor Bruto - INSS - Dedução por Dependente
+            BigDecimal baseIRRF = valorBruto.subtract(inss);
+
+            // Aplicar dedução por dependente se houver
+            if (numeroDependentes != null && numeroDependentes > 0) {
+                Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
+                if (tabelaIrrfOpt.isPresent()) {
+                    BigDecimal deducaoDependentes = tabelaIrrfOpt.get().getDeducaoPorDependente()
+                            .multiply(BigDecimal.valueOf(numeroDependentes));
+                    baseIRRF = baseIRRF.subtract(deducaoDependentes);
+                }
+            }
+
+            // Garantir que base não seja negativa
+            if (baseIRRF.compareTo(BigDecimal.ZERO) < 0) {
+                baseIRRF = BigDecimal.ZERO;
+            }
+
+            // 3. Cálculo do IRRF
+            BigDecimal irrf = calcularIRRF(baseIRRF);
+
+            descontos.put("inss", inss);
+            descontos.put("irrf", irrf);
+            descontos.put("total", inss.add(irrf));
+
+        } catch (Exception e) {
+            descontos.put("inss", BigDecimal.ZERO);
+            descontos.put("irrf", BigDecimal.ZERO);
+            descontos.put("total", BigDecimal.ZERO);
+        }
+
+        return descontos;
+    }
+
+    private BigDecimal calcularINSS(BigDecimal valorBruto) {
+
+        Optional<TabelaDeducaoInss> ValorCota = tabelaDeducaoInssRepository.findTopByOrderById();
+
+        BigDecimal[] faixas = {
+                new BigDecimal(String.valueOf(ValorCota.get().getFaixaSalario1())),
+                new BigDecimal(String.valueOf(ValorCota.get().getFaixaSalario2())),
+                new BigDecimal(String.valueOf(ValorCota.get().getFaixaSalario3())),
+                new BigDecimal(String.valueOf(ValorCota.get().getFaixaSalario4()))
+        };
+
+        BigDecimal[] aliquotas = {
+                new BigDecimal(String.valueOf(ValorCota.get().getAliquota1())),
+                new BigDecimal(String.valueOf(ValorCota.get().getAliquota2())),
+                new BigDecimal(String.valueOf(ValorCota.get().getAliquota3())),
+                new BigDecimal(String.valueOf(ValorCota.get().getAliquota4()))
+        };
+
+        BigDecimal inss = BigDecimal.ZERO;
+        BigDecimal valorRestante = valorBruto;
+
+        for (int i = 0; i < faixas.length; i++) {
+            if (valorRestante.compareTo(BigDecimal.ZERO) <= 0) break;
+
+            BigDecimal baseCalculo;
+            if (i == 0) {
+                baseCalculo = valorRestante.min(faixas[i]);
+            } else {
+                BigDecimal diferencaFaixa = faixas[i].subtract(faixas[i-1]);
+                baseCalculo = valorRestante.min(diferencaFaixa);
+            }
+
+            inss = inss.add(baseCalculo.multiply(aliquotas[i]));
+            valorRestante = valorRestante.subtract(baseCalculo);
+        }
+
+        // Teto do INSS
+        BigDecimal tetoINSS = new BigDecimal("908.85");
+        return inss.min(tetoINSS).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal calcularIRRF(BigDecimal baseCalculo) {
+        try {
+            Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
+
+            if (tabelaIrrfOpt.isEmpty()) {
+                throw new RuntimeException("Tabela IRRF não encontrada");
+            }
+
+            TabelaImpostoRenda tabelaIrrf = tabelaIrrfOpt.get();
+
+            // 1ª Faixa: Até faixaSalario1 - Isento
+            if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario1()) <= 0) {
+                return BigDecimal.ZERO;
+            }
+            // 2ª Faixa: Até faixaSalario2
+            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario2()) <= 0) {
+                return baseCalculo.multiply(tabelaIrrf.getAliquota1())
+                        .subtract(tabelaIrrf.getParcelaDeduzir1())
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
+            // 3ª Faixa: Até faixaSalario3
+            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario3()) <= 0) {
+                return baseCalculo.multiply(tabelaIrrf.getAliquota2())
+                        .subtract(tabelaIrrf.getParcelaDeduzir2())
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
+            // 4ª Faixa: Até faixaSalario4
+            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario4()) <= 0) {
+                return baseCalculo.multiply(tabelaIrrf.getAliquota3())
+                        .subtract(tabelaIrrf.getParcelaDeduzir3())
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
+            // 5ª Faixa: Até faixaSalario5
+            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario5()) <= 0) {
+                return baseCalculo.multiply(tabelaIrrf.getAliquota4())
+                        .subtract(tabelaIrrf.getParcelaDeduzir4())
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
+            // Acima da 5ª Faixa
+            else {
+                return baseCalculo.multiply(tabelaIrrf.getAliquota5())
+                        .subtract(tabelaIrrf.getParcelaDeduzir5())
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular IRRF: " + e.getMessage());
+        }
+    }
 }

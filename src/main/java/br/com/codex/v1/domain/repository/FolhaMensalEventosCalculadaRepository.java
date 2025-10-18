@@ -45,4 +45,8 @@ public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<Fol
     @Query("SELECT COALESCE(SUM(f.referencia), 0) FROM FolhaMensalEventosCalculada f WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula " +
             "AND f.codigoEvento = :codigoEvento AND YEAR(f.folhaMensalCalculada.dataProcessamento) = :ano")
     BigDecimal findSomaQuantidadeHorasExtrasAno(@Param("matricula") String matricula,  @Param("codigoEvento") Integer codigoEvento, @Param("ano") Integer ano);
+
+    @Query("SELECT COALESCE(SUM(f.vencimentos), 0) FROM FolhaMensalEventosCalculada f " +
+            "WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento = :codigoEvento AND YEAR(f.folhaMensalCalculada.dataProcessamento) = :ano")
+    BigDecimal findSomaValorHorasExtrasAno(@Param("matricula") String matricula, @Param("codigoEvento") Integer codigoEvento, @Param("ano") Integer ano);
 }
