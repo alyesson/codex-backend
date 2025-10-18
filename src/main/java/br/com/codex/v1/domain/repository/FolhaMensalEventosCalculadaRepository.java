@@ -12,10 +12,6 @@ import java.time.LocalDate;
 @Repository
 public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<FolhaMensalEventosCalculada, Long> {
 
-    /**
-     * Calcula a média dos vencimentos das Horas Extras 50,70 e 100% sobre o salário
-     * dos últimos 6 meses para uma determinada matrícula e evento.
-     */
     @Query("SELECT COALESCE(AVG(f.vencimentos), 0) FROM FolhaMensalEventosCalculada f WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento = :numeroEvento " +
             "AND f.folhaMensalCalculada.dataProcessamento >= :dataLimite")
     BigDecimal findMediaHorasExtrasUltimosSeisMeses(@Param("matricula") String matricula, @Param("numeroEvento") Integer numeroEvento, @Param("dataLimite") LocalDate dataLimite);
@@ -49,4 +45,35 @@ public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<Fol
     @Query("SELECT COALESCE(SUM(f.vencimentos), 0) FROM FolhaMensalEventosCalculada f " +
             "WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento = :codigoEvento AND YEAR(f.folhaMensalCalculada.dataProcessamento) = :ano")
     BigDecimal findSomaValorHorasExtrasAno(@Param("matricula") String matricula, @Param("codigoEvento") Integer codigoEvento, @Param("ano") Integer ano);
+
+    @Query("SELECT COALESCE(SUM(fmec.vencimentos), 0) FROM FolhaMensalEventosCalculada fmec WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula " +
+            "AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento IN ('51')")
+    BigDecimal findSomaComissoesPorMesEAno(@Param("matricula") String matricula, @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(fmec.referencia), 0) FROM FolhaMensalEventosCalculada fmec WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula " +
+            "AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '98'") // Código HE 50%
+    BigDecimal findQuantidadeHorasExtras50PorMesEAno(@Param("matricula") String matricula, @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(fmec.referencia), 0) FROM FolhaMensalEventosCalculada fmec WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula " +
+            "AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '99'") // Código HE 70%
+    BigDecimal findQuantidadeHorasExtras70PorMesEAno(@Param("matricula") String matricula, @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(fmec.referencia), 0) FROM FolhaMensalEventosCalculada fmec WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula " +
+            "AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '100'") // Código HE 70%
+    BigDecimal findQuantidadeHorasExtras100PorMesEAno(@Param("matricula") String matricula, @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(fmec.vencimentos), 0) FROM FolhaMensalEventosCalculada fmec " +
+            "WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano " +
+            "AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '5'") // Código DSR Diurno
+    BigDecimal findDSRDiurnoPorMesEAno(@Param("matricula") String matricula, @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(fmec.vencimentos), 0) FROM FolhaMensalEventosCalculada fmec " +
+            "WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano " +
+            "AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '25'") // Código DSR Noturno
+    BigDecimal findDSRNoturnoPorMesEAno(@Param("matricula") String matricula, @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(fmec.vencimentos), 0) FROM FolhaMensalEventosCalculada fmec " +
+            "WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano " +
+            "AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '14'") // Código Adicional Noturno
+    BigDecimal findAdicionalNoturnoPorMesEAno(@Param("matricula") String matricula,  @Param("ano") int ano, @Param("mes") int mes);
 }

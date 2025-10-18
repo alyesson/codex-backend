@@ -22,9 +22,9 @@ public class FolhaMensalEventosCalculada implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String codigoEvento;
+    private Integer codigoEvento;
     private String descricaoEvento;
-    private String referencia;
+    private BigDecimal referencia;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal vencimentos;
@@ -41,7 +41,7 @@ public class FolhaMensalEventosCalculada implements Serializable {
         super();
     }
 
-    public FolhaMensalEventosCalculada(Long id, String codigoEvento, String descricaoEvento, String referencia,
+    public FolhaMensalEventosCalculada(Long id, Integer codigoEvento, String descricaoEvento, BigDecimal referencia,
                                        BigDecimal vencimentos, BigDecimal descontos,
                                        FolhaMensalCalculada folhaMensalCalculada) {
         this.id = id;

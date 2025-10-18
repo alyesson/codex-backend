@@ -16,9 +16,9 @@ public class FolhaMensalEventosCalculadaDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String codigoEvento;
+    private Integer codigoEvento;
     private String descricaoEvento;
-    private String referencia;
+    private BigDecimal referencia;
     private BigDecimal vencimentos;
     private BigDecimal descontos;
     private FolhaMensalCalculadaDto folhaMensalCalculadaDto;
