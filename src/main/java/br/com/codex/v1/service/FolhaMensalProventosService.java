@@ -22,8 +22,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class FolhaMensalService {
-    private static final Logger logger = LoggerFactory.getLogger(FolhaMensalService.class);
+public class FolhaMensalProventosService {
+    private static final Logger logger = LoggerFactory.getLogger(FolhaMensalProventosService.class);
+
+    @Autowired
+    private CalculoBaseService calculoBaseService;
 
     @Autowired
     private FolhaMensalRepository folhaMensalRepository;
@@ -835,6 +838,77 @@ public class FolhaMensalService {
         return resultado;
     }
 
+    public Map<String, BigDecimal> calcularPericulosidadeSegundaParcela13(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
+
+            // 1. Buscar valor da periculosidade (evento 47) OU calcular 30%
+            BigDecimal valorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
+
+            // Se não encontrou, calcula 30% do salário base
+            if (valorPericulosidade.compareTo(BigDecimal.ZERO) == 0) {
+                valorPericulosidade = salarioBase.multiply(new BigDecimal("0.30"))
+                        .setScale(2, RoundingMode.HALF_UP);
+            }
+
+            // 2. Calcular 13º proporcional
+            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorPericulosidade);
+
+            resultado.put("referencia", new BigDecimal(calcularMesesTrabalhados13o(dataAdmissao, hoje)));
+            resultado.put("vencimentos", decimoTerceiroProporcional);  // ✅ PAGA na 2ª parcela
+            resultado.put("descontos", BigDecimal.ZERO);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular Periculosidade para 2ª Parcela do 13º: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    private Map<String, BigDecimal> calcularDescontos13o(BigDecimal valorBruto, Integer numeroDependentes) {
+        Map<String, BigDecimal> descontos = new HashMap<>();
+
+        try {
+            // 1. Cálculo do INSS
+            BigDecimal inss = calculoBaseService.calcularINSS(valorBruto);
+
+            // 2. Base para IRRF = Valor Bruto - INSS - Dedução por Dependente
+            BigDecimal baseIRRF = valorBruto.subtract(inss);
+
+            // Aplicar dedução por dependente se houver
+            if (numeroDependentes != null && numeroDependentes > 0) {
+                Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
+                if (tabelaIrrfOpt.isPresent()) {
+                    BigDecimal deducaoDependentes = tabelaIrrfOpt.get().getDeducaoPorDependente()
+                            .multiply(BigDecimal.valueOf(numeroDependentes));
+                    baseIRRF = baseIRRF.subtract(deducaoDependentes);
+                }
+            }
+
+            // Garantir que base não seja negativa
+            if (baseIRRF.compareTo(BigDecimal.ZERO) < 0) {
+                baseIRRF = BigDecimal.ZERO;
+            }
+
+            // 3. Cálculo do IRRF
+            BigDecimal irrf = calculoBaseService.calcularIRRF(baseIRRF);
+
+            descontos.put("inss", inss);
+            descontos.put("irrf", irrf);
+            descontos.put("total", inss.add(irrf));
+
+        } catch (Exception e) {
+            descontos.put("inss", BigDecimal.ZERO);
+            descontos.put("irrf", BigDecimal.ZERO);
+            descontos.put("total", BigDecimal.ZERO);
+        }
+
+        return descontos;
+    }
+
     //---------------------------------------------Outro métodos------------------------------------------------
     private BigDecimal calcularAdicionalPericulosidade(String matricula, BigDecimal salarioBase, int anoAtual) {
         try {
@@ -915,171 +989,6 @@ public class FolhaMensalService {
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular 13º proporcional: " + e.getMessage());
-        }
-    }
-
-    public Map<String, BigDecimal> calcularPericulosidadeSegundaParcela13(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao) {
-        Map<String, BigDecimal> resultado = new HashMap<>();
-
-        try {
-            LocalDate hoje = LocalDate.now();
-            int anoAtual = hoje.getYear();
-
-            // 1. Buscar valor da periculosidade (evento 47) OU calcular 30%
-            BigDecimal valorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
-
-            // Se não encontrou, calcula 30% do salário base
-            if (valorPericulosidade.compareTo(BigDecimal.ZERO) == 0) {
-                valorPericulosidade = salarioBase.multiply(new BigDecimal("0.30"))
-                        .setScale(2, RoundingMode.HALF_UP);
-            }
-
-            // 2. Calcular 13º proporcional
-            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorPericulosidade);
-
-            resultado.put("referencia", new BigDecimal(calcularMesesTrabalhados13o(dataAdmissao, hoje)));
-            resultado.put("vencimentos", decimoTerceiroProporcional);  // ✅ PAGA na 2ª parcela
-            resultado.put("descontos", BigDecimal.ZERO);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular Periculosidade para 2ª Parcela do 13º: " + e.getMessage());
-        }
-
-        return resultado;
-    }
-
-    private Map<String, BigDecimal> calcularDescontos13o(BigDecimal valorBruto, Integer numeroDependentes) {
-        Map<String, BigDecimal> descontos = new HashMap<>();
-
-        try {
-            // 1. Cálculo do INSS
-            BigDecimal inss = calcularINSS(valorBruto);
-
-            // 2. Base para IRRF = Valor Bruto - INSS - Dedução por Dependente
-            BigDecimal baseIRRF = valorBruto.subtract(inss);
-
-            // Aplicar dedução por dependente se houver
-            if (numeroDependentes != null && numeroDependentes > 0) {
-                Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
-                if (tabelaIrrfOpt.isPresent()) {
-                    BigDecimal deducaoDependentes = tabelaIrrfOpt.get().getDeducaoPorDependente()
-                            .multiply(BigDecimal.valueOf(numeroDependentes));
-                    baseIRRF = baseIRRF.subtract(deducaoDependentes);
-                }
-            }
-
-            // Garantir que base não seja negativa
-            if (baseIRRF.compareTo(BigDecimal.ZERO) < 0) {
-                baseIRRF = BigDecimal.ZERO;
-            }
-
-            // 3. Cálculo do IRRF
-            BigDecimal irrf = calcularIRRF(baseIRRF);
-
-            descontos.put("inss", inss);
-            descontos.put("irrf", irrf);
-            descontos.put("total", inss.add(irrf));
-
-        } catch (Exception e) {
-            descontos.put("inss", BigDecimal.ZERO);
-            descontos.put("irrf", BigDecimal.ZERO);
-            descontos.put("total", BigDecimal.ZERO);
-        }
-
-        return descontos;
-    }
-
-    private BigDecimal calcularINSS(BigDecimal valorBruto) {
-
-        Optional<TabelaDeducaoInss> valorCota = tabelaDeducaoInssRepository.findTopByOrderById();
-
-        if(valorCota.isEmpty()){
-            throw new DataIntegrityViolationException("Nenhuma cota foi cadastrada na tabela de dedução do INSS");
-        }
-
-        BigDecimal[] faixas = {
-                new BigDecimal(String.valueOf(valorCota.get().getFaixaSalario1())),
-                new BigDecimal(String.valueOf(valorCota.get().getFaixaSalario2())),
-                new BigDecimal(String.valueOf(valorCota.get().getFaixaSalario3())),
-                new BigDecimal(String.valueOf(valorCota.get().getFaixaSalario4()))
-        };
-
-        BigDecimal[] aliquotas = {
-                new BigDecimal(String.valueOf(valorCota.get().getAliquota1())),
-                new BigDecimal(String.valueOf(valorCota.get().getAliquota2())),
-                new BigDecimal(String.valueOf(valorCota.get().getAliquota3())),
-                new BigDecimal(String.valueOf(valorCota.get().getAliquota4()))
-        };
-
-        BigDecimal inss = BigDecimal.ZERO;
-        BigDecimal valorRestante = valorBruto;
-
-        for (int i = 0; i < faixas.length; i++) {
-            if (valorRestante.compareTo(BigDecimal.ZERO) <= 0) break;
-
-            BigDecimal baseCalculo;
-            if (i == 0) {
-                baseCalculo = valorRestante.min(faixas[i]);
-            } else {
-                BigDecimal diferencaFaixa = faixas[i].subtract(faixas[i-1]);
-                baseCalculo = valorRestante.min(diferencaFaixa);
-            }
-
-            inss = inss.add(baseCalculo.multiply(aliquotas[i]));
-            valorRestante = valorRestante.subtract(baseCalculo);
-        }
-
-        // Teto do INSS
-        BigDecimal tetoINSS = new BigDecimal("908.85");
-        return inss.min(tetoINSS).setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private BigDecimal calcularIRRF(BigDecimal baseCalculo) {
-        try {
-            Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
-
-            if (tabelaIrrfOpt.isEmpty()) {
-                throw new RuntimeException("Tabela IRRF não encontrada");
-            }
-
-            TabelaImpostoRenda tabelaIrrf = tabelaIrrfOpt.get();
-
-            // 1ª Faixa: Até faixaSalario1 - Isento
-            if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario1()) <= 0) {
-                return BigDecimal.ZERO;
-            }
-            // 2ª Faixa: Até faixaSalario2
-            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario2()) <= 0) {
-                return baseCalculo.multiply(tabelaIrrf.getAliquota1())
-                        .subtract(tabelaIrrf.getParcelaDeduzir1())
-                        .setScale(2, RoundingMode.HALF_UP);
-            }
-            // 3ª Faixa: Até faixaSalario3
-            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario3()) <= 0) {
-                return baseCalculo.multiply(tabelaIrrf.getAliquota2())
-                        .subtract(tabelaIrrf.getParcelaDeduzir2())
-                        .setScale(2, RoundingMode.HALF_UP);
-            }
-            // 4ª Faixa: Até faixaSalario4
-            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario4()) <= 0) {
-                return baseCalculo.multiply(tabelaIrrf.getAliquota3())
-                        .subtract(tabelaIrrf.getParcelaDeduzir3())
-                        .setScale(2, RoundingMode.HALF_UP);
-            }
-            // 5ª Faixa: Até faixaSalario5
-            else if (baseCalculo.compareTo(tabelaIrrf.getFaixaSalario5()) <= 0) {
-                return baseCalculo.multiply(tabelaIrrf.getAliquota4())
-                        .subtract(tabelaIrrf.getParcelaDeduzir4())
-                        .setScale(2, RoundingMode.HALF_UP);
-            }
-            // Acima da 5ª Faixa
-            else {
-                return baseCalculo.multiply(tabelaIrrf.getAliquota5())
-                        .subtract(tabelaIrrf.getParcelaDeduzir5())
-                        .setScale(2, RoundingMode.HALF_UP);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular IRRF: " + e.getMessage());
         }
     }
 

@@ -120,7 +120,6 @@ public class FolhaQuinzenalCalculadaService {
         folhaDto.setValorLiquido(totalVencimentos.subtract(totalDescontos));
     }
 
-
     @Transactional
     public void delete(Long id) {
         FolhaQuinzenalCalculada folha = findById(id);
