@@ -76,4 +76,8 @@ public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<Fol
             "WHERE fmec.folhaMensalCalculada.matriculaColaborador = :matricula AND YEAR(fmec.folhaMensalCalculada.dataProcessamento) = :ano " +
             "AND MONTH(fmec.folhaMensalCalculada.dataProcessamento) = :mes AND fmec.codigoEvento = '14'") // Código Adicional Noturno
     BigDecimal findAdicionalNoturnoPorMesEAno(@Param("matricula") String matricula,  @Param("ano") int ano, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(AVG(f.vencimentos), 0) FROM FolhaMensalEventosCalculada f " +
+            "WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento = :codigoEvento AND f.folhaMensalCalculada.dataProcessamento BETWEEN :dataInicio AND :dataFim")
+    BigDecimal findMediaProventoPeriodo(@Param("matricula") String matricula, @Param("codigoEvento") Integer codigoEvento, @Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 }

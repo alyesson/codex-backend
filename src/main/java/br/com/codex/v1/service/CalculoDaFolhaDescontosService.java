@@ -1,6 +1,8 @@
 package br.com.codex.v1.service;
 
+import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
 import br.com.codex.v1.domain.rh.FolhaMensal;
+import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import java.math.RoundingMode;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CalculoDaFolhaDescontosService {
@@ -22,6 +25,9 @@ public class CalculoDaFolhaDescontosService {
 
     @Autowired
     private FolhaMensalProventosService folhaMensalProventosService;
+
+    @Autowired
+    private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
     @Setter
     String numeroMatricula;
@@ -288,6 +294,7 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
+            //Desconto INSS
             case 244 ->{
                 FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
@@ -300,14 +307,52 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
-            case 245 ->{
+            //Desconto Imposto de Renda
+            case 245 -> {
                 FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
-                BigDecimal descontoIrff = calculoBaseService.calcularIRRF(salarioBase);
 
-                resultado.put("referencia", descontoIrff);
+                // **Primeiro calcula o INSS**
+                BigDecimal descontoInss = calculoBaseService.calcularINSS(salarioBase);
+
+                // **Calcula a base do IRRF (salário - INSS - dependentes - pensão)**
+                BigDecimal baseCalculoIrrf = salarioBase
+                        .subtract(descontoInss)
+                        .subtract(BigDecimal.valueOf(folha.getDependentesIrrf()))
+                        .subtract(folha.getPensaoAlimenticia());
+
+                // **Calcula o IRRF normalmente**
+                BigDecimal descontoIrrf = calculoBaseService.calcularIRRF(baseCalculoIrrf);
+
+                // **AGORA PEGAMOS A ALÍQUOTA AQUI MESMO**
+                BigDecimal aliquotaIrrf = BigDecimal.ZERO;
+
+                // Busca a tabela atual do IRRF
+                Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
+
+                if (tabelaIrrfOpt.isPresent()) {
+                    TabelaImpostoRenda tabelaIrrf = tabelaIrrfOpt.get();
+
+                    // Determina a alíquota com base na base de cálculo
+                    if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario1()) <= 0) {
+                        aliquotaIrrf = BigDecimal.ZERO;
+                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario2()) <= 0) {
+                        aliquotaIrrf = tabelaIrrf.getAliquota1().multiply(BigDecimal.valueOf(100)); // Converte para %
+                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario3()) <= 0) {
+                        aliquotaIrrf = tabelaIrrf.getAliquota2().multiply(BigDecimal.valueOf(100));
+                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario4()) <= 0) {
+                        aliquotaIrrf = tabelaIrrf.getAliquota3().multiply(BigDecimal.valueOf(100));
+                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario5()) <= 0) {
+                        aliquotaIrrf = tabelaIrrf.getAliquota4().multiply(BigDecimal.valueOf(100));
+                    } else {
+                        aliquotaIrrf = tabelaIrrf.getAliquota5().multiply(BigDecimal.valueOf(100));
+                    }
+                }
+
+                // **Agora coloca a alíquota na referência**
+                resultado.put("referencia", aliquotaIrrf); // ✅ Alíquota em %
                 resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", descontoIrff);
+                resultado.put("descontos", descontoIrrf);
 
                 return resultado;
             }

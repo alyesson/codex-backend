@@ -228,4 +228,5 @@ public class CalculoBaseService {
 
         return valorHora.multiply(horasTotais).multiply(faltas).setScale(1, RoundingMode.HALF_UP);
     }
+
 }
