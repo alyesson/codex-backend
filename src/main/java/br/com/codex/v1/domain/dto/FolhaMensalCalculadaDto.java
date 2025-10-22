@@ -25,7 +25,7 @@ public class FolhaMensalCalculadaDto implements Serializable {
     private String matriculaColaborador;
     private String nomeColaborador;
     private LocalDate dataAdmissao;
-    private String departColaborador;
+    private String departamentoColaborador;
     private BigDecimal salarioBase;
     private BigDecimal salarioHora;
     private String jornada;
@@ -84,7 +84,7 @@ public class FolhaMensalCalculadaDto implements Serializable {
         this.matriculaColaborador = obj.getMatriculaColaborador();
         this.nomeColaborador = obj.getNomeColaborador();
         this.dataAdmissao = obj.getDataAdmissao();
-        this.departColaborador = obj.getDepartColaborador();
+        this.departamentoColaborador = obj.getDepartamentoColaborador();
         this.salarioBase = obj.getSalarioBase();
         this.salarioHora = obj.getSalarioHora();
         this.jornada = obj.getJornada();

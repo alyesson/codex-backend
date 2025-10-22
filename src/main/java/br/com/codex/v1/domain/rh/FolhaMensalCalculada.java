@@ -30,7 +30,7 @@ public class FolhaMensalCalculada implements Serializable {
     private String matriculaColaborador;
     private String nomeColaborador;
     private LocalDate dataAdmissao;
-    private String departColaborador;
+    private String departamentoColaborador;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal salarioBase;
@@ -162,7 +162,7 @@ public class FolhaMensalCalculada implements Serializable {
     }
 
     public FolhaMensalCalculada(Long id, String matriculaColaborador, String nomeColaborador, LocalDate dataAdmissao,
-                                String departColaborador, BigDecimal salarioBase, BigDecimal salarioHora, String jornada,
+                                String departamentoColaborador, BigDecimal salarioBase, BigDecimal salarioHora, String jornada,
                                 BigDecimal horasMes, int dependentesIrrf, BigDecimal horasSemana, BigDecimal insalubridade,
                                 BigDecimal periculosidade, BigDecimal pensaoAlimenticia, BigDecimal horasExtras50, BigDecimal salarioFamilia,
                                 BigDecimal comissao, BigDecimal quebraCaixa, BigDecimal gratificacao, String cargoFuncionario,
@@ -179,7 +179,7 @@ public class FolhaMensalCalculada implements Serializable {
         this.matriculaColaborador = matriculaColaborador;
         this.nomeColaborador = nomeColaborador;
         this.dataAdmissao = dataAdmissao;
-        this.departColaborador = departColaborador;
+        this.departamentoColaborador = departamentoColaborador;
         this.salarioBase = salarioBase;
         this.salarioHora = salarioHora;
         this.jornada = jornada;
@@ -233,7 +233,7 @@ public class FolhaMensalCalculada implements Serializable {
         this.matriculaColaborador = obj.getMatriculaColaborador();
         this.nomeColaborador = obj.getNomeColaborador();
         this.dataAdmissao = obj.getDataAdmissao();
-        this.departColaborador = obj.getDepartColaborador();
+        this.departamentoColaborador = obj.getDepartamentoColaborador();
         this.salarioBase = obj.getSalarioBase();
         this.salarioHora = obj.getSalarioHora();
         this.jornada = obj.getJornada();

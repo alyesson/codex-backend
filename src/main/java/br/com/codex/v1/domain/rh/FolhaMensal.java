@@ -29,7 +29,7 @@ public class FolhaMensal implements Serializable {
     private String matriculaColaborador;
     private String nomeColaborador;
     private LocalDate dataAdmissao;
-    private String departColaborador;
+    private String departamentoColaborador;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal salarioBase;
@@ -141,6 +141,10 @@ public class FolhaMensal implements Serializable {
 
     private LocalDate dataProcessamento;
     private Situacao situacao;
+    private String nomeBanco;
+    private String agencia;
+    private String numeroConta;
+    private String tipoSalario;
 
     @JsonIgnore
     @OneToMany(mappedBy = "folhaMensal", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -151,7 +155,7 @@ public class FolhaMensal implements Serializable {
     }
 
     public FolhaMensal(Long id, String matriculaColaborador, String nomeColaborador, LocalDate dataAdmissao,
-                       String departColaborador, BigDecimal salarioBase, BigDecimal salarioHora, String jornada,
+                       String departamentoColaborador, BigDecimal salarioBase, BigDecimal salarioHora, String jornada,
                        BigDecimal horasMes, int dependentesIrrf, BigDecimal horasSemana, BigDecimal insalubridade,
                        BigDecimal periculosidade, BigDecimal pensaoAlimenticia, BigDecimal horasExtras50, BigDecimal salarioFamilia,
                        BigDecimal comissao, BigDecimal quebraCaixa, BigDecimal gratificacao, String cargoFuncionario,
@@ -162,12 +166,13 @@ public class FolhaMensal implements Serializable {
                        BigDecimal emprestimoConsignado, BigDecimal contribuiSindical, BigDecimal ajudaCusto,
                        int faltasMes, int faltasDsr, int faltasFeriados, BigDecimal abonoSalarial,
                        BigDecimal participacaoLucrosResultado, BigDecimal faltasHorasMes, BigDecimal seguroVida,
-                       BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento, Situacao situacao) {
+                       BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento, Situacao situacao,
+                       String nomeBanco, String agencia, String numeroConta, String tipoSalario) {
         this.id = id;
         this.matriculaColaborador = matriculaColaborador;
         this.nomeColaborador = nomeColaborador;
         this.dataAdmissao = dataAdmissao;
-        this.departColaborador = departColaborador;
+        this.departamentoColaborador = departamentoColaborador;
         this.salarioBase = salarioBase;
         this.salarioHora = salarioHora;
         this.jornada = jornada;
@@ -211,6 +216,10 @@ public class FolhaMensal implements Serializable {
         this.reembolsoViagem = reembolsoViagem;
         this.dataProcessamento = dataProcessamento;
         this.situacao = situacao;
+        this.nomeBanco = nomeBanco;
+        this.agencia = agencia;
+        this.numeroConta = numeroConta;
+        this.tipoSalario = tipoSalario;
     }
 
     public FolhaMensal(FolhaMensalDto obj) {
@@ -218,7 +227,7 @@ public class FolhaMensal implements Serializable {
         this.matriculaColaborador = obj.getMatriculaColaborador();
         this.nomeColaborador = obj.getNomeColaborador();
         this.dataAdmissao = obj.getDataAdmissao();
-        this.departColaborador = obj.getDepartColaborador();
+        this.departamentoColaborador = obj.getDepartamentoColaborador();
         this.salarioBase = obj.getSalarioBase();
         this.salarioHora = obj.getSalarioHora();
         this.jornada = obj.getJornada();
@@ -262,6 +271,10 @@ public class FolhaMensal implements Serializable {
         this.reembolsoViagem = obj.getReembolsoViagem();
         this.dataProcessamento = obj.getDataProcessamento();
         this.situacao = obj.getSituacao();
+        this.nomeBanco = obj.getNomeBanco();
+        this.agencia = obj.getAgencia();
+        this.numeroConta = obj.getNumeroConta();
+        this.tipoSalario = obj.getTipoSalario();
     }
 
     @Override

@@ -1,15 +1,8 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.domain.rh.FolhaMensalEventos;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;

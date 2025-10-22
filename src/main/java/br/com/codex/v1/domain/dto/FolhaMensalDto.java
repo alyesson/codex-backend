@@ -31,7 +31,7 @@ public class FolhaMensalDto implements Serializable {
     private String matriculaColaborador;
     private String nomeColaborador;
     private LocalDate dataAdmissao;
-    private String departColaborador;
+    private String departamentoColaborador;
     private BigDecimal salarioBase;
     private BigDecimal salarioHora;
     private String jornada;
@@ -76,6 +76,10 @@ public class FolhaMensalDto implements Serializable {
     private BigDecimal reembolsoViagem;
     private LocalDate dataProcessamento;
     private Situacao situacao;
+    private String nomeBanco;
+    private String agencia;
+    private String numeroConta;
+    private String tipoSalario;
     private List<FolhaMensalEventosDto> eventos = new ArrayList<>();
 
     public FolhaMensalDto() {
@@ -87,7 +91,7 @@ public class FolhaMensalDto implements Serializable {
         this.matriculaColaborador = obj.getMatriculaColaborador();
         this.nomeColaborador = obj.getNomeColaborador();
         this.dataAdmissao = obj.getDataAdmissao();
-        this.departColaborador = obj.getDepartColaborador();
+        this.departamentoColaborador = obj.getDepartamentoColaborador();
         this.salarioBase = obj.getSalarioBase();
         this.salarioHora = obj.getSalarioHora();
         this.jornada = obj.getJornada();
@@ -131,5 +135,9 @@ public class FolhaMensalDto implements Serializable {
         this.reembolsoViagem = obj.getReembolsoViagem();
         this.dataProcessamento = obj.getDataProcessamento();
         this.situacao = obj.getSituacao();
+        this.nomeBanco = obj.getNomeBanco();
+        this.agencia = obj.getAgencia();
+        this.numeroConta = obj.getNumeroConta();
+        this.tipoSalario = obj.getTipoSalario();
     }
 }
