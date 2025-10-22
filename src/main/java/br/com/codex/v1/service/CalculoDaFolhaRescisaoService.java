@@ -49,10 +49,8 @@ public class CalculoDaFolhaRescisaoService {
     }
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
+
         Map<String, BigDecimal> resultado = new HashMap<>();
-        resultado.put("referencia", BigDecimal.ZERO);
-        resultado.put("vencimentos", BigDecimal.ZERO);
-        resultado.put("descontos", BigDecimal.ZERO);
 
         try {
             FolhaRescisao rescisao = findByNumeroMatricula(numeroMatricula);
@@ -65,7 +63,6 @@ public class CalculoDaFolhaRescisaoService {
             Integer numeroDependentes = rescisao.getNumDependenteIrrf();
             String tipoSalario = rescisao.getTipoDeSalario();
             String tipoDemissao = rescisao.getTipoDeDemissao();
-            String tipoAvisoPrevio = rescisao.getTipoDeAvisoPrevio();
 
             switch (codigoEvento) {
                 // Saldo de Salário
@@ -73,6 +70,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal saldoSalario = calcularSaldoSalario(salarioBase, diasTrabalhadosMes, tipoSalario, salarioPorHora);
                     resultado.put("referencia", new BigDecimal(diasTrabalhadosMes));
                     resultado.put("vencimentos", saldoSalario);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // Aviso Prévio Trabalhado
@@ -80,6 +80,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal avisoTrabalhado = calcularAvisoPrevioTrabalhado(diasTrabalhadosMes);
                     resultado.put("referencia", new BigDecimal(diasTrabalhadosMes));
                     resultado.put("vencimentos", avisoTrabalhado);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // Aviso Prévio Indenizado
@@ -87,6 +90,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal avisoIndenizado = calcularAvisoPrevioIndenizado(salarioBase, dataAdmissao, dataDemissao, tipoSalario, salarioPorHora);
                     resultado.put("referencia", BigDecimal.ONE); // 1 aviso prévio
                     resultado.put("vencimentos", avisoIndenizado);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // Multa do FGTS (40%)
@@ -94,6 +100,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal multaFGTS = calcularMultaFGTS(salarioBase, dataAdmissao, dataDemissao, tipoDemissao);
                     resultado.put("referencia", new BigDecimal("40")); // 40%
                     resultado.put("vencimentos", multaFGTS);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // Férias Proporcionais
@@ -101,6 +110,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal feriasProporcionais = calcularFeriasProporcionais(salarioBase, dataAdmissao, dataDemissao, faltasMes, tipoSalario);
                     resultado.put("referencia", BigDecimal.ONE);
                     resultado.put("vencimentos", feriasProporcionais);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // Férias Vencidas
@@ -108,6 +120,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal feriasVencidas = calcularFeriasVencidas(salarioBase, faltasMes, tipoSalario);
                     resultado.put("referencia", BigDecimal.ONE);
                     resultado.put("vencimentos", feriasVencidas);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // 1/3 de Férias
@@ -115,6 +130,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal umTercoFerias = salarioBase.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
                     resultado.put("referencia", umTercoFerias);
                     resultado.put("vencimentos", umTercoFerias);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // 13º Proporcional
@@ -122,6 +140,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal decimoTerceiro = calcularDecimoTerceiroProporcional(salarioBase, dataAdmissao, dataDemissao, faltasMes);
                     resultado.put("referencia", BigDecimal.ONE);
                     resultado.put("vencimentos", decimoTerceiro);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 // INSS Sobre Rescisão
@@ -129,7 +150,10 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal valorTotalRescisao = calcularValorTotalRescisao(rescisao);
                     BigDecimal inssRescisao = calculoBaseService.calcularINSS(valorTotalRescisao);
                     resultado.put("referencia", inssRescisao);
+                    resultado.put("vencimentos", BigDecimal.ZERO);
                     resultado.put("descontos", inssRescisao);
+
+                    return resultado;
                 }
 
                 // IRRF Sobre Rescisão
@@ -138,7 +162,10 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal inssRescisao = calculoBaseService.calcularINSS(valorTotalRescisao);
                     BigDecimal irrfRescisao = calcularIRRFRescisao(valorTotalRescisao, inssRescisao, numeroDependentes);
                     resultado.put("referencia", irrfRescisao);
+                    resultado.put("vencimentos", BigDecimal.ZERO);
                     resultado.put("descontos", irrfRescisao);
+
+                    return resultado;
                 }
 
                 // Salário Família na Rescisão
@@ -146,6 +173,9 @@ public class CalculoDaFolhaRescisaoService {
                     BigDecimal salarioFamilia = calcularSalarioFamiliaRescisao(salarioBase, numeroDependentes, diasTrabalhadosMes);
                     resultado.put("referencia", new BigDecimal(numeroDependentes));
                     resultado.put("vencimentos", salarioFamilia);
+                    resultado.put("descontos", BigDecimal.ZERO);
+
+                    return resultado;
                 }
 
                 default -> {

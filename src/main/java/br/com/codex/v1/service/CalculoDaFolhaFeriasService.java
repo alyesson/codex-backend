@@ -18,6 +18,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CalculoDaFolhaFeriasService {
@@ -30,23 +31,29 @@ public class CalculoDaFolhaFeriasService {
         private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
 
         @Autowired
-        private CalculoFeriasService calculoFeriasService;
-
-        @Autowired
         private CalculoBaseService calculoBaseService;
 
         @Autowired
         private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
+        @Autowired
+        private CalculoFeriasRepository calculoFeriasRepository;
+
         @Setter
         private String numeroMatricula;
+
+        public CalculoFerias findByNumeroMatricula(String matricula){
+            Optional<CalculoFerias> obj = calculoFeriasRepository.findByNumeroMatricula(matricula);
+            return obj.orElseThrow(() -> new ObjectNotFoundException("Informação não encontrada"));
+        }
 
         public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
 
             Map<String, BigDecimal> resultado = new HashMap<>();
   
             try {
-                CalculoFerias ferias = calculoFeriasService.findByNumeroMatricula(numeroMatricula);
+                CalculoFerias ferias = findByNumeroMatricula(numeroMatricula);
+
                 BigDecimal salarioBase = ferias.getSalarioBruto();
                 BigDecimal salarioPorHora = ferias.getSalarioHora();
                 BigDecimal diasDeFerias = BigDecimal.valueOf(ferias.getTotalDiasFerias());
