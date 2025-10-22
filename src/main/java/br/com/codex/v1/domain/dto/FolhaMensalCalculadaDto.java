@@ -69,6 +69,9 @@ public class FolhaMensalCalculadaDto implements Serializable {
     private BigDecimal valeCreche;
     private BigDecimal reembolsoViagem;
     private LocalDate dataProcessamento;
+    private BigDecimal totalVencimentos;
+    private BigDecimal totalDescontos;
+    private BigDecimal valorLiquido;
     private Situacao situacao;
     private List<FolhaMensalEventosCalculadaDto> eventos = new ArrayList<>();
 
@@ -124,6 +127,9 @@ public class FolhaMensalCalculadaDto implements Serializable {
         this.valeCreche = obj.getValeCreche();
         this.reembolsoViagem = obj.getReembolsoViagem();
         this.dataProcessamento = obj.getDataProcessamento();
+        this.totalVencimentos = obj.getTotalVencimentos();
+        this.totalDescontos = obj.getTotalDescontos();
+        this.valorLiquido = obj.getValorLiquido();
         this.situacao = obj.getSituacao();
     }
 }

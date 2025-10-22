@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<FolhaMensalEventosCalculada, Long> {
@@ -80,4 +81,8 @@ public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<Fol
     @Query("SELECT COALESCE(AVG(f.vencimentos), 0) FROM FolhaMensalEventosCalculada f " +
             "WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento = :codigoEvento AND f.folhaMensalCalculada.dataProcessamento BETWEEN :dataInicio AND :dataFim")
     BigDecimal findMediaProventoPeriodo(@Param("matricula") String matricula, @Param("codigoEvento") Integer codigoEvento, @Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+
+    void deleteByFolhaMensalCalculadaId(Long id);
+
+    List<FolhaMensalEventosCalculada> findAllEventosByFolhaMensalCalculadaId(Long eventoId);
 }

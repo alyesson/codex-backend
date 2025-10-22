@@ -62,7 +62,7 @@ public class FolhaQuinzenalCalculadaResource {
         return ResponseEntity.ok().body(listObj);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         folhaQuinzenalCalculadaService.delete(id);

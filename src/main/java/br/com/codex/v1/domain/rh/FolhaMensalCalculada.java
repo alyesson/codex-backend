@@ -141,6 +141,16 @@ public class FolhaMensalCalculada implements Serializable {
     private BigDecimal reembolsoViagem;
 
     private LocalDate dataProcessamento;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalVencimentos;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalDescontos;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal valorLiquido;
+
     private Situacao situacao;
 
     @JsonIgnore
@@ -163,7 +173,8 @@ public class FolhaMensalCalculada implements Serializable {
                                 BigDecimal emprestimoConsignado, BigDecimal contribuiSindical, BigDecimal ajudaCusto,
                                 int faltasMes, int faltasDsr, int faltasFeriados, BigDecimal abonoSalarial,
                                 BigDecimal participacaoLucrosResultado, BigDecimal faltasHorasMes, BigDecimal seguroVida,
-                                BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento, Situacao situacao) {
+                                BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento,
+                                BigDecimal totalVencimentos, BigDecimal totalDescontos, BigDecimal valorLiquido, Situacao situacao) {
         this.id = id;
         this.matriculaColaborador = matriculaColaborador;
         this.nomeColaborador = nomeColaborador;
@@ -211,6 +222,9 @@ public class FolhaMensalCalculada implements Serializable {
         this.valeCreche = valeCreche;
         this.reembolsoViagem = reembolsoViagem;
         this.dataProcessamento = dataProcessamento;
+        this.totalVencimentos = totalVencimentos;
+        this.totalDescontos = totalDescontos;
+        this.valorLiquido = valorLiquido;
         this.situacao = situacao;
     }
 
@@ -262,6 +276,9 @@ public class FolhaMensalCalculada implements Serializable {
         this.valeCreche = obj.getValeCreche();
         this.reembolsoViagem = obj.getReembolsoViagem();
         this.dataProcessamento = obj.getDataProcessamento();
+        this.totalVencimentos = obj.getTotalVencimentos();
+        this.totalDescontos = obj.getTotalDescontos();
+        this.valorLiquido = obj.getValorLiquido();
         this.situacao = obj.getSituacao();
     }
 
