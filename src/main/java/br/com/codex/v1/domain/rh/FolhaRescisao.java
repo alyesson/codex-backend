@@ -61,10 +61,23 @@ public class FolhaRescisao implements Serializable {
     private String categoriaTrabalhador;
     private String codigoSindical; //cnpj do sindicato
     private String entidadeSindical;
+
+    @Column(precision = 10, scale = 2)
     private BigDecimal salarioBase;
+
+    @Column(precision = 10, scale = 2)
     private BigDecimal salarioHora;
     private Integer faltasNoMes;
     private Integer diasTrabalhadosNoMes;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalVencimentos;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalDescontos;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal valorLiquido;
 
 
 
@@ -86,7 +99,8 @@ public class FolhaRescisao implements Serializable {
                          LocalDate dataDeDemissao, LocalDate dataAVisoPrevio, String tipoDeDemissao, String tipoContrato,
                          String tipoDeAvisoPrevio, String codigoAfastamento, LocalDate dataFimAvisoPrevio,
                          String categoriaTrabalhador, String codigoSindical, String entidadeSindical, BigDecimal salarioHora,
-                         Integer faltasNoMes, Integer diasTrabalhadosNoMes) {
+                         Integer faltasNoMes, Integer diasTrabalhadosNoMes, BigDecimal totalVencimentos,
+                         BigDecimal totalDescontos, BigDecimal valorLiquido) {
         this.id = id;
         this.mesFolha = mesFolha;
         this.dataProcessamento = dataProcessamento;
@@ -128,6 +142,9 @@ public class FolhaRescisao implements Serializable {
         this.salarioHora = salarioHora;
         this.faltasNoMes = faltasNoMes;
         this.diasTrabalhadosNoMes = diasTrabalhadosNoMes;
+        this.totalVencimentos = totalVencimentos;
+        this.totalDescontos = totalDescontos;
+        this.valorLiquido = valorLiquido;
     }
 
     public FolhaRescisao(FolhaRescisaoDto obj) {
@@ -172,6 +189,9 @@ public class FolhaRescisao implements Serializable {
         this.salarioHora = obj.getSalarioHora();
         this.faltasNoMes = obj.getFaltasNoMes();
         this.diasTrabalhadosNoMes = obj.getDiasTrabalhadosNoMes();
+        this.totalVencimentos = obj.getTotalVencimentos();
+        this.totalDescontos = obj.getTotalDescontos();
+        this.valorLiquido = obj.getValorLiquido();
     }
 
     @Override

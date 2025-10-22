@@ -23,7 +23,7 @@ public class CalculoFeriasEventosDto implements Serializable {
     private Long id;
     private Integer codigoEvento;
     private String descricaoEvento;
-    private String referencia;
+    private BigDecimal referencia;
     private BigDecimal vencimentos;
     private BigDecimal descontos;
     private LocalDate dataProcessamento;

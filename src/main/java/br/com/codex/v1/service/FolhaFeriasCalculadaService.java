@@ -1,12 +1,11 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.dto.*;
-import br.com.codex.v1.domain.dto.FolhaMensalCalculadaDto;
-import br.com.codex.v1.domain.repository.FolhaMensalCalculadaRepository;
-import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
-import br.com.codex.v1.domain.rh.*;
-import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
-import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
+import br.com.codex.v1.domain.dto.CalculoFeriasDto;
+import br.com.codex.v1.domain.dto.CalculoFeriasEventosDto;
+import br.com.codex.v1.domain.repository.CalculoFeriasRepository;
+import br.com.codex.v1.domain.repository.CalculoFeriasEventosRepository;
+import br.com.codex.v1.domain.rh.CalculoFerias;
+import br.com.codex.v1.domain.rh.CalculoFeriasEventos;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +18,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class FolhaMensalCalculadaService {
+public class FolhaFeriasCalculadaService {
 
     @Autowired
-    private FolhaMensalCalculadaRepository folhaMensalCalculadaRepository;
+    private CalculoFeriasRepository calculoFeriasRepository;
 
     @Autowired
-    private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
+    private CalculoFeriasEventosRepository calculoFeriasEventosRepository;
 
     @Autowired
     private CalculoDaFolhaProventosService calculoDaFolhaProventosService;
@@ -33,44 +32,44 @@ public class FolhaMensalCalculadaService {
     @Autowired
     private CalculoDaFolhaDescontosService calculoDaFolhaDescontosService;
 
-    public FolhaMensalCalculada create (FolhaMensalCalculadaDto folhaMensalCalculadaDto){
+    public CalculoFerias create (CalculoFeriasDto calculoFeriasDto){
 
-        folhaMensalCalculadaDto.setId(null);
-        FolhaMensalCalculada folhaMensalCalculada = new FolhaMensalCalculada(folhaMensalCalculadaDto);
-        folhaMensalCalculada = folhaMensalCalculadaRepository.save(folhaMensalCalculada);
+        calculoFeriasDto.setId(null);
+        CalculoFerias calculoFerias = new CalculoFerias(calculoFeriasDto);
+        calculoFerias = calculoFeriasRepository.save(calculoFerias);
 
         //Salvando eventos
-        for(FolhaMensalEventosCalculadaDto eventosDto : folhaMensalCalculadaDto.getEventos()){
-            FolhaMensalEventosCalculada eventos = new FolhaMensalEventosCalculada();
+        for(CalculoFeriasEventosDto eventosDto : calculoFeriasDto.getEventos()){
+            CalculoFeriasEventos eventos = new CalculoFeriasEventos();
             eventos.setCodigoEvento(eventosDto.getCodigoEvento());
             eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
             eventos.setReferencia(eventosDto.getReferencia());
             eventos.setVencimentos(eventosDto.getVencimentos());
             eventos.setDescontos(eventosDto.getDescontos());
-            eventos.setFolhaMensalCalculada(folhaMensalCalculada);
-            folhaMensalEventosCalculadaRepository.save(eventos);
+            eventos.setCalculoFerias(calculoFerias);
+            calculoFeriasEventosRepository.save(eventos);
         }
-        return folhaMensalCalculada;
+        return calculoFerias;
     }
 
     @Transactional
-    public List<FolhaMensalCalculada> processarLote(List<FolhaMensalCalculadaDto> folhasDto) {
-        List<FolhaMensalCalculada> folhasProcessadas = new ArrayList<>();
+    public List<CalculoFerias> processarLote(List<CalculoFeriasDto> folhasDto) {
+        List<CalculoFerias> folhasProcessadas = new ArrayList<>();
 
-        for (FolhaMensalCalculadaDto folhaDto : folhasDto) {
-            FolhaMensalCalculada folhaProcessada = processarFolhaIndividual(folhaDto);
+        for (CalculoFeriasDto folhaDto : folhasDto) {
+            CalculoFerias folhaProcessada = processarFolhaIndividual(folhaDto);
             folhasProcessadas.add(folhaProcessada);
         }
 
         return folhasProcessadas;
     }
 
-    private FolhaMensalCalculada processarFolhaIndividual(FolhaMensalCalculadaDto folhaDto) {
+    private CalculoFerias processarFolhaIndividual(CalculoFeriasDto folhaDto) {
         // Processa cada evento da folha
-        List<FolhaMensalEventosCalculadaDto> eventosProcessados = new ArrayList<>();
+        List<CalculoFeriasEventosDto> eventosProcessados = new ArrayList<>();
 
-        for (FolhaMensalEventosCalculadaDto eventoDto : folhaDto.getEventos()) {
-            FolhaMensalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto);
+        for (CalculoFeriasEventosDto eventoDto : folhaDto.getEventos()) {
+            CalculoFeriasEventosDto eventoProcessado = processarEvento(folhaDto.getNumeroMatricula(), eventoDto);
             eventosProcessados.add(eventoProcessado);
         }
 
@@ -84,7 +83,7 @@ public class FolhaMensalCalculadaService {
         return create(folhaDto);
     }
 
-    private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto) {
+    private CalculoFeriasEventosDto processarEvento(String matricula, CalculoFeriasEventosDto eventoDto) {
         // Configura o cálculo
         calculoDaFolhaProventosService.setNumeroMatricula(matricula);
 
@@ -119,11 +118,11 @@ public class FolhaMensalCalculadaService {
         return eventoDto;
     }
 
-    private void calcularTotais(FolhaMensalCalculadaDto folhaDto) {
+    private void calcularTotais(CalculoFeriasDto folhaDto) {
         BigDecimal totalVencimentos = BigDecimal.ZERO;
         BigDecimal totalDescontos = BigDecimal.ZERO;
 
-        for (FolhaMensalEventosCalculadaDto evento : folhaDto.getEventos()) {
+        for (CalculoFeriasEventosDto evento : folhaDto.getEventos()) {
             if (evento.getVencimentos() != null) {
                 totalVencimentos = totalVencimentos.add(evento.getVencimentos());
             }
@@ -132,32 +131,32 @@ public class FolhaMensalCalculadaService {
             }
         }
 
-        folhaDto.setTotalVencimentos(totalVencimentos);
-        folhaDto.setTotalDescontos(totalDescontos);
-        folhaDto.setValorLiquido(totalVencimentos.subtract(totalDescontos));
+        folhaDto.setTotalBrutReceber(totalVencimentos);
+        folhaDto.setTotalDeDescontos(totalDescontos);
+        folhaDto.setTotalLiquidoReceber(totalVencimentos.subtract(totalDescontos));
     }
 
     @Transactional
     public void delete(Long id) {
-        FolhaMensalCalculada folha = findById(id);
+        CalculoFerias folha = findById(id);
 
         // Remove os eventos primeiro (devido à constraint de chave estrangeira)
-        folhaMensalEventosCalculadaRepository.deleteByFolhaMensalCalculadaId(id);
+        calculoFeriasEventosRepository.deleteByCalculoFeriasId(id);
 
         // Remove o cadastro principal
-        folhaMensalCalculadaRepository.deleteById(id);
+        calculoFeriasRepository.deleteById(id);
     }
 
-    public FolhaMensalCalculada findById(Long id) {
-        Optional<FolhaMensalCalculada> objFolhaMensalCalculada = folhaMensalCalculadaRepository.findById(id);
-        return objFolhaMensalCalculada.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento mensal não encontrado"));
+    public CalculoFerias findById(Long id) {
+        Optional<CalculoFerias> objCalculoFerias = calculoFeriasRepository.findById(id);
+        return objCalculoFerias.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento quinzenal não encontrado"));
     }
 
-    public List<FolhaMensalEventosCalculada> findAllEventosByFolhaMensalCalculadaId(Long eventoId) {
-        return folhaMensalEventosCalculadaRepository.findAllEventosByFolhaMensalCalculadaId(eventoId);
+    public List<CalculoFeriasEventos> findAllEventosByCalculoFeriasId(Long eventoId) {
+        return calculoFeriasEventosRepository.findAllEventosByCalculoFeriasId(eventoId);
     }
 
-    public List<FolhaMensalCalculada> findAll() {
-        return folhaMensalCalculadaRepository.findAll();
+    public List<CalculoFerias> findAll() {
+        return calculoFeriasRepository.findAll();
     }
 }

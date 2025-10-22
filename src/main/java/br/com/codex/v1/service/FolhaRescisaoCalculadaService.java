@@ -1,12 +1,11 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.dto.*;
-import br.com.codex.v1.domain.dto.FolhaMensalCalculadaDto;
-import br.com.codex.v1.domain.repository.FolhaMensalCalculadaRepository;
-import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
-import br.com.codex.v1.domain.rh.*;
-import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
-import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
+import br.com.codex.v1.domain.dto.FolhaRescisaoDto;
+import br.com.codex.v1.domain.dto.FolhaRescisaoEventosDto;
+import br.com.codex.v1.domain.repository.FolhaRescisaoRepository;
+import br.com.codex.v1.domain.repository.FolhaRescisaoEventosRepository;
+import br.com.codex.v1.domain.rh.FolhaRescisao;
+import br.com.codex.v1.domain.rh.FolhaRescisaoEventos;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +18,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class FolhaMensalCalculadaService {
+public class FolhaRescisaoCalculadaService {
 
     @Autowired
-    private FolhaMensalCalculadaRepository folhaMensalCalculadaRepository;
+    private FolhaRescisaoRepository folhaRescisaoRepository;
 
     @Autowired
-    private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
+    private FolhaRescisaoEventosRepository folhaRescisaoEventosRepository;
 
     @Autowired
     private CalculoDaFolhaProventosService calculoDaFolhaProventosService;
@@ -33,44 +32,44 @@ public class FolhaMensalCalculadaService {
     @Autowired
     private CalculoDaFolhaDescontosService calculoDaFolhaDescontosService;
 
-    public FolhaMensalCalculada create (FolhaMensalCalculadaDto folhaMensalCalculadaDto){
+    public FolhaRescisao create (FolhaRescisaoDto folhaRescisaoDto){
 
-        folhaMensalCalculadaDto.setId(null);
-        FolhaMensalCalculada folhaMensalCalculada = new FolhaMensalCalculada(folhaMensalCalculadaDto);
-        folhaMensalCalculada = folhaMensalCalculadaRepository.save(folhaMensalCalculada);
+        folhaRescisaoDto.setId(null);
+        FolhaRescisao folhaRescisao = new FolhaRescisao(folhaRescisaoDto);
+        folhaRescisao = folhaRescisaoRepository.save(folhaRescisao);
 
         //Salvando eventos
-        for(FolhaMensalEventosCalculadaDto eventosDto : folhaMensalCalculadaDto.getEventos()){
-            FolhaMensalEventosCalculada eventos = new FolhaMensalEventosCalculada();
+        for(FolhaRescisaoEventosDto eventosDto : folhaRescisaoDto.getEventos()){
+            FolhaRescisaoEventos eventos = new FolhaRescisaoEventos();
             eventos.setCodigoEvento(eventosDto.getCodigoEvento());
             eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
             eventos.setReferencia(eventosDto.getReferencia());
             eventos.setVencimentos(eventosDto.getVencimentos());
             eventos.setDescontos(eventosDto.getDescontos());
-            eventos.setFolhaMensalCalculada(folhaMensalCalculada);
-            folhaMensalEventosCalculadaRepository.save(eventos);
+            eventos.setFolhaRescisao(folhaRescisao);
+            folhaRescisaoEventosRepository.save(eventos);
         }
-        return folhaMensalCalculada;
+        return folhaRescisao;
     }
 
     @Transactional
-    public List<FolhaMensalCalculada> processarLote(List<FolhaMensalCalculadaDto> folhasDto) {
-        List<FolhaMensalCalculada> folhasProcessadas = new ArrayList<>();
+    public List<FolhaRescisao> processarLote(List<FolhaRescisaoDto> folhasDto) {
+        List<FolhaRescisao> folhasProcessadas = new ArrayList<>();
 
-        for (FolhaMensalCalculadaDto folhaDto : folhasDto) {
-            FolhaMensalCalculada folhaProcessada = processarFolhaIndividual(folhaDto);
+        for (FolhaRescisaoDto folhaDto : folhasDto) {
+            FolhaRescisao folhaProcessada = processarFolhaIndividual(folhaDto);
             folhasProcessadas.add(folhaProcessada);
         }
 
         return folhasProcessadas;
     }
 
-    private FolhaMensalCalculada processarFolhaIndividual(FolhaMensalCalculadaDto folhaDto) {
+    private FolhaRescisao processarFolhaIndividual(FolhaRescisaoDto folhaDto) {
         // Processa cada evento da folha
-        List<FolhaMensalEventosCalculadaDto> eventosProcessados = new ArrayList<>();
+        List<FolhaRescisaoEventosDto> eventosProcessados = new ArrayList<>();
 
-        for (FolhaMensalEventosCalculadaDto eventoDto : folhaDto.getEventos()) {
-            FolhaMensalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto);
+        for (FolhaRescisaoEventosDto eventoDto : folhaDto.getEventos()) {
+            FolhaRescisaoEventosDto eventoProcessado = processarEvento(folhaDto.getNumeroMatricula(), eventoDto);
             eventosProcessados.add(eventoProcessado);
         }
 
@@ -84,7 +83,7 @@ public class FolhaMensalCalculadaService {
         return create(folhaDto);
     }
 
-    private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto) {
+    private FolhaRescisaoEventosDto processarEvento(String matricula, FolhaRescisaoEventosDto eventoDto) {
         // Configura o cálculo
         calculoDaFolhaProventosService.setNumeroMatricula(matricula);
 
@@ -119,11 +118,11 @@ public class FolhaMensalCalculadaService {
         return eventoDto;
     }
 
-    private void calcularTotais(FolhaMensalCalculadaDto folhaDto) {
+    private void calcularTotais(FolhaRescisaoDto folhaDto) {
         BigDecimal totalVencimentos = BigDecimal.ZERO;
         BigDecimal totalDescontos = BigDecimal.ZERO;
 
-        for (FolhaMensalEventosCalculadaDto evento : folhaDto.getEventos()) {
+        for (FolhaRescisaoEventosDto evento : folhaDto.getEventos()) {
             if (evento.getVencimentos() != null) {
                 totalVencimentos = totalVencimentos.add(evento.getVencimentos());
             }
@@ -139,25 +138,25 @@ public class FolhaMensalCalculadaService {
 
     @Transactional
     public void delete(Long id) {
-        FolhaMensalCalculada folha = findById(id);
+        FolhaRescisao folha = findById(id);
 
         // Remove os eventos primeiro (devido à constraint de chave estrangeira)
-        folhaMensalEventosCalculadaRepository.deleteByFolhaMensalCalculadaId(id);
+        folhaRescisaoEventosRepository.deleteByFolhaRescisaoId(id);
 
         // Remove o cadastro principal
-        folhaMensalCalculadaRepository.deleteById(id);
+        folhaRescisaoRepository.deleteById(id);
     }
 
-    public FolhaMensalCalculada findById(Long id) {
-        Optional<FolhaMensalCalculada> objFolhaMensalCalculada = folhaMensalCalculadaRepository.findById(id);
-        return objFolhaMensalCalculada.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento mensal não encontrado"));
+    public FolhaRescisao findById(Long id) {
+        Optional<FolhaRescisao> objFolhaRescisao = folhaRescisaoRepository.findById(id);
+        return objFolhaRescisao.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento rescisão não encontrado"));
     }
 
-    public List<FolhaMensalEventosCalculada> findAllEventosByFolhaMensalCalculadaId(Long eventoId) {
-        return folhaMensalEventosCalculadaRepository.findAllEventosByFolhaMensalCalculadaId(eventoId);
+    public List<FolhaRescisaoEventos> findAllEventosByFolhaRescisaoId(Long eventoId) {
+        return folhaRescisaoEventosRepository.findAllEventosByFolhaRescisaoId(eventoId);
     }
 
-    public List<FolhaMensalCalculada> findAll() {
-        return folhaMensalCalculadaRepository.findAll();
+    public List<FolhaRescisao> findAll() {
+        return folhaRescisaoRepository.findAll();
     }
 }

@@ -24,7 +24,7 @@ public class CalculoFeriasEventos implements Serializable {
     private Long id;
     private Integer codigoEvento;
     private String descricaoEvento;
-    private String referencia;
+    private BigDecimal referencia;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal vencimentos;
@@ -43,7 +43,7 @@ public class CalculoFeriasEventos implements Serializable {
         super();
     }
 
-    public CalculoFeriasEventos(Long id, Integer codigoEvento, String descricaoEvento, String referencia,
+    public CalculoFeriasEventos(Long id, Integer codigoEvento, String descricaoEvento, BigDecimal referencia,
                                 BigDecimal vencimentos, BigDecimal descontos, LocalDate dataProcessamento,
                                 CalculoFerias calculoFerias) {
         this.id = id;

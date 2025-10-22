@@ -5,6 +5,7 @@ import br.com.codex.v1.domain.rh.FolhaQuinzenalCalculada;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,6 +25,8 @@ public class FolhaQuinzenalCalculadaDto implements Serializable {
     private LocalDate admissao;
     private String codigoCbo;
     private String descricaoCbo;
+
+    @NotBlank(message = "O número da matrícula não pode ser nulo")
     private String matriculaColaborador;
     private BigDecimal salarioBase;
     private BigDecimal salarioHora;

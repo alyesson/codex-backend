@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -32,6 +33,8 @@ public class FolhaRescisaoDto implements Serializable {
     private String ufEmpresa;
     private String cepEmpresa;
     private String cnaeEmpresa;
+
+    @NotBlank(message = "O número da matrícula não pode ser nulo")
     private String numeroMatricula;
     private String numeroPis;
     private String nomDoFuncionario;
@@ -50,10 +53,16 @@ public class FolhaRescisaoDto implements Serializable {
     private LocalDate dataDeAdmissao;
     private LocalDate dataDeDemissao;
     private LocalDate dataAVisoPrevio;
+
+    @NotBlank(message = "O tipo de demissão não pode ser nulo")
     private String tipoDeDemissao;           // Sem justa causa, com justa causa, pedido demissão
     private String tipoContrato;           // Sem justa causa, com justa causa, pedido demissão
     private String tipoDeAvisoPrevio;        // Trabalhado, indenizado, dispensado
+
+    @NotBlank(message = "O código de afastamento não pode ser nulo")
     private String codigoAfastamento;       // Código e-Social
+
+    @NotBlank(message = "O fim do aviso prévio não pode ser nulo")
     private LocalDate dataFimAvisoPrevio;
     private String categoriaTrabalhador;
     private String codigoSindical; //cnpj do sindicato
@@ -61,7 +70,10 @@ public class FolhaRescisaoDto implements Serializable {
     private BigDecimal salarioHora;
     private Integer faltasNoMes;
     private Integer diasTrabalhadosNoMes;
-    private List<FolhaRescisaoEventos> eventos;
+    private BigDecimal totalVencimentos;
+    private BigDecimal totalDescontos;
+    private BigDecimal valorLiquido;
+    private List<FolhaRescisaoEventosDto> eventos;
 
     public FolhaRescisaoDto() {
         super();
@@ -70,44 +82,47 @@ public class FolhaRescisaoDto implements Serializable {
     public FolhaRescisaoDto(FolhaRescisao obj) {
         this.id = obj.getId();
         this.mesFolha = obj.getMesFolha();
-        this.dataProcessamento = dataProcessamento;
-        this.dataDoPagamento = dataDoPagamento;
-        this.empresaNome = empresaNome;
-        this.numeroCnpj = numeroCnpj;
-        this.ederecoEmpresa = ederecoEmpresa;
-        this.bairroEmpresa = bairroEmpresa;
-        this.municipioEmpresa = municipioEmpresa;
-        this.ufEmpresa = ufEmpresa;
-        this.cepEmpresa = cepEmpresa;
-        this.cnaeEmpresa = cnaeEmpresa;
-        this.numeroMatricula = numeroMatricula;
-        this.numeroPis = numeroPis;
-        this.nomDoFuncionario = nomDoFuncionario;
-        this.ederecoFuncionario = ederecoFuncionario;
-        this.bairroFuncionario = bairroFuncionario;
-        this.municipioFuncionario = municipioFuncionario;
-        this.ufFuncionario = ufFuncionario;
-        this.cepFuncionario = cepFuncionario;
-        this.ctps = ctps;
-        this.cpf = cpf;
-        this.dataNascimento = dataNascimento;
-        this.nomeMae = nomeMae;
-        this.numDependenteIrrf = numDependenteIrrf;
-        this.tipoDeSalario = tipoDeSalario;
-        this.horasSemanais = horasSemanais;
-        this.dataDeAdmissao = dataDeAdmissao;
-        this.dataDeDemissao = dataDeDemissao;
-        this.dataAVisoPrevio = dataAVisoPrevio;
-        this.tipoDeDemissao = tipoDeDemissao;
-        this.tipoContrato = tipoContrato;
-        this.tipoDeAvisoPrevio = tipoDeAvisoPrevio;
-        this.codigoAfastamento = codigoAfastamento;
-        this.dataFimAvisoPrevio = dataFimAvisoPrevio;
-        this.categoriaTrabalhador = categoriaTrabalhador;
-        this.codigoSindical = codigoSindical;
-        this.entidadeSindical = entidadeSindical;
+        this.dataProcessamento = obj.getDataProcessamento();
+        this.dataDoPagamento = obj.getDataDoPagamento();
+        this.empresaNome = obj.getEmpresaNome();
+        this.numeroCnpj = obj.getNumeroCnpj();
+        this.ederecoEmpresa = obj.getEderecoEmpresa();
+        this.bairroEmpresa = obj.getBairroEmpresa();
+        this.municipioEmpresa = obj.getMunicipioEmpresa();
+        this.ufEmpresa = obj.getUfEmpresa();
+        this.cepEmpresa = obj.getCepEmpresa();
+        this.cnaeEmpresa = obj.getCnaeEmpresa();
+        this.numeroMatricula = obj.getNumeroMatricula();
+        this.numeroPis = obj.getNumeroPis();
+        this.nomDoFuncionario = obj.getNomDoFuncionario();
+        this.ederecoFuncionario = obj.getEderecoFuncionario();
+        this.bairroFuncionario = obj.getBairroFuncionario();
+        this.municipioFuncionario = obj.getMunicipioFuncionario();
+        this.ufFuncionario = obj.getUfFuncionario();
+        this.cepFuncionario = obj.getCepFuncionario();
+        this.ctps = obj.getCtps();
+        this.cpf = obj.getCpf();
+        this.dataNascimento = obj.getDataNascimento();
+        this.nomeMae = obj.getNomeMae();
+        this.numDependenteIrrf = obj.getNumDependenteIrrf();
+        this.tipoDeSalario = obj.getTipoDeSalario();
+        this.horasSemanais = obj.getHorasSemanais();
+        this.dataDeAdmissao = obj.getDataDeAdmissao();
+        this.dataDeDemissao = obj.getDataDeDemissao();
+        this.dataAVisoPrevio = obj.getDataAVisoPrevio();
+        this.tipoDeDemissao = obj.getTipoDeDemissao();
+        this.tipoContrato = obj.getTipoContrato();
+        this.tipoDeAvisoPrevio = obj.getTipoDeAvisoPrevio();
+        this.codigoAfastamento = obj.getCodigoAfastamento();
+        this.dataFimAvisoPrevio = obj.getDataFimAvisoPrevio();
+        this.categoriaTrabalhador = obj.getCategoriaTrabalhador();
+        this.codigoSindical = obj.getCodigoSindical();
+        this.entidadeSindical = obj.getEntidadeSindical();
         this.salarioHora = obj.getSalarioHora();
         this.faltasNoMes = obj.getFaltasNoMes();
         this.diasTrabalhadosNoMes = obj.getDiasTrabalhadosNoMes();
+        this.totalVencimentos = obj.getTotalVencimentos();
+        this.totalDescontos = obj.getTotalDescontos();
+        this.valorLiquido = obj.getValorLiquido();
     }
 }

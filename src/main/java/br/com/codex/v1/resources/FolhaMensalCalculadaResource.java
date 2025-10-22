@@ -34,9 +34,7 @@ public class FolhaMensalCalculadaResource {
     @PostMapping("/processar-lote")
     public ResponseEntity<List<FolhaMensalCalculadaDto>> processarLote(@RequestBody List<FolhaMensalCalculadaDto> folhasDto) {
         List<FolhaMensalCalculada> folhasProcessadas = folhaMensalCalculadaService.processarLote(folhasDto);
-        List<FolhaMensalCalculadaDto> listDto = folhasProcessadas.stream()
-                .map(FolhaMensalCalculadaDto::new)
-                .collect(Collectors.toList());
+        List<FolhaMensalCalculadaDto> listDto = folhasProcessadas.stream().map(FolhaMensalCalculadaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 

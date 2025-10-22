@@ -8,10 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -21,6 +23,7 @@ public class CalculoFeriasDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    @NotBlank(message = "O número da matrícula não pode ser nulo")
     private String numeroMatricula;
     private String nomeColaborador;
     private String codigoCbo;
@@ -53,6 +56,7 @@ public class CalculoFeriasDto implements Serializable {
     private BigDecimal totalDeDescontos;
     private String nomeEmpresa;
     private String cnpjEmpresa;
+    private List<CalculoFeriasEventosDto> eventos;
 
     public CalculoFeriasDto() {
         super();

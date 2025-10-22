@@ -34,9 +34,7 @@ public class FolhaQuinzenalCalculadaResource {
     @PostMapping("/processar-lote")
     public ResponseEntity<List<FolhaQuinzenalCalculadaDto>> processarLote(@RequestBody List<FolhaQuinzenalCalculadaDto> folhasDto) {
         List<FolhaQuinzenalCalculada> folhasProcessadas = folhaQuinzenalCalculadaService.processarLote(folhasDto);
-        List<FolhaQuinzenalCalculadaDto> listDto = folhasProcessadas.stream()
-                .map(FolhaQuinzenalCalculadaDto::new)
-                .collect(Collectors.toList());
+        List<FolhaQuinzenalCalculadaDto> listDto = folhasProcessadas.stream().map(FolhaQuinzenalCalculadaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 
