@@ -33,8 +33,19 @@ public class FolhaQuinzenalCalculadaResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PostMapping("/processar-lote")
     public ResponseEntity<List<FolhaQuinzenalCalculadaDto>> processarLote(@RequestBody List<FolhaQuinzenalCalculadaDto> folhasDto) {
+
+        System.out.println("🎯🎯🎯 ENDPOINT QUINZENAL /processar-lote CHAMADO 🎯🎯🎯");
+        System.out.println("Quantidade de folhas recebidas: " + folhasDto.size());
+
+        if (folhasDto.isEmpty()) {
+            System.out.println("⚠️ Lista de folhas vazia!");
+        } else {
+            System.out.println("📋 Primeira folha - Matrícula: " + folhasDto.get(0).getMatriculaColaborador());
+        }
+
         List<FolhaQuinzenalCalculada> folhasProcessadas = folhaQuinzenalCalculadaService.processarLote(folhasDto);
         List<FolhaQuinzenalCalculadaDto> listDto = folhasProcessadas.stream().map(FolhaQuinzenalCalculadaDto::new).collect(Collectors.toList());
+        System.out.println("✅ Folhas quinzenais processadas com sucesso: " + folhasProcessadas.size());
         return ResponseEntity.ok().body(listDto);
     }
 

@@ -6,13 +6,13 @@ import br.com.codex.v1.domain.repository.FolhaMensalCalculadaRepository;
 import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
 import br.com.codex.v1.domain.rh.*;
 import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
-import br.com.codex.v1.domain.rh.FolhaMensalCalculada;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +35,14 @@ public class FolhaMensalCalculadaService {
 
     public FolhaMensalCalculada create (FolhaMensalCalculadaDto folhaMensalCalculadaDto){
 
+        LocalDate dataDoProcessamento = LocalDate.now();
+
         folhaMensalCalculadaDto.setId(null);
+        folhaMensalCalculadaDto.setDataProcessamento(dataDoProcessamento);
         FolhaMensalCalculada folhaMensalCalculada = new FolhaMensalCalculada(folhaMensalCalculadaDto);
         folhaMensalCalculada = folhaMensalCalculadaRepository.save(folhaMensalCalculada);
+
+        System.out.println("💾 SALVANDO FOLHA - ID: " + folhaMensalCalculada.getId());
 
         //Salvando eventos
         for(FolhaMensalEventosCalculadaDto eventosDto : folhaMensalCalculadaDto.getEventos()){
@@ -49,7 +54,13 @@ public class FolhaMensalCalculadaService {
             eventos.setDescontos(eventosDto.getDescontos());
             eventos.setFolhaMensalCalculada(folhaMensalCalculada);
             folhaMensalEventosCalculadaRepository.save(eventos);
+
+            System.out.println("💾 Evento salvo - ID: " + eventosDto.getId() +
+                    ", Código: " + eventosDto.getCodigoEvento() +
+                    ", Venc: " + eventosDto.getVencimentos() +
+                    ", Desc: " + eventosDto.getDescontos());
         }
+
         return folhaMensalCalculada;
     }
 
@@ -85,6 +96,61 @@ public class FolhaMensalCalculadaService {
     }
 
     private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto) {
+        System.out.println("=== PROCESSANDO EVENTO ===");
+        System.out.println("Matrícula: " + matricula);
+        System.out.println("Código Evento: " + eventoDto.getCodigoEvento());
+        System.out.println("Descrição: " + eventoDto.getDescricaoEvento());
+
+        // Configura o cálculo
+        calculoDaFolhaProventosService.setNumeroMatricula(matricula);
+        calculoDaFolhaDescontosService.setNumeroMatricula(matricula);
+
+        // Processa o evento específico
+        Integer codigoEvento = eventoDto.getCodigoEvento();
+        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
+        Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
+
+        System.out.println("Resultado Prov: " + resultadoProv);
+        System.out.println("Resultado Desc: " + resultadoDesc);
+
+        BigDecimal referenciaFinal = BigDecimal.ZERO;
+        BigDecimal vencimentosFinal = BigDecimal.ZERO;
+        BigDecimal descontosFinal = BigDecimal.ZERO;
+
+        // Atualiza o evento proventos com os resultados
+        if (resultadoProv != null && !resultadoProv.isEmpty()) {
+            referenciaFinal = resultadoProv.get("referencia") != null ? resultadoProv.get("referencia") : BigDecimal.ZERO;
+            vencimentosFinal = vencimentosFinal.add(resultadoProv.get("vencimentos") != null ? resultadoProv.get("vencimentos") : BigDecimal.ZERO);
+            descontosFinal = descontosFinal.add(resultadoProv.get("descontos") != null ? resultadoProv.get("descontos") : BigDecimal.ZERO);
+
+            System.out.println("Somando Prov - Ref: " + referenciaFinal + ", Venc: " + vencimentosFinal + ", Desc: " + descontosFinal);
+        }
+
+        // Atualiza o evento desconto com os resultados
+        if (resultadoDesc != null && !resultadoDesc.isEmpty()) {
+            // Para descontos, a referência pode vir do resultadoDesc
+            if (referenciaFinal.equals(BigDecimal.ZERO)) {
+                referenciaFinal = resultadoDesc.get("referencia") != null ? resultadoDesc.get("referencia") : BigDecimal.ZERO;
+            }
+            vencimentosFinal = vencimentosFinal.add(resultadoDesc.get("vencimentos") != null ? resultadoDesc.get("vencimentos") : BigDecimal.ZERO);
+            descontosFinal = descontosFinal.add(resultadoDesc.get("descontos") != null ? resultadoDesc.get("descontos") : BigDecimal.ZERO);
+
+            System.out.println("Somando Desc - Ref: " + referenciaFinal + ", Venc: " + vencimentosFinal + ", Desc: " + descontosFinal);
+        }
+
+        eventoDto.setReferencia(referenciaFinal);
+        eventoDto.setVencimentos(vencimentosFinal);
+        eventoDto.setDescontos(descontosFinal);
+
+        System.out.println("Evento final - Ref: " + eventoDto.getReferencia() +
+                ", Venc: " + eventoDto.getVencimentos() +
+                ", Desc: " + eventoDto.getDescontos());
+        System.out.println("=== FIM PROCESSAMENTO EVENTO ===");
+
+        return eventoDto;
+    }
+
+    /*private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto) {
         // Configura o cálculo
         calculoDaFolhaProventosService.setNumeroMatricula(matricula);
 
@@ -117,7 +183,7 @@ public class FolhaMensalCalculadaService {
         }
 
         return eventoDto;
-    }
+    }*/
 
     private void calcularTotais(FolhaMensalCalculadaDto folhaDto) {
         BigDecimal totalVencimentos = BigDecimal.ZERO;

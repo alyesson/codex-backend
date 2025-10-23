@@ -50,6 +50,8 @@ public class CalculoDaFolhaProventosService {
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
 
+        System.out.println("🔍 CALCULANDO PROVENTOS - Código: " + codigoEvento + ", Matrícula: " + numeroMatricula);
+
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         switch (codigoEvento) {
@@ -58,6 +60,7 @@ public class CalculoDaFolhaProventosService {
             case 1 -> {
                 try {
                     FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    System.out.println("Folha encontrada: " + (folha != null ? folha.getNomeColaborador() : "NULA"));
 
                     LocalTime horaIni = folha.getHoraEntrada();
                     LocalTime horaFim = folha.getHoraSaida();
@@ -112,8 +115,10 @@ public class CalculoDaFolhaProventosService {
                     resultado.put("referencia", totalHorasMes);     // Total de horas no mês
                     resultado.put("vencimentos", valorReferenteHoraDiurna);       // Valor total em R$
                     resultado.put("descontos", BigDecimal.ZERO);
+                    System.out.println("💰 Calculado Horas Normais: " + valorReferenteHoraDiurna);
 
                     return resultado;
+
 
                 } catch (Exception e) {
                     throw new RuntimeException("Erro ao calcular horas diurnas: " + e.getMessage());
@@ -1019,8 +1024,6 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("referencia", valorValeTransporte);
                 resultado.put("vencimentos", valorValeTransporte);
                 resultado.put("descontos", BigDecimal.ZERO);
-
-                return resultado;
             }
 
             //Calculando Primeira Parcela 13°

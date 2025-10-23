@@ -31,7 +31,6 @@ public class CalculoDaFolhaDescontosService {
 
     @Setter
     String numeroMatricula;
-    BigDecimal valorReferenteHoraDiurna;
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
 
@@ -39,6 +38,8 @@ public class CalculoDaFolhaDescontosService {
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);
         resultado.put("descontos", BigDecimal.ZERO);
+
+        System.out.println("🔍 CALCULANDO DESCONTOS - Código: " + codigoEvento + ", Matrícula: " + numeroMatricula);
 
     try{
         switch (codigoEvento) {

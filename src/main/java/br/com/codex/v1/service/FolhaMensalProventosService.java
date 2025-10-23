@@ -5,7 +5,6 @@ import br.com.codex.v1.domain.repository.FolhaMensalRepository;
 import br.com.codex.v1.domain.repository.TabelaDeducaoInssRepository;
 import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.domain.rh.TabelaDeducaoInss;
 import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.slf4j.Logger;
@@ -41,8 +40,19 @@ public class FolhaMensalProventosService {
     private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
 
     public FolhaMensal findByMatriculaColaborador(String numeroMatricula) {
+        logger.info("🔎 BUSCANDO FOLHA - Matrícula: {}", numeroMatricula);
+
         Optional<FolhaMensal> obj = folhaMensalRepository.findByMatriculaColaborador(numeroMatricula);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Informação não encontrada"));
+
+        if (obj.isPresent()) {
+            FolhaMensal folha = obj.get();
+            logger.info("✅ Folha ENCONTRADA - Matrícula: {}, ID: {}, Nome: {}",
+                    numeroMatricula, folha.getId(), folha.getNomeColaborador());
+            return folha;
+        } else {
+            logger.warn("❌ Folha NÃO ENCONTRADA - Matrícula: {}", numeroMatricula);
+            throw new ObjectNotFoundException("Folha mensal não encontrada para matrícula: " + numeroMatricula);
+        }
     }
 
     public BigDecimal calcularSalarioFamilia(BigDecimal cota, int filhos) {

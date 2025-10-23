@@ -1,6 +1,5 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.FolhaMensalEventos;
 import br.com.codex.v1.domain.rh.FolhaMensalEventosCalculada;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +20,7 @@ public class FolhaMensalEventosCalculadaDto implements Serializable {
     private BigDecimal referencia;
     private BigDecimal vencimentos;
     private BigDecimal descontos;
-    private FolhaMensalCalculadaDto folhaMensalCalculadaDto;
+    private Long folhaMensalCalculadaId;
 
     public FolhaMensalEventosCalculadaDto() {
         super();
@@ -34,6 +33,6 @@ public class FolhaMensalEventosCalculadaDto implements Serializable {
         this.referencia = obj.getReferencia();
         this.vencimentos = obj.getVencimentos();
         this.descontos = obj.getDescontos();
-        this.folhaMensalCalculadaDto = new FolhaMensalCalculadaDto(obj.getFolhaMensalCalculada());
+        this.folhaMensalCalculadaId = obj.getFolhaMensalCalculada() != null ? obj.getFolhaMensalCalculada().getId() : null;
     }
 }

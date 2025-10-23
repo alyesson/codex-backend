@@ -86,34 +86,48 @@ public class FolhaQuinzenalCalculadaService {
     private FolhaQuinzenalEventosCalculadaDto processarEvento(String matricula, FolhaQuinzenalEventosCalculadaDto eventoDto) {
         // Configura o cálculo
         calculoDaFolhaProventosService.setNumeroMatricula(matricula);
+        calculoDaFolhaDescontosService.setNumeroMatricula(matricula);
 
         // Processa o evento específico
-        Integer codigoEvento = Integer.parseInt(eventoDto.getCodigoEvento());
+        Integer codigoEvento = eventoDto.getCodigoEvento();
         Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
         Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
 
+        BigDecimal referenciaFinal = BigDecimal.ZERO;
+        BigDecimal vencimentosFinal = BigDecimal.ZERO;
+        BigDecimal descontosFinal = BigDecimal.ZERO;
+
 
         // Atualiza o evento proventos com os resultados
-        if (resultadoProv != null) {
-            BigDecimal referencia = resultadoProv.get("referencia");
-            BigDecimal vencimentos = resultadoProv.get("vencimentos");
-            BigDecimal descontos = resultadoProv.get("descontos");
+        if (resultadoProv != null && !resultadoProv.isEmpty()) {
+            referenciaFinal = resultadoProv.get("referencia") != null ? resultadoProv.get("referencia") : BigDecimal.ZERO;
+            vencimentosFinal = resultadoProv.get("vencimentos") != null ? resultadoProv.get("vencimentos") : BigDecimal.ZERO;
+            descontosFinal = resultadoProv.get("descontos") != null ? resultadoProv.get("descontos") : BigDecimal.ZERO;
 
-            eventoDto.setReferencia(referencia != null ? referencia.toString() : "0");
-            eventoDto.setVencimentos(vencimentos != null ? vencimentos : BigDecimal.ZERO);
-            eventoDto.setDescontos(descontos != null ? descontos : BigDecimal.ZERO);
+            System.out.println("💰 Valores do Provento - Ref: " + referenciaFinal + ", Venc: " + vencimentosFinal + ", Desc: " + descontosFinal);
         }
 
         // Atualiza o evento desconto com os resultados
-        if (resultadoDesc != null) {
-            BigDecimal referencia = resultadoDesc.get("referencia");
-            BigDecimal vencimentos = resultadoDesc.get("vencimentos");
-            BigDecimal descontos = resultadoDesc.get("descontos");
+        if (resultadoDesc != null && !resultadoDesc.isEmpty()) {
+            // Para referência, usar a do desconto se a do provento for zero
+            if (referenciaFinal.equals(BigDecimal.ZERO)) {
+                referenciaFinal = resultadoDesc.get("referencia") != null ? resultadoDesc.get("referencia") : BigDecimal.ZERO;
+            }
 
-            eventoDto.setReferencia(referencia != null ? referencia.toString() : "0");
-            eventoDto.setVencimentos(vencimentos != null ? vencimentos : BigDecimal.ZERO);
-            eventoDto.setDescontos(descontos != null ? descontos : BigDecimal.ZERO);
+            // 🔥 IMPORTANTE: SOMAR os valores, não substituir!
+            vencimentosFinal = vencimentosFinal.add(resultadoDesc.get("vencimentos") != null ? resultadoDesc.get("vencimentos") : BigDecimal.ZERO);
+            descontosFinal = descontosFinal.add(resultadoDesc.get("descontos") != null ? resultadoDesc.get("descontos") : BigDecimal.ZERO);
+
+            System.out.println("💸 Valores do Desconto - Ref: " + referenciaFinal + ", Venc: " + vencimentosFinal + ", Desc: " + descontosFinal);
         }
+
+        eventoDto.setReferencia(referenciaFinal.toString()); // Converter para String se necessário
+        eventoDto.setVencimentos(vencimentosFinal);
+        eventoDto.setDescontos(descontosFinal);
+
+        System.out.println("✅ Evento final - Ref: " + eventoDto.getReferencia() +
+                ", Venc: " + eventoDto.getVencimentos() +
+                ", Desc: " + eventoDto.getDescontos());
 
         return eventoDto;
     }

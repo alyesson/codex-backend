@@ -1,7 +1,5 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.FolhaQuinzenalCalculada;
-import br.com.codex.v1.domain.rh.FolhaQuinzenalEventos;
 import br.com.codex.v1.domain.rh.FolhaQuinzenalEventosCalculada;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +15,7 @@ public class FolhaQuinzenalEventosCalculadaDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String codigoEvento;
+    private Integer codigoEvento;
     private String descricaoEvento;
     private String referencia;
     private BigDecimal vencimentos;

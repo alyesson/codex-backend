@@ -33,6 +33,11 @@ public class FolhaMensalCalculadaResource {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SOCIO', 'GERENTE_RH', 'RH')")
     @PostMapping("/processar-lote")
     public ResponseEntity<List<FolhaMensalCalculadaDto>> processarLote(@RequestBody List<FolhaMensalCalculadaDto> folhasDto) {
+        System.out.println("Folhas recebidas: " + folhasDto.size());
+        for (FolhaMensalCalculadaDto folha : folhasDto) {
+            System.out.println("Folha: " + folha.getMatriculaColaborador() + " - Eventos: " +
+                    (folha.getEventos() != null ? folha.getEventos().size() : 0));
+        }
         List<FolhaMensalCalculada> folhasProcessadas = folhaMensalCalculadaService.processarLote(folhasDto);
         List<FolhaMensalCalculadaDto> listDto = folhasProcessadas.stream().map(FolhaMensalCalculadaDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
