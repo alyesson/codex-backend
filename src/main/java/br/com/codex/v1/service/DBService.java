@@ -213,7 +213,7 @@ public class DBService {
         List<EventosFolha> listaEventosFolha = new ArrayList<>();
         listaEventosFolha.add(new EventosFolha(null, "1", "Normais Diurnas"));
         listaEventosFolha.add(new EventosFolha(null, "2", "Adiantamento Salário"));
-        listaEventosFolha.add(new EventosFolha(null, "5", "Horas Repouso Remunerado Diruno"));
+        listaEventosFolha.add(new EventosFolha(null, "5", "Horas Repouso Remunerado Diurno"));
         listaEventosFolha.add(new EventosFolha(null, "6", "Desconto Dias de Faltas"));
         listaEventosFolha.add(new EventosFolha(null, "7", "Desconto Dias de Descanso Semanal Remunerado (DSR)"));
         listaEventosFolha.add(new EventosFolha(null, "8", "Horas de Atestado Médico"));
@@ -366,9 +366,9 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "347", "Faltas Calculadas nas Férias - Rescisão"));
         listaEventosFolha.add(new EventosFolha(null, "349", "Faltas - Rescisão"));
         listaEventosFolha.add(new EventosFolha(null, "350", "1/12 Avos 13º Salário s/ Aviso Prévio"));
-        listaEventosFolha.add(new EventosFolha(null, "351", "1/12 Avos Férias s/ Aviso Prévio. Inden."));
+        listaEventosFolha.add(new EventosFolha(null, "351", "1/12 Avos Férias s/ Aviso Prévio. Indenizado"));
         listaEventosFolha.add(new EventosFolha(null, "352", "1/12 Avos 13º Salário C/ Aviso Prévio"));
-        listaEventosFolha.add(new EventosFolha(null, "353", "1/12 Avos Férias C/ Aviso Prévio. Inden."));
+        listaEventosFolha.add(new EventosFolha(null, "353", "1/12 Avos Férias C/ Aviso Prévio. Indenizado"));
         listaEventosFolha.add(new EventosFolha(null, "402", "FGTS Normal Deposito"));
         listaEventosFolha.add(new EventosFolha(null, "403", "FGTS 13º Salário Deposito"));
         listaEventosFolha.add(new EventosFolha(null, "404", "Dedução Dependentes IRF"));
@@ -422,7 +422,7 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 1152,"Transferência para comercialização", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1153,"Transferência de energia elétrica para distribuição", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1154,"Transferência para utilização na prestação de serviço de Transporte e de Comunicação", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 12,"DEVOLUÇÕES DE VENDAS DE PRODUÇÃO PRÓPRIA, DE TERCEIROS OU ANULAÇÕES DE VALORES", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 12,"Devoluções de vendas de produção própria, de terceiros ou anulações de valores", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1201,"Devolução de venda de produção do estabelecimento", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1202,"Devolução de venda de mercadoria adquirida ou recebida de terceiros", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1203,"Devolução de venda de produção do estabelecimento, destinada à Zona Franca de Manaus ou Áreas de Livre Comércio", "Interno", "Entrada"));
@@ -432,7 +432,7 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 1207,"Anulação de valor relativo à venda de energia elétrica", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1208,"Devolução de produção do estabelecimento, remetida em transferência", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1209,"Devolução de mercadoria adquirida ou recebida de terceiros remetida em transferência", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 125,"COMPRAS DE ENERGIA ELÉTRICA", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 125,"Compras de energia elétrica", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1251,"Compra de energia elétrica para distribuição ou comercialização", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1252,"Compra de energia elétrica por estabelecimento industrial", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1253,"Compra de energia elétrica por estabelecimento comercial", "Interno", "Entrada"));
@@ -440,14 +440,14 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 1255,"Compra de energia elétrica por estabelecimento prestador de serviço de comunicação", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1256,"Compra de energia elétrica por estabelecimento de produtor rural", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1257,"Compra de energia elétrica para consumo por demanda contratada", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 13,"AQUISIÇÕES DE SERVIÇOS DE COMUNICAÇÃO", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 13,"Aquisições de serviços de comunicação", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1301,"Aquisição de serviço de comunicação para execução de serviço da mesma natureza", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1302,"Aquisição de serviço de comunicação por estabelecimento industrial", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1303,"Aquisição de serviço de comunicação por estabelecimento comercial", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1304,"Aquisição de serviço de comunicação por estabelecimento de prestador de serviço de transporte", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1305,"Aquisição de serviço de comunicação por estabelecimento de geradora ou de distribuidora de energia elétrica", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1306,"Aquisição de serviço de comunicação por estabelecimento de produtor rural", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 135,"AQUISIÇÕES DE SERVIÇOS DE TRANSPORTE", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 135,"Aquisição de serviço de transporte", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1351,"Aquisição de serviço de transporte para execução de serviço da mesma natureza", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1352,"Aquisição de serviço de transporte por estabelecimento industrial", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1353,"Aquisição de serviço de transporte por estabelecimento comercial", "Interno", "Entrada"));
@@ -455,7 +455,7 @@ public class DBService {
         listaCfops.add(new TabelaCfop(null, 1355,"Aquisição de serviço de transporte por estabelecimento de geradora ou de distribuidora de energia elétrica", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1356,"Aquisição de serviço de transporte por estabelecimento de produtor rural", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 136,"Aquisição de serviço de transporte por contribuinte substituto em relação ao serviço de transporte", "Interno", "Entrada"));
-        listaCfops.add(new TabelaCfop(null, 14,"Entrada DE MERCADORIAS SUJEITAS AO", "Interno", "Entrada"));
+        listaCfops.add(new TabelaCfop(null, 14,"Entrada de mercadorias sujeitas ao", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1401,"Compra para industrialização ou produção rural em operação com mercadoria sujeita ao regime de substituição tributária", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1403,"Compra para comercialização em operação com mercadoria sujeita ao regime de substituição tributária", "Interno", "Entrada"));
         listaCfops.add(new TabelaCfop(null, 1406,"Compra de bem para o ativo imobilizado cuja mercadoria está sujeita ao regime de substituição tributária", "Interno", "Entrada"));

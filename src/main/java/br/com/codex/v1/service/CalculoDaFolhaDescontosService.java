@@ -23,14 +23,14 @@ public class CalculoDaFolhaDescontosService {
     @Autowired
     CalculoBaseService calculoBaseService;
 
-    /*@Autowired
-    private FolhaMensalProventosService calculoBaseService;*/
-
     @Autowired
     private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
     @Setter
     String numeroMatricula;
+
+    @Setter
+    String tipoSalario;
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
 

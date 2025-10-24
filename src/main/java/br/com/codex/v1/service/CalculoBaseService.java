@@ -85,6 +85,15 @@ public class CalculoBaseService {
         return false;
     }*/
 
+    public FolhaMensal findByMatriculaColaborador(String numeroMatricula) {
+        Optional<FolhaMensal> obj = folhaMensalRepository.findByMatriculaColaborador(numeroMatricula);
+        if (obj.isPresent()) {
+            return obj.get();
+        } else {
+            throw new ObjectNotFoundException("Folha mensal não encontrada para matrícula: " + numeroMatricula);
+        }
+    }
+
     public long calcularDiasUteisTrabalhados(LocalDate dataInicio, LocalDate dataFim) {
         long diasTrabalhados = 0;
         LocalDate data = dataInicio;
@@ -98,22 +107,6 @@ public class CalculoBaseService {
         }
 
         return diasTrabalhados;
-    }
-
-    public FolhaMensal findByMatriculaColaborador(String numeroMatricula) {
-        logger.info("🔎 BUSCANDO FOLHA - Matrícula: {}", numeroMatricula);
-
-        Optional<FolhaMensal> obj = folhaMensalRepository.findByMatriculaColaborador(numeroMatricula);
-
-        if (obj.isPresent()) {
-            FolhaMensal folha = obj.get();
-            logger.info("✅ Folha ENCONTRADA - Matrícula: {}, ID: {}, Nome: {}",
-                    numeroMatricula, folha.getId(), folha.getNomeColaborador());
-            return folha;
-        } else {
-            logger.warn("❌ Folha NÃO ENCONTRADA - Matrícula: {}", numeroMatricula);
-            throw new ObjectNotFoundException("Folha mensal não encontrada para matrícula: " + numeroMatricula);
-        }
     }
 
     public int calcularDiasUteisNoMes(int year, int month) {

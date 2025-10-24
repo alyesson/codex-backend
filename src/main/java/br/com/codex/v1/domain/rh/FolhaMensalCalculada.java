@@ -153,6 +153,8 @@ public class FolhaMensalCalculada implements Serializable {
 
     private Situacao situacao;
 
+    private String tipoSalario;
+
     @JsonIgnore
     @OneToMany(mappedBy = "folhaMensalCalculada", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FolhaMensalEventosCalculada> eventos = new ArrayList<>();
@@ -174,7 +176,8 @@ public class FolhaMensalCalculada implements Serializable {
                                 int faltasMes, int faltasDsr, int faltasFeriados, BigDecimal abonoSalarial,
                                 BigDecimal participacaoLucrosResultado, BigDecimal faltasHorasMes, BigDecimal seguroVida,
                                 BigDecimal valeCreche, BigDecimal reembolsoViagem, LocalDate dataProcessamento,
-                                BigDecimal totalVencimentos, BigDecimal totalDescontos, BigDecimal valorLiquido, Situacao situacao) {
+                                BigDecimal totalVencimentos, BigDecimal totalDescontos, BigDecimal valorLiquido, Situacao situacao,
+                                String tipoSalario) {
         this.id = id;
         this.matriculaColaborador = matriculaColaborador;
         this.nomeColaborador = nomeColaborador;
@@ -226,6 +229,7 @@ public class FolhaMensalCalculada implements Serializable {
         this.totalDescontos = totalDescontos;
         this.valorLiquido = valorLiquido;
         this.situacao = situacao;
+        this.tipoSalario = tipoSalario;
     }
 
     public FolhaMensalCalculada(FolhaMensalCalculadaDto obj) {
@@ -280,6 +284,7 @@ public class FolhaMensalCalculada implements Serializable {
         this.totalDescontos = obj.getTotalDescontos();
         this.valorLiquido = obj.getValorLiquido();
         this.situacao = obj.getSituacao();
+        this.tipoSalario = obj.getTipoSalario();
     }
 
     @Override

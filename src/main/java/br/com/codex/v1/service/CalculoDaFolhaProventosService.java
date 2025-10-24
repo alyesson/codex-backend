@@ -31,9 +31,6 @@ public class CalculoDaFolhaProventosService {
     @Autowired
     private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
 
-   // @Autowired
-    //private FolhaMensalProventosService calculoBaseService;
-
     @Autowired
     private CalculoBaseService calculoBaseService;
 
@@ -42,6 +39,10 @@ public class CalculoDaFolhaProventosService {
 
     @Setter
     String numeroMatricula;
+
+    @Setter
+    String tipoSalario;
+
     BigDecimal valorReferenteHoraDiurna;
 
     private BigDecimal obtemSalarioMinimo(){
@@ -49,9 +50,6 @@ public class CalculoDaFolhaProventosService {
     }
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
-
-        System.out.println("🔍 CALCULANDO PROVENTOS - Código: " + codigoEvento + ", Matrícula: " + numeroMatricula);
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         switch (codigoEvento) {
@@ -59,8 +57,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando Horas Normais Diurnas
             case 1 -> {
                 try {
-                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                    System.out.println("Folha encontrada: " + (folha != null ? folha.getNomeColaborador() : "NULA"));
+                   FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                     assert folha != null;
                     LocalTime horaIni = folha.getHoraEntrada();
@@ -1720,9 +1717,7 @@ public class CalculoDaFolhaProventosService {
             default -> {
                 return resultado;
             }
-
         }
-
         return resultado;
     }
 }
