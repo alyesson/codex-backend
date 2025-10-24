@@ -31,8 +31,8 @@ public class CalculoDaFolhaProventosService {
     @Autowired
     private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
 
-    @Autowired
-    private FolhaMensalProventosService folhaMensalProventosService;
+   // @Autowired
+    //private FolhaMensalProventosService calculoBaseService;
 
     @Autowired
     private CalculoBaseService calculoBaseService;
@@ -59,9 +59,10 @@ public class CalculoDaFolhaProventosService {
             //Calculando Horas Normais Diurnas
             case 1 -> {
                 try {
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     System.out.println("Folha encontrada: " + (folha != null ? folha.getNomeColaborador() : "NULA"));
 
+                    assert folha != null;
                     LocalTime horaIni = folha.getHoraEntrada();
                     LocalTime horaFim = folha.getHoraSaida();
                     BigDecimal salarioPorHora = folha.getSalarioHora();
@@ -127,7 +128,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Adiantamento de Salário (40%)
             case 2 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 BigDecimal adiantamentoSalarial = (salarioBase.multiply(new BigDecimal("40"))).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
@@ -139,7 +140,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando Horas Repouso Remunerado Diurno (DSR) no mês
             case 5 -> {
                 try {
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal salarioPorHora = folha.getSalarioHora();
                     LocalTime horaIniHRDiurno = folha.getHoraEntrada();
                     LocalTime horaFimHRDiurno = folha.getHoraSaida();
@@ -208,7 +209,7 @@ public class CalculoDaFolhaProventosService {
 
             //Horas de Atestado Médico
             case 8 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasDeFaltasAtestadoMedico = folha.getFaltasHorasMes();
                 resultado.put("referencia", horasDeFaltasAtestadoMedico);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -218,7 +219,7 @@ public class CalculoDaFolhaProventosService {
 
             //Dias de atestado médico
             case 9 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasDeFaltasMedico = folha.getFaltasHorasMes();
                 resultado.put("referencia", horasDeFaltasMedico);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -229,7 +230,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando horas normais noturnas
             case 12 -> {
                 try {
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal salarioPorHora = folha.getSalarioHora();
                     LocalTime horaFim = folha.getHoraSaida();
 
@@ -284,7 +285,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando o Adicional Noturno
             case 14 -> {
                 try {
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal salarioPorHora = folha.getSalarioHora();
                     BigDecimal percentualAdicionalNoturno = folha.getPercentualAdicionalNoturno();
                     LocalTime horaFim = folha.getHoraSaida();
@@ -346,7 +347,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando o Pro-Labore
             case 17 -> {
                 try {
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal proLabore = folha.getSalarioBase();
 
                     // ✅ Validação do valor
@@ -371,7 +372,7 @@ public class CalculoDaFolhaProventosService {
             case 19 -> {
 
                 try {
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal bolsaAuxilio = folha.getSalarioBase();
 
                     // ✅ Validação do valor
@@ -392,7 +393,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Horas Repouso Remunerado (DSR) Noturno
             case 25 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 String tipoJornada = folha.getJornada();
                 BigDecimal salarioPorHora =  folha.getSalarioHora();
 
@@ -532,7 +533,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando DSR Sobre Hora Extra Diurna 50%
             case 26 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal quantidadeHoraExtra50 = folha.getHorasExtras50();
 
                 //----Calculando Horas Diurnas Úteis
@@ -572,7 +573,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando DSR Sobre Hora Extra Diurna 70%
             case 27 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal quantidadeHoraExtra70 = folha.getHorasExtras70();
 
                 //---------Calculando Horas Diurnas Úteis
@@ -613,7 +614,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando DSR Sobre Hora Extra Diurna 100%
             case 28 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal quantidadeHoraExtra100 = folha.getHorasExtras100();
 
                 //------------Calculando Horas Diurnas Úteis--
@@ -651,7 +652,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando a Insalubridade
             case 46 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorSalarioMinimo = obtemSalarioMinimo();
 
                 BigDecimal porcentagemInsalubre = folha.getInsalubridade();
@@ -665,7 +666,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando a Periculosidade
             case 47 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 BigDecimal porcentagemPericuloso = folha.getPericulosidade();
                 BigDecimal valorPericuloso = (salarioBase.multiply(porcentagemPericuloso)).divide(new BigDecimal("100"),2, RoundingMode.HALF_UP);
@@ -678,7 +679,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando a Comissão
             case 51 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal percentualComissao = folha.getComissao();
                 BigDecimal vendasMes = folha.getValorVendaMes();
@@ -697,7 +698,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando a Gratificação
             case 53 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorGratifica = folha.getGratificacao();
                 resultado.put("referencia", valorGratifica);
                 resultado.put("vencimentos", valorGratifica);
@@ -708,7 +709,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando a Quebra Caixa
             case 54 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasPorMes = folha.getHorasMes();
 
                 BigDecimal valorQuebraCaixa = folha.getQuebraCaixa();
@@ -723,7 +724,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando horas extras 50% feitas no mês.
             case 98 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal percentualInsalubridade = folha.getInsalubridade();
                 BigDecimal totalHoraExtra50 = folha.getHorasExtras50();
                 BigDecimal salarioPorHora = folha.getSalarioHora();
@@ -752,7 +753,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando horas extras 70% feitas no mês
             case 99 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal percentualInsalubridade = folha.getInsalubridade();
                 BigDecimal totalHoraExtra70 = folha.getHorasExtras70();
                 BigDecimal salarioPorHora = folha.getSalarioHora();
@@ -783,7 +784,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando horas extras 100% feitas no mês.
             case 100 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal percentualInsalubridade = folha.getInsalubridade();
                 BigDecimal totalHoraExtra100 = folha.getHorasExtras100();
                 BigDecimal salarioPorHora = folha.getSalarioHora();
@@ -813,7 +814,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando o Salário Maternidade
             case 101 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioMaternidade = folha.getSalarioBase();
                 resultado.put("referencia", salarioMaternidade);
                 resultado.put("vencimentos", salarioMaternidade);
@@ -824,7 +825,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média Horas Extras 50% Sobre Salário Maternidade
             case 102 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
@@ -856,7 +857,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando Média Horas Extras70% Sobre Salário Maternidade
             case 103 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
@@ -889,7 +890,7 @@ public class CalculoDaFolhaProventosService {
             //Calculando Média Horas Extras100% Sobre Salário Maternidade
             case 104 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
@@ -962,7 +963,7 @@ public class CalculoDaFolhaProventosService {
             // Média Adicional Noturno Sobre Salário Maternidade
             case 107 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
@@ -999,12 +1000,12 @@ public class CalculoDaFolhaProventosService {
             //Calculando Salário Família
             case 133 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorCotaSalarioFamilia = tabelaDeducaoInssService.getSalarioFamilia();
                 int numeroDependentes = folha.getDependentesIrrf();
 
                 try {
-                    BigDecimal valorSalarioFamilia = folhaMensalProventosService.calcularSalarioFamilia(valorCotaSalarioFamilia, numeroDependentes);
+                    BigDecimal valorSalarioFamilia = calculoBaseService.calcularSalarioFamilia(valorCotaSalarioFamilia, numeroDependentes);
 
                     resultado.put("referencia", BigDecimal.valueOf(numeroDependentes)); // Quantidade de filhos
                     resultado.put("vencimentos", valorSalarioFamilia);              // Valor total
@@ -1019,7 +1020,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Ajuda de Custo
             case 130 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorValeTransporte = folha.getValorValeTransporte();
                 resultado.put("referencia", valorValeTransporte);
                 resultado.put("vencimentos", valorValeTransporte);
@@ -1029,11 +1030,11 @@ public class CalculoDaFolhaProventosService {
             //Calculando Primeira Parcela 13°
             case 167 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 try {
-                    LocalDate dataAdmissao = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
+                    LocalDate dataAdmissao = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
 
                     // Calcular meses trabalhados considerando a regra dos 15 dias
                     int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
@@ -1057,11 +1058,11 @@ public class CalculoDaFolhaProventosService {
             //Calculando Média de Horas Extras 50% Sobre 1° Parcela do 13°
             case 168 -> {
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
-                      Map<String, BigDecimal> resultadoHE50 = folhaMensalProventosService.calcularMediaHE50PrimeiraParcela13(numeroMatricula, salarioPorHora);
+                      Map<String, BigDecimal> resultadoHE50 = calculoBaseService.calcularMediaHE50PrimeiraParcela13(numeroMatricula, salarioPorHora);
 
                     // Atualiza o resultado principal
                     resultado.putAll(resultadoHE50);
@@ -1075,11 +1076,11 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de Horas Extras 70% Sobre 1° Parcela do 13°
             case 169 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
-                    Map<String, BigDecimal> resultadoHE70 = folhaMensalProventosService.calcularMediaHE70PrimeiraParcela13(numeroMatricula, salarioPorHora);
+                    Map<String, BigDecimal> resultadoHE70 = calculoBaseService.calcularMediaHE70PrimeiraParcela13(numeroMatricula, salarioPorHora);
 
                     // Atualiza o resultado principal
                     resultado.putAll(resultadoHE70);
@@ -1093,11 +1094,11 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de Horas Extras 100% Sobre 1° Parcela do 13°
             case 170 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioPorHora = folha.getSalarioHora();
 
                 try {
-                    Map<String, BigDecimal> resultadoHE100 = folhaMensalProventosService.calcularMediaHE100PrimeiraParcela13(numeroMatricula, salarioPorHora);
+                    Map<String, BigDecimal> resultadoHE100 = calculoBaseService.calcularMediaHE100PrimeiraParcela13(numeroMatricula, salarioPorHora);
 
                     // Atualiza o resultado principal
                     resultado.putAll(resultadoHE100);
@@ -1111,7 +1112,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Décimo terceiro cheio Adiantado
             case 171 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 resultado.put("vencimentos", salarioBase);
@@ -1122,7 +1123,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de DSR Noturno Sobre 1° Parcela do 13°
             case 177 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
@@ -1130,7 +1131,7 @@ public class CalculoDaFolhaProventosService {
                 int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao,hoje);
 
                 try {
-                    Map<String, BigDecimal> resultadoDSRNoturno = folhaMensalProventosService.calcularMediaDSRNoturnoPrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+                    Map<String, BigDecimal> resultadoDSRNoturno = calculoBaseService.calcularMediaDSRNoturnoPrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
                     resultado.putAll(resultadoDSRNoturno);
                     return resultado;
 
@@ -1141,7 +1142,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Insalubridade sobre Primeira Parcela do 13°
             case 178 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
@@ -1150,7 +1151,7 @@ public class CalculoDaFolhaProventosService {
 
                 try {
 
-                    Map<String, BigDecimal> resultadoInsalubridade = folhaMensalProventosService.calcularInsalubridadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+                    Map<String, BigDecimal> resultadoInsalubridade = calculoBaseService.calcularInsalubridadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
                     resultado.putAll(resultadoInsalubridade);
                     return resultado;
 
@@ -1161,7 +1162,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Periculosidade sobre Primeira Parcela do 13°
             case 179 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
@@ -1169,7 +1170,7 @@ public class CalculoDaFolhaProventosService {
                 int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao,hoje);
 
                 try {
-                  Map<String, BigDecimal> resultadoPericulosidade = folhaMensalProventosService.calcularPericulosidadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+                  Map<String, BigDecimal> resultadoPericulosidade = calculoBaseService.calcularPericulosidadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
                     resultado.putAll(resultadoPericulosidade);
                     return resultado;
 
@@ -1180,11 +1181,11 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de Horas Extras 50% Sobre 2° Parcela do 13°
             case 182 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
                 BigDecimal salarioBase = folha.getSalarioBase();
                 try {
-                    Map<String, BigDecimal> resultadoMediaHE50 = folhaMensalProventosService.calcularMediaHE50SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoMediaHE50 = calculoBaseService.calcularMediaHE50SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoMediaHE50);
                     return resultado;
 
@@ -1195,12 +1196,12 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de Horas Extras 70% Sobre 2° Parcela do 13°
             case 183 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 try {
-                    Map<String, BigDecimal> resultadoMediaHE70 = folhaMensalProventosService.calcularMediaHE70SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoMediaHE70 = calculoBaseService.calcularMediaHE70SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoMediaHE70);
                     return resultado;
 
@@ -1211,12 +1212,12 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de Horas Extras 100% Sobre 2° Parcela do 13°
             case 184 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 try {
-                    Map<String, BigDecimal> resultadoMediaHE100 = folhaMensalProventosService.calcularMediaHE100SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoMediaHE100 = calculoBaseService.calcularMediaHE100SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoMediaHE100);
                     return resultado;
 
@@ -1227,11 +1228,11 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de DSR Diurno Sobre 2° Parcela do 13°
             case 185 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
 
                 try {
-                     Map<String, BigDecimal> resultadoMediaDsr13 = folhaMensalProventosService.calcularMediaDSRSegundaParcela13(numeroMatricula, dataAdmissao);
+                     Map<String, BigDecimal> resultadoMediaDsr13 = calculoBaseService.calcularMediaDSRSegundaParcela13(numeroMatricula, dataAdmissao);
                      resultado.putAll(resultadoMediaDsr13);
                      return resultado;
 
@@ -1242,11 +1243,11 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Média de DSR Noturno Sobre 2° Parcela do 13°
             case 186 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
 
                 try {
-                    Map<String, BigDecimal> resultadoMediaDsrNoturno13 = folhaMensalProventosService.calcularMediaDSRNoturnoSegundaParcela13(numeroMatricula, dataAdmissao);
+                    Map<String, BigDecimal> resultadoMediaDsrNoturno13 = calculoBaseService.calcularMediaDSRNoturnoSegundaParcela13(numeroMatricula, dataAdmissao);
                     resultado.putAll(resultadoMediaDsrNoturno13);
                     return resultado;
 
@@ -1257,12 +1258,12 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Insalubridade sobre Segunda Parcela do 13°
             case 187 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 try {
-                    Map<String, BigDecimal> resultadoInsalubreSegundaParcela13 = folhaMensalProventosService.calcularInsalubridadeSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao);
+                    Map<String, BigDecimal> resultadoInsalubreSegundaParcela13 = calculoBaseService.calcularInsalubridadeSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao);
                     resultado.putAll(resultadoInsalubreSegundaParcela13);
                     return resultado;
                 } catch (Exception e) {
@@ -1272,11 +1273,11 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Periculosidade sobre Segunda Parcela do 13°
             case 188 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 try {
-                    Map<String, BigDecimal> resultadoPericulosoSegundaParcela13 = folhaMensalProventosService.calcularPericulosidadeSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao);
+                    Map<String, BigDecimal> resultadoPericulosoSegundaParcela13 = calculoBaseService.calcularPericulosidadeSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao);
                     resultado.putAll(resultadoPericulosoSegundaParcela13);
                     return resultado;
                 } catch (Exception e) {
@@ -1286,14 +1287,14 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando a Segunda Parcela do 13°
             case 189 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
                 int numeroDependentes = folha.getDependentesIrrf();
 
                 try {
-                    Map<String, BigDecimal> resultadoSegundaParcela13 = folhaMensalProventosService.calcularSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao, numeroDependentes, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoSegundaParcela13 = calculoBaseService.calcularSegundaParcela13(numeroMatricula, salarioBase, dataAdmissao, numeroDependentes, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoSegundaParcela13);
                     return resultado;
                 } catch (Exception e) {
@@ -1303,12 +1304,12 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando 13.º Salário Final Média Comissões
             case 195 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 try {
-                    Map<String, BigDecimal> resultado13Comissoes = folhaMensalProventosService.calcularDecimoTerceiroComMediaComissoes(numeroMatricula, salarioBase, dataAdmissao);
+                    Map<String, BigDecimal> resultado13Comissoes = calculoBaseService.calcularDecimoTerceiroComMediaComissoes(numeroMatricula, salarioBase, dataAdmissao);
                     resultado.putAll(resultado13Comissoes);
                     return resultado;
                 } catch (Exception e) {
@@ -1318,13 +1319,13 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando o Complemento Média Hora Extra 50% do 13°
             case 201 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
 
                 try {
-                    Map<String, BigDecimal> resultadoComplementoHE5013 = folhaMensalProventosService.calcularComplementoMediaHE5013(numeroMatricula, salarioBase, dataAdmissao, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoComplementoHE5013 = calculoBaseService.calcularComplementoMediaHE5013(numeroMatricula, salarioBase, dataAdmissao, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoComplementoHE5013);
                     return resultado;
                 } catch (Exception e) {
@@ -1334,13 +1335,13 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando o Complemento Média Hora Extra 70% do 13°
             case 202 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
 
                 try {
-                    Map<String, BigDecimal> resultadoComplementoHE7013 = folhaMensalProventosService.calcularComplementoMediaHE7013(numeroMatricula, salarioBase, dataAdmissao, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoComplementoHE7013 = calculoBaseService.calcularComplementoMediaHE7013(numeroMatricula, salarioBase, dataAdmissao, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoComplementoHE7013);
                     return resultado;
                 } catch (Exception e) {
@@ -1350,13 +1351,13 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando o Complemento Média Hora Extra 100% do 13°
             case 203 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
 
                 try {
-                    Map<String, BigDecimal> resultadoComplementoHE10013 = folhaMensalProventosService.calcularComplementoMediaHE10013(numeroMatricula, salarioBase, dataAdmissao, horasTrabalhadasPorMes);
+                    Map<String, BigDecimal> resultadoComplementoHE10013 = calculoBaseService.calcularComplementoMediaHE10013(numeroMatricula, salarioBase, dataAdmissao, horasTrabalhadasPorMes);
                     resultado.putAll(resultadoComplementoHE10013);
                     return resultado;
                 } catch (Exception e) {
@@ -1366,10 +1367,10 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Complemento DSR Diurno Sobre o 13°
             case 204 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 try {
-                    Map<String, BigDecimal> resultadoDSRDiurno = folhaMensalProventosService.calcularComplementoDSRDiurno13(numeroMatricula, dataAdmissao);
+                    Map<String, BigDecimal> resultadoDSRDiurno = calculoBaseService.calcularComplementoDSRDiurno13(numeroMatricula, dataAdmissao);
                     resultado.putAll(resultadoDSRDiurno);
                     return resultado;
                 } catch (Exception e) {
@@ -1379,10 +1380,10 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Complemento DSR Noturno Sobre o 13°
             case 205 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
                 try {
-                    Map<String, BigDecimal> resultadoDSRNoturno = folhaMensalProventosService.calcularComplementoDSRNoturno13(numeroMatricula, dataAdmissao);
+                    Map<String, BigDecimal> resultadoDSRNoturno = calculoBaseService.calcularComplementoDSRNoturno13(numeroMatricula, dataAdmissao);
                     resultado.putAll(resultadoDSRNoturno);
                     return resultado;
                 } catch (Exception e) {
@@ -1392,11 +1393,11 @@ public class CalculoDaFolhaProventosService {
 
             //Média Adicional Noturno do 13° Salário
             case 206 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 LocalDate dataAdmissao = folha.getDataAdmissao();
 
                 try {
-                    Map<String, BigDecimal> resultadoAdicionalNoturno = folhaMensalProventosService.calcularMediaAdicionalNoturno13(numeroMatricula, dataAdmissao);
+                    Map<String, BigDecimal> resultadoAdicionalNoturno = calculoBaseService.calcularMediaAdicionalNoturno13(numeroMatricula, dataAdmissao);
                     resultado.putAll(resultadoAdicionalNoturno);
                     return resultado;
                 } catch (Exception e) {
@@ -1406,7 +1407,7 @@ public class CalculoDaFolhaProventosService {
 
             //Cálculo do Vale Transporte
             case 239 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorUnitarioVT = folha.getValorValeTransporte();
                 String jornada = folha.getJornada();
 
@@ -1519,8 +1520,8 @@ public class CalculoDaFolhaProventosService {
 
             //Cálculo Vale Creche
             case 259 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal valorValeCreche = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getValeCreche();
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+                BigDecimal valorValeCreche = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getValeCreche();
 
                 try {
                     // Validação do valor
@@ -1552,7 +1553,7 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando FGTS Sobre o Salário
             case 402 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 String descricaoDoCargo = folha.getCargoFuncionario();
                 BigDecimal salarioBase = folha.getSalarioBase();
 
@@ -1590,7 +1591,7 @@ public class CalculoDaFolhaProventosService {
             case 403 -> {
                 try {
                     // ✅ Busca apenas UMA vez e reutiliza os dados
-                    FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                     String descricaoDoCargo = folha.getCargoFuncionario();
                     BigDecimal salarioBase = folha.getSalarioBase();
@@ -1606,7 +1607,7 @@ public class CalculoDaFolhaProventosService {
                     }
 
                     // Calcular meses trabalhados
-                    int mesesTrabalhados = folhaMensalProventosService.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
+                    int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
 
                     // Cálculo do 13º (integral ou proporcional)
                     BigDecimal decimoTerceiroIntegral = salarioBase.multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
@@ -1628,7 +1629,7 @@ public class CalculoDaFolhaProventosService {
 
             //Participação Nos Lucros e Resultados
             case 409 -> {
-                BigDecimal participacaoLucrosResultado = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getParticipacaoLucrosResultado();
+                BigDecimal participacaoLucrosResultado = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getParticipacaoLucrosResultado();
                 resultado.put("referencia", participacaoLucrosResultado);
                 resultado.put("vencimentos", participacaoLucrosResultado);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1638,7 +1639,7 @@ public class CalculoDaFolhaProventosService {
 
             //Abono Salarial
             case 410 -> {
-                BigDecimal abonoSalarial = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getAbonoSalarial();
+                BigDecimal abonoSalarial = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getAbonoSalarial();
                 resultado.put("referencia", abonoSalarial);
                 resultado.put("vencimentos", abonoSalarial);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1648,7 +1649,7 @@ public class CalculoDaFolhaProventosService {
 
             //Cálculo Reembolso Creche
             case 412 -> {
-                BigDecimal reembolsoCreche = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getValeCreche();
+                BigDecimal reembolsoCreche = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getValeCreche();
                 resultado.put("referencia", reembolsoCreche);
                 resultado.put("vencimentos", reembolsoCreche);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1658,7 +1659,7 @@ public class CalculoDaFolhaProventosService {
 
             //Cálculo Gratificação Semestral
             case 414 -> {
-                BigDecimal gratificacaoSemestral = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getGratificacao();
+                BigDecimal gratificacaoSemestral = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getGratificacao();
                 resultado.put("referencia", gratificacaoSemestral);
                 resultado.put("vencimentos", gratificacaoSemestral);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1668,7 +1669,7 @@ public class CalculoDaFolhaProventosService {
 
             //Cálculo Reembolso Viagem
             case 416 -> {
-                BigDecimal reembolsoViagem = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getReembolsoViagem();
+                BigDecimal reembolsoViagem = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getReembolsoViagem();
                 resultado.put("referencia", reembolsoViagem);
                 resultado.put("vencimentos", reembolsoViagem);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1678,7 +1679,7 @@ public class CalculoDaFolhaProventosService {
 
             //1° Parcela Participação Nos Lucros e Resultados
             case 417 -> {
-                BigDecimal plr1 = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getParticipacaoLucrosResultado();
+                BigDecimal plr1 = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getParticipacaoLucrosResultado();
                 resultado.put("referencia", plr1);
                 resultado.put("vencimentos", plr1);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1688,7 +1689,7 @@ public class CalculoDaFolhaProventosService {
 
             //2° Parcela Participação Nos Lucros e Resultados
             case 418 -> {
-                BigDecimal plr2 = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getParticipacaoLucrosResultado();
+                BigDecimal plr2 = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getParticipacaoLucrosResultado();
                 resultado.put("referencia", plr2);
                 resultado.put("vencimentos", plr2);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1698,7 +1699,7 @@ public class CalculoDaFolhaProventosService {
 
             //1° Parcela Abono Salarial
             case 420 -> {
-                BigDecimal primeiraParcelAbonoSalarial = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getAbonoSalarial();
+                BigDecimal primeiraParcelAbonoSalarial = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getAbonoSalarial();
                 resultado.put("referencia", primeiraParcelAbonoSalarial);
                 resultado.put("vencimentos", primeiraParcelAbonoSalarial);
                 resultado.put("descontos", BigDecimal.ZERO);
@@ -1708,7 +1709,7 @@ public class CalculoDaFolhaProventosService {
 
             //2° Parcela Abono Salarial
             case 421 -> {
-                BigDecimal segundaParcelAbonoSalarial = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula).getAbonoSalarial();
+                BigDecimal segundaParcelAbonoSalarial = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getAbonoSalarial();
                 resultado.put("referencia", segundaParcelAbonoSalarial);
                 resultado.put("vencimentos", segundaParcelAbonoSalarial);
                 resultado.put("descontos", BigDecimal.ZERO);

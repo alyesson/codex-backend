@@ -23,8 +23,8 @@ public class CalculoDaFolhaDescontosService {
     @Autowired
     CalculoBaseService calculoBaseService;
 
-    @Autowired
-    private FolhaMensalProventosService folhaMensalProventosService;
+    /*@Autowired
+    private FolhaMensalProventosService calculoBaseService;*/
 
     @Autowired
     private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
@@ -47,7 +47,7 @@ public class CalculoDaFolhaDescontosService {
             // Desconto Dias de Faltas
             case 6 ->{
 
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 LocalTime horaEntrada = folha.getHoraEntrada();
                 LocalTime horaSaida = folha.getHoraSaida();
@@ -65,7 +65,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Desconto DSR (Descanso Semanal Remunerado)
             case 7 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 LocalTime horaEntrada = folha.getHoraEntrada();
                 LocalTime horaSaida = folha.getHoraSaida();
@@ -83,7 +83,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Desconto por Atraso
             case 15 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 LocalTime horaEntrada = folha.getHoraEntrada();
                 LocalTime horaSaida = folha.getHoraSaida();
@@ -101,7 +101,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Desconto por Faltas em Feriado
             case 18 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 LocalTime horaEntrada = folha.getHoraEntrada();
                 LocalTime horaSaida = folha.getHoraSaida();
@@ -119,7 +119,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Desconto por Suspensão Disciplinar
             case 23 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 LocalTime horaEntrada = folha.getHoraEntrada();
                 LocalTime horaSaida = folha.getHoraSaida();
@@ -137,7 +137,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Desconto Adiantamento de Salário
             case 44 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valorSalarioBase = folha.getSalarioBase();
                 BigDecimal descontoAdiantamentoSalarial = valorSalarioBase.multiply(new BigDecimal("0.40")).setScale(2, RoundingMode.HALF_UP);
@@ -151,7 +151,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Desconto Salário Maternidade
             case 131 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valorSalarioBase = folha.getSalarioBase();
 
@@ -164,7 +164,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Adiantamento 1° Parcela Décimo Terceiro
             case 172 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valorSalarioBase = folha.getSalarioBase();
 
@@ -177,7 +177,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Adiantamento 2° Parcela Décimo Terceiro
             case 190 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valorSalarioBase = folha.getSalarioBase();
                 BigDecimal decimoTerceiroSegundaParcela = valorSalarioBase.divide(new BigDecimal("2"), 2, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP);
@@ -191,7 +191,7 @@ public class CalculoDaFolhaDescontosService {
 
             // Empréstimo Consignado
             case 229 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal emprestimoConsignado = folha.getEmprestimoConsignado();
 
@@ -204,7 +204,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Vale Alimentação
             case 231 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valoAlimentacao = folha.getValorValAlimentacao();
 
@@ -217,7 +217,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Vale Farmácia
             case 232 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valeFarmacia = folha.getValeFarmacia();
 
@@ -230,7 +230,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Vale Refeição
             case 233 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valeRefeicao = folha.getValorValeRefeicao();
 
@@ -243,7 +243,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Plano Médico
             case 235 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal planoMedico = folha.getValorPlanoMedico();
 
@@ -256,7 +256,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Plano Seguro de Vida
             case 236 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal seguroVida = folha.getSeguroVida();
 
@@ -269,7 +269,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Vale Transporte
             case 241 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal valorSalarioBase = folha.getSalarioBase();
                 BigDecimal descontoValeTransporte = folha.getSalarioBase()
@@ -285,7 +285,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Plano Odontológico
             case 242 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal planoOdonto = folha.getValorPlanoOdonto();
 
                 resultado.put("referencia", planoOdonto);
@@ -297,7 +297,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto INSS
             case 244 ->{
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 BigDecimal descontoInss = calculoBaseService.calcularINSS(salarioBase);
 
@@ -310,7 +310,7 @@ public class CalculoDaFolhaDescontosService {
 
             //Desconto Imposto de Renda
             case 245 -> {
-                FolhaMensal folha = folhaMensalProventosService.findByMatriculaColaborador(numeroMatricula);
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 // **Primeiro calcula o INSS**
