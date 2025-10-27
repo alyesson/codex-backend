@@ -69,7 +69,7 @@ public class FolhaQuinzenalCalculadaService {
         List<FolhaQuinzenalEventosCalculadaDto> eventosProcessados = new ArrayList<>();
 
         for (FolhaQuinzenalEventosCalculadaDto eventoDto : folhaDto.getEventos()) {
-            FolhaQuinzenalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto);
+            FolhaQuinzenalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto, folhaDto.getTipoSalario());
             eventosProcessados.add(eventoProcessado);
         }
 
@@ -83,14 +83,17 @@ public class FolhaQuinzenalCalculadaService {
         return create(folhaDto);
     }
 
-    private FolhaQuinzenalEventosCalculadaDto processarEvento(String matricula, FolhaQuinzenalEventosCalculadaDto eventoDto) {
+    private FolhaQuinzenalEventosCalculadaDto processarEvento(String matricula, FolhaQuinzenalEventosCalculadaDto eventoDto, String tipoSalario) {
         // Configura o cálculo
         calculoDaFolhaProventosService.setNumeroMatricula(matricula);
         calculoDaFolhaDescontosService.setNumeroMatricula(matricula);
 
+        calculoDaFolhaProventosService.setTipoSalario(tipoSalario);
+        calculoDaFolhaDescontosService.setTipoSalario(tipoSalario);
+
         // Processa o evento específico
         Integer codigoEvento = eventoDto.getCodigoEvento();
-        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
+        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento, tipoSalario);
         Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
 
         BigDecimal referenciaFinal = BigDecimal.ZERO;

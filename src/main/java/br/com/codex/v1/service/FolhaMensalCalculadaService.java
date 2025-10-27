@@ -74,7 +74,7 @@ public class FolhaMensalCalculadaService {
         List<FolhaMensalEventosCalculadaDto> eventosProcessados = new ArrayList<>();
 
         for (FolhaMensalEventosCalculadaDto eventoDto : folhaDto.getEventos()) {
-            FolhaMensalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto);
+            FolhaMensalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto, folhaDto.getTipoSalario());
             eventosProcessados.add(eventoProcessado);
         }
 
@@ -88,15 +88,18 @@ public class FolhaMensalCalculadaService {
         return create(folhaDto);
     }
 
-    private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto) {
+    private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto, String tipoSalario) {
 
         // Configura o cálculo
         calculoDaFolhaProventosService.setNumeroMatricula(matricula);
         calculoDaFolhaDescontosService.setNumeroMatricula(matricula);
 
+        calculoDaFolhaProventosService.setTipoSalario(tipoSalario);
+        calculoDaFolhaDescontosService.setTipoSalario(tipoSalario);
+
         // Processa o evento específico
         Integer codigoEvento = eventoDto.getCodigoEvento();
-        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
+        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento, tipoSalario);
         Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
 
         BigDecimal referenciaFinal = BigDecimal.ZERO;
@@ -168,39 +171,4 @@ public class FolhaMensalCalculadaService {
     public List<FolhaMensalCalculada> findAll() {
         return folhaMensalCalculadaRepository.findAll();
     }
-    /*private FolhaMensalEventosCalculadaDto processarEvento(String matricula, FolhaMensalEventosCalculadaDto eventoDto) {
-        // Configura o cálculo
-        calculoDaFolhaProventosService.setNumeroMatricula(matricula);
-
-        // Processa o evento específico
-        Integer codigoEvento = eventoDto.getCodigoEvento();
-        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
-        Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
-
-
-        // Atualiza o evento proventos com os resultados
-        if (resultadoProv != null) {
-            BigDecimal referencia = resultadoProv.get("referencia");
-            BigDecimal vencimentos = resultadoProv.get("vencimentos");
-            BigDecimal descontos = resultadoProv.get("descontos");
-
-            eventoDto.setReferencia(referencia != null ? referencia : BigDecimal.valueOf(0));
-            eventoDto.setVencimentos(vencimentos != null ? vencimentos : BigDecimal.ZERO);
-            eventoDto.setDescontos(descontos != null ? descontos : BigDecimal.ZERO);
-        }
-
-        // Atualiza o evento desconto com os resultados
-        if (resultadoDesc != null) {
-            BigDecimal referencia = resultadoDesc.get("referencia");
-            BigDecimal vencimentos = resultadoDesc.get("vencimentos");
-            BigDecimal descontos = resultadoDesc.get("descontos");
-
-            eventoDto.setReferencia(referencia != null ? referencia : BigDecimal.valueOf(0));
-            eventoDto.setVencimentos(vencimentos != null ? vencimentos : BigDecimal.ZERO);
-            eventoDto.setDescontos(descontos != null ? descontos : BigDecimal.ZERO);
-        }
-
-        return eventoDto;
-    }*/
-
 }

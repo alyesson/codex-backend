@@ -27,7 +27,7 @@ public class FolhaRescisaoCalculadaService {
     private FolhaRescisaoEventosRepository folhaRescisaoEventosRepository;
 
     @Autowired
-    private CalculoDaFolhaProventosService calculoDaFolhaProventosService;
+    private CalculoDaFolhaRescisaoService calculoDaFolhaRescisaoService;
 
     @Autowired
     private CalculoDaFolhaDescontosService calculoDaFolhaDescontosService;
@@ -85,11 +85,11 @@ public class FolhaRescisaoCalculadaService {
 
     private FolhaRescisaoEventosDto processarEvento(String matricula, FolhaRescisaoEventosDto eventoDto) {
         // Configura o cálculo
-        calculoDaFolhaProventosService.setNumeroMatricula(matricula);
+        calculoDaFolhaRescisaoService.setNumeroMatricula(matricula);
 
         // Processa o evento específico
         Integer codigoEvento = eventoDto.getCodigoEvento();
-        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
+        Map<String, BigDecimal> resultadoProv = calculoDaFolhaRescisaoService.escolheEventos(codigoEvento);
         Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
 
 

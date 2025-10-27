@@ -1,10 +1,8 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
-import br.com.codex.v1.domain.repository.FolhaMensalRepository;
-import br.com.codex.v1.domain.repository.TabelaDeducaoInssRepository;
-import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
+import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.domain.rh.FolhaMensal;
+import br.com.codex.v1.domain.rh.FolhaQuinzenal;
 import br.com.codex.v1.domain.rh.TabelaDeducaoInss;
 import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
@@ -37,6 +35,9 @@ public class CalculoBaseService {
 
     @Autowired
     private FolhaMensalRepository folhaMensalRepository;
+
+    @Autowired
+    FolhaQuinzenalRepository folhaQuinzenalRepository;
 
     /*public int calcularMesesTrabalhados13o(LocalDate dataAdmissao, LocalDate dataCalculo) {
         int anoAtual = dataCalculo.getYear();
@@ -87,6 +88,15 @@ public class CalculoBaseService {
 
     public FolhaMensal findByMatriculaColaborador(String numeroMatricula) {
         Optional<FolhaMensal> obj = folhaMensalRepository.findByMatriculaColaborador(numeroMatricula);
+        if (obj.isPresent()) {
+            return obj.get();
+        } else {
+            throw new ObjectNotFoundException("Folha mensal não encontrada para matrícula: " + numeroMatricula);
+        }
+    }
+
+    public FolhaQuinzenal findByMatriculaFuncionario(String numeroMatricula) {
+        Optional<FolhaQuinzenal> obj = folhaQuinzenalRepository.findByMatriculaColaborador(numeroMatricula);
         if (obj.isPresent()) {
             return obj.get();
         } else {

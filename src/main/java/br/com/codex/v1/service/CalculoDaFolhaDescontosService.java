@@ -39,8 +39,6 @@ public class CalculoDaFolhaDescontosService {
         resultado.put("vencimentos", BigDecimal.ZERO);
         resultado.put("descontos", BigDecimal.ZERO);
 
-        System.out.println("🔍 CALCULANDO DESCONTOS - Código: " + codigoEvento + ", Matrícula: " + numeroMatricula);
-
     try{
         switch (codigoEvento) {
 

@@ -2,6 +2,17 @@ package br.com.codex.v1.service;
 
 import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
 import br.com.codex.v1.domain.rh.FolhaMensal;
+import br.com.codex.v1.domain.rh.FolhaQuinzenal;
+import br.com.codex.v1.service.rh.beneficios.CalcularBolsaAuxílioService;
+import br.com.codex.v1.service.rh.beneficios.CalcularGratificacaoService;
+import br.com.codex.v1.service.rh.beneficios.CalcularProLaboreService;
+import br.com.codex.v1.service.rh.especiais.CalcularComissaoService;
+import br.com.codex.v1.service.rh.especiais.CalcularInsalubridadeService;
+import br.com.codex.v1.service.rh.especiais.CalcularPericulosidadeService;
+import br.com.codex.v1.service.rh.horarios.*;
+import br.com.codex.v1.service.rh.horasextras.CalcularDsrSobreHoraExtraDiurna100PorcentoService;
+import br.com.codex.v1.service.rh.horasextras.CalcularDsrSobreHoraExtraDiurna50PorcentoService;
+import br.com.codex.v1.service.rh.horasextras.CalcularDsrSobreHoraExtraDiurna70PorcentoService;
 import br.com.codex.v1.utilitario.Calendario;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -34,6 +45,57 @@ public class CalculoDaFolhaProventosService {
     @Autowired
     private CalculoBaseService calculoBaseService;
 
+    @Autowired
+    protected CalcularHorasNormaisDiurnasService calcularHorasNormaisDiurnasService;
+
+    @Autowired
+    protected CalcularAdiantamentoSalario40PorcentoService calcularAdiantamentoSalario40PorcentoService;
+
+    @Autowired
+    protected CalcularHorasRepousoRemuneradoDiurnoService calcularHorasRepousoRemuneradoDiurnoService;
+
+    @Autowired
+    protected CalcularHorasAtestadoMedicoService calcularHorasAtestadoMedicoService;
+
+    @Autowired
+    protected CalcularDiasAtestadoMedicoService calcularDiasAtestadoMedicoService;
+
+    @Autowired
+    protected CalcularHorasNormaisNoturnasService calcularHorasNormaisNoturnasService;
+
+    @Autowired
+    protected CalcularAdicionalNoturnoService calcularAdicionalNoturnoService;
+
+    @Autowired
+    protected CalcularProLaboreService calcularProLaboreService;
+
+    @Autowired
+    protected CalcularBolsaAuxílioService calcularBolsaAuxilioService;
+
+    @Autowired
+    protected  CalcularHorasRepousoRemuneradoNoturnoService calcularHorasRepousoRemuneradoNoturnoService;
+
+    @Autowired
+    protected CalcularDsrSobreHoraExtraDiurna50PorcentoService calcularDsrSobreHoraExtraDiurna50PorcentoService;
+
+    @Autowired
+    protected CalcularDsrSobreHoraExtraDiurna70PorcentoService calcularDsrSobreHoraExtraDiurna70PorcentoService;
+
+    @Autowired
+    protected CalcularDsrSobreHoraExtraDiurna100PorcentoService calcularDsrSobreHoraExtraDiurna100PorcentoService;
+
+    @Autowired
+    protected CalcularInsalubridadeService calcularInsalubridadeService;
+
+    @Autowired
+    protected CalcularPericulosidadeService calcularPericulosidadeService;
+
+    @Autowired
+    protected CalcularComissaoService calcularComissaoService;
+
+    @Autowired
+    protected CalcularGratificacaoService calculoGratificacaoService;
+
     Calendario calendario = new Calendario();
     Set<LocalDate> feriados = new HashSet<>();
 
@@ -42,21 +104,24 @@ public class CalculoDaFolhaProventosService {
 
     @Setter
     String tipoSalario;
-
     BigDecimal valorReferenteHoraDiurna;
 
     private BigDecimal obtemSalarioMinimo(){
         return tabelaImpostoRendaService.getSalarioMinimo();
     }
 
-    public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
+    public Map<String, BigDecimal> escolheEventos(Integer codigoEvento, String tipoSalario) {
         Map<String, BigDecimal> resultado = new HashMap<>();
+        resultado.put("referencia", BigDecimal.ZERO);
+        resultado.put("vencimentos", BigDecimal.ZERO);
+        resultado.put("descontos", BigDecimal.ZERO);
 
         switch (codigoEvento) {
 
             //Calculando Horas Normais Diurnas
-            case 1 -> {
-                try {
+            ✅case 1 -> {
+                calcularHorasNormaisDiurnasService.calculaHorasNormaisDiurnas();
+                /*try {
                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                     assert folha != null;
@@ -120,23 +185,26 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new RuntimeException("Erro ao calcular horas diurnas: " + e.getMessage());
-                }
+                }*/
             }
 
             //Calculando Adiantamento de Salário (40%)
-            case 2 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+            ✅case 2 -> {
+                calcularAdiantamentoSalario40PorcentoService.calculaAdiantamentoSalarial40Porcento();
+
+                /*FolhaQuinzenal folha = calculoBaseService.findByMatriculaFuncionario(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
 
                 BigDecimal adiantamentoSalarial = (salarioBase.multiply(new BigDecimal("40"))).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
                 resultado.put("referencia", new BigDecimal(40));
                 resultado.put("vencimentos", adiantamentoSalarial);
-                resultado.put("descontos", BigDecimal.ZERO);
+                resultado.put("descontos", BigDecimal.ZERO);*/
             }
 
             //Calculando Horas Repouso Remunerado Diurno (DSR) no mês
-            case 5 -> {
-                try {
+            ✅case 5 -> {
+                calcularHorasRepousoRemuneradoDiurnoService.calcularHorasRepousoRemuneradoDiurno();
+                /*try {
                     FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal salarioPorHora = folha.getSalarioHora();
                     LocalTime horaIniHRDiurno = folha.getHoraEntrada();
@@ -201,32 +269,35 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new RuntimeException("Erro ao calcular DSR Diurno: " + e.getMessage());
-                }
+                }*/
             }
 
             //Horas de Atestado Médico
-            case 8 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+            ✅case 8 -> {
+                calcularHorasAtestadoMedicoService.calcularHorasAtestadoMedico();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasDeFaltasAtestadoMedico = folha.getFaltasHorasMes();
                 resultado.put("referencia", horasDeFaltasAtestadoMedico);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Dias de atestado médico
-            case 9 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+            ✅case 9 -> {
+                calcularDiasAtestadoMedicoService.diasAtestadoMedico();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal horasDeFaltasMedico = folha.getFaltasHorasMes();
                 resultado.put("referencia", horasDeFaltasMedico);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando horas normais noturnas
-            case 12 -> {
-                try {
+            ✅case 12 -> {
+                calcularHorasNormaisNoturnasService.calcularHorasNormaisNoturnas();
+                /*try {
                     FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal salarioPorHora = folha.getSalarioHora();
                     LocalTime horaFim = folha.getHoraSaida();
@@ -276,12 +347,13 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new RuntimeException("Erro ao calcular horas noturnas: " + e.getMessage());
-                }
+                }*/
             }
 
             //Calculando o Adicional Noturno
-            case 14 -> {
-                try {
+            ✅case 14 -> {
+                calcularAdicionalNoturnoService.calcularAdicionalNoturno();
+                /*try {
                     FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal salarioPorHora = folha.getSalarioHora();
                     BigDecimal percentualAdicionalNoturno = folha.getPercentualAdicionalNoturno();
@@ -338,12 +410,13 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new RuntimeException("Erro ao calcular adicional noturno: " + e.getMessage());
-                }
+                }*/
             }
 
             //Calculando o Pro-Labore
-            case 17 -> {
-                try {
+            ✅case 17 -> {
+                calcularProLaboreService.calcularProLabore();
+                /*try {
                     FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                     BigDecimal proLabore = folha.getSalarioBase();
 
@@ -362,17 +435,23 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new DataIntegrityViolationException("Erro ao calcular pró-labore: " +e);
-                }
+                }*/
             }
 
             //Calculando Bolsa Auxílio
-            case 19 -> {
+            ✅case 19 -> {
+                calcularBolsaAuxilioService.calcularBolsaAuxilio();
 
+                /*BigDecimal bolsaAuxilio;
                 try {
-                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                    BigDecimal bolsaAuxilio = folha.getSalarioBase();
+                    if(tipoSalario.equals("Quinzenal")){
+                        FolhaQuinzenal folha = calculoBaseService.findByMatriculaFuncionario(numeroMatricula);
+                        bolsaAuxilio = folha.getSalarioBase();
+                    }else{
+                        FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+                        bolsaAuxilio = folha.getSalarioBase();
+                    }
 
-                    // ✅ Validação do valor
                     if (bolsaAuxilio == null || bolsaAuxilio.compareTo(BigDecimal.ZERO) <= 0) {
                         bolsaAuxilio = BigDecimal.ZERO;
                     }
@@ -385,12 +464,13 @@ public class CalculoDaFolhaProventosService {
 
                 } catch (Exception e) {
                     throw new DataIntegrityViolationException("Erro ao calcular bolsa auxílio: " +e);
-                }
+                }*/
             }
 
             //Calculando Horas Repouso Remunerado (DSR) Noturno
-            case 25 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+           ✅case 25 -> {
+                calcularHorasRepousoRemuneradoNoturnoService.calcularHorasRepousoRemuneradoNoturno();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 String tipoJornada = folha.getJornada();
                 BigDecimal salarioPorHora =  folha.getSalarioHora();
 
@@ -525,12 +605,13 @@ public class CalculoDaFolhaProventosService {
                         resultado.put("vencimentos", dsrHoraNoturnaRepousoRemuneradoNoturno);
                         resultado.put("descontos", BigDecimal.ZERO);
                     }
-                }
+                }*/
             }
 
             //Calculando DSR Sobre Hora Extra Diurna 50%
-            case 26 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+           ✅case 26 -> {
+                calcularDsrSobreHoraExtraDiurna50PorcentoService.calcularDsrSobreHoraExtraDiurna50Porcento();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal quantidadeHoraExtra50 = folha.getHorasExtras50();
 
                 //----Calculando Horas Diurnas Úteis
@@ -564,13 +645,13 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", dsrSobreHoraExtraDiurna);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando DSR Sobre Hora Extra Diurna 70%
-            case 27 -> {
-
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+           ✅case 27 -> {
+                calcularDsrSobreHoraExtraDiurna70PorcentoService.calcularDsrSobreHoraExtraDiurna70Porcento();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal quantidadeHoraExtra70 = folha.getHorasExtras70();
 
                 //---------Calculando Horas Diurnas Úteis
@@ -605,13 +686,13 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", dsrSobreHoraExtraDiurna70);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando DSR Sobre Hora Extra Diurna 100%
-            case 28 -> {
-
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+           ✅case 28 -> {
+                calcularDsrSobreHoraExtraDiurna100PorcentoService.calcularDsrSobreHoraExtraDiurna100Porcento();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal quantidadeHoraExtra100 = folha.getHorasExtras100();
 
                 //------------Calculando Horas Diurnas Úteis--
@@ -644,12 +725,13 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", dsrSobreHExtraDiurna100);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando a Insalubridade
-            case 46 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+           ✅case 46 -> {
+                calcularInsalubridadeService.calcularInsalubridadeService();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorSalarioMinimo = obtemSalarioMinimo();
 
                 BigDecimal porcentagemInsalubre = folha.getInsalubridade();
@@ -658,12 +740,13 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", valorInsalubre);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando a Periculosidade
-            case 47 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+           ✅case 47 -> {
+                calcularPericulosidadeService.calculoPericulosidade();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
                 BigDecimal porcentagemPericuloso = folha.getPericulosidade();
                 BigDecimal valorPericuloso = (salarioBase.multiply(porcentagemPericuloso)).divide(new BigDecimal("100"),2, RoundingMode.HALF_UP);
@@ -671,12 +754,13 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", valorPericuloso);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando a Comissão
-            case 51 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+          ✅case 51 -> {
+                calcularComissaoService.calcularComissao();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
 
                 BigDecimal percentualComissao = folha.getComissao();
                 BigDecimal vendasMes = folha.getValorVendaMes();
@@ -690,18 +774,19 @@ public class CalculoDaFolhaProventosService {
                 resultado.put("vencimentos", valorComissao);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando a Gratificação
-            case 53 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+          ✅case 53 -> {
+                calculoGratificacaoService.calcularGratificacao();
+                /*FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal valorGratifica = folha.getGratificacao();
                 resultado.put("referencia", valorGratifica);
                 resultado.put("vencimentos", valorGratifica);
                 resultado.put("descontos", BigDecimal.ZERO);
 
-                return resultado;
+                return resultado;*/
             }
 
             //Calculando a Quebra Caixa
@@ -1017,18 +1102,39 @@ public class CalculoDaFolhaProventosService {
 
             //Calculando Ajuda de Custo
             case 130 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal valorValeTransporte = folha.getValorValeTransporte();
-                resultado.put("referencia", valorValeTransporte);
-                resultado.put("vencimentos", valorValeTransporte);
+                if(tipoSalario.equals("Quinzenal")) {
+                    FolhaQuinzenal folha = calculoBaseService.findByMatriculaFuncionario(numeroMatricula);
+                    BigDecimal valorReferencia = folha.getEventos().stream()
+                            .filter(evento -> evento.getCodigoEvento().equals(130))
+                            .findFirst()
+                            .map(evento -> {
+                                try { return new BigDecimal(evento.getReferencia()); }
+                                catch (NumberFormatException e) { return BigDecimal.ZERO; }
+                            })
+                            .orElse(BigDecimal.ZERO);
+
+                    BigDecimal valorAjudaCusto = valorReferencia.multiply(folha.getTransporteDia());
+                    resultado.put("referencia", valorReferencia);
+                    resultado.put("vencimentos", valorAjudaCusto);
+                } else {
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+                    BigDecimal valorVT = folha.getValorValeTransporte();
+                    resultado.put("referencia", valorVT);
+                    resultado.put("vencimentos", valorVT);
+                }
                 resultado.put("descontos", BigDecimal.ZERO);
             }
 
             //Calculando Primeira Parcela 13°
             case 167 -> {
-
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal salarioBase = folha.getSalarioBase();
+                BigDecimal salarioBase;
+                if(tipoSalario.equals("Quinzenal")) {
+                    FolhaQuinzenal folha = calculoBaseService.findByMatriculaFuncionario(numeroMatricula);
+                    salarioBase = folha.getSalarioBase();
+                }else{
+                    FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+                    salarioBase = folha.getSalarioBase();
+                }
 
                 try {
                     LocalDate dataAdmissao = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();

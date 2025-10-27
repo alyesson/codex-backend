@@ -27,7 +27,7 @@ public class FolhaFeriasCalculadaService {
     private CalculoFeriasEventosRepository calculoFeriasEventosRepository;
 
     @Autowired
-    private CalculoDaFolhaProventosService calculoDaFolhaProventosService;
+    private CalculoDaFolhaFeriasService calculoDaFolhaFeriasService;
 
     @Autowired
     private CalculoDaFolhaDescontosService calculoDaFolhaDescontosService;
@@ -85,11 +85,11 @@ public class FolhaFeriasCalculadaService {
 
     private CalculoFeriasEventosDto processarEvento(String matricula, CalculoFeriasEventosDto eventoDto) {
         // Configura o cálculo
-        calculoDaFolhaProventosService.setNumeroMatricula(matricula);
+        calculoDaFolhaFeriasService.setNumeroMatricula(matricula);
 
         // Processa o evento específico
         Integer codigoEvento = eventoDto.getCodigoEvento();
-        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
+        Map<String, BigDecimal> resultadoProv = calculoDaFolhaFeriasService.escolheEventos(codigoEvento);
         Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
 
 
