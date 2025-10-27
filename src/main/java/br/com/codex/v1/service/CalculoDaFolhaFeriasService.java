@@ -48,246 +48,117 @@ public class CalculoDaFolhaFeriasService {
         }
 
         public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
-
             Map<String, BigDecimal> resultado = new HashMap<>();
-  
+
             try {
                 CalculoFerias ferias = findByNumeroMatricula(numeroMatricula);
 
                 BigDecimal salarioBase = ferias.getSalarioBruto();
                 BigDecimal salarioPorHora = ferias.getSalarioHora();
                 BigDecimal diasDeFerias = BigDecimal.valueOf(ferias.getTotalDiasFerias());
-                BigDecimal diasDeAbono = BigDecimal.valueOf(ferias.getTotalDiasAbono());
                 Integer quantidadeDeFaltas = ferias.getTotalFaltas();
                 Integer numeroDependentes = ferias.getNumeroDependentes();
 
+                // Calcular valores base reutilizáveis
+                BigDecimal valorDiasFerias = ferias.getValorDiasFerias() != null ?
+                        ferias.getValorDiasFerias() :
+                        calcularValorFerias(salarioBase, diasDeFerias);
+
                 switch (codigoEvento) {
                     // 30 Dias de Férias Gozadas
-                    case 140 -> {
-                        BigDecimal diasFerias = new BigDecimal( 30);
-                        BigDecimal valorFerias = calcularValorFerias(salarioBase, diasFerias);
-
-                        resultado.put("referencia", diasFerias);
-                        resultado.put("vencimentos", valorFerias);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
-                    }
+                    case 140 -> calcularFeriasGozadas(resultado, new BigDecimal("30"), salarioBase);
 
                     // 20 Dias de Férias Gozadas
-                    case 141 -> {
-                        BigDecimal valorFerias = calcularValorFerias(salarioBase, new BigDecimal("20"));
-                        resultado.put("referencia", new BigDecimal("20"));
-                        resultado.put("vencimentos", valorFerias);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
-                    }
+                    case 141 -> calcularFeriasGozadas(resultado, new BigDecimal("20"), salarioBase);
 
                     // 15 Dias de Férias Gozadas
-                    case 142 -> {
-                        BigDecimal valorFerias = calcularValorFerias(salarioBase, new BigDecimal("15"));
-                        resultado.put("referencia", new BigDecimal("15"));
-                        resultado.put("vencimentos", valorFerias);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
-                    }
+                    case 142 -> calcularFeriasGozadas(resultado, new BigDecimal("15"), salarioBase);
 
                     // 10 Dias de Férias Gozadas
-                    case 143 -> {
-                        BigDecimal valorFerias = calcularValorFerias(salarioBase, new BigDecimal("10"));
-                        resultado.put("referencia", new BigDecimal("10"));
-                        resultado.put("vencimentos", valorFerias);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
-                    }
+                    case 143 -> calcularFeriasGozadas(resultado, new BigDecimal("10"), salarioBase);
 
                     // Outros Dias de Férias
-                    case 144 -> {
-                        BigDecimal valorFerias = calcularValorFerias(salarioBase, diasDeFerias);
-                        resultado.put("referencia", diasDeFerias);
-                        resultado.put("vencimentos", valorFerias);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
-                    }
+                    case 144 -> calcularFeriasGozadas(resultado, diasDeFerias, salarioBase);
 
                     // 1/3 de Férias
                     case 145 -> {
-                        BigDecimal valorFerias = calcularValorFerias(salarioBase, diasDeFerias);
-                        BigDecimal umTerco = valorFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
-
+                        BigDecimal umTerco = valorDiasFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
                         resultado.put("referencia", umTerco);
                         resultado.put("vencimentos", umTerco);
                         resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
                     }
 
                     // Abono Pecuniário (venda de 10 dias)
-                    case 146 -> {
-                        BigDecimal valorAbono = calcularValorFerias(salarioBase, new BigDecimal("10"));
-                        resultado.put("referencia", new BigDecimal("10"));
-                        resultado.put("vencimentos", valorAbono);
-                        resultado.put("descontos", BigDecimal.ZERO);
+                    case 146 -> calcularFeriasGozadas(resultado, new BigDecimal("10"), salarioBase);
 
-                        return resultado;
-                    }
-
-                    // 1/3 Abono Pecuniário
+                    // 1/3 Abono Pecuniário - CORRIGIDO
                     case 147 -> {
-                        BigDecimal umTercoAbono = diasDeAbono.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
-
+                        BigDecimal valorAbono = calcularValorFerias(salarioBase, new BigDecimal("10"));
+                        BigDecimal umTercoAbono = valorAbono.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
                         resultado.put("referencia", umTercoAbono);
                         resultado.put("vencimentos", umTercoAbono);
                         resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
                     }
 
-                    // Média de Horas Extras 50%
+                    // Média de Horas Extras
                     case 148 -> {
-                        BigDecimal mediaHE50 = calcularMediaHorasExtrasFerias(98, salarioPorHora);
-                        resultado.put("referencia", mediaHE50);
-                        resultado.put("vencimentos", mediaHE50);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaHorasExtras(resultado, 98, salarioPorHora);
                     }
 
-                    // Média de Horas Extras 100%
                     case 149 -> {
-                        BigDecimal mediaHE100 = calcularMediaHorasExtrasFerias(100, salarioPorHora);
-                        resultado.put("referencia", mediaHE100);
-                        resultado.put("vencimentos", mediaHE100);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaHorasExtras(resultado, 100, salarioPorHora);
                     }
 
-                    // Média de Horas Extras 70%
                     case 150 -> {
-                        BigDecimal mediaHE70 = calcularMediaHorasExtrasFerias(99, salarioPorHora);
-                        resultado.put("referencia", mediaHE70);
-                        resultado.put("vencimentos", mediaHE70);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaHorasExtras(resultado, 99, salarioPorHora);
                     }
 
-                    // Insalubridade Sobre Férias
+                    // Adicionais
                     case 151 -> {
-                        BigDecimal mediaInsalubridade = calcularMediaInsalubridadeFerias();
-                        resultado.put("referencia", mediaInsalubridade);
-                        resultado.put("vencimentos", mediaInsalubridade);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaInsalubridade(resultado);
                     }
 
-                    // Periculosidade Sobre Férias - USANDO MÉTuDO ALTERNATIVO
                     case 152 -> {
-                        BigDecimal mediaPericulosidade = calcularMediaPericulosidadeFerias(salarioBase);
-                        resultado.put("referencia", mediaPericulosidade);
-                        resultado.put("vencimentos", mediaPericulosidade);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaPericulosidade(resultado, salarioBase);
                     }
 
-                    // Comissões Sobre Férias
                     case 153 -> {
-                        BigDecimal mediaComissoes = calcularMediaComissoesFerias();
-                        resultado.put("referencia", mediaComissoes);
-                        resultado.put("vencimentos", mediaComissoes);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaComissoes(resultado);
                     }
 
-                    // Média de Adicional Noturno nas Férias
                     case 154 -> {
-                        BigDecimal mediaAdicionalNoturno = calcularMediaAdicionalNoturnoFerias();
-                        resultado.put("referencia", mediaAdicionalNoturno);
-                        resultado.put("vencimentos", mediaAdicionalNoturno);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularMediaAdicionalNoturno(resultado);
                     }
 
-                    // Desconto Dias Redução Faltas Férias
+                    // Desconto Dias Redução Faltas Férias - CORRIGIDO
                     case 155 -> {
-
                         BigDecimal diasReduzidos = calcularReducaoFaltasFerias(quantidadeDeFaltas);
+                        BigDecimal valorReducao = calcularValorFerias(salarioBase, diasReduzidos);
                         resultado.put("referencia", diasReduzidos);
                         resultado.put("vencimentos", BigDecimal.ZERO);
-                        resultado.put("descontos", diasReduzidos);
-
-                        return resultado;
+                        resultado.put("descontos", valorReducao);
                     }
 
                     // Férias em Dobro
                     case 156 -> {
-                        BigDecimal valorFerias = ferias.getValorDiasFerias() != null ?
-                                ferias.getValorDiasFerias() :
-                                calcularValorFerias(salarioBase, diasDeFerias);
-
-                        BigDecimal valorUmTerco = valorFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
-                        BigDecimal valorTotal = valorFerias.add(valorUmTerco);
-                        BigDecimal inssTotal = calculoBaseService.calcularINSS(valorTotal);
-                        BigDecimal irrfTotal = calcularIRRFFerias(valorTotal, inssTotal, numeroDependentes);
-
-                        BigDecimal feriasDobro = calcularFeriasDobro(valorFerias, valorUmTerco, inssTotal, irrfTotal);
-                        resultado.put("referencia", feriasDobro);
-                        resultado.put("vencimentos", feriasDobro);
-                        resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
+                        calcularFeriasDobro(resultado, valorDiasFerias, numeroDependentes);
                     }
 
-                    // 1/3 Constitucional Férias em Dobro - CORRIGIDO
+                    // 1/3 Constitucional Férias em Dobro
                     case 157 -> {
-                        BigDecimal valorFerias = ferias.getValorDiasFerias() != null ?
-                                ferias.getValorDiasFerias() :
-                                calcularValorFerias(salarioBase, diasDeFerias);
-                        BigDecimal umTerco = valorFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
-
+                        BigDecimal umTerco = valorDiasFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
                         resultado.put("referencia", umTerco);
                         resultado.put("vencimentos", umTerco);
                         resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
                     }
 
-                    // Desconto INSS Sobre Férias - CORRIGIDO
+                    // Descontos INSS e IRRF
                     case 158 -> {
-                        BigDecimal valorFerias = ferias.getValorDiasFerias() != null ?
-                                ferias.getValorDiasFerias() :
-                                calcularValorFerias(salarioBase, diasDeFerias);
-                        BigDecimal inssFerias = calculoBaseService.calcularINSS(valorFerias);
-
-                        resultado.put("referencia", inssFerias);
-                        resultado.put("vencimentos", BigDecimal.ZERO);
-                        resultado.put("descontos", inssFerias);
-
-                        return resultado;
+                        calcularDescontoINSS(resultado, valorDiasFerias);
                     }
 
-                    // Desconto IRRF Sobre Férias - CORRIGIDO
                     case 159 -> {
-                        BigDecimal valorFerias = ferias.getValorDiasFerias() != null ?
-                                ferias.getValorDiasFerias() :
-                                calcularValorFerias(salarioBase, diasDeFerias);
-                        BigDecimal inssFerias = calculoBaseService.calcularINSS(valorFerias);
-                        BigDecimal irrfFerias = calcularIRRFFerias(valorFerias, inssFerias, numeroDependentes);
-
-                        resultado.put("referencia", irrfFerias);
-                        resultado.put("vencimentos", BigDecimal.ZERO);
-                        resultado.put("descontos", irrfFerias);
-
-                        return resultado;
+                        calcularDescontoIRRF(resultado, valorDiasFerias, numeroDependentes);
                     }
 
                     // Adiantamento 1° Parcela Décimo Terceiro
@@ -296,13 +167,9 @@ public class CalculoDaFolhaFeriasService {
                         resultado.put("referencia", decimoTerceiro);
                         resultado.put("vencimentos", decimoTerceiro);
                         resultado.put("descontos", BigDecimal.ZERO);
-
-                        return resultado;
                     }
 
-                    default -> {
-                        logger.warn("Evento de férias não implementado: {}", codigoEvento);
-                    }
+                    default -> logger.warn("Evento de férias não implementado: {}", codigoEvento);
                 }
 
             } catch (Exception e) {
@@ -313,7 +180,46 @@ public class CalculoDaFolhaFeriasService {
             return resultado;
         }
 
-        // ========== MÉTODOS AUXILIARES ==========
+        private void calcularFeriasGozadas(Map<String, BigDecimal> resultado, BigDecimal dias, BigDecimal salarioBase) {
+            BigDecimal valorFerias = calcularValorFerias(salarioBase, dias);
+            resultado.put("referencia", dias);
+            resultado.put("vencimentos", valorFerias);
+            resultado.put("descontos", BigDecimal.ZERO);
+        }
+
+        private void calcularMediaHorasExtras(Map<String, BigDecimal> resultado, Integer codigoEvento, BigDecimal salarioPorHora) {
+            BigDecimal media = calcularMediaHorasExtrasFerias(codigoEvento, salarioPorHora);
+            resultado.put("referencia", media);
+            resultado.put("vencimentos", media);
+            resultado.put("descontos", BigDecimal.ZERO);
+        }
+
+        private void calcularDescontoINSS(Map<String, BigDecimal> resultado, BigDecimal valorFerias) {
+            BigDecimal inssFerias = calculoBaseService.calcularINSS(valorFerias);
+            resultado.put("referencia", inssFerias);
+            resultado.put("vencimentos", BigDecimal.ZERO);
+            resultado.put("descontos", inssFerias);
+        }
+
+        private void calcularDescontoIRRF(Map<String, BigDecimal> resultado, BigDecimal valorFerias, Integer dependentes) {
+            BigDecimal inssFerias = calculoBaseService.calcularINSS(valorFerias);
+            BigDecimal irrfFerias = calcularIRRFFerias(valorFerias, inssFerias, dependentes);
+            resultado.put("referencia", irrfFerias);
+            resultado.put("vencimentos", BigDecimal.ZERO);
+            resultado.put("descontos", irrfFerias);
+        }
+
+        private void calcularFeriasDobro(Map<String, BigDecimal> resultado, BigDecimal valorFerias, Integer dependentes) {
+            BigDecimal umTerco = valorFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
+            BigDecimal valorTotal = valorFerias.add(umTerco);
+            BigDecimal inssTotal = calculoBaseService.calcularINSS(valorTotal);
+            BigDecimal irrfTotal = calcularIRRFFerias(valorTotal, inssTotal, dependentes);
+
+            BigDecimal feriasDobro = valorTotal.subtract(inssTotal).subtract(irrfTotal).multiply(new BigDecimal("2"));
+            resultado.put("referencia", feriasDobro);
+            resultado.put("vencimentos", feriasDobro);
+            resultado.put("descontos", BigDecimal.ZERO);
+        }
 
         private BigDecimal calcularValorFerias(BigDecimal salarioBase, BigDecimal dias) {
             return salarioBase.divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP).multiply(dias).setScale(2, RoundingMode.HALF_UP);
@@ -461,21 +367,6 @@ public class CalculoDaFolhaFeriasService {
             }
         }
 
-        private BigDecimal calcularFeriasDobro(BigDecimal valorFerias, BigDecimal umTerco, BigDecimal inssTotal, BigDecimal irrfTotal) {
-            BigDecimal baseCalculo = valorFerias.add(umTerco);
-
-            // ✅ CORREÇÃO: Verificar o VALOR TOTAL das férias, não o salário base
-            BigDecimal valorTotalFerias = valorFerias.add(umTerco);
-
-            if (valorTotalFerias.compareTo(new BigDecimal("1713.58")) > 0) {
-                // Acima do limite - aplica INSS e IRRF
-                return baseCalculo.subtract(inssTotal).subtract(irrfTotal).multiply(new BigDecimal("2"));
-            } else {
-                // Abaixo do limite - aplica apenas INSS
-                return baseCalculo.subtract(inssTotal).multiply(new BigDecimal("2"));
-            }
-        }
-
         private BigDecimal calcularIRRFFerias(BigDecimal valorFerias, BigDecimal inssFerias, Integer dependentes) {
             BigDecimal baseCalculo = valorFerias.subtract(inssFerias);
 
@@ -489,5 +380,33 @@ public class CalculoDaFolhaFeriasService {
             }
 
             return calculoBaseService.calcularIRRF(baseCalculo);
+        }
+
+        private void calcularMediaInsalubridade(Map<String, BigDecimal> resultado) {
+            BigDecimal media = calcularMediaInsalubridadeFerias();
+            resultado.put("referencia", media);
+            resultado.put("vencimentos", media);
+            resultado.put("descontos", BigDecimal.ZERO);
+        }
+
+        private void calcularMediaPericulosidade(Map<String, BigDecimal> resultado, BigDecimal salarioBase) {
+            BigDecimal media = calcularMediaPericulosidadeFerias(salarioBase);
+            resultado.put("referencia", media);
+            resultado.put("vencimentos", media);
+            resultado.put("descontos", BigDecimal.ZERO);
+        }
+
+        private void calcularMediaComissoes(Map<String, BigDecimal> resultado) {
+            BigDecimal media = calcularMediaComissoesFerias();
+            resultado.put("referencia", media);
+            resultado.put("vencimentos", media);
+            resultado.put("descontos", BigDecimal.ZERO);
+        }
+
+        private void calcularMediaAdicionalNoturno(Map<String, BigDecimal> resultado) {
+            BigDecimal media = calcularMediaAdicionalNoturnoFerias();
+            resultado.put("referencia", media);
+            resultado.put("vencimentos", media);
+            resultado.put("descontos", BigDecimal.ZERO);
         }
 }
