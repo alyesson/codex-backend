@@ -93,7 +93,7 @@ public class FolhaQuinzenalCalculadaService {
 
         // Processa o evento específico
         Integer codigoEvento = eventoDto.getCodigoEvento();
-        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento, tipoSalario);
+        Map<String, BigDecimal> resultadoProv = calculoDaFolhaProventosService.escolheEventos(codigoEvento);
         Map<String, BigDecimal> resultadoDesc = calculoDaFolhaDescontosService.escolheEventos(codigoEvento);
 
         BigDecimal referenciaFinal = BigDecimal.ZERO;
