@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalcularBolsaAuxílioService {
+public class CalcularBolsaAuxilioService {
 
     @Autowired
     private CalculoBaseService calculoBaseService;

@@ -226,8 +226,7 @@ public class CalculoDaFolhaRescisaoService {
         } else {
             BigDecimal horasPorDia = new BigDecimal("8");
             BigDecimal valorDia = salarioPorHora.multiply(horasPorDia);
-            return valorDia.multiply(new BigDecimal(diasAvisoPrevio))
-                    .setScale(2, RoundingMode.HALF_UP);
+            return valorDia.multiply(new BigDecimal(diasAvisoPrevio)).setScale(2, RoundingMode.HALF_UP);
         }
     }
 
@@ -241,8 +240,7 @@ public class CalculoDaFolhaRescisaoService {
 
         // Multa de 40% para demissão sem justa causa
         if ("SEM_JUSTA_CAUSA".equals(tipoDemissao)) {
-            return totalFGTSDepositado.multiply(new BigDecimal("0.40"))
-                    .setScale(2, RoundingMode.HALF_UP);
+            return totalFGTSDepositado.multiply(new BigDecimal("0.40")).setScale(2, RoundingMode.HALF_UP);
         }
 
         return BigDecimal.ZERO;
@@ -262,9 +260,7 @@ public class CalculoDaFolhaRescisaoService {
         int diasFerias = calcularDiasFeriasPorFaltas(faltas);
 
         BigDecimal valorFerias = salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                .multiply(new BigDecimal(mesesTrabalhados))
-                .multiply(new BigDecimal(diasFerias))
-                .divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP);
+                .multiply(new BigDecimal(mesesTrabalhados)).multiply(new BigDecimal(diasFerias)).divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP);
 
         return valorFerias.setScale(2, RoundingMode.HALF_UP);
     }
@@ -272,12 +268,8 @@ public class CalculoDaFolhaRescisaoService {
     private BigDecimal calcularFeriasVencidas(BigDecimal salarioBase, Integer faltas, String tipoSalario) {
         int diasFerias = calcularDiasFeriasPorFaltas(faltas);
 
-        BigDecimal valorFerias = salarioBase.divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP)
-                .multiply(new BigDecimal(diasFerias));
-
-        // + 1/3 constitucional
+        BigDecimal valorFerias = salarioBase.divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(diasFerias));
         BigDecimal umTerco = valorFerias.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
-
         return valorFerias.add(umTerco).setScale(2, RoundingMode.HALF_UP);
     }
 
@@ -291,9 +283,7 @@ public class CalculoDaFolhaRescisaoService {
             mesesTrabalhados++;
         }
 
-        return salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                .multiply(new BigDecimal(mesesTrabalhados))
-                .setScale(2, RoundingMode.HALF_UP);
+        return salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
     }
 
     private int calcularDiasFeriasPorFaltas(Integer faltas) {
@@ -317,9 +307,7 @@ public class CalculoDaFolhaRescisaoService {
                     .orElse(new BigDecimal("50.00")); // Valor padrão
 
             if (dependentes > 0 && salarioBase.compareTo(new BigDecimal("1500.00")) <= 0) {
-                return valorCota.multiply(new BigDecimal(dependentes))
-                        .multiply(new BigDecimal(diasTrabalhados))
-                        .divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP);
+                return valorCota.multiply(new BigDecimal(dependentes)).multiply(new BigDecimal(diasTrabalhados)).divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP);
             }
         } catch (Exception e) {
             logger.error("Erro ao calcular salário família: {}", e.getMessage());

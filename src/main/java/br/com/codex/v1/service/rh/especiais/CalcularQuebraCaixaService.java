@@ -2,6 +2,7 @@ package br.com.codex.v1.service.rh.especiais;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.horarios.CalcularHorasNormaisDiurnasService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +13,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalcularPericulosidadeService {
+public class CalcularQuebraCaixaService {
 
     @Autowired
     private CalculoBaseService calculoBaseService;
 
+    @Autowired
+    private CalcularHorasNormaisDiurnasService calculaHorasNormaisDiurnasService;
+
     @Setter
     String numeroMatricula;
 
-    public Map<String, BigDecimal> calcularPericulosidade() {
+    BigDecimal valorReferenteHoraDiurna;
+
+    public Map<String, BigDecimal> calcularQuebraCaixa() {
         Map<String, BigDecimal> resultado = new HashMap<>();
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);
@@ -28,21 +34,20 @@ public class CalcularPericulosidadeService {
 
         try {
             FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-            BigDecimal salarioBase = folha.getSalarioBase();
-            BigDecimal porcentagemPericuloso = folha.getPericulosidade();
+            BigDecimal valorQuebraCaixa = folha.getQuebraCaixa();
+            BigDecimal horasPorMes = folha.getHorasMes();
 
-            if (porcentagemPericuloso == null || porcentagemPericuloso.compareTo(BigDecimal.ZERO) <= 0) {
-                return resultado;
-            }
+            //Calculando o valor da Hora Diurna
+            calculaHorasNormaisDiurnasService.calculaHorasNormaisDiurnas();
 
-            BigDecimal valorPericuloso = salarioBase.multiply(porcentagemPericuloso).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+            BigDecimal quebCaixa = (valorQuebraCaixa.multiply(valorReferenteHoraDiurna)).divide(horasPorMes,2, RoundingMode.HALF_UP);
 
-            resultado.put("referencia", porcentagemPericuloso);
-            resultado.put("vencimentos", valorPericuloso);
+            resultado.put("referencia", valorQuebraCaixa);
+            resultado.put("vencimentos", quebCaixa);
             resultado.put("descontos", BigDecimal.ZERO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular periculosidade: " + e.getMessage());
+            throw new RuntimeException("Erro ao calcular comissão: " + e.getMessage());
         }
         return resultado;
     }

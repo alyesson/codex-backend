@@ -5,6 +5,7 @@ import br.com.codex.v1.service.CalculoBaseService;
 import br.com.codex.v1.utilitario.Calendario;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Service
 public class CalcularHorasRepousoRemuneradoDiurnoService {
 
     @Autowired

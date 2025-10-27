@@ -91,10 +91,8 @@ public class CalcularHorasNormaisDiurnasService {
             resultado.put("referencia", totalHorasMes);     // Total de horas no mês
             resultado.put("vencimentos", valorReferenteHoraDiurna);       // Valor total em R$
             resultado.put("descontos", BigDecimal.ZERO);
-            System.out.println("💰 Calculado Horas Normais: " + valorReferenteHoraDiurna);
 
             return resultado;
-
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular horas diurnas: " + e.getMessage());
