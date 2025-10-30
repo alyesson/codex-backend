@@ -15,7 +15,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class CalculoFeriasEventos implements Serializable {
+public class FolhaFeriasEventos implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -35,17 +35,17 @@ public class CalculoFeriasEventos implements Serializable {
     private LocalDate dataProcessamento;
 
     @ManyToOne
-    @JoinColumn(name = "calculoFerias_id")
+    @JoinColumn(name = "folhaFerias_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private CalculoFerias calculoFerias;
+    private FolhaFerias folhaFerias;
 
-    public CalculoFeriasEventos() {
+    public FolhaFeriasEventos() {
         super();
     }
 
-    public CalculoFeriasEventos(Long id, Integer codigoEvento, String descricaoEvento, BigDecimal referencia,
-                                BigDecimal vencimentos, BigDecimal descontos, LocalDate dataProcessamento,
-                                CalculoFerias calculoFerias) {
+    public FolhaFeriasEventos(Long id, Integer codigoEvento, String descricaoEvento, BigDecimal referencia,
+                              BigDecimal vencimentos, BigDecimal descontos, LocalDate dataProcessamento,
+                              FolhaFerias folhaFerias) {
         this.id = id;
         this.codigoEvento = codigoEvento;
         this.descricaoEvento = descricaoEvento;
@@ -53,13 +53,13 @@ public class CalculoFeriasEventos implements Serializable {
         this.vencimentos = vencimentos;
         this.descontos = descontos;
         this.dataProcessamento = dataProcessamento;
-        this.calculoFerias = calculoFerias;
+        this.folhaFerias = folhaFerias;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CalculoFeriasEventos that = (CalculoFeriasEventos) o;
+        FolhaFeriasEventos that = (FolhaFeriasEventos) o;
         return Objects.equals(id, that.id);
     }
 

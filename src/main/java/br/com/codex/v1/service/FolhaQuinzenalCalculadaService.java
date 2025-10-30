@@ -60,7 +60,6 @@ public class FolhaQuinzenalCalculadaService {
             FolhaQuinzenalCalculada folhaProcessada = processarFolhaIndividual(folhaDto);
             folhasProcessadas.add(folhaProcessada);
         }
-
         return folhasProcessadas;
     }
 
@@ -72,14 +71,8 @@ public class FolhaQuinzenalCalculadaService {
             FolhaQuinzenalEventosCalculadaDto eventoProcessado = processarEvento(folhaDto.getMatriculaColaborador(), eventoDto, folhaDto.getTipoSalario());
             eventosProcessados.add(eventoProcessado);
         }
-
-        // Atualiza a folha com os eventos processados
         folhaDto.setEventos(eventosProcessados);
-
-        // Calcula totais
         calcularTotais(folhaDto);
-
-        // Salva no banco
         return create(folhaDto);
     }
 
@@ -106,31 +99,19 @@ public class FolhaQuinzenalCalculadaService {
             referenciaFinal = resultadoProv.get("referencia") != null ? resultadoProv.get("referencia") : BigDecimal.ZERO;
             vencimentosFinal = resultadoProv.get("vencimentos") != null ? resultadoProv.get("vencimentos") : BigDecimal.ZERO;
             descontosFinal = resultadoProv.get("descontos") != null ? resultadoProv.get("descontos") : BigDecimal.ZERO;
-
-            System.out.println("💰 Valores do Provento - Ref: " + referenciaFinal + ", Venc: " + vencimentosFinal + ", Desc: " + descontosFinal);
         }
 
-        // Atualiza o evento desconto com os resultados
         if (resultadoDesc != null && !resultadoDesc.isEmpty()) {
-            // Para referência, usar a do desconto se a do provento for zero
             if (referenciaFinal.equals(BigDecimal.ZERO)) {
                 referenciaFinal = resultadoDesc.get("referencia") != null ? resultadoDesc.get("referencia") : BigDecimal.ZERO;
             }
-
-            // 🔥 IMPORTANTE: SOMAR os valores, não substituir!
             vencimentosFinal = vencimentosFinal.add(resultadoDesc.get("vencimentos") != null ? resultadoDesc.get("vencimentos") : BigDecimal.ZERO);
             descontosFinal = descontosFinal.add(resultadoDesc.get("descontos") != null ? resultadoDesc.get("descontos") : BigDecimal.ZERO);
-
-            System.out.println("💸 Valores do Desconto - Ref: " + referenciaFinal + ", Venc: " + vencimentosFinal + ", Desc: " + descontosFinal);
         }
 
         eventoDto.setReferencia(referenciaFinal.toString()); // Converter para String se necessário
         eventoDto.setVencimentos(vencimentosFinal);
         eventoDto.setDescontos(descontosFinal);
-
-        System.out.println("✅ Evento final - Ref: " + eventoDto.getReferencia() +
-                ", Venc: " + eventoDto.getVencimentos() +
-                ", Desc: " + eventoDto.getDescontos());
 
         return eventoDto;
     }
@@ -156,11 +137,7 @@ public class FolhaQuinzenalCalculadaService {
     @Transactional
     public void delete(Long id) {
         FolhaQuinzenalCalculada folha = findById(id);
-
-        // Remove os eventos primeiro (devido à constraint de chave estrangeira)
         folhaQuinzenalEventosCalculadaRepository.deleteByFolhaQuinzenalCalculadaId(id);
-
-        // Remove o cadastro principal
         folhaQuinzenalCalculadaRepository.deleteById(id);
     }
 

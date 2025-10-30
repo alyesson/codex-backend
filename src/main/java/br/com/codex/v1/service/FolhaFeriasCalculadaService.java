@@ -1,11 +1,11 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.dto.CalculoFeriasDto;
-import br.com.codex.v1.domain.dto.CalculoFeriasEventosDto;
-import br.com.codex.v1.domain.repository.CalculoFeriasRepository;
-import br.com.codex.v1.domain.repository.CalculoFeriasEventosRepository;
-import br.com.codex.v1.domain.rh.CalculoFerias;
-import br.com.codex.v1.domain.rh.CalculoFeriasEventos;
+import br.com.codex.v1.domain.dto.FolhaFeriasDto;
+import br.com.codex.v1.domain.dto.FolhaFeriasEventosDto;
+import br.com.codex.v1.domain.repository.FolhaFeriasRepository;
+import br.com.codex.v1.domain.repository.FolhaFeriasEventosRepository;
+import br.com.codex.v1.domain.rh.FolhaFerias;
+import br.com.codex.v1.domain.rh.FolhaFeriasEventos;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,10 @@ import java.util.Optional;
 public class FolhaFeriasCalculadaService {
 
     @Autowired
-    private CalculoFeriasRepository calculoFeriasRepository;
+    private FolhaFeriasRepository folhaFeriasRepository;
 
     @Autowired
-    private CalculoFeriasEventosRepository calculoFeriasEventosRepository;
+    private FolhaFeriasEventosRepository folhaFeriasEventosRepository;
 
     @Autowired
     private CalculoDaFolhaFeriasService calculoDaFolhaFeriasService;
@@ -32,58 +32,52 @@ public class FolhaFeriasCalculadaService {
     @Autowired
     private CalculoDaFolhaDescontosService calculoDaFolhaDescontosService;
 
-    public CalculoFerias create (CalculoFeriasDto calculoFeriasDto){
+    public FolhaFerias create (FolhaFeriasDto folhaFeriasDto){
 
-        calculoFeriasDto.setId(null);
-        CalculoFerias calculoFerias = new CalculoFerias(calculoFeriasDto);
-        calculoFerias = calculoFeriasRepository.save(calculoFerias);
+        folhaFeriasDto.setId(null);
+        FolhaFerias folhaFerias = new FolhaFerias(folhaFeriasDto);
+        folhaFerias = folhaFeriasRepository.save(folhaFerias);
 
         //Salvando eventos
-        for(CalculoFeriasEventosDto eventosDto : calculoFeriasDto.getEventos()){
-            CalculoFeriasEventos eventos = new CalculoFeriasEventos();
+        for(FolhaFeriasEventosDto eventosDto : folhaFeriasDto.getEventos()){
+            FolhaFeriasEventos eventos = new FolhaFeriasEventos();
             eventos.setCodigoEvento(eventosDto.getCodigoEvento());
             eventos.setDescricaoEvento(eventosDto.getDescricaoEvento());
             eventos.setReferencia(eventosDto.getReferencia());
             eventos.setVencimentos(eventosDto.getVencimentos());
             eventos.setDescontos(eventosDto.getDescontos());
-            eventos.setCalculoFerias(calculoFerias);
-            calculoFeriasEventosRepository.save(eventos);
+            eventos.setFolhaFerias(folhaFerias);
+            folhaFeriasEventosRepository.save(eventos);
         }
-        return calculoFerias;
+        return folhaFerias;
     }
 
     @Transactional
-    public List<CalculoFerias> processarLote(List<CalculoFeriasDto> folhasDto) {
-        List<CalculoFerias> folhasProcessadas = new ArrayList<>();
+    public List<FolhaFerias> processarLote(List<FolhaFeriasDto> folhasDto) {
+        List<FolhaFerias> folhasProcessadas = new ArrayList<>();
 
-        for (CalculoFeriasDto folhaDto : folhasDto) {
-            CalculoFerias folhaProcessada = processarFolhaIndividual(folhaDto);
+        for (FolhaFeriasDto folhaDto : folhasDto) {
+            FolhaFerias folhaProcessada = processarFolhaIndividual(folhaDto);
             folhasProcessadas.add(folhaProcessada);
         }
-
         return folhasProcessadas;
     }
 
-    private CalculoFerias processarFolhaIndividual(CalculoFeriasDto folhaDto) {
+    private FolhaFerias processarFolhaIndividual(FolhaFeriasDto folhaDto) {
         // Processa cada evento da folha
-        List<CalculoFeriasEventosDto> eventosProcessados = new ArrayList<>();
+        List<FolhaFeriasEventosDto> eventosProcessados = new ArrayList<>();
 
-        for (CalculoFeriasEventosDto eventoDto : folhaDto.getEventos()) {
-            CalculoFeriasEventosDto eventoProcessado = processarEvento(folhaDto.getNumeroMatricula(), eventoDto);
+        for (FolhaFeriasEventosDto eventoDto : folhaDto.getEventos()) {
+            FolhaFeriasEventosDto eventoProcessado = processarEvento(folhaDto.getNumeroMatricula(), eventoDto);
             eventosProcessados.add(eventoProcessado);
         }
 
-        // Atualiza a folha com os eventos processados
         folhaDto.setEventos(eventosProcessados);
-
-        // Calcula totais
         calcularTotais(folhaDto);
-
-        // Salva no banco
         return create(folhaDto);
     }
 
-    private CalculoFeriasEventosDto processarEvento(String matricula, CalculoFeriasEventosDto eventoDto) {
+    private FolhaFeriasEventosDto processarEvento(String matricula, FolhaFeriasEventosDto eventoDto) {
         // Configura o cálculo
         calculoDaFolhaFeriasService.setNumeroMatricula(matricula);
 
@@ -118,11 +112,11 @@ public class FolhaFeriasCalculadaService {
         return eventoDto;
     }
 
-    private void calcularTotais(CalculoFeriasDto folhaDto) {
+    private void calcularTotais(FolhaFeriasDto folhaDto) {
         BigDecimal totalVencimentos = BigDecimal.ZERO;
         BigDecimal totalDescontos = BigDecimal.ZERO;
 
-        for (CalculoFeriasEventosDto evento : folhaDto.getEventos()) {
+        for (FolhaFeriasEventosDto evento : folhaDto.getEventos()) {
             if (evento.getVencimentos() != null) {
                 totalVencimentos = totalVencimentos.add(evento.getVencimentos());
             }
@@ -138,25 +132,25 @@ public class FolhaFeriasCalculadaService {
 
     @Transactional
     public void delete(Long id) {
-        CalculoFerias folha = findById(id);
+        FolhaFerias folha = findById(id);
 
         // Remove os eventos primeiro (devido à constraint de chave estrangeira)
-        calculoFeriasEventosRepository.deleteByCalculoFeriasId(id);
+        folhaFeriasEventosRepository.deleteByFolhaFeriasId(id);
 
         // Remove o cadastro principal
-        calculoFeriasRepository.deleteById(id);
+        folhaFeriasRepository.deleteById(id);
     }
 
-    public CalculoFerias findById(Long id) {
-        Optional<CalculoFerias> objCalculoFerias = calculoFeriasRepository.findById(id);
+    public FolhaFerias findById(Long id) {
+        Optional<FolhaFerias> objCalculoFerias = folhaFeriasRepository.findById(id);
         return objCalculoFerias.orElseThrow(() -> new ObjectNotFoundException("Cadastro de folha de pagamento quinzenal não encontrado"));
     }
 
-    public List<CalculoFeriasEventos> findAllEventosByCalculoFeriasId(Long eventoId) {
-        return calculoFeriasEventosRepository.findAllEventosByCalculoFeriasId(eventoId);
+    public List<FolhaFeriasEventos> findAllEventosByFolhaFeriasId(Long eventoId) {
+        return folhaFeriasEventosRepository.findAllEventosByFolhaFeriasId(eventoId);
     }
 
-    public List<CalculoFerias> findAll() {
-        return calculoFeriasRepository.findAll();
+    public List<FolhaFerias> findAll() {
+        return folhaFeriasRepository.findAll();
     }
 }

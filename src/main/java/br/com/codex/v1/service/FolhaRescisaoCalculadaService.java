@@ -60,7 +60,6 @@ public class FolhaRescisaoCalculadaService {
             FolhaRescisao folhaProcessada = processarFolhaIndividual(folhaDto);
             folhasProcessadas.add(folhaProcessada);
         }
-
         return folhasProcessadas;
     }
 
@@ -73,13 +72,8 @@ public class FolhaRescisaoCalculadaService {
             eventosProcessados.add(eventoProcessado);
         }
 
-        // Atualiza a folha com os eventos processados
         folhaDto.setEventos(eventosProcessados);
-
-        // Calcula totais
         calcularTotais(folhaDto);
-
-        // Salva no banco
         return create(folhaDto);
     }
 
@@ -114,7 +108,6 @@ public class FolhaRescisaoCalculadaService {
             eventoDto.setVencimentos(vencimentos != null ? vencimentos : BigDecimal.ZERO);
             eventoDto.setDescontos(descontos != null ? descontos : BigDecimal.ZERO);
         }
-
         return eventoDto;
     }
 

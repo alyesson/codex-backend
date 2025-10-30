@@ -1,6 +1,6 @@
 package br.com.codex.v1.domain.rh;
 
-import br.com.codex.v1.domain.dto.CalculoFeriasDto;
+import br.com.codex.v1.domain.dto.FolhaFeriasDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class CalculoFerias implements Serializable {
+public class FolhaFerias implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -74,22 +74,22 @@ public class CalculoFerias implements Serializable {
     private String cnpjEmpresa;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "calculoFerias", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CalculoFeriasEventos> eventos = new ArrayList<>();
+    @OneToMany(mappedBy = "folhaFerias", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FolhaFeriasEventos> eventos = new ArrayList<>();
 
-    public CalculoFerias() {
+    public FolhaFerias() {
         super();
     }
 
-    public CalculoFerias(Long id, String numeroMatricula, String nomeColaborador, String codigoCbo, String centroDeCusto,
-                         LocalDate dataDeAdmissao, String mesAnoReferencia, String mesAnoReferenciaFolha, String tipoDaFolha,
-                         int numeroDependentes, LocalDate dataAvisoFerias, LocalDate dataReciboFerias, LocalDate dataPagamento,
-                         BigDecimal valorMediaHoras, BigDecimal salarioBruto, BigDecimal salarioHora, String abonoPecuniario,
-                         String adiantar13, LocalDate inicioAquisitivoFerias, LocalDate terminoAquisitivoFerias,
-                         int totalFaltas, LocalDate dataInicioFerias, LocalDate terminoFerias, int totalDiasFerias,
-                         String inicioAbono, String terminoAbono, int totalDiasAbono, BigDecimal valorDiasFerias,
-                         BigDecimal totalLiquidoReceber, BigDecimal totalBrutReceber, BigDecimal totalDeDescontos,
-                         String nomeEmpresa, String cnpjEmpresa) {
+    public FolhaFerias(Long id, String numeroMatricula, String nomeColaborador, String codigoCbo, String centroDeCusto,
+                       LocalDate dataDeAdmissao, String mesAnoReferencia, String mesAnoReferenciaFolha, String tipoDaFolha,
+                       int numeroDependentes, LocalDate dataAvisoFerias, LocalDate dataReciboFerias, LocalDate dataPagamento,
+                       BigDecimal valorMediaHoras, BigDecimal salarioBruto, BigDecimal salarioHora, String abonoPecuniario,
+                       String adiantar13, LocalDate inicioAquisitivoFerias, LocalDate terminoAquisitivoFerias,
+                       int totalFaltas, LocalDate dataInicioFerias, LocalDate terminoFerias, int totalDiasFerias,
+                       String inicioAbono, String terminoAbono, int totalDiasAbono, BigDecimal valorDiasFerias,
+                       BigDecimal totalLiquidoReceber, BigDecimal totalBrutReceber, BigDecimal totalDeDescontos,
+                       String nomeEmpresa, String cnpjEmpresa) {
         this.id = id;
         this.numeroMatricula = numeroMatricula;
         this.nomeColaborador = nomeColaborador;
@@ -125,7 +125,7 @@ public class CalculoFerias implements Serializable {
         this.cnpjEmpresa = cnpjEmpresa;
     }
 
-    public CalculoFerias(CalculoFeriasDto obj) {
+    public FolhaFerias(FolhaFeriasDto obj) {
         this.id = obj.getId();
         this.numeroMatricula = obj.getNumeroMatricula();
         this.nomeColaborador = obj.getNomeColaborador();
@@ -164,7 +164,7 @@ public class CalculoFerias implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CalculoFerias that = (CalculoFerias) o;
+        FolhaFerias that = (FolhaFerias) o;
         return Objects.equals(id, that.id);
     }
 

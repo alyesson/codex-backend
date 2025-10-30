@@ -1,22 +1,17 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.CalculoFerias;
-import br.com.codex.v1.domain.rh.CalculoFeriasEventos;
+import br.com.codex.v1.domain.rh.FolhaFeriasEventos;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Getter
 @Setter
-public class CalculoFeriasEventosDto implements Serializable {
+public class FolhaFeriasEventosDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -27,13 +22,13 @@ public class CalculoFeriasEventosDto implements Serializable {
     private BigDecimal vencimentos;
     private BigDecimal descontos;
     private LocalDate dataProcessamento;
-    private CalculoFeriasDto calculoFeriasDto;
+    private FolhaFeriasDto folhaFeriasDto;
 
-    public CalculoFeriasEventosDto() {
+    public FolhaFeriasEventosDto() {
         super();
     }
 
-    public CalculoFeriasEventosDto(CalculoFeriasEventos obj) {
+    public FolhaFeriasEventosDto(FolhaFeriasEventos obj) {
         this.id = obj.getId();
         this.codigoEvento = obj.getCodigoEvento();
         this.descricaoEvento = obj.getDescricaoEvento();
@@ -41,6 +36,6 @@ public class CalculoFeriasEventosDto implements Serializable {
         this.vencimentos = obj.getVencimentos();
         this.descontos = obj.getDescontos();
         this.dataProcessamento = obj.getDataProcessamento();
-        this.calculoFeriasDto = new CalculoFeriasDto(obj.getCalculoFerias());
+        this.folhaFeriasDto = new FolhaFeriasDto(obj.getFolhaFerias());
     }
 }

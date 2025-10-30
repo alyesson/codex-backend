@@ -1,24 +1,19 @@
 package br.com.codex.v1.domain.dto;
 
-import br.com.codex.v1.domain.rh.CalculoFerias;
+import br.com.codex.v1.domain.rh.FolhaFerias;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
-public class CalculoFeriasDto implements Serializable {
+public class FolhaFeriasDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -56,13 +51,13 @@ public class CalculoFeriasDto implements Serializable {
     private BigDecimal totalDeDescontos;
     private String nomeEmpresa;
     private String cnpjEmpresa;
-    private List<CalculoFeriasEventosDto> eventos;
+    private List<FolhaFeriasEventosDto> eventos;
 
-    public CalculoFeriasDto() {
+    public FolhaFeriasDto() {
         super();
     }
 
-    public CalculoFeriasDto(CalculoFerias obj) {
+    public FolhaFeriasDto(FolhaFerias obj) {
         this.id = obj.getId();
         this.numeroMatricula = obj.getNumeroMatricula();
         this.nomeColaborador = obj.getNomeColaborador();

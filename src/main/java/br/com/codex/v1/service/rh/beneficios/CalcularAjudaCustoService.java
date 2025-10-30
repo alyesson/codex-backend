@@ -32,17 +32,8 @@ public class CalcularAjudaCustoService {
 
         if(tipoSalario.equals("Quinzenal")) {
             FolhaQuinzenal folha = calculoBaseService.findByMatriculaFuncionario(numeroMatricula);
-            BigDecimal valorReferencia = folha.getEventos().stream()
-                    .filter(evento -> evento.getCodigoEvento().equals(130))
-                    .findFirst()
-                    .map(evento -> {
-                        try { return new BigDecimal(evento.getReferencia()); }
-                        catch (NumberFormatException e) { return BigDecimal.ZERO; }
-                    })
-                    .orElse(BigDecimal.ZERO);
-
-            BigDecimal valorAjudaCusto = valorReferencia.multiply(folha.getTransporteDia());
-            resultado.put("referencia", valorReferencia);
+            BigDecimal valorAjudaCusto = folha.getTransporteDia();
+            resultado.put("referencia", valorAjudaCusto);
             resultado.put("vencimentos", valorAjudaCusto);
         } else {
             FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);

@@ -64,7 +64,7 @@ public class CalculoDaFolhaRescisaoService {
             LocalDate dataDemissao = rescisao.getDataDeDemissao();
             Integer diasTrabalhadosMes = rescisao.getDiasTrabalhadosNoMes();
             Integer faltasMes = rescisao.getFaltasNoMes();
-            Integer numeroDependentes = rescisao.getNumDependenteIrrf();
+            Integer numeroDependentes = rescisao.getNumeroDependenteIrrf();
             String tipoSalario = rescisao.getTipoDeSalario();
             String tipoDemissao = rescisao.getTipoDeDemissao();
 

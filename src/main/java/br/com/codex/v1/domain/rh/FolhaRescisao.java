@@ -29,7 +29,7 @@ public class FolhaRescisao implements Serializable {
     private LocalDate dataDoPagamento;
     private String empresaNome;
     private String numeroCnpj;
-    private String ederecoEmpresa;
+    private String enderecoEmpresa;
     private String bairroEmpresa;
     private String municipioEmpresa;
     private String ufEmpresa;
@@ -47,7 +47,7 @@ public class FolhaRescisao implements Serializable {
     private String cpf;
     private String dataNascimento;
     private String nomeMae;
-    private int numDependenteIrrf;
+    private int numeroDependenteIrrf;
     private String tipoDeSalario;
     private int horasSemanais;
     private LocalDate dataDeAdmissao;
@@ -90,12 +90,12 @@ public class FolhaRescisao implements Serializable {
     }
 
     public FolhaRescisao(Long id, String mesFolha, LocalDate dataProcessamento, LocalDate dataDoPagamento,
-                         String empresaNome, String numeroCnpj, String ederecoEmpresa, String bairroEmpresa,
+                         String empresaNome, String numeroCnpj, String enderecoEmpresa, String bairroEmpresa,
                          String municipioEmpresa, String ufEmpresa, String cepEmpresa, String cnaeEmpresa,
                          String numeroMatricula, String numeroPis, String nomDoFuncionario, String ederecoFuncionario,
                          String bairroFuncionario, String municipioFuncionario, String ufFuncionario,
                          String cepFuncionario, String ctps, String cpf, String dataNascimento, String nomeMae,
-                         int numDependenteIrrf, String tipoDeSalario, int horasSemanais, LocalDate dataDeAdmissao,
+                         int numeroDependenteIrrf, String tipoDeSalario, int horasSemanais, LocalDate dataDeAdmissao,
                          LocalDate dataDeDemissao, LocalDate dataAVisoPrevio, String tipoDeDemissao, String tipoContrato,
                          String tipoDeAvisoPrevio, String codigoAfastamento, LocalDate dataFimAvisoPrevio,
                          String categoriaTrabalhador, String codigoSindical, String entidadeSindical, BigDecimal salarioHora,
@@ -107,7 +107,7 @@ public class FolhaRescisao implements Serializable {
         this.dataDoPagamento = dataDoPagamento;
         this.empresaNome = empresaNome;
         this.numeroCnpj = numeroCnpj;
-        this.ederecoEmpresa = ederecoEmpresa;
+        this.enderecoEmpresa = enderecoEmpresa;
         this.bairroEmpresa = bairroEmpresa;
         this.municipioEmpresa = municipioEmpresa;
         this.ufEmpresa = ufEmpresa;
@@ -125,7 +125,7 @@ public class FolhaRescisao implements Serializable {
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
         this.nomeMae = nomeMae;
-        this.numDependenteIrrf = numDependenteIrrf;
+        this.numeroDependenteIrrf = numeroDependenteIrrf;
         this.tipoDeSalario = tipoDeSalario;
         this.horasSemanais = horasSemanais;
         this.dataDeAdmissao = dataDeAdmissao;
@@ -154,7 +154,7 @@ public class FolhaRescisao implements Serializable {
         this.dataDoPagamento = obj.getDataDoPagamento();
         this.empresaNome = obj.getEmpresaNome();
         this.numeroCnpj = obj.getNumeroCnpj();
-        this.ederecoEmpresa = obj.getEderecoEmpresa();
+        this.enderecoEmpresa = obj.getEnderecoEmpresa();
         this.bairroEmpresa = obj.getBairroEmpresa();
         this.municipioEmpresa = obj.getMunicipioEmpresa();
         this.ufEmpresa = obj.getUfEmpresa();
@@ -172,7 +172,7 @@ public class FolhaRescisao implements Serializable {
         this.cpf = obj.getCpf();
         this.dataNascimento = obj.getDataNascimento();
         this.nomeMae = obj.getNomeMae();
-        this.numDependenteIrrf = obj.getNumDependenteIrrf();
+        this.numeroDependenteIrrf = obj.getNumeroDependenteIrrf();
         this.tipoDeSalario = obj.getTipoDeSalario();
         this.horasSemanais = obj.getHorasSemanais();
         this.dataDeAdmissao = obj.getDataDeAdmissao();

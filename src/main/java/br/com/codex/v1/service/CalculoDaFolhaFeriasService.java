@@ -1,11 +1,10 @@
 package br.com.codex.v1.service;
 
-import br.com.codex.v1.domain.repository.CalculoFeriasRepository;
+import br.com.codex.v1.domain.repository.FolhaFeriasRepository;
 import br.com.codex.v1.domain.repository.FolhaMensalEventosCalculadaRepository;
 import br.com.codex.v1.domain.repository.FolhaMensalRepository;
 import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
-import br.com.codex.v1.domain.rh.CalculoFerias;
-import br.com.codex.v1.domain.rh.FolhaMensal;
+import br.com.codex.v1.domain.rh.FolhaFerias;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -37,13 +36,13 @@ public class CalculoDaFolhaFeriasService {
         private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
         @Autowired
-        private CalculoFeriasRepository calculoFeriasRepository;
+        private FolhaFeriasRepository folhaFeriasRepository;
 
         @Setter
         private String numeroMatricula;
 
-        public CalculoFerias findByNumeroMatricula(String matricula){
-            Optional<CalculoFerias> obj = calculoFeriasRepository.findByNumeroMatricula(matricula);
+        public FolhaFerias findByNumeroMatricula(String matricula){
+            Optional<FolhaFerias> obj = folhaFeriasRepository.findByNumeroMatricula(matricula);
             return obj.orElseThrow(() -> new ObjectNotFoundException("Informação não encontrada"));
         }
 
@@ -51,7 +50,7 @@ public class CalculoDaFolhaFeriasService {
             Map<String, BigDecimal> resultado = new HashMap<>();
 
             try {
-                CalculoFerias ferias = findByNumeroMatricula(numeroMatricula);
+                FolhaFerias ferias = findByNumeroMatricula(numeroMatricula);
 
                 BigDecimal salarioBase = ferias.getSalarioBruto();
                 BigDecimal salarioPorHora = ferias.getSalarioHora();
