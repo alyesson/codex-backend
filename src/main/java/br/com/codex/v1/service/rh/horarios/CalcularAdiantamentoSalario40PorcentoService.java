@@ -20,6 +20,9 @@ public class CalcularAdiantamentoSalario40PorcentoService {
     @Setter
     String numeroMatricula;
 
+    @Setter
+    String tipoSalario;
+
     public Map<String, BigDecimal>calculaAdiantamentoSalarial40Porcento(){
 
         Map<String, BigDecimal> resultado = new HashMap<>();

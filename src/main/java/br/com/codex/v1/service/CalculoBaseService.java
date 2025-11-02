@@ -100,7 +100,7 @@ public class CalculoBaseService {
         if (obj.isPresent()) {
             return obj.get();
         } else {
-            throw new ObjectNotFoundException("Folha mensal não encontrada para matrícula: " + numeroMatricula);
+            throw new ObjectNotFoundException("Folha quinzenal não encontrada para matrícula: " + numeroMatricula);
         }
     }
 

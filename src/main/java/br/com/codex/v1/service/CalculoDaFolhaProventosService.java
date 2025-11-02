@@ -313,6 +313,7 @@ public class CalculoDaFolhaProventosService {
 
             case 130 -> {
                 calcularAjudaCustoService.setNumeroMatricula(numeroMatricula);
+                calcularAjudaCustoService.setTipoSalario(tipoSalario);
                 return   calcularAjudaCustoService.calcularAjudaCusto();
             }
 
