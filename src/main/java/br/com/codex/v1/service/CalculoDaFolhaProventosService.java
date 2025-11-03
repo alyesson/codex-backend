@@ -256,6 +256,11 @@ public class CalculoDaFolhaProventosService {
                 return   calcularQuebraCaixaService.calcularQuebraCaixa();
             }
 
+            case 56 -> {
+                calcularQuebraCaixaService.setNumeroMatricula(numeroMatricula);
+                return   calcularQuebraCaixaService.calcularQuebraCaixa();
+            }
+
              case 98 -> {
                  calcularHorasExtras50Service.setNumeroMatricula(numeroMatricula);
                 return  calcularHorasExtras50Service.calcularHorasExtras50();
@@ -347,7 +352,6 @@ public class CalculoDaFolhaProventosService {
                 return  calcularMediaDsrNoturnoPrimeiraParcela13Service.calcularMediaDSRNoturnoPrimeiraParcela13();
             }
 
-            //Calculando Insalubridade sobre Primeira Parcela do 13°
             case 178 -> {
                 calcularInsalubridadePrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
                 return  calcularInsalubridadePrimeiraParcela13Service.calcularInsalubridadePrimeiraParcela13();

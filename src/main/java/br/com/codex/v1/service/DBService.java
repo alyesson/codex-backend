@@ -64,12 +64,12 @@ public class DBService {
             List<Usuario> usuariosPadrao = Arrays.asList(
 
                     new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
-                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
+                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "Suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2025!"), "Sistema", "00000"),
 
                     new Usuario(null, "Sistema", "13784744141", Date.valueOf("2024-01-07"), "Neutro", "19999999999",
                             "Rua Indefinida 05", "Indefinido", "Hortolândia", "SP",
-                            "13185-421", "sistema@sistema.com.br",
+                            "13185-421", "Sistema@sistema.com.br",
                             encoder.encode("Sistema@2026!"), "Sistema", "00001"));
 
                     usuariosPadrao.get(0).addPerfil(Perfil.ADMINISTRADOR);
@@ -121,13 +121,13 @@ public class DBService {
                 new Usuario(null, "Administrador", "80374841063",
                         Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                         "Rua Indefinida", "Indefinido", "Hortolândia", "SP",
-                        "13185-421", "suporte@codexsolucoes.com.br",
+                        "13185-421", "Suporte@codexsolucoes.com.br",
                         encoder.encode("Admin@2026!"), "Sistema", "00000"),
 
                 new Usuario(null, "Sistema", "13784744141",
                         Date.valueOf("2024-01-07"), "Neutro", "19999999999",
                         "Rua Indefinida 05", "Indefinido", "Hortolândia", "SP",
-                        "13185-421", "sistema@sistema.com.br",
+                        "13185-421", "Sistema@sistema.com.br",
                         encoder.encode("Sistema@2026!"), "Sistema", "00001")
         );
 
@@ -163,13 +163,13 @@ public class DBService {
                 new Usuario(null, "Administrador", "80374841063",
                         Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                         "Rua Indefinida", "Indefinido", "Hortolândia", "SP",
-                        "13185-421", "suporte@codexsolucoes.com.br",
+                        "13185-421", "Suporte@codexsolucoes.com.br",
                         encoder.encode("Admin@2026!"), "Sistema", "00000"),
 
                 new Usuario(null, "Sistema", "13784744141",
                         Date.valueOf("2024-01-07"), "Neutro", "19999999999",
                         "Rua Indefinida 05", "Indefinido", "Hortolândia", "SP",
-                        "13185-421", "sistema@sistema.com.br",
+                        "13185-421", "Sistema@sistema.com.br",
                         encoder.encode("Sistema@2026!"), "Sistema", "00001")
         );
 
@@ -200,10 +200,10 @@ public class DBService {
 
     private List<MotivoAcerto> criaListaMotivoAcerto(){
         List<MotivoAcerto> listaMotivoAcerto = new ArrayList<>();
-        listaMotivoAcerto.add(new MotivoAcerto(null, "1000", "Entrada De Material Com Nota Fiscal"));
-        listaMotivoAcerto.add(new MotivoAcerto(null, "1001", "Entrada De Material Sem Nota Fiscal"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1000", "Entrada Dde material com nota fiscal"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1001", "Entrada de material sem nota fiscal"));
         listaMotivoAcerto.add(new MotivoAcerto(null, "1002", "Devolução"));
-        listaMotivoAcerto.add(new MotivoAcerto(null, "1003", "Material Danificado"));
+        listaMotivoAcerto.add(new MotivoAcerto(null, "1003", "Material danificado"));
         listaMotivoAcerto.add(new MotivoAcerto(null, "1004", "Material extraviado"));
 
         return listaMotivoAcerto;
@@ -216,15 +216,14 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "5", "Horas repouso remunerado diurno"));
         listaEventosFolha.add(new EventosFolha(null, "6", "Desconto dias de faltas"));
         listaEventosFolha.add(new EventosFolha(null, "7", "Desconto dias de descanso semanal remunerado (DSR)"));
-        listaEventosFolha.add(new EventosFolha(null, "8", "Horas de atestado m"));
+        listaEventosFolha.add(new EventosFolha(null, "8", "Horas de atestado médico"));
         listaEventosFolha.add(new EventosFolha(null, "9", "Dias de atestado médico"));
         listaEventosFolha.add(new EventosFolha(null, "12", "Horas normais noturnas"));
-        listaEventosFolha.add(new EventosFolha(null, "13", "Redução Horário noturno"));
+        listaEventosFolha.add(new EventosFolha(null, "13", "Redução horário noturno"));
         listaEventosFolha.add(new EventosFolha(null, "14", "Adicional noturno"));
-        listaEventosFolha.add(new EventosFolha(null, "15", "Desconto horas atrasos e/ou saídas"));
-        listaEventosFolha.add(new EventosFolha(null, "16", "salário simbólico para cálculo FGTS"));
+        listaEventosFolha.add(new EventosFolha(null, "15", "Desconto horas atrasos e/ou Saídas"));
+        listaEventosFolha.add(new EventosFolha(null, "16", "salário simbólico para cCálculo FGTS"));
         listaEventosFolha.add(new EventosFolha(null, "17", "Pró-labore"));
-        listaEventosFolha.add(new EventosFolha(null, "18", "Desconto dias de faltas"));
         listaEventosFolha.add(new EventosFolha(null, "19", "Bolsa auxílio"));
         listaEventosFolha.add(new EventosFolha(null, "23", "Suspensão disciplinar"));
         listaEventosFolha.add(new EventosFolha(null, "25", "Horas repouso remunerado noturno"));
@@ -232,7 +231,7 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "27", "DSR sobre hora extra 75%"));
         listaEventosFolha.add(new EventosFolha(null, "28", "DSR sobre hora extra 100%"));
         listaEventosFolha.add(new EventosFolha(null, "44", "Desconto adiantamento salário"));
-        listaEventosFolha.add(new EventosFolha(null, "45", "Diferença salário Mês Anterior"));
+        listaEventosFolha.add(new EventosFolha(null, "45", "Diferença salário Mês anterior"));
         listaEventosFolha.add(new EventosFolha(null, "46", "Adicional insalubridade"));
         listaEventosFolha.add(new EventosFolha(null, "47", "Adicional periculosidade"));
         listaEventosFolha.add(new EventosFolha(null, "48", "Diferença férias"));
@@ -243,41 +242,39 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "54", "Quebra de caixa"));
         listaEventosFolha.add(new EventosFolha(null, "55", "Estimativa gorjeta"));
         listaEventosFolha.add(new EventosFolha(null, "56", "Prêmio frequência"));
-        listaEventosFolha.add(new EventosFolha(null, "98", "horas extras 50%"));
-        listaEventosFolha.add(new EventosFolha(null, "99", "horas extras 70%"));
-        listaEventosFolha.add(new EventosFolha(null, "100", "horas extras 100%"));
+        listaEventosFolha.add(new EventosFolha(null, "98", "Horas extras 50%"));
+        listaEventosFolha.add(new EventosFolha(null, "99", "Horas extras 70%"));
+        listaEventosFolha.add(new EventosFolha(null, "100", "Horas extras 100%"));
         listaEventosFolha.add(new EventosFolha(null, "101", "salário maternidade"));
-        listaEventosFolha.add(new EventosFolha(null, "102", "horas extras 50sobre salário maternidade"));
-        listaEventosFolha.add(new EventosFolha(null, "103", "horas extras 70sobre salário maternidade"));
-        listaEventosFolha.add(new EventosFolha(null, "104", "horas extras 100sobre salário maternidade"));
-        listaEventosFolha.add(new EventosFolha(null, "105", "DSR diurno sobre salário maternidade"));
+        listaEventosFolha.add(new EventosFolha(null, "102", "Horas extras 50% sobre salário maternidade"));
+        listaEventosFolha.add(new EventosFolha(null, "103", "Horas extras 70% sobre salário maternidade"));
+        listaEventosFolha.add(new EventosFolha(null, "104", "Horas extras 100% sobre salário maternidade"));
+        listaEventosFolha.add(new EventosFolha(null, "105", "DSR Diurno sobre salário maternidade"));
         listaEventosFolha.add(new EventosFolha(null, "106", "DSR noturno sobre salário maternidade"));
         listaEventosFolha.add(new EventosFolha(null, "107", "Adicional noturno sobre salário maternidade"));
-        listaEventosFolha.add(new EventosFolha(null, "116", "Integração horas extras e Variáveis repouso"));
-        listaEventosFolha.add(new EventosFolha(null, "117", "Integração de Horas Noturnas"));
+        listaEventosFolha.add(new EventosFolha(null, "116", "Integração horas extras e variáveis repouso"));
+        listaEventosFolha.add(new EventosFolha(null, "117", "Integração de horas noturnas"));
         listaEventosFolha.add(new EventosFolha(null, "130", "Ajuda de custo"));
         listaEventosFolha.add(new EventosFolha(null, "131", "Desconto salário maternidade"));
         listaEventosFolha.add(new EventosFolha(null, "132", "Auxílio natalidade"));
-        listaEventosFolha.add(new EventosFolha(null, "133", "Salário família"));
-        listaEventosFolha.add(new EventosFolha(null, "134", "Salário paternidade"));
-        listaEventosFolha.add(new EventosFolha(null, "140", "30 Dias de férias gozadas"));
-        listaEventosFolha.add(new EventosFolha(null, "141", "20 Dias de férias gozadas"));
-        listaEventosFolha.add(new EventosFolha(null, "142", "15 Dias de férias gozadas"));
-        listaEventosFolha.add(new EventosFolha(null, "143", "10 Dias de férias gozadas"));
+        listaEventosFolha.add(new EventosFolha(null, "133", "salário família"));
+        listaEventosFolha.add(new EventosFolha(null, "134", "salário paternidade"));
+        listaEventosFolha.add(new EventosFolha(null, "140", "30 dias de férias gozadas"));
+        listaEventosFolha.add(new EventosFolha(null, "141", "20 dias de férias gozadas"));
+        listaEventosFolha.add(new EventosFolha(null, "142", "15 dias de férias gozadas"));
+        listaEventosFolha.add(new EventosFolha(null, "143", "10 dias de férias gozadas"));
         listaEventosFolha.add(new EventosFolha(null, "144", "Dias de férias gozadas"));
         listaEventosFolha.add(new EventosFolha(null, "145", "1/3 De férias"));
         listaEventosFolha.add(new EventosFolha(null, "146", "Abono pecuniário"));
         listaEventosFolha.add(new EventosFolha(null, "147", "1/3 Abono pecuniário"));
-        listaEventosFolha.add(new EventosFolha(null, "148", "média horas extras 50%"));
-        listaEventosFolha.add(new EventosFolha(null, "149", "média horas extras 100%"));
-        listaEventosFolha.add(new EventosFolha(null, "150", "média horas extras 70%"));
-        listaEventosFolha.add(new EventosFolha(null, "151", "Adicional insalubridade"));
-        listaEventosFolha.add(new EventosFolha(null, "152", "Adicional periculosidade"));
-        listaEventosFolha.add(new EventosFolha(null, "153", "média comissões"));
-        listaEventosFolha.add(new EventosFolha(null, "154", "média adicional noturno"));
+        listaEventosFolha.add(new EventosFolha(null, "148", "Média horas extras 50"));
+        listaEventosFolha.add(new EventosFolha(null, "149", "Média horas extras 100"));
+        listaEventosFolha.add(new EventosFolha(null, "150", "Média horas extras 70"));
+        listaEventosFolha.add(new EventosFolha(null, "153", "Média comissões"));
+        listaEventosFolha.add(new EventosFolha(null, "154", "Média adicional noturno"));
         listaEventosFolha.add(new EventosFolha(null, "155", "Desconto dias redução para faltas"));
-        listaEventosFolha.add(new EventosFolha(null, "156", "férias em Dobro"));
-        listaEventosFolha.add(new EventosFolha(null, "157", "1/3 Constitucional férias em Dobro"));
+        listaEventosFolha.add(new EventosFolha(null, "156", "Férias em dobro"));
+        listaEventosFolha.add(new EventosFolha(null, "157", "1/3 Constitucional férias em dobro"));
         listaEventosFolha.add(new EventosFolha(null, "158", "INSS sobre férias"));
         listaEventosFolha.add(new EventosFolha(null, "159", "IRRF sobre férias"));
         listaEventosFolha.add(new EventosFolha(null, "167", "Adiantamento 1° parcela 13º salário"));
@@ -285,28 +282,27 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "169", "Adiantamento 13º salário horas extras 70%"));
         listaEventosFolha.add(new EventosFolha(null, "170", "Adiantamento 13º salário horas extras 100%"));
         listaEventosFolha.add(new EventosFolha(null, "171", "Adiantamento 13º salário"));
-        listaEventosFolha.add(new EventosFolha(null, "172", "Adiantamento 13º salário - Desconto"));
         listaEventosFolha.add(new EventosFolha(null, "176", "DSR diurno sobre 1° parcela 13°"));
         listaEventosFolha.add(new EventosFolha(null, "177", "DSR noturno sobre 1° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "178", "insalubridade sobre 1° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "179", "periculosidade sobre 1° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "182", "13º salário Final horas extras 50%"));
-        listaEventosFolha.add(new EventosFolha(null, "183", "13º salário Final horas extras 70%"));
-        listaEventosFolha.add(new EventosFolha(null, "184", "13º salário Final horas extras 100%"));
-        listaEventosFolha.add(new EventosFolha(null, "185", "DSR diurno sobre 2° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "186", "DSR noturno sobre 2° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "187", "Insalubridade sobre 2° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "188", "Periculosidade sobre 2° parcela 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "189", "2° parcela 13º salário"));
-        listaEventosFolha.add(new EventosFolha(null, "190", "Desconto Adiantamento 13º salário"));
+        listaEventosFolha.add(new EventosFolha(null, "178", "Insalubridade sobre 1° parcela 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "179", "Periculosidade sobre 1° parcela 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "182", "2° parcela 13º salário"));
+        listaEventosFolha.add(new EventosFolha(null, "183", "13º salário Final horas extras 50%"));
+        listaEventosFolha.add(new EventosFolha(null, "184", "13º salário Final horas extras 70%"));
+        listaEventosFolha.add(new EventosFolha(null, "185", "13º salário Final horas extras 100%"));
+        listaEventosFolha.add(new EventosFolha(null, "186", "DSR diurno sobre 2° parcela 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "187", "DSR noturno sobre 2° parcela 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "188", "Insalubridade sobre 2° parcela 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "189", "Periculosidade sobre 2° parcela 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "190", "Desconto adiantamento 13º salário"));
         listaEventosFolha.add(new EventosFolha(null, "194", "13º salário final horas extras e adicional sem repouso"));
-        listaEventosFolha.add(new EventosFolha(null, "195", "13º salário final média comissões"));
-        listaEventosFolha.add(new EventosFolha(null, "200", "13º salário final comissão sem repouso"));
-        listaEventosFolha.add(new EventosFolha(null, "201", "Complemento média Hora extra 50do 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "202", "Complemento média Hora extra 70do 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "203", "Complemento média Hora extra 100do 13°"));
-        listaEventosFolha.add(new EventosFolha(null, "204", "Complemento média referente DSR diurno"));
-        listaEventosFolha.add(new EventosFolha(null, "205", "Complemento média referente DSR noturno"));
+        listaEventosFolha.add(new EventosFolha(null, "195", "13º salário final média Comissões"));
+        listaEventosFolha.add(new EventosFolha(null, "200", "13º salário final Comissão sem Repouso"));
+        listaEventosFolha.add(new EventosFolha(null, "201", "Complemento média hora extra 50% do 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "202", "Complemento média hora extra 70% do 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "203", "Complemento média hora extra 100% do 13°"));
+        listaEventosFolha.add(new EventosFolha(null, "204", "Complemento mMédia referente ao DSR Diurno"));
+        listaEventosFolha.add(new EventosFolha(null, "205", "Complemento mMédia referente ao DSR noturno"));
         listaEventosFolha.add(new EventosFolha(null, "206", "13º salário média adicional noturno"));
         listaEventosFolha.add(new EventosFolha(null, "229", "Empréstimo consignado"));
         listaEventosFolha.add(new EventosFolha(null, "230", "Desconto empréstimo"));
@@ -317,7 +313,7 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "236", "Seguro de vida"));
         listaEventosFolha.add(new EventosFolha(null, "238", "Desconto seguro vida"));
         listaEventosFolha.add(new EventosFolha(null, "239", "Vale transporte"));
-        listaEventosFolha.add(new EventosFolha(null, "241", "6Desconto vale transporte"));
+        listaEventosFolha.add(new EventosFolha(null, "241", "Desconto vale transporte"));
         listaEventosFolha.add(new EventosFolha(null, "242", "Convênio assistência odontológica"));
         listaEventosFolha.add(new EventosFolha(null, "243", "Coparticipação assistência médica"));
         listaEventosFolha.add(new EventosFolha(null, "244", "Desconto INSS"));
@@ -327,26 +323,24 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "248", "Pensão alimentícia"));
         listaEventosFolha.add(new EventosFolha(null, "256", "Coparticipação assistência odontológica"));
         listaEventosFolha.add(new EventosFolha(null, "259", "Vale creche"));
-        listaEventosFolha.add(new EventosFolha(null, "260", "Dia Desconto contribuição sindical"));
-        listaEventosFolha.add(new EventosFolha(null, "302", "Dias Saldo salário"));
-        listaEventosFolha.add(new EventosFolha(null, "303", "Dias aviso prévio trabalhados"));
+        listaEventosFolha.add(new EventosFolha(null, "260", "Dia desconto contribuição sindical"));
+        listaEventosFolha.add(new EventosFolha(null, "302", "Dias saldo salário"));
+        listaEventosFolha.add(new EventosFolha(null, "303", "Dias aviso prévio tTrabalhados"));
         listaEventosFolha.add(new EventosFolha(null, "304", "Dias aviso prévio indenizados"));
         listaEventosFolha.add(new EventosFolha(null, "305", "Multa do FGTS"));
         listaEventosFolha.add(new EventosFolha(null, "306", "Férias proporcionais"));
-        listaEventosFolha.add(new EventosFolha(null, "307", "Férias vencidas"));
+        listaEventosFolha.add(new EventosFolha(null, "307", "Férias Vencidas"));
         listaEventosFolha.add(new EventosFolha(null, "308", "Média horas extras férias proporcionais"));
         listaEventosFolha.add(new EventosFolha(null, "309", "Insalubridade férias proporcionais"));
         listaEventosFolha.add(new EventosFolha(null, "310", "Periculosidade férias proporcionais"));
-        listaEventosFolha.add(new EventosFolha(null, "311", "Média Adicional noturno férias proporcionais"));
-        listaEventosFolha.add(new EventosFolha(null, "312", "salário Família"));
-        listaEventosFolha.add(new EventosFolha(null, "313", "INSS sEM aviso Prévio"));
-        listaEventosFolha.add(new EventosFolha(null, "314", "IRF Participação nos Lucros"));
-        listaEventosFolha.add(new EventosFolha(null, "315", "média comissões férias proporcionais"));
-        listaEventosFolha.add(new EventosFolha(null, "316", "média horas extras férias"));
-        listaEventosFolha.add(new EventosFolha(null, "317", "Adiantamento 13º salário"));
-        listaEventosFolha.add(new EventosFolha(null, "318", "média triênio férias proporcionais"));
-        listaEventosFolha.add(new EventosFolha(null, "319", "média quinquênio férias proporcionais"));
-        listaEventosFolha.add(new EventosFolha(null, "324", "1/3 férias constitucional"));
+        listaEventosFolha.add(new EventosFolha(null, "311", "Média adicional noturno férias proporcionais"));
+        listaEventosFolha.add(new EventosFolha(null, "313", "INSS sem aviso prévio"));
+        listaEventosFolha.add(new EventosFolha(null, "314", "IRRF participação nos lucros"));
+        listaEventosFolha.add(new EventosFolha(null, "315", "Média comissões férias proporcionais"));
+        listaEventosFolha.add(new EventosFolha(null, "316", "Média horas extras férias"));
+        listaEventosFolha.add(new EventosFolha(null, "318", "Média triênio férias proporcionais"));
+        listaEventosFolha.add(new EventosFolha(null, "319", "Média quinquênio férias proporcionais"));
+        listaEventosFolha.add(new EventosFolha(null, "324", "1/3 férias Constitucional"));
         listaEventosFolha.add(new EventosFolha(null, "325", "13º salário proporcional"));
         listaEventosFolha.add(new EventosFolha(null, "326", "Insalubridade 13º salário"));
         listaEventosFolha.add(new EventosFolha(null, "327", "Periculosidade 13º salário"));
@@ -355,19 +349,11 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "330", "Comissões 13º salário proporcional"));
         listaEventosFolha.add(new EventosFolha(null, "331", "Multa Art. 476-A §5º CLT"));
         listaEventosFolha.add(new EventosFolha(null, "332", "Média adicional noturno"));
-        listaEventosFolha.add(new EventosFolha(null, "333", "insalubridade"));
-        listaEventosFolha.add(new EventosFolha(null, "335", "Insalubridade 13º salário"));
-        listaEventosFolha.add(new EventosFolha(null, "336", "Periculosidade"));
-        listaEventosFolha.add(new EventosFolha(null, "338", "Hora extra 50%"));
-        listaEventosFolha.add(new EventosFolha(null, "339", "Hora extra 70%"));
-        listaEventosFolha.add(new EventosFolha(null, "340", "Hora extra 100%"));
-        listaEventosFolha.add(new EventosFolha(null, "342", "Desconto vale transporte"));
-        listaEventosFolha.add(new EventosFolha(null, "343", "Desconto vale refeição"));
-        listaEventosFolha.add(new EventosFolha(null, "347", "Faltas Calculadas nas férias"));
+        listaEventosFolha.add(new EventosFolha(null, "347", "Faltas calculadas nas férias"));
         listaEventosFolha.add(new EventosFolha(null, "349", "Faltas"));
         listaEventosFolha.add(new EventosFolha(null, "350", "1/12 Avos 13º salário sem aviso prévio"));
         listaEventosFolha.add(new EventosFolha(null, "351", "1/12 Avos férias sem aviso prévio indenizado"));
-        listaEventosFolha.add(new EventosFolha(null, "352", "1/12 Avos 13º salário com aviso prévio"));
+        listaEventosFolha.add(new EventosFolha(null, "352", "1/12 Avos 13º salário com aviso Prévio"));
         listaEventosFolha.add(new EventosFolha(null, "353", "1/12 Avos férias com aviso prévio indenizado"));
         listaEventosFolha.add(new EventosFolha(null, "402", "FGTS normal deposito"));
         listaEventosFolha.add(new EventosFolha(null, "403", "FGTS 13º salário deposito"));
@@ -387,9 +373,9 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "422", "Arredondamento anterior"));
         listaEventosFolha.add(new EventosFolha(null, "423", "Arredondamento atual"));
         listaEventosFolha.add(new EventosFolha(null, "424", "Desconto complementar insuficiência saldo"));
-        listaEventosFolha.add(new EventosFolha(null, "425", "Complemento para insuficiência de Saldo"));
+        listaEventosFolha.add(new EventosFolha(null, "425", "Complemento para insuficiência de saldo"));
         listaEventosFolha.add(new EventosFolha(null, "426", "Retenção INSS empregador"));
-        listaEventosFolha.add(new EventosFolha(null, "427", "Pensão alimentícia sem líquido férias"));
+        listaEventosFolha.add(new EventosFolha(null, "427", "pensão alimentícia sem líquido férias"));
         listaEventosFolha.add(new EventosFolha(null, "428", "Prévia IRRF sem férias"));
         listaEventosFolha.add(new EventosFolha(null, "429", "Prévia IRRF sem 13º salário"));
         listaEventosFolha.add(new EventosFolha(null, "430", "Prévia pensão alimentícia"));
