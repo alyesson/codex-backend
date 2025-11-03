@@ -2,7 +2,8 @@ package br.com.codex.v1.service.rh.decimoterceiro;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.domain.rh.FolhaQuinzenal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculosAuxiliaresFolha;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,9 @@ public class CalcularPrimeiraParcela13Service {
 
     @Autowired
     private CalculoBaseService calculoBaseService;
+
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
 
     @Setter
     String numeroMatricula;
@@ -51,7 +55,7 @@ public class CalcularPrimeiraParcela13Service {
             LocalDate dataAdmissao = calculoBaseService.findByMatriculaColaborador(numeroMatricula).getDataAdmissao();
 
             // ✅ Calcular meses trabalhados considerando a regra dos 15 dias
-            int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
 
             // ✅ Cálculo proporcional do 13º
             BigDecimal valorMensal = salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);

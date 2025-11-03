@@ -1,7 +1,8 @@
 package br.com.codex.v1.service.rh.decimoterceiro;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculosAuxiliaresFolha;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,9 @@ public class CalcularMediaDsrNoturnoPrimeiraParcela13Service {
     @Autowired
     private CalculoBaseService calculoBaseService;
 
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
+
     @Setter
     String numeroMatricula;
 
@@ -35,7 +39,7 @@ public class CalcularMediaDsrNoturnoPrimeiraParcela13Service {
             BigDecimal salarioBase = folha.getSalarioBase();
 
             LocalDate hoje = LocalDate.now();
-            int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao, hoje);
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
 
             // ✅ Chamar métudo do CalculoBaseService
             Map<String, BigDecimal> resultadoDSRNoturno = calculoBaseService.calcularMediaDSRNoturnoPrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);

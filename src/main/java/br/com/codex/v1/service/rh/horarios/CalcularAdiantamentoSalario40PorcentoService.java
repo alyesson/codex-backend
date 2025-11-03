@@ -1,7 +1,7 @@
 package br.com.codex.v1.service.rh.horarios;
 
 import br.com.codex.v1.domain.rh.FolhaQuinzenal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,8 @@
 package br.com.codex.v1.service.rh.horarios;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculosAuxiliaresFolha;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class CalcularAdicionalNoturnoService {
 
     @Autowired
     private CalculoBaseService calculoBaseService;
+
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
 
     @Setter
     String numeroMatricula;
@@ -64,7 +68,7 @@ public class CalcularAdicionalNoturnoService {
             if (horasNoturnasTrabalhadas.compareTo(BigDecimal.ZERO) > 0) {
                 int year = LocalDate.now().getYear();
                 int month = LocalDate.now().getMonthValue();
-                int diasRepouso = calculoBaseService.calcularDiasRepousoNoMes(year, month);
+                int diasRepouso = calculosAuxiliaresFolha.calcularDiasRepousoNoMes(year, month);
 
                 horasNoturnasDSR = horasNoturnasTrabalhadas
                         .multiply(new BigDecimal(diasRepouso))

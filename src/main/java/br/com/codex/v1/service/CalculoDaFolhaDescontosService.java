@@ -3,6 +3,7 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
 import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
+import br.com.codex.v1.service.rh.CalculoBaseService;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -287,8 +289,18 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
+            //Desconto INSS sobre o 13°
+            case 245 ->{
+
+                LocalDate dataCalculo = LocalDate.now();
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+                BigDecimal salarioBase = folha.getSalarioBase();
+
+                return calculoBaseService.calcularINSSDecimoTerceiro(folha.getDataAdmissao(), dataCalculo, salarioBase);
+            }
+
             //Desconto Imposto de Renda
-            case 245 -> {
+            case 246 -> {
                 FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
 

@@ -1,7 +1,7 @@
 package br.com.codex.v1.service.rh.especiais;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
 import br.com.codex.v1.service.TabelaImpostoRendaService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

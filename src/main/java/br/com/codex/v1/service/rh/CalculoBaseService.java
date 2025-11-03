@@ -1,4 +1,4 @@
-package br.com.codex.v1.service;
+package br.com.codex.v1.service.rh;
 
 import br.com.codex.v1.domain.repository.*;
 import br.com.codex.v1.domain.rh.FolhaMensal;
@@ -22,13 +22,14 @@ import java.util.*;
 public class CalculoBaseService {
     private static final Logger logger = LoggerFactory.getLogger(CalculoBaseService.class);
 
-    Calendario calendario = new Calendario();
-
     @Autowired
     private TabelaDeducaoInssRepository tabelaDeducaoInssRepository;
 
     @Autowired
     private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
+
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
 
     @Autowired
     private FolhaMensalEventosCalculadaRepository folhaMensalEventosCalculadaRepository;
@@ -38,53 +39,6 @@ public class CalculoBaseService {
 
     @Autowired
     FolhaQuinzenalRepository folhaQuinzenalRepository;
-
-    /*public int calcularMesesTrabalhados13o(LocalDate dataAdmissao, LocalDate dataCalculo) {
-        int anoAtual = dataCalculo.getYear();
-        int mesesTrabalhados = 0;
-
-        // Verificar cada mês do ano
-        for (int mes = 1; mes <= 12; mes++) {
-            LocalDate primeiroDiaMes = LocalDate.of(anoAtual, mes, 1);
-            LocalDate ultimoDiaMes = primeiroDiaMes.withDayOfMonth(primeiroDiaMes.lengthOfMonth());
-
-            // Verificar se o funcionário trabalhou pelo menos 15 dias neste mês
-            if (trabalhouPeloMenos15DiasNoMes(dataAdmissao, dataCalculo, mes, anoAtual)) {
-                mesesTrabalhados++;
-            }
-        }
-
-        return mesesTrabalhados;
-    }*/
-
-    /*public boolean trabalhouPeloMenos15DiasNoMes(LocalDate dataAdmissao, LocalDate dataCalculo, int mes, int ano) {
-        LocalDate primeiroDiaMes = LocalDate.of(ano, mes, 1);
-        LocalDate ultimoDiaMes = primeiroDiaMes.withDayOfMonth(primeiroDiaMes.lengthOfMonth());
-
-        // Se o mês for no futuro, não conta
-        if (primeiroDiaMes.isAfter(dataCalculo)) {
-            return false;
-        }
-
-        // Se foi admitido durante o mês
-        if (dataAdmissao.getYear() == ano && dataAdmissao.getMonthValue() == mes) {
-            LocalDate dataInicio = dataAdmissao;
-            LocalDate dataFim = ultimoDiaMes.isAfter(dataCalculo) ? dataCalculo : ultimoDiaMes;
-
-            // Calcular dias trabalhados no mês
-            long diasTrabalhados = calcularDiasUteisTrabalhados(dataInicio, dataFim);
-            return diasTrabalhados >= 15;
-        }
-
-        // Se foi admitido antes do mês e não foi demitido
-        if (dataAdmissao.isBefore(primeiroDiaMes)) {
-            LocalDate dataFim = ultimoDiaMes.isAfter(dataCalculo) ? dataCalculo : ultimoDiaMes;
-            long diasTrabalhados = calcularDiasUteisTrabalhados(primeiroDiaMes, dataFim);
-            return diasTrabalhados >= 15;
-        }
-
-        return false;
-    }*/
 
     public FolhaMensal findByMatriculaColaborador(String numeroMatricula) {
         Optional<FolhaMensal> obj = folhaMensalRepository.findByMatriculaColaborador(numeroMatricula);
@@ -102,56 +56,6 @@ public class CalculoBaseService {
         } else {
             throw new ObjectNotFoundException("Folha quinzenal não encontrada para matrícula: " + numeroMatricula);
         }
-    }
-
-    public long calcularDiasUteisTrabalhados(LocalDate dataInicio, LocalDate dataFim) {
-        long diasTrabalhados = 0;
-        LocalDate data = dataInicio;
-
-        while (!data.isAfter(dataFim)) {
-            // Considera apenas dias de semana (segunda a sexta)
-            if (data.getDayOfWeek() != DayOfWeek.SATURDAY && data.getDayOfWeek() != DayOfWeek.SUNDAY) {
-                diasTrabalhados++;
-            }
-            data = data.plusDays(1);
-        }
-
-        return diasTrabalhados;
-    }
-
-    public int calcularDiasUteisNoMes(int year, int month) {
-        YearMonth anoMes = YearMonth.of(year, month);
-        Set<LocalDate> feriados = new HashSet<>();
-
-        // Adicionar feriados (ajuste conforme seu calendário)
-        feriados.addAll(calendario.getFeriadosFixos(year));
-        feriados.addAll(calendario.getFeriadosMoveis(year));
-
-        int diasUteis = 0;
-        for (int dia = 1; dia <= anoMes.lengthOfMonth(); dia++) {
-            LocalDate data = anoMes.atDay(dia);
-            if (data.getDayOfWeek() != DayOfWeek.SUNDAY && !feriados.contains(data)) {
-                diasUteis++;
-            }
-        }
-        return diasUteis;
-    }
-
-    public int calcularDiasRepousoNoMes(int year, int month) {
-        YearMonth anoMes = YearMonth.of(year, month);
-        Set<LocalDate> feriados = new HashSet<>();
-
-        feriados.addAll(calendario.getFeriadosFixos(year));
-        feriados.addAll(calendario.getFeriadosMoveis(year));
-
-        int diasRepouso = 0;
-        for (int dia = 1; dia <= anoMes.lengthOfMonth(); dia++) {
-            LocalDate data = anoMes.atDay(dia);
-            if (data.getDayOfWeek() == DayOfWeek.SUNDAY || feriados.contains(data)) {
-                diasRepouso++;
-            }
-        }
-        return diasRepouso;
     }
 
     public BigDecimal calcularINSS(BigDecimal valorBruto) {
@@ -521,7 +425,7 @@ public class CalculoBaseService {
 
             // 1. Buscar o valor do adicional de periculosidade (evento 47)
             // OU calcular 30% do salário base (conforme a regra)
-            BigDecimal adicionalPericulosidade = calcularAdicionalPericulosidade(matricula, salarioBase, anoAtual);
+            BigDecimal adicionalPericulosidade = calculosAuxiliaresFolha.calcularAdicionalPericulosidade(matricula, salarioBase, anoAtual);
 
             // 2. Somar periculosidade à remuneração base
             BigDecimal remuneracaoTotal = salarioBase.add(adicionalPericulosidade);
@@ -549,20 +453,10 @@ public class CalculoBaseService {
         try {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
-
-            // **1. Calcular valor da hora normal (CLT: 220 horas)**
             BigDecimal valorHoraNormal = salarioBase.divide(horasTrabalhadasPorMes, 4, RoundingMode.HALF_UP);
-
-            // **2. Calcular valor da hora extra com 50%**
             BigDecimal valorHoraExtra50 = valorHoraNormal.multiply(new BigDecimal("1.5")).setScale(4, RoundingMode.HALF_UP);
-
-            // **3. ✅ Buscar TOTAL DE HORAS EXTRAS do ano INTEIRO (jan a dez)**
-            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 98, anoAtual);
-
-            // **4. Calcular MÉDIA MENSAL de horas extras**
+            BigDecimal totalHorasExtrasAno = calculosAuxiliaresFolha.buscarTotalHorasExtrasQuantidadeAno(matricula, 98, anoAtual);
             BigDecimal mediaMensalHoras = totalHorasExtrasAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-
-            // **5. Calcular VALOR da média mensal de horas extras**
             BigDecimal valorMediaMensalHE = mediaMensalHoras.multiply(valorHoraExtra50).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", mediaMensalHoras);
@@ -583,19 +477,10 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // **1. Calcular valor da hora normal (CLT: 220 horas)**
             BigDecimal valorHoraNormal = salarioBase.divide(horasTrabalhadasPorMes, 4, RoundingMode.HALF_UP);
-
-            // **2. Calcular valor da hora extra com 70%**
             BigDecimal valorHoraExtra70 = valorHoraNormal.multiply(new BigDecimal("1.7")).setScale(4, RoundingMode.HALF_UP);
-
-            // **3. ✅ Buscar TOTAL DE HORAS EXTRAS do ano INTEIRO (jan a dez)**
-            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 99, anoAtual);
-
-            // **4. Calcular MÉDIA MENSAL de horas extras**
+            BigDecimal totalHorasExtrasAno = calculosAuxiliaresFolha.buscarTotalHorasExtrasQuantidadeAno(matricula, 99, anoAtual);
             BigDecimal mediaMensalHoras = totalHorasExtrasAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-
-            // **5. Calcular VALOR da média mensal de horas extras**
             BigDecimal valorMediaMensalHE = mediaMensalHoras.multiply(valorHoraExtra70).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", mediaMensalHoras);
@@ -616,19 +501,10 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // **1. Calcular valor da hora normal (CLT: 220 horas)**
             BigDecimal valorHoraNormal = salarioBase.divide(horasTrabalhadasPorMes, 4, RoundingMode.HALF_UP);
-
-            // **2. Calcular valor da hora extra com 100%**
             BigDecimal valorHoraExtra100 = valorHoraNormal.multiply(new BigDecimal("2.0")).setScale(4, RoundingMode.HALF_UP);
-
-            // **3. ✅ Buscar TOTAL DE HORAS EXTRAS do ano INTEIRO (jan a dez)**
-            BigDecimal totalHorasExtrasAno = buscarTotalHorasExtrasQuantidadeAno(matricula, 100, anoAtual);
-
-            // **4. Calcular MÉDIA MENSAL de horas extras**
+            BigDecimal totalHorasExtrasAno = calculosAuxiliaresFolha.buscarTotalHorasExtrasQuantidadeAno(matricula, 100, anoAtual);
             BigDecimal mediaMensalHoras = totalHorasExtrasAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-
-            // **5. Calcular VALOR da média mensal de horas extras**
             BigDecimal valorMediaMensalHE = mediaMensalHoras.multiply(valorHoraExtra100).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", mediaMensalHoras);
@@ -649,16 +525,10 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. Buscar SOMA de todos os DSRs do ano (evento 5 = DSR Diurno)
             BigDecimal somaDSRAno = folhaMensalEventosCalculadaRepository.findSomaValorHorasExtrasAno(matricula, 5, anoAtual);
-
-            // 2. Calcular meses trabalhados no ano
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. **CLT: Duas formas de cálculo (ambas válidas)**
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal mediaDSR;
 
-            // Opção A: Dividir por 11 e multiplicar por meses trabalhados
             if (mesesTrabalhados == 12) {
                 mediaDSR = somaDSRAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP);
             } else {
@@ -668,12 +538,8 @@ public class CalculoBaseService {
                         .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             }
 
-            // Opção B: Dividir por 12 e multiplicar por avos (meses trabalhados)
             BigDecimal mediaDSROpcaoB = somaDSRAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal(mesesTrabalhados))
-                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-
-            // Usar a maior média (beneficia o trabalhador)
+                    .multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             mediaDSR = mediaDSR.max(mediaDSROpcaoB);
 
             resultado.put("referencia", BigDecimal.valueOf(mesesTrabalhados));
@@ -694,13 +560,8 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. Buscar SOMA de DSRs NOTURNOS do ano (evento 25 = DSR Noturno)
             BigDecimal somaDSRNoturnoAno = folhaMensalEventosCalculadaRepository.findSomaValorHorasExtrasAno(matricula, 25, anoAtual);
-
-            // 2. Calcular meses trabalhados
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. Cálculo da média DSR Noturno (mesma lógica do DSR Diurno)
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal mediaDSRNoturno;
 
             if (mesesTrabalhados == 12) {
@@ -731,17 +592,10 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. Buscar valor da insalubridade (evento 46)
             BigDecimal valorInsalubridade = folhaMensalEventosCalculadaRepository.findUltimoValorInsalubridade(matricula, 46, anoAtual);
-
-            // 2. Calcular meses trabalhados
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. **CLT: Insalubridade integra base do 13º**
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal baseCalculo13 = salarioBase.add(valorInsalubridade);
-
-            // **2ª parcela = 50% (COM descontos)**
-            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorInsalubridade);
+            BigDecimal decimoTerceiroProporcional = calculosAuxiliaresFolha.calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorInsalubridade);
             BigDecimal segundaParcelaBruta = decimoTerceiroProporcional.multiply(new BigDecimal("0.5"));
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
@@ -762,7 +616,6 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. Buscar todos os adicionais que compõem a base do 13.º
             BigDecimal valorInsalubridade = folhaMensalEventosCalculadaRepository.findUltimoValorInsalubridade(matricula, 46, anoAtual);
             if (valorInsalubridade == null) {
                 valorInsalubridade = BigDecimal.ZERO;
@@ -770,7 +623,7 @@ public class CalculoBaseService {
 
             BigDecimal valorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
             if (valorPericulosidade == null) {
-                valorPericulosidade = calcularAdicionalPericulosidade(matricula, salarioBase, anoAtual);
+                valorPericulosidade = calculosAuxiliaresFolha.calcularAdicionalPericulosidade(matricula, salarioBase, anoAtual);
             }
 
             // 2. Calcular médias de horas extras para a base do 13º
@@ -780,22 +633,15 @@ public class CalculoBaseService {
 
             BigDecimal totalMediaHE = mediaHE50.add(mediaHE70).add(mediaHE100);
 
-            // 3. Calcular 13º proporcional COMPLETO
-            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorInsalubridade, valorPericulosidade, totalMediaHE);
-
-            // 4. Calcular 1ª parcela (já paga - 50% sem descontos)
+            BigDecimal decimoTerceiroProporcional = calculosAuxiliaresFolha.calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorInsalubridade, valorPericulosidade, totalMediaHE);
             BigDecimal primeiraParcela = decimoTerceiroProporcional.multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
-
-            // 5. Calcular 2ª parcela BRUTA
             BigDecimal segundaParcelaBruta = decimoTerceiroProporcional.subtract(primeiraParcela).setScale(2, RoundingMode.HALF_UP);
-
-            // 6. Aplicar descontos (INSS e IRRF) considerando dependentes
             Map<String, BigDecimal> descontos = calcularDescontos13o(segundaParcelaBruta, numeroDependentes);
             BigDecimal totalDescontos = descontos.get("total");
             //BigDecimal segundaParcelaLiquida = segundaParcelaBruta.subtract(totalDescontos);
 
             // 7. Montar resultado
-            resultado.put("referencia", new BigDecimal(calcularMesesTrabalhados13o(dataAdmissao, hoje)));
+            resultado.put("referencia", new BigDecimal(calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje)));
             resultado.put("vencimentos", segundaParcelaBruta);
             resultado.put("descontos", totalDescontos);
 
@@ -814,16 +660,9 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR MÉDIA DAS COMISSÕES DO ANO
-            BigDecimal mediaComissoes = calcularMediaComissoesAno(matricula, anoAtual);
-
-            // 2. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. BASE DE CÁLCULO = Salário Base + Média de Comissões
+            BigDecimal mediaComissoes = calculosAuxiliaresFolha.calcularMediaComissoesAno(matricula, anoAtual);
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal baseCalculo = salarioBase.add(mediaComissoes);
-
-            // 4. 13º PROPORCIONAL = (Base / 12) × Meses Trabalhados
             BigDecimal decimoTerceiroProporcional = baseCalculo.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
@@ -846,20 +685,11 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR VALOR DA HORA NORMAL
             BigDecimal valorHoraNormal = salarioBase.divide(horasPorMes, 4, RoundingMode.HALF_UP);
-
-            // 2. CALCULAR MÉDIA DE HORAS EXTRAS 50% DO ANO
-            BigDecimal mediaHorasExtras50 = calcularMediaHorasExtras50Ano(matricula, anoAtual);
-
-            // 3. CALCULAR VALOR DA MÉDIA DE HE 50%
+            BigDecimal mediaHorasExtras50 = calculosAuxiliaresFolha.calcularMediaHorasExtras50Ano(matricula, anoAtual);
             BigDecimal valorHoraExtra50 = valorHoraNormal.multiply(new BigDecimal("1.5")); // +50%
             BigDecimal valorMediaHE50 = mediaHorasExtras50.multiply(valorHoraExtra50).setScale(2, RoundingMode.HALF_UP);
-
-            // 4. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 5. COMPLEMENTO DO 13º = (Valor média HE 50% / 12) × meses trabalhados
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal complemento13 = valorMediaHE50.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
@@ -882,20 +712,11 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR VALOR DA HORA NORMAL
             BigDecimal valorHoraNormal = salarioBase.divide(horasPorMes, 4, RoundingMode.HALF_UP);
-
-            // 2. CALCULAR MÉDIA DE HORAS EXTRAS 70% DO ANO
-            BigDecimal mediaHorasExtras70 = calcularMediaHorasExtras70Ano(matricula, anoAtual);
-
-            // 3. CALCULAR VALOR DA MÉDIA DE HE 70%
+            BigDecimal mediaHorasExtras70 = calculosAuxiliaresFolha.calcularMediaHorasExtras70Ano(matricula, anoAtual);
             BigDecimal valorHoraExtra70 = valorHoraNormal.multiply(new BigDecimal("1.7")); // +70%
             BigDecimal valorMediaHE70 = mediaHorasExtras70.multiply(valorHoraExtra70).setScale(2, RoundingMode.HALF_UP);
-
-            // 4. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 5. COMPLEMENTO DO 13º = (Valor média HE 70% / 12) × meses trabalhados
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal complemento13 = valorMediaHE70.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
@@ -918,20 +739,11 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR VALOR DA HORA NORMAL
             BigDecimal valorHoraNormal = salarioBase.divide(horasPorMes, 4, RoundingMode.HALF_UP);
-
-            // 2. CALCULAR MÉDIA DE HORAS EXTRAS 100% DO ANO
-            BigDecimal mediaHorasExtras100 = calcularMediaHorasExtras100Ano(matricula, anoAtual);
-
-            // 3. CALCULAR VALOR DA MÉDIA DE HE 100%
+            BigDecimal mediaHorasExtras100 = calculosAuxiliaresFolha.calcularMediaHorasExtras100Ano(matricula, anoAtual);
             BigDecimal valorHoraExtra100 = valorHoraNormal.multiply(new BigDecimal("2.0")); // +100%
             BigDecimal valorMediaHE100 = mediaHorasExtras100.multiply(valorHoraExtra100).setScale(2, RoundingMode.HALF_UP);
-
-            // 4. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 5. COMPLEMENTO DO 13º = (Valor média HE 100% / 12) × meses trabalhados
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal complemento13 = valorMediaHE100.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
@@ -954,13 +766,8 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR SOMA DOS DSRs DIURNOS DO ANO
-            BigDecimal somaDSRDiurnoAno = calcularSomaDSRDiurnoAno(matricula, anoAtual);
-
-            // 2. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. CALCULAR MÉDIA MENSAL DE DSR DIURNO
+            BigDecimal somaDSRDiurnoAno = calculosAuxiliaresFolha.calcularSomaDSRDiurnoAno(matricula, anoAtual);
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal mediaDSRDiurno;
             if (mesesTrabalhados == 12) {
                 // Trabalhou ano completo: divide por 11 (meses com DSR)
@@ -970,8 +777,6 @@ public class CalculoBaseService {
                 mediaDSRDiurno = somaDSRDiurnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP)
                         .multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             }
-
-            // 4. COMPLEMENTO DO 13º = Média mensal de DSR Diurno
             BigDecimal complemento13 = mediaDSRDiurno;
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
@@ -993,13 +798,8 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR SOMA DOS DSRs NOTURNOS DO ANO
-            BigDecimal somaDSRNoturnoAno = calcularSomaDSRNoturnoAno(matricula, anoAtual);
-
-            // 2. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. CALCULAR MÉDIA MENSAL DE DSR NOTURNO
+            BigDecimal somaDSRNoturnoAno = calculosAuxiliaresFolha.calcularSomaDSRNoturnoAno(matricula, anoAtual);
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal mediaDSRNoturno;
             if (mesesTrabalhados == 12) {
                 // Trabalhou ano completo: divide por 11 (meses com DSR)
@@ -1009,8 +809,6 @@ public class CalculoBaseService {
                 mediaDSRNoturno = somaDSRNoturnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP)
                         .multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             }
-
-            // 4. COMPLEMENTO DO 13º = Média mensal de DSR Noturno
             BigDecimal complemento13 = mediaDSRNoturno;
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
@@ -1032,13 +830,8 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. CALCULAR MÉDIA DO ADICIONAL NOTURNO DO ANO
-            BigDecimal mediaMensalAdicionalNoturno  = calcularMediaAdicionalNoturnoAno(matricula, anoAtual);
-
-            // 2. CALCULAR MESES TRABALHADOS
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
-
-            // 3. VALOR A INCORPORAR NO 13º = Média mensal × (meses trabalhados / 12)
+            BigDecimal mediaMensalAdicionalNoturno  = calculosAuxiliaresFolha.calcularMediaAdicionalNoturnoAno(matricula, anoAtual);
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
             BigDecimal valorIncorporar13 = mediaMensalAdicionalNoturno .multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
@@ -1059,19 +852,14 @@ public class CalculoBaseService {
             LocalDate hoje = LocalDate.now();
             int anoAtual = hoje.getYear();
 
-            // 1. Buscar valor da periculosidade (evento 47) OU calcular 30%
             BigDecimal valorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
-
-            // Se não encontrou, calcula 30% do salário base
             if (valorPericulosidade.compareTo(BigDecimal.ZERO) == 0) {
                 valorPericulosidade = salarioBase.multiply(new BigDecimal("0.30"))
                         .setScale(2, RoundingMode.HALF_UP);
             }
+            BigDecimal decimoTerceiroProporcional = calculosAuxiliaresFolha.calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorPericulosidade);
 
-            // 2. Calcular 13º proporcional
-            BigDecimal decimoTerceiroProporcional = calcularDecimoTerceiroProporcional(dataAdmissao, salarioBase, valorPericulosidade);
-
-            resultado.put("referencia", new BigDecimal(calcularMesesTrabalhados13o(dataAdmissao, hoje)));
+            resultado.put("referencia", new BigDecimal(calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje)));
             resultado.put("vencimentos", decimoTerceiroProporcional);  // ✅ PAGA na 2ª parcela
             resultado.put("descontos", BigDecimal.ZERO);
 
@@ -1125,324 +913,46 @@ public class CalculoBaseService {
         return descontos;
     }
 
-    private BigDecimal calcularAdicionalPericulosidade(String matricula, BigDecimal salarioBase, int anoAtual) {
+    public Map<String, BigDecimal> calcularINSSDecimoTerceiro(LocalDate datAdmissao, LocalDate dataCalculo, BigDecimal salarioBase) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+        resultado.put("referencia", BigDecimal.ZERO);
+        resultado.put("vencimentos", BigDecimal.ZERO);
+        resultado.put("descontos", BigDecimal.ZERO);
+
         try {
-            // Tentar buscar o último valor registrado (evento 47)
-            BigDecimal ultimoValorPericulosidade = folhaMensalEventosCalculadaRepository.findUltimoValorPericulosidade(matricula, 47, anoAtual);
-
-            // Se encontrou valor registrado, usa ele
-            if (ultimoValorPericulosidade.compareTo(BigDecimal.ZERO) > 0) {
-                return ultimoValorPericulosidade;
-            }
-
-            // Se não encontrou, calcula 30% do salário base (regra CLT)
-            return salarioBase.multiply(new BigDecimal("0.30")).setScale(2, RoundingMode.HALF_UP);
-
-        } catch (Exception e) {
-            // Fallback: calcula 30% do salário base
-            return salarioBase.multiply(new BigDecimal("0.30")).setScale(2, RoundingMode.HALF_UP);
-        }
-    }
-
-    private BigDecimal buscarTotalHorasExtrasQuantidadeAno(String matricula, Integer codigoEvento, int ano) {
-        try {
-            // Buscar a QUANTIDADE de horas extras do ano INTEIRO
-            return folhaMensalEventosCalculadaRepository.findSomaQuantidadeHorasExtrasAno(matricula, codigoEvento, ano);
-        } catch (Exception e) {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    public int calcularMesesTrabalhados13o(LocalDate dataAdmissao, LocalDate dataCalculo) {
-        int anoAtual = dataCalculo.getYear();
-
-        // Se admitido em ano anterior, conta todos os meses até o cálculo
-        if (dataAdmissao.getYear() < anoAtual) {
-            return Math.min(dataCalculo.getMonthValue(), 12); // máximo 12 meses
-        }
-
-        // Se admitido no mesmo ano
-        if (dataAdmissao.getYear() == anoAtual) {
-            int mesAdmissao = dataAdmissao.getMonthValue();
-            int mesAtual = dataCalculo.getMonthValue();
-
-            // **CLT: Conta mês se trabalhou pelo menos 15 dias**
-            boolean contaMesAdmissao = dataAdmissao.getDayOfMonth() <= 15;
-
-            if (contaMesAdmissao) {
-                // Admitido até dia 15, conta o mês inteiro
-                return (mesAtual - mesAdmissao) + 1;
-            } else {
-                // Admitido após dia 15, não conta o mês
-                return Math.max(0, mesAtual - mesAdmissao);
-            }
-        }
-        return 0; // Admitido no futuro
-    }
-
-    public BigDecimal calcularDecimoTerceiroProporcional(LocalDate dataAdmissao, BigDecimal salarioBase, BigDecimal... adicionais) {
-        try {
-            LocalDate hoje = LocalDate.now();
 
             // 1. Calcular meses trabalhados no ano
-            int mesesTrabalhados = calcularMesesTrabalhados13o(dataAdmissao, hoje);
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(datAdmissao, dataCalculo);
 
-            // 2. Somar todos os adicionais à base
-            BigDecimal remuneracaoTotal = salarioBase;
-            for (BigDecimal adicional : adicionais) {
-                if (adicional != null) {
-                    remuneracaoTotal = remuneracaoTotal.add(adicional);
-                }
+            if (mesesTrabalhados == 0) {
+                logger.info("Colaborador não tem direito a 13º salário");
+                return resultado;
             }
 
-            // 3. Calcular 13º proporcional = (remuneração total / 12) × meses trabalhados
-            BigDecimal decimoTerceiroProporcional = remuneracaoTotal
-                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
+            // 2. Calcular valor bruto do 13º
+            BigDecimal valorBruto13o = salarioBase.divide(new BigDecimal("12"), 4, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(mesesTrabalhados));
 
-            return decimoTerceiroProporcional.setScale(2, RoundingMode.HALF_UP);
+            // 3. Verificar se é primeira ou segunda parcela
+            boolean isSegundaParcela = calculosAuxiliaresFolha.isSegundaParcela13o(dataCalculo);
+
+            if (!isSegundaParcela) {
+                logger.info("Primeira parcela do 13º - INSS não incide");
+                return resultado;
+            }
+
+            // 4. Calcular INSS sobre o valor bruto do 13º (segunda parcela)
+            BigDecimal valorINSS = calcularINSS(valorBruto13o);
+
+            resultado.put("referencia", new BigDecimal(mesesTrabalhados));
+            resultado.put("descontos", valorINSS);
+
+            logger.info("INSS 13º calculado: R$ {} para {} meses trabalhados", valorINSS, mesesTrabalhados);
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular 13º proporcional: " + e.getMessage());
+            logger.error("Erro ao calcular INSS do 13º", e);
         }
-    }
 
-    private BigDecimal calcularMediaComissoesAno(String matricula, int ano) {
-        try {
-            // Buscar soma de comissões de janeiro a dezembro (ou até mês atual)
-            BigDecimal somaComissoesAno = BigDecimal.ZERO;
-            int mesesComComissao = 0;
-
-            // Considerar até o mês anterior ao cálculo (para pagamento em nov/dez)
-            int mesLimite = LocalDate.now().getMonthValue() - 1;
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar comissões do mês
-                BigDecimal comissaoMes = folhaMensalEventosCalculadaRepository.findSomaComissoesPorMesEAno(matricula, ano, mes);
-
-                if (comissaoMes != null && comissaoMes.compareTo(BigDecimal.ZERO) > 0) {
-                    somaComissoesAno = somaComissoesAno.add(comissaoMes);
-                    mesesComComissao++;
-                }
-            }
-
-            // Média = Soma das comissões / meses com comissão (ou 12 se habitual)
-            BigDecimal mediaComissoes;
-            if (mesesComComissao >= 6) {
-                // Se recebeu comissão em 6+ meses, considera habitual - divide por 12
-                mediaComissoes = somaComissoesAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-            } else {
-                // Se eventual, divide apenas pelos meses que recebeu
-                mediaComissoes = mesesComComissao > 0 ? somaComissoesAno.divide(new BigDecimal(mesesComComissao), 2, RoundingMode.HALF_UP) : BigDecimal.ZERO;
-            }
-
-            return mediaComissoes;
-
-        } catch (Exception e) {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private BigDecimal calcularMediaHorasExtras50Ano(String matricula, int ano) {
-        try {
-            BigDecimal totalHorasExtras50Ano = BigDecimal.ZERO;
-            int mesesComHE50 = 0;
-
-            // Considerar até novembro para cálculo do 13º
-            int mesLimite = Math.min(LocalDate.now().getMonthValue() - 1, 11);
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar quantidade de horas extras 50% do mês
-                BigDecimal horasExtras50Mes = folhaMensalEventosCalculadaRepository.findQuantidadeHorasExtras50PorMesEAno(matricula, ano, mes);
-
-                if (horasExtras50Mes != null && horasExtras50Mes.compareTo(BigDecimal.ZERO) > 0) {
-                    totalHorasExtras50Ano = totalHorasExtras50Ano.add(horasExtras50Mes);
-                    mesesComHE50++;
-                }
-            }
-
-            // Se recebeu HE 50% em 6+ meses, considera habitual - divide por 12
-            // Se eventual, divide apenas pelos meses que trabalhou HE
-            BigDecimal mediaHorasExtras50;
-            if (mesesComHE50 >= 6) {
-                mediaHorasExtras50 = totalHorasExtras50Ano.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-            } else if (mesesComHE50 > 0) {
-                mediaHorasExtras50 = totalHorasExtras50Ano.divide(new BigDecimal(mesesComHE50), 2, RoundingMode.HALF_UP);
-            } else {
-                mediaHorasExtras50 = BigDecimal.ZERO;
-            }
-
-            return mediaHorasExtras50;
-
-        } catch (Exception e) {
-            logger.error("Erro ao calcular média HE 50% para matrícula {}: {}", matricula, e.getMessage());
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private BigDecimal calcularMediaHorasExtras70Ano(String matricula, int ano) {
-        try {
-            BigDecimal totalHorasExtras70Ano = BigDecimal.ZERO;
-            int mesesComHE70 = 0;
-
-            // Considerar até novembro para cálculo do 13º
-            int mesLimite = Math.min(LocalDate.now().getMonthValue() - 1, 11);
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar quantidade de horas extras 70% do mês
-                BigDecimal horasExtras70Mes = folhaMensalEventosCalculadaRepository.findQuantidadeHorasExtras70PorMesEAno(matricula, ano, mes);
-
-                if (horasExtras70Mes != null && horasExtras70Mes.compareTo(BigDecimal.ZERO) > 0) {
-                    totalHorasExtras70Ano = totalHorasExtras70Ano.add(horasExtras70Mes);
-                    mesesComHE70++;
-                }
-            }
-
-            // Se recebeu HE 70% em 6+ meses, considera habitual - divide por 12
-            // Se eventual, divide apenas pelos meses que trabalhou HE
-            BigDecimal mediaHorasExtras70;
-            if (mesesComHE70 >= 6) {
-                mediaHorasExtras70 = totalHorasExtras70Ano.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-            } else if (mesesComHE70 > 0) {
-                mediaHorasExtras70 = totalHorasExtras70Ano.divide(new BigDecimal(mesesComHE70), 2, RoundingMode.HALF_UP);
-            } else {
-                mediaHorasExtras70 = BigDecimal.ZERO;
-            }
-
-            return mediaHorasExtras70;
-
-        } catch (Exception e) {
-            logger.error("Erro ao calcular média HE 70% para matrícula {}: {}", matricula, e.getMessage());
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private BigDecimal calcularMediaHorasExtras100Ano(String matricula, int ano) {
-        try {
-            BigDecimal totalHorasExtras100Ano = BigDecimal.ZERO;
-            int mesesComHE100 = 0;
-
-            // Considerar até novembro para cálculo do 13º
-            int mesLimite = Math.min(LocalDate.now().getMonthValue() - 1, 11);
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar quantidade de horas extras 100% do mês
-                BigDecimal horasExtras100Mes = folhaMensalEventosCalculadaRepository.findQuantidadeHorasExtras100PorMesEAno(matricula, ano, mes);
-
-                if (horasExtras100Mes != null && horasExtras100Mes.compareTo(BigDecimal.ZERO) > 0) {
-                    totalHorasExtras100Ano = totalHorasExtras100Ano.add(horasExtras100Mes);
-                    mesesComHE100++;
-                }
-            }
-
-            // Se recebeu HE 100% em 6+ meses, considera habitual - divide por 12
-            // Se eventual, divide apenas pelos meses que trabalhou HE
-            BigDecimal mediaHorasExtras100;
-            if (mesesComHE100 >= 6) {
-                mediaHorasExtras100 = totalHorasExtras100Ano.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-            } else if (mesesComHE100 > 0) {
-                mediaHorasExtras100 = totalHorasExtras100Ano.divide(new BigDecimal(mesesComHE100), 2, RoundingMode.HALF_UP);
-            } else {
-                mediaHorasExtras100 = BigDecimal.ZERO;
-            }
-
-            return mediaHorasExtras100;
-
-        } catch (Exception e) {
-            logger.error("Erro ao calcular média HE 100% para matrícula {}: {}", matricula, e.getMessage());
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private BigDecimal calcularSomaDSRDiurnoAno(String matricula, int ano) {
-        try {
-            BigDecimal somaDSRDiurno = BigDecimal.ZERO;
-
-            // Considerar até novembro para cálculo do 13º
-            int mesLimite = Math.min(LocalDate.now().getMonthValue() - 1, 11);
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar DSR Diurno do mês (código 5)
-                BigDecimal dsrDiurnoMes = folhaMensalEventosCalculadaRepository.findDSRDiurnoPorMesEAno(matricula, ano, mes);
-
-                if (dsrDiurnoMes != null) {
-                    somaDSRDiurno = somaDSRDiurno.add(dsrDiurnoMes);
-                }
-            }
-
-            return somaDSRDiurno;
-
-        } catch (Exception e) {
-            logger.error("Erro ao calcular soma DSR Diurno para matrícula {}: {}", matricula, e.getMessage());
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private BigDecimal calcularSomaDSRNoturnoAno(String matricula, int ano) {
-        try {
-            BigDecimal somaDSRNoturno = BigDecimal.ZERO;
-
-            // Considerar até novembro para cálculo do 13º
-            int mesLimite = Math.min(LocalDate.now().getMonthValue() - 1, 11);
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar DSR Noturno do mês (código 25)
-                BigDecimal dsrNoturnoMes = folhaMensalEventosCalculadaRepository.findDSRNoturnoPorMesEAno(matricula, ano, mes);
-
-                if (dsrNoturnoMes != null) {
-                    somaDSRNoturno = somaDSRNoturno.add(dsrNoturnoMes);
-                }
-            }
-
-            return somaDSRNoturno;
-
-        } catch (Exception e) {
-            logger.error("Erro ao calcular soma DSR Noturno para matrícula {}: {}", matricula, e.getMessage());
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private BigDecimal calcularMediaAdicionalNoturnoAno(String matricula, int ano) {
-        try {
-            BigDecimal totalAdicionalNoturnoAno = BigDecimal.ZERO;
-            int mesesComAdicionalNoturno = 0;
-
-            // Considerar até novembro para cálculo do 13º
-            int mesLimite = Math.min(LocalDate.now().getMonthValue() - 1, 11);
-            if (mesLimite == 0) mesLimite = 12;
-
-            for (int mes = 1; mes <= mesLimite; mes++) {
-                // Buscar adicional noturno do mês (código 24)
-                BigDecimal adicionalNoturnoMes = folhaMensalEventosCalculadaRepository.findAdicionalNoturnoPorMesEAno(matricula, ano, mes);
-
-                if (adicionalNoturnoMes != null && adicionalNoturnoMes.compareTo(BigDecimal.ZERO) > 0) {
-                    totalAdicionalNoturnoAno = totalAdicionalNoturnoAno.add(adicionalNoturnoMes);
-                    mesesComAdicionalNoturno++;
-                }
-            }
-
-            // Se recebeu adicional noturno em 6+ meses, considera habitual - divide por 12
-            // Se eventual, divide apenas pelos meses que recebeu
-            BigDecimal mediaAdicionalNoturno;
-            if (mesesComAdicionalNoturno >= 6) {
-                mediaAdicionalNoturno = totalAdicionalNoturnoAno.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-            } else if (mesesComAdicionalNoturno > 0) {
-                mediaAdicionalNoturno = totalAdicionalNoturnoAno.divide(new BigDecimal(mesesComAdicionalNoturno), 2, RoundingMode.HALF_UP);
-            } else {
-                mediaAdicionalNoturno = BigDecimal.ZERO;
-            }
-
-            return mediaAdicionalNoturno;
-
-        } catch (Exception e) {
-            logger.error("Erro ao calcular média adicional noturno para matrícula {}: {}", matricula, e.getMessage());
-            return BigDecimal.ZERO;
-        }
+        return resultado;
     }
 }

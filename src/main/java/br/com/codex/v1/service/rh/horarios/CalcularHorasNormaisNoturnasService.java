@@ -1,7 +1,8 @@
 package br.com.codex.v1.service.rh.horarios;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculosAuxiliaresFolha;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.Map;
 
 @Service
 public class CalcularHorasNormaisNoturnasService {
+
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
 
     @Autowired
     private CalculoBaseService calculoBaseService;
@@ -65,7 +69,7 @@ public class CalcularHorasNormaisNoturnasService {
             // ✅ 2. CALCULAR DIAS ÚTEIS NO MÊS - UMA ÚNICA VEZ
             int year = LocalDate.now().getYear();
             int month = LocalDate.now().getMonthValue();
-            int diasUteis = calculoBaseService.calcularDiasUteisNoMes(year, month);
+            int diasUteis = calculosAuxiliaresFolha.calcularDiasUteisNoMes(year, month);
 
             // ✅ 3. CÁLCULO FINAL DAS HORAS NOTURNAS
             BigDecimal totalHorasNoturnasMes = horasNoturnasPorDia.multiply(new BigDecimal(diasUteis)).setScale(2, RoundingMode.HALF_UP);

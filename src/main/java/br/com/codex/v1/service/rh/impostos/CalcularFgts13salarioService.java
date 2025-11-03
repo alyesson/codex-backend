@@ -1,7 +1,8 @@
 package br.com.codex.v1.service.rh.impostos;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.service.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculoBaseService;
+import br.com.codex.v1.service.rh.CalculosAuxiliaresFolha;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,9 @@ public class CalcularFgts13salarioService {
 
     @Autowired
     private CalculoBaseService calculoBaseService;
+
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
 
     @Setter
     String numeroMatricula;
@@ -47,7 +51,7 @@ public class CalcularFgts13salarioService {
             }
 
             // ✅ Calcular meses trabalhados
-            int mesesTrabalhados = calculoBaseService.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
+            int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, LocalDate.now());
 
             // ✅ Cálculo do 13º (integral ou proporcional)
             BigDecimal decimoTerceiroIntegral = salarioBase.multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);

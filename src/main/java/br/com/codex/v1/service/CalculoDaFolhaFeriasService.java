@@ -6,6 +6,7 @@ import br.com.codex.v1.domain.repository.FolhaMensalRepository;
 import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
 import br.com.codex.v1.domain.rh.FolhaFerias;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
+import br.com.codex.v1.service.rh.CalculoBaseService;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
