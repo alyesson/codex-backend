@@ -8,8 +8,6 @@ import br.com.codex.v1.service.rh.horasextras.*;
 import br.com.codex.v1.service.rh.impostos.CalcularFgts13salarioService;
 import br.com.codex.v1.service.rh.impostos.CalcularFgtsSalarioService;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -158,6 +156,10 @@ public class CalculoDaFolhaProventosService {
     protected CalcularPrimeiraParcelaAbonoSalarialService calcularPrimeiraParcelaAbonoSalarialService;
     @Autowired
     protected CalcularSegundaParcelaAbonoSalarialService calcularSegundaParcelaAbonoSalarialService;
+    @Autowired
+    protected CalcularAuxilioNatalidadeService calcularAuxilioNatalidadeService;
+    @Autowired
+    protected CalcularPremioFrequenciaService calcularPremioFrequenciaService;
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
         Map<String, BigDecimal> resultado = new HashMap<>();
@@ -258,7 +260,7 @@ public class CalculoDaFolhaProventosService {
 
             case 56 -> {
                 calcularQuebraCaixaService.setNumeroMatricula(numeroMatricula);
-                return   calcularQuebraCaixaService.calcularQuebraCaixa();
+                return   calcularPremioFrequenciaService.calcularPremioFrequencia();
             }
 
              case 98 -> {
@@ -311,15 +313,20 @@ public class CalculoDaFolhaProventosService {
                 return  calcularMediaAdicionalNoturnoSalarioMaternidadeService.calcularMediaAdicionalNoturnoSalarioMaternidade();
             }
 
-            case 133 -> {
-                calcularSalarioFamiliaService.setNumeroMatricula(numeroMatricula);
-                return  calcularSalarioFamiliaService.calcularSalarioFamilia();
-            }
-
             case 130 -> {
                 calcularAjudaCustoService.setNumeroMatricula(numeroMatricula);
                 calcularAjudaCustoService.setTipoSalario(tipoSalario);
                 return   calcularAjudaCustoService.calcularAjudaCusto();
+            }
+
+            case 132 -> {
+                calcularSalarioFamiliaService.setNumeroMatricula(numeroMatricula);
+                return  calcularAuxilioNatalidadeService.calcularAuxilioNatalidade();
+            }
+
+            case 133 -> {
+                calcularSalarioFamiliaService.setNumeroMatricula(numeroMatricula);
+                return  calcularSalarioFamiliaService.calcularSalarioFamilia();
             }
 
             case 167 -> {
