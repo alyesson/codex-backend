@@ -4,11 +4,13 @@ import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.service.rh.CalculoBaseService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class CalcularPremioFrequenciaService {
     @Autowired
     private CalculoBaseService calculoBaseService;
@@ -30,7 +32,6 @@ public class CalcularPremioFrequenciaService {
         BigDecimal valorPremio = folha.getGratificacao();
         resultado.put("referencia", valorPremio);
         resultado.put("vencimentos", valorPremio);
-
 
         return resultado;
     }

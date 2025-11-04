@@ -222,7 +222,7 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "13", "Redução horário noturno"));
         listaEventosFolha.add(new EventosFolha(null, "14", "Adicional noturno"));
         listaEventosFolha.add(new EventosFolha(null, "15", "Desconto horas atrasos e/ou Saídas"));
-        listaEventosFolha.add(new EventosFolha(null, "16", "salário simbólico para cCálculo FGTS"));
+        listaEventosFolha.add(new EventosFolha(null, "16", "salário simbólico para cálculo FGTS"));
         listaEventosFolha.add(new EventosFolha(null, "17", "Pró-labore"));
         listaEventosFolha.add(new EventosFolha(null, "19", "Bolsa auxílio"));
         listaEventosFolha.add(new EventosFolha(null, "23", "Suspensão disciplinar"));
