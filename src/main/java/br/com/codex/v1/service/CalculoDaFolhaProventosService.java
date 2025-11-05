@@ -95,6 +95,8 @@ public class CalculoDaFolhaProventosService {
     @Autowired
     protected CalcularDecimoTerceiroCheioAdiantadoService calcularDecimoTerceiroCheioAdiantadoService;
     @Autowired
+    protected CalcularMediaDsrDiurnoPrimeiraParcela13Service calcularMediaDsrDiurnoPrimeiraParcela13Service;
+    @Autowired
     protected CalcularMediaDsrNoturnoPrimeiraParcela13Service calcularMediaDsrNoturnoPrimeiraParcela13Service;
     @Autowired
     protected CalcularInsalubridadePrimeiraParcela13Service calcularInsalubridadePrimeiraParcela13Service;
@@ -354,6 +356,11 @@ public class CalculoDaFolhaProventosService {
                 return  calcularDecimoTerceiroCheioAdiantadoService.calcularDecimoTerceiroCheioAdiantado();
             }
 
+            case 176 ->{
+                calcularMediaDsrDiurnoPrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
+                return calcularMediaDsrDiurnoPrimeiraParcela13Service.calcularMediaDSRDiurnoPrimeiraParcela13();
+            }
+
             case 177 -> {
                 calcularMediaDsrNoturnoPrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
                 return  calcularMediaDsrNoturnoPrimeiraParcela13Service.calcularMediaDSRNoturnoPrimeiraParcela13();
@@ -370,43 +377,43 @@ public class CalculoDaFolhaProventosService {
             }
 
             case 182 -> {
+                calcularSegundaParcela13Service.setNumeroMatricula(numeroMatricula);
+                return calcularSegundaParcela13Service.calcularSegundaParcela13();
+            }
+
+            case 183 -> {
                 calcularMediaHE50SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return  calcularMediaHE50SegundaParcela13Service.calcularMediaHE50SegundaParcela13();
             }
 
-            case 183 -> {
+            case 184 -> {
                 calcularMediaHE70SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return  calcularMediaHE70SegundaParcela13Service.calcularMediaHE70SegundaParcela13();
             }
 
-            case 184 -> {
+            case 185 -> {
                 calcularMediaHE100SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return  calcularMediaHE100SegundaParcela13Service.calcularMediaHE100SegundaParcela13();
             }
 
-            case 185 -> {
+            case 186 ->{
                 calcularMediaDsrDiurnoSegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return calcularMediaDsrDiurnoSegundaParcela13Service.calcularMediaDsrDiurnoSegundaParcela13();
             }
 
-            case 186 ->{
+            case 187 ->{
                 calcularMediaDsrNoturnoSegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return calcularMediaDsrNoturnoSegundaParcela13Service.calcularMediaDsrNoturnoSegundaParcela13();
             }
 
-            case 187 ->{
+            case 188 ->{
                 calcularInsalubridadeSegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return calcularInsalubridadeSegundaParcela13Service.calcularInsalubridadeSegundaParcela13();
             }
 
-            case 188 ->{
+            case 189 -> {
                 calcularPericulosidadeSegundaParcela13Service.setNumeroMatricula(numeroMatricula);
                 return calcularPericulosidadeSegundaParcela13Service.calcularPericulosidadeSegundaParcela13();
-            }
-
-            case 189 -> {
-                calcularSegundaParcela13Service.setNumeroMatricula(numeroMatricula);
-                return calcularSegundaParcela13Service.calcularSegundaParcela13();
             }
 
             case 195 -> {

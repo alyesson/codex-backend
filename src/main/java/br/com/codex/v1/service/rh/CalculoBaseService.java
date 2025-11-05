@@ -263,10 +263,7 @@ public class CalculoBaseService {
             BigDecimal valorBase = mediaFinal.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
 
             // 6. Cálculo do valor com adicional 70%
-            BigDecimal valorComAdicional = valorBase
-                    .multiply(new BigDecimal("1.7")) // +70%
-                    .multiply(new BigDecimal("0.5")) // 50% da parcela do 13º
-                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal valorComAdicional = valorBase.multiply(new BigDecimal("1.7")).multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", valorBase);
             resultado.put("vencimentos", valorComAdicional);
@@ -314,10 +311,7 @@ public class CalculoBaseService {
             BigDecimal valorBase = mediaFinal.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
 
             // 6. Cálculo do valor com adicional 100%
-            BigDecimal valorComAdicional = valorBase
-                    .multiply(new BigDecimal("2.0")) // +100%
-                    .multiply(new BigDecimal("0.5")) // 50% da parcela do 13º
-                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal valorComAdicional = valorBase.multiply(new BigDecimal("2.0")).multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", valorBase);
             resultado.put("vencimentos", valorComAdicional);
@@ -325,6 +319,57 @@ public class CalculoBaseService {
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular Média de Horas Extras 1000% Sobre 1ª Parcela do 13º: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public Map<String, BigDecimal> calcularMediaDSRDiurnoPrimeiraParcela13(String matricula, BigDecimal salarioBase, Integer mesesTrabalhados) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            LocalDate hoje = LocalDate.now();
+            int anoAtual = hoje.getYear();
+
+            // 1. Somar DSR Diurno de janeiro a novembro
+            // Código evento 5 = "Horas repouso remunerado diurno" (DSR Diurno)
+            BigDecimal somaDsrDiurnoAno = BigDecimal.ZERO;
+            int mesesConsiderados = 0;
+
+            for (int mes = 1; mes <= 11; mes++) { // Janeiro a novembro
+                BigDecimal dsrDiurnoMes = folhaMensalEventosCalculadaRepository.findSomaEventoPorMesEAno(matricula, 5, anoAtual, mes);
+
+                if (dsrDiurnoMes != null && dsrDiurnoMes.compareTo(BigDecimal.ZERO) > 0) {
+                    somaDsrDiurnoAno = somaDsrDiurnoAno.add(dsrDiurnoMes);
+                    mesesConsiderados++;
+                }
+            }
+
+            // 2. Calcular média mensal (soma / 11 meses)
+            BigDecimal mediaMensalDsrDiurno = mesesConsiderados > 0 ? somaDsrDiurnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP) : BigDecimal.ZERO;
+
+            // 3. Adicionar ao salário bruto para base do 13º
+            BigDecimal baseCalculo13 = salarioBase.add(mediaMensalDsrDiurno);
+
+            // 4. Calcular 1/12 do valor (proporção mensal do 13º)
+            BigDecimal decimoTerceiroMensal = baseCalculo13.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+
+            // 5. Calcular valor proporcional do 13º
+            BigDecimal decimoTerceiroProporcional = decimoTerceiroMensal.multiply(new BigDecimal(mesesTrabalhados));
+
+            // 6. Primeira parcela = 50% do valor proporcional
+            BigDecimal primeiraParcela = decimoTerceiroProporcional.multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
+
+            resultado.put("referencia", new BigDecimal(mesesTrabalhados)); // meses trabalhados
+            resultado.put("vencimentos", primeiraParcela);                // valor 1ª parcela
+            resultado.put("descontos", BigDecimal.ZERO);
+
+            logger.debug("Cálculo DSR Diurno 13º - Média: R$ {}, Base: R$ {}, " +  "13º mensal: R$ {}, 13º proporcional: R$ {}, 1ª parcela: R$ {}",
+                    mediaMensalDsrDiurno, baseCalculo13, decimoTerceiroMensal, decimoTerceiroProporcional, primeiraParcela);
+
+        } catch (Exception e) {
+            logger.error("Erro ao calcular Média de DSR Diurno Sobre 1ª Parcela do 13º para matrícula {}", matricula, e);
+            throw new RuntimeException("Erro ao calcular Média de DSR Diurno Sobre 1ª Parcela do 13º: " + e.getMessage());
         }
 
         return resultado;

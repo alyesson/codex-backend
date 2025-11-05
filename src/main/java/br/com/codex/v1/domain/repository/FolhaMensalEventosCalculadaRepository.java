@@ -82,6 +82,10 @@ public interface FolhaMensalEventosCalculadaRepository extends JpaRepository<Fol
             "WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento = :codigoEvento AND f.folhaMensalCalculada.dataProcessamento BETWEEN :dataInicio AND :dataFim")
     BigDecimal findMediaProventoPeriodo(@Param("matricula") String matricula, @Param("codigoEvento") Integer codigoEvento, @Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
+    @Query("SELECT COALESCE(SUM(f.quantidadeHoras), 0) FROM FolhaMensalEventosCalculada f " +
+            "WHERE f.folhaMensalCalculada.matriculaColaborador = :matricula AND f.codigoEvento IN :codigosEvento AND f.folhaMensalCalculada.dataProcessamento BETWEEN :dataInicio AND :dataFim")
+    BigDecimal findTotalHorasExtrasPeriodo(@Param("matricula") String matricula, @Param("codigosEvento") Integer codigosEvento, @Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+
     void deleteByFolhaMensalCalculadaId(Long id);
 
     List<FolhaMensalEventosCalculada> findAllEventosByFolhaMensalCalculadaId(Long eventoId);

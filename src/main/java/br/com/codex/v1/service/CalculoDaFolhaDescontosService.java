@@ -4,6 +4,7 @@ import br.com.codex.v1.domain.repository.TabelaImpostoRendaRepository;
 import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
 import br.com.codex.v1.service.rh.CalculoBaseService;
+import br.com.codex.v1.service.rh.decimoterceiro.CalcularIrrfDecimoTerceiroService;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,13 @@ public class CalculoDaFolhaDescontosService {
     private static final Logger logger = LoggerFactory.getLogger(CalculoDaFolhaDescontosService.class);
 
     @Autowired
-    CalculoBaseService calculoBaseService;
+    private CalculoBaseService calculoBaseService;
 
     @Autowired
     private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
+
+    @Autowired
+    private CalcularIrrfDecimoTerceiroService calcularIrrfDecimoTerceiroService;
 
     @Setter
     String numeroMatricula;
@@ -155,31 +159,6 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
-            // Adiantamento 1° Parcela Décimo Terceiro
-            case 172 ->{
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal valorSalarioBase = folha.getSalarioBase();
-
-                resultado.put("referencia", valorSalarioBase);
-                resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", valorSalarioBase);
-
-                return resultado;
-            }
-
-            // Adiantamento 2° Parcela Décimo Terceiro
-            case 190 ->{
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal valorSalarioBase = folha.getSalarioBase();
-                BigDecimal decimoTerceiroSegundaParcela = valorSalarioBase.divide(new BigDecimal("2"), 2, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP);
-
-                resultado.put("referencia", decimoTerceiroSegundaParcela);
-                resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", decimoTerceiroSegundaParcela);
-
-                return resultado;
-            }
-
             // Empréstimo Consignado
             case 229 ->{
                 FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
@@ -276,6 +255,18 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
+            //Coparticipação plano médico
+            case 243 -> {
+                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+                BigDecimal planoMedico = folha.getValorPlanoMedico();
+
+                resultado.put("referencia", planoMedico);
+                resultado.put("vencimentos", BigDecimal.ZERO);
+                resultado.put("descontos", planoMedico);
+
+                return resultado;
+            }
+
             //Desconto INSS
             case 244 ->{
                 FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
@@ -343,6 +334,11 @@ public class CalculoDaFolhaDescontosService {
                 resultado.put("descontos", descontoIrrf);
 
                 return resultado;
+            }
+
+            case 247 -> {
+                calcularIrrfDecimoTerceiroService.setNumeroMatricula(numeroMatricula);
+                return calcularIrrfDecimoTerceiroService.calcularIrrfDecimoTerceiro();
             }
         }
     } catch (Exception e) {
