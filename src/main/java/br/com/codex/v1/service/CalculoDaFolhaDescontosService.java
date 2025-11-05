@@ -340,6 +340,17 @@ public class CalculoDaFolhaDescontosService {
                 calcularIrrfDecimoTerceiroService.setNumeroMatricula(numeroMatricula);
                 return calcularIrrfDecimoTerceiroService.calcularIrrfDecimoTerceiro();
             }
+
+            case 248 ->{
+              FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+              BigDecimal planoMedico = folha.getPensaoAlimenticia();
+
+              resultado.put("referencia", planoMedico);
+              resultado.put("vencimentos", BigDecimal.ZERO);
+              resultado.put("descontos", planoMedico);
+
+              return resultado;
+            }
         }
     } catch (Exception e) {
         logger.error("Erro ao calcular desconto para evento {}: {}", codigoEvento, e.getMessage());
