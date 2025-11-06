@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Service
 public class CalcularImpostosRescisaoService {
-
     private static final Logger logger = LoggerFactory.getLogger(CalcularImpostosRescisaoService.class);
 
     @Autowired
@@ -60,12 +59,10 @@ public class CalcularImpostosRescisaoService {
             resultado.put("referencia", irrfRescisao);
             resultado.put("descontos", irrfRescisao);
 
-            logger.info("IRRF sobre rescisão calculado para {}: R$ {}",
-                    numeroMatricula, irrfRescisao);
+            logger.info("IRRF sobre rescisão calculado para {}: R$ {}", numeroMatricula, irrfRescisao);
 
         } catch (Exception e) {
-            logger.error("Erro ao calcular IRRF sobre rescisão para {}: {}",
-                    numeroMatricula, e.getMessage());
+            logger.error("Erro ao calcular IRRF sobre rescisão para {}: {}", numeroMatricula, e.getMessage());
             throw new RuntimeException("Erro ao calcular IRRF sobre rescisão: " + e.getMessage());
         }
 

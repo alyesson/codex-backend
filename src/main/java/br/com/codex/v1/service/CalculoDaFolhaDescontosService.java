@@ -5,6 +5,10 @@ import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
 import br.com.codex.v1.service.rh.CalculoBaseService;
 import br.com.codex.v1.service.rh.decimoterceiro.CalcularIrrfDecimoTerceiroService;
+import br.com.codex.v1.service.rh.descontos.CalcularConvenioAssistenciaOdontologicaService;
+import br.com.codex.v1.service.rh.descontos.CalcularDescontoInssService;
+import br.com.codex.v1.service.rh.descontos.CalcularDescontoValeTransporteService;
+import br.com.codex.v1.service.rh.impostos.CalcularDescontoImpostoRendaService;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +35,18 @@ public class CalculoDaFolhaDescontosService {
 
     @Autowired
     private CalcularIrrfDecimoTerceiroService calcularIrrfDecimoTerceiroService;
+
+    @Autowired
+    private CalcularDescontoImpostoRendaService calcularDescontoImpostoRendaService;
+
+    @Autowired
+    private CalcularConvenioAssistenciaOdontologicaService calcularConvenioAssistenciaOdontologicaService;
+
+    @Autowired
+    private CalcularDescontoValeTransporteService calcularDescontoValeTransporteService;
+
+    @Autowired
+    private CalcularDescontoInssService calcularDescontoInssService;
 
     @Setter
     String numeroMatricula;
@@ -231,31 +247,16 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
-            //Desconto Vale Transporte
             case 241 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal descontoValeTransporte = folha.getSalarioBase().multiply(new BigDecimal("0.06")).setScale(2, RoundingMode.HALF_UP);
-
-                resultado.put("referencia", new BigDecimal(6));
-                resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", descontoValeTransporte);
-
-                return resultado;
+                calcularDescontoValeTransporteService.setNumeroMatricula(numeroMatricula);
+                return calcularDescontoValeTransporteService.calcularDescontoValeTransporte();
             }
 
-            //Desconto Plano Odontológico
             case 242 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal planoOdonto = folha.getValorPlanoOdonto();
-
-                resultado.put("referencia", planoOdonto);
-                resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", planoOdonto);
-
-                return resultado;
+                calcularConvenioAssistenciaOdontologicaService.setNumeroMatricula(numeroMatricula);
+                return calcularConvenioAssistenciaOdontologicaService.calcularConvenioAssistenciaOdontologica();
             }
 
-            //Coparticipação plano médico
             case 243 -> {
                 FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal planoMedico = folha.getValorPlanoMedico();
@@ -267,73 +268,21 @@ public class CalculoDaFolhaDescontosService {
                 return resultado;
             }
 
-            //Desconto INSS
             case 244 ->{
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal salarioBase = folha.getSalarioBase();
-                BigDecimal descontoInss = calculoBaseService.calcularINSS(salarioBase);
-
-                resultado.put("referencia", descontoInss);
-                resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", descontoInss);
-
-                return resultado;
+                calcularDescontoInssService.setNumeroMatricula(numeroMatricula);
+                return calcularDescontoInssService.calcularDescontoInss();
             }
 
-            //Desconto INSS sobre o 13°
             case 245 ->{
-
                 LocalDate dataCalculo = LocalDate.now();
                 FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
                 BigDecimal salarioBase = folha.getSalarioBase();
-
                 return calculoBaseService.calcularINSSDecimoTerceiro(folha.getDataAdmissao(), dataCalculo, salarioBase);
             }
 
-            //Desconto Imposto de Renda
             case 246 -> {
-                FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-                BigDecimal salarioBase = folha.getSalarioBase();
-
-                // **Primeiro calcula o INSS**
-                BigDecimal descontoInss = calculoBaseService.calcularINSS(salarioBase);
-
-                // **Calcula a base do IRRF (salário - INSS - dependentes - pensão)**
-                BigDecimal baseCalculoIrrf = salarioBase.subtract(descontoInss).subtract(BigDecimal.valueOf(folha.getDependentesIrrf())).subtract(folha.getPensaoAlimenticia());
-
-                // **Calcula o IRRF normalmente**
-                BigDecimal descontoIrrf = calculoBaseService.calcularIRRF(baseCalculoIrrf);
-
-                // **AGORA PEGAMOS A ALÍQUOTA AQUI MESMO**
-                BigDecimal aliquotaIrrf = BigDecimal.ZERO;
-
-                // Busca a tabela atual do IRRF
-                Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
-
-                if (tabelaIrrfOpt.isPresent()) {
-                    TabelaImpostoRenda tabelaIrrf = tabelaIrrfOpt.get();
-
-                    // Determina a alíquota com base na base de cálculo
-                    if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario1()) <= 0) {
-                        aliquotaIrrf = BigDecimal.ZERO;
-                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario2()) <= 0) {
-                        aliquotaIrrf = tabelaIrrf.getAliquota1().multiply(BigDecimal.valueOf(100)); // Converte para %
-                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario3()) <= 0) {
-                        aliquotaIrrf = tabelaIrrf.getAliquota2().multiply(BigDecimal.valueOf(100));
-                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario4()) <= 0) {
-                        aliquotaIrrf = tabelaIrrf.getAliquota3().multiply(BigDecimal.valueOf(100));
-                    } else if (baseCalculoIrrf.compareTo(tabelaIrrf.getFaixaSalario5()) <= 0) {
-                        aliquotaIrrf = tabelaIrrf.getAliquota4().multiply(BigDecimal.valueOf(100));
-                    } else {
-                        aliquotaIrrf = tabelaIrrf.getAliquota5().multiply(BigDecimal.valueOf(100));
-                    }
-                }
-
-                resultado.put("referencia", aliquotaIrrf); // ✅ Alíquota em %
-                resultado.put("vencimentos", BigDecimal.ZERO);
-                resultado.put("descontos", descontoIrrf);
-
-                return resultado;
+                calcularIrrfDecimoTerceiroService.setNumeroMatricula(numeroMatricula);
+                return calcularDescontoImpostoRendaService.calcularDescontoImpostoRenda();
             }
 
             case 247 -> {
@@ -350,6 +299,11 @@ public class CalculoDaFolhaDescontosService {
               resultado.put("descontos", planoMedico);
 
               return resultado;
+            }
+
+            case 256 ->{
+                calcularConvenioAssistenciaOdontologicaService.setNumeroMatricula(numeroMatricula);
+                return calcularConvenioAssistenciaOdontologicaService.calcularConvenioAssistenciaOdontologica();
             }
         }
     } catch (Exception e) {

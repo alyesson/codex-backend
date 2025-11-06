@@ -45,6 +45,9 @@ public class CalculoDaFolhaRescisaoService {
     @Autowired
     private CalcularBeneficiosRescisaoService calcularBeneficiosRescisaoService;
 
+    @Autowired
+    private CalcularFeriasProporcionaisRescisaoService calcularFeriasProporcionaisRescisaoService;
+
     @Setter
     private String numeroMatricula;
 
@@ -90,11 +93,12 @@ public class CalculoDaFolhaRescisaoService {
                 case 307 -> { // Férias Vencidas
                     return calcularFeriasRescisaoService.calcularFeriasVencidas(salarioBase, faltasMes, tipoSalario);
                 }
-                case 324 -> { // 1/3 de Férias
-                    return calcularFeriasRescisaoService.calcularUmTercoFerias(salarioBase);
+                case 308 ->{ //Média horas extras férias proporcionais
+                    calcularFeriasProporcionaisRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return calcularFeriasProporcionaisRescisaoService.calcularFeriasProporcionaisRescisao(dataDemissao, dataAdmissao);
                 }
-                case 325 -> { // 13º Proporcional
-                    return calcularDecimoTerceiroRescisaoService.calcularDecimoTerceiroProporcional(salarioBase, dataAdmissao, dataDemissao, faltasMes);
+                case 312 -> { // Salário Família na Rescisão
+                    return calcularBeneficiosRescisaoService.calcularSalarioFamiliaRescisao(salarioBase, numeroDependentes, diasTrabalhadosMes);
                 }
                 case 313 -> { // INSS Sobre Rescisão
                     return calcularImpostosRescisaoService.calcularINSSRescisao(rescisao);
@@ -102,9 +106,13 @@ public class CalculoDaFolhaRescisaoService {
                 case 314 -> { // IRRF Sobre Rescisão
                     return calcularImpostosRescisaoService.calcularIRRFRescisao(rescisao, numeroDependentes);
                 }
-                case 312 -> { // Salário Família na Rescisão
-                    return calcularBeneficiosRescisaoService.calcularSalarioFamiliaRescisao(salarioBase, numeroDependentes, diasTrabalhadosMes);
+                case 324 -> { // 1/3 de Férias
+                    return calcularFeriasRescisaoService.calcularUmTercoFerias(salarioBase);
                 }
+                case 325 -> { // 13º Proporcional
+                    return calcularDecimoTerceiroRescisaoService.calcularDecimoTerceiroProporcional(salarioBase, dataAdmissao, dataDemissao, faltasMes);
+                }
+
                 default -> {
                     logger.warn("Evento de rescisão não implementado: {}", codigoEvento);
                 }

@@ -325,7 +325,7 @@ public class DBService {
         listaEventosFolha.add(new EventosFolha(null, "259", "Vale creche"));
         listaEventosFolha.add(new EventosFolha(null, "260", "Dia desconto contribuição sindical"));
         listaEventosFolha.add(new EventosFolha(null, "302", "Dias saldo salário"));
-        listaEventosFolha.add(new EventosFolha(null, "303", "Dias aviso prévio tTrabalhados"));
+        listaEventosFolha.add(new EventosFolha(null, "303", "Dias aviso prévio trabalhados"));
         listaEventosFolha.add(new EventosFolha(null, "304", "Dias aviso prévio indenizados"));
         listaEventosFolha.add(new EventosFolha(null, "305", "Multa do FGTS"));
         listaEventosFolha.add(new EventosFolha(null, "306", "Férias proporcionais"));
