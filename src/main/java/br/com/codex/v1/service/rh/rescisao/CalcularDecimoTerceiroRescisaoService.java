@@ -38,7 +38,6 @@ public class CalcularDecimoTerceiroRescisaoService {
             }
 
             BigDecimal decimoTerceiro = salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
-
             resultado.put("referencia", BigDecimal.ONE);
             resultado.put("vencimentos", decimoTerceiro);
 

@@ -12,7 +12,6 @@ import java.util.Map;
 
 @Service
 public class CalcularSaldoSalarioService {
-
     private static final Logger logger = LoggerFactory.getLogger(CalcularSaldoSalarioService.class);
 
     @Setter

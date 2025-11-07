@@ -48,6 +48,12 @@ public class CalculoDaFolhaRescisaoService {
     @Autowired
     private CalcularFeriasProporcionaisRescisaoService calcularFeriasProporcionaisRescisaoService;
 
+    @Autowired
+    private CalcularImpostoRendaSobrePlrRescisaoService calcularImpostoRendaSobrePlrRescisaoService;
+
+    @Autowired
+    private CalcularFeriasProporcionaisComAdicionalNoturnoRescisaoService calcularFeriasProporcionaisComAdicionalNoturnoRescisaoService;
+
     @Setter
     private String numeroMatricula;
 
@@ -70,6 +76,7 @@ public class CalculoDaFolhaRescisaoService {
             Integer numeroDependentes = rescisao.getNumeroDependenteIrrf();
             String tipoSalario = rescisao.getTipoDeSalario();
             String tipoDemissao = rescisao.getTipoDeDemissao();
+            BigDecimal participacaoLucros = rescisao.getParticipacaoLucros();
 
             // Configurar numeroMatricula em todos os services
             configurarServices();
@@ -78,37 +85,68 @@ public class CalculoDaFolhaRescisaoService {
                 case 302 -> { // Saldo de Salário
                     return calcularSaldoSalarioService.calcularSaldoSalario(salarioBase, diasTrabalhadosMes, tipoSalario, salarioPorHora);
                 }
+
                 case 303 -> { // Aviso Prévio Trabalhado
                     return calcularAvisoPrevioService.calcularAvisoPrevioTrabalhado(diasTrabalhadosMes);
                 }
+
                 case 304 -> { // Aviso Prévio Indenizado
                     return calcularAvisoPrevioService.calcularAvisoPrevioIndenizado(salarioBase, dataAdmissao, dataDemissao, tipoSalario, salarioPorHora);
                 }
+
                 case 305 -> { // Multa do FGTS (40%)
                     return calcularMultaFGTSService.calcularMultaFGTS(salarioBase, dataAdmissao, dataDemissao, tipoDemissao);
                 }
+
                 case 306 -> { // Férias Proporcionais
-                    return calcularFeriasRescisaoService.calcularFeriasProporcionais(salarioBase, dataAdmissao, dataDemissao, faltasMes, tipoSalario);
+                    return calcularFeriasRescisaoService.calcularFeriasProporcionais(salarioBase, dataAdmissao, dataDemissao, faltasMes);
                 }
+
                 case 307 -> { // Férias Vencidas
-                    return calcularFeriasRescisaoService.calcularFeriasVencidas(salarioBase, faltasMes, tipoSalario);
+                    return calcularFeriasRescisaoService.calcularFeriasVencidas(salarioBase, faltasMes);
                 }
+
                 case 308 ->{ //Média horas extras férias proporcionais
                     calcularFeriasProporcionaisRescisaoService.setNumeroMatricula(numeroMatricula);
                     return calcularFeriasProporcionaisRescisaoService.calcularFeriasProporcionaisRescisao(dataDemissao, dataAdmissao);
                 }
+
+                case 309 ->{
+                    calcularFeriasRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return calcularFeriasRescisaoService.calcularInsalubridadeFeriasProporcionais(salarioBase, dataAdmissao, dataDemissao, faltasMes);
+                }
+
+                case 310 ->{
+                    calcularFeriasRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return calcularFeriasRescisaoService.calcularFeriasProporcionaisComPericulosidade(salarioBase, dataAdmissao, dataDemissao, faltasMes, tipoSalario);
+                }
+
+                case 311 ->{
+                    calcularFeriasProporcionaisComAdicionalNoturnoRescisaoService.setNumeroMatricula(numeroMatricula);
+                    calcularFeriasProporcionaisComAdicionalNoturnoRescisaoService.calcularFeriasProporcionaisComAdicionalNoturno(salarioBase, dataAdmissao, dataDemissao, faltasMes, tipoSalario);
+                }
+
                 case 312 -> { // Salário Família na Rescisão
                     return calcularBeneficiosRescisaoService.calcularSalarioFamiliaRescisao(salarioBase, numeroDependentes, diasTrabalhadosMes);
                 }
+
                 case 313 -> { // INSS Sobre Rescisão
                     return calcularImpostosRescisaoService.calcularINSSRescisao(rescisao);
                 }
-                case 314 -> { // IRRF Sobre Rescisão
+
+                case 314 -> { // IRRF Sobre Participação dos lucros na Rescisão
+                    calcularImpostoRendaSobrePlrRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return calcularImpostoRendaSobrePlrRescisaoService.calcularImpostoRendaSobrePlrRescisao(participacaoLucros);
+                }
+
+                case 317 -> { // IRRF Sobre Rescisão
                     return calcularImpostosRescisaoService.calcularIRRFRescisao(rescisao, numeroDependentes);
                 }
+
                 case 324 -> { // 1/3 de Férias
                     return calcularFeriasRescisaoService.calcularUmTercoFerias(salarioBase);
                 }
+
                 case 325 -> { // 13º Proporcional
                     return calcularDecimoTerceiroRescisaoService.calcularDecimoTerceiroProporcional(salarioBase, dataAdmissao, dataDemissao, faltasMes);
                 }

@@ -61,6 +61,7 @@ public class FolhaRescisao implements Serializable {
     private String categoriaTrabalhador;
     private String codigoSindical; //cnpj do sindicato
     private String entidadeSindical;
+    private BigDecimal participacaoLucros;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal salarioBase;
@@ -98,7 +99,7 @@ public class FolhaRescisao implements Serializable {
                          int numeroDependenteIrrf, String tipoDeSalario, int horasSemanais, LocalDate dataDeAdmissao,
                          LocalDate dataDeDemissao, LocalDate dataAVisoPrevio, String tipoDeDemissao, String tipoContrato,
                          String tipoDeAvisoPrevio, String codigoAfastamento, LocalDate dataFimAvisoPrevio,
-                         String categoriaTrabalhador, String codigoSindical, String entidadeSindical, BigDecimal salarioHora,
+                         String categoriaTrabalhador, String codigoSindical, String entidadeSindical, BigDecimal participacaoLucros, BigDecimal salarioHora,
                          Integer faltasNoMes, Integer diasTrabalhadosNoMes, BigDecimal totalVencimentos,
                          BigDecimal totalDescontos, BigDecimal valorLiquido) {
         this.id = id;
@@ -139,6 +140,7 @@ public class FolhaRescisao implements Serializable {
         this.categoriaTrabalhador = categoriaTrabalhador;
         this.codigoSindical = codigoSindical;
         this.entidadeSindical = entidadeSindical;
+        this.participacaoLucros = participacaoLucros;
         this.salarioHora = salarioHora;
         this.faltasNoMes = faltasNoMes;
         this.diasTrabalhadosNoMes = diasTrabalhadosNoMes;
@@ -186,6 +188,7 @@ public class FolhaRescisao implements Serializable {
         this.categoriaTrabalhador = obj.getCategoriaTrabalhador();
         this.codigoSindical = obj.getCodigoSindical();
         this.entidadeSindical = obj.getEntidadeSindical();
+        this.participacaoLucros = obj.getParticipacaoLucros();
         this.salarioHora = obj.getSalarioHora();
         this.faltasNoMes = obj.getFaltasNoMes();
         this.diasTrabalhadosNoMes = obj.getDiasTrabalhadosNoMes();

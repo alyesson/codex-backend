@@ -67,6 +67,7 @@ public class FolhaRescisaoDto implements Serializable {
     private String categoriaTrabalhador;
     private String codigoSindical; //cnpj do sindicato
     private String entidadeSindical;
+    private BigDecimal participacaoLucros;
     private BigDecimal salarioHora;
     private Integer faltasNoMes;
     private Integer diasTrabalhadosNoMes;
@@ -118,6 +119,7 @@ public class FolhaRescisaoDto implements Serializable {
         this.categoriaTrabalhador = obj.getCategoriaTrabalhador();
         this.codigoSindical = obj.getCodigoSindical();
         this.entidadeSindical = obj.getEntidadeSindical();
+        this.participacaoLucros = obj.getParticipacaoLucros();
         this.salarioHora = obj.getSalarioHora();
         this.faltasNoMes = obj.getFaltasNoMes();
         this.diasTrabalhadosNoMes = obj.getDiasTrabalhadosNoMes();

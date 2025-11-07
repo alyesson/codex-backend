@@ -27,6 +27,9 @@ public class CalcularFeriasProporcionaisRescisaoService {
     private CalcularMediaHorasExtrasRescisao calcularMediaHorasExtrasRescisao;
 
     @Autowired
+    private CalcularInsalubridadeRescisaoService calcularInsalubridadeRescisaoService;
+
+    @Autowired
     private CadastroColaboradoresRepository cadastroColaboradoresRepository;
 
     @Setter
