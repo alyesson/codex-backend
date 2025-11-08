@@ -417,7 +417,7 @@ public class CalculoDaFolhaProventosService {
             }
 
             case 195 -> {
-                   calcularDecimoTerceiroComMediaComissoesService.setNumeroMatricula(numeroMatricula);
+                calcularDecimoTerceiroComMediaComissoesService.setNumeroMatricula(numeroMatricula);
                 return calcularDecimoTerceiroComMediaComissoesService.calcularDecimoTerceiroComMediaComissoes();
             }
 

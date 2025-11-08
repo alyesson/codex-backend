@@ -42,8 +42,7 @@ public class CalcularInsalubridadePrimeiraParcela13Service {
             int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
 
             // ✅ Chamar métudo do CalculoBaseService
-            Map<String, BigDecimal> resultadoInsalubridade = calculoBaseService
-                    .calcularInsalubridadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
+            Map<String, BigDecimal> resultadoInsalubridade = calculoBaseService.calcularInsalubridadePrimeiraParcela13(numeroMatricula, salarioBase, mesesTrabalhados);
 
             // ✅ Atualiza o resultado principal
             resultado.putAll(resultadoInsalubridade);

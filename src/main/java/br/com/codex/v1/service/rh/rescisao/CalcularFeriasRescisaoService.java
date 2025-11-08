@@ -101,12 +101,9 @@ public class CalcularFeriasRescisaoService {
             resultado.put("referencia", umTercoFerias);
             resultado.put("vencimentos", umTercoFerias);
 
-            logger.info("1/3 de férias calculado para {}: R$ {}",
-                    numeroMatricula, umTercoFerias);
-
+            logger.info("1/3 de férias calculado para {}: R$ {}", numeroMatricula, umTercoFerias);
         } catch (Exception e) {
-            logger.error("Erro ao calcular 1/3 de férias para {}: {}",
-                    numeroMatricula, e.getMessage());
+            logger.error("Erro ao calcular 1/3 de férias para {}: {}", numeroMatricula, e.getMessage());
             throw new RuntimeException("Erro ao calcular 1/3 de férias: " + e.getMessage());
         }
 
@@ -166,7 +163,7 @@ public class CalcularFeriasRescisaoService {
         return resultado;
     }
 
-    public Map<String, BigDecimal> calcularFeriasProporcionaisComPericulosidade(BigDecimal salarioBase, LocalDate dataAdmissao, LocalDate dataDemissao, Integer faltas, String tipoSalario) {
+    public Map<String, BigDecimal> calcularPericulosidadeFeriasProporcionais(BigDecimal salarioBase, LocalDate dataAdmissao, LocalDate dataDemissao, Integer faltas, String tipoSalario) {
         Map<String, BigDecimal> resultado = new HashMap<>();
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);

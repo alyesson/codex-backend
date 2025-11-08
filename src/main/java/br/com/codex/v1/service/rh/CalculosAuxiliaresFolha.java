@@ -72,7 +72,7 @@ public class CalculosAuxiliaresFolha {
             }
 
             // Se não encontrou, calcula 30% do salário base (regra CLT)
-            return salarioBase.multiply(new BigDecimal("0.30")).setScale(2, RoundingMode.HALF_UP);
+            return salarioBase.multiply(new BigDecimal("0.30"));
 
         } catch (Exception e) {
             // Fallback: calcula 30% do salário base

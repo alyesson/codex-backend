@@ -1,10 +1,7 @@
 package br.com.codex.v1.service.rh;
 
 import br.com.codex.v1.domain.repository.*;
-import br.com.codex.v1.domain.rh.FolhaMensal;
-import br.com.codex.v1.domain.rh.FolhaQuinzenal;
-import br.com.codex.v1.domain.rh.TabelaDeducaoInss;
-import br.com.codex.v1.domain.rh.TabelaImpostoRenda;
+import br.com.codex.v1.domain.rh.*;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
 import br.com.codex.v1.utilitario.Calendario;
 import org.slf4j.Logger;
@@ -40,6 +37,9 @@ public class CalculoBaseService {
     @Autowired
     FolhaQuinzenalRepository folhaQuinzenalRepository;
 
+    @Autowired
+    FolhaRescisaoRepository folhaRescisaoRepository;
+
     public FolhaMensal findByMatriculaColaborador(String numeroMatricula) {
         Optional<FolhaMensal> obj = folhaMensalRepository.findByMatriculaColaborador(numeroMatricula);
         if (obj.isPresent()) {
@@ -55,6 +55,15 @@ public class CalculoBaseService {
             return obj.get();
         } else {
             throw new ObjectNotFoundException("Folha quinzenal não encontrada para matrícula: " + numeroMatricula);
+        }
+    }
+
+    public FolhaRescisao findByMatriculaDoFuncionario(String numeroMatricula) {
+        Optional<FolhaRescisao> obj = folhaRescisaoRepository.findByNumeroMatricula(numeroMatricula);
+        if (obj.isPresent()) {
+            return obj.get();
+        } else {
+            throw new ObjectNotFoundException("Folha rescisão não encontrada para matrícula: " + numeroMatricula);
         }
     }
 
@@ -178,7 +187,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularMediaHE50PrimeiraParcela13(String matricula, BigDecimal salarioPorHora) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -193,13 +201,8 @@ public class CalculoBaseService {
                 anoAtual = anoAtual - 1;
             }
 
-            // 1. Buscar soma das HE 50% do mês anterior
             BigDecimal somaMesAnterior = folhaMensalEventosCalculadaRepository.findSomaHorasExtrasPorMesEAno(matricula, 98, anoAtual, mesAnterior);
-
-            // 2. Buscar média das HE 50% do ano até o momento
             BigDecimal mediaAnoAteMes = folhaMensalEventosCalculadaRepository.findMediaHorasExtrasAteMes(matricula, 98, anoAtual, mesAnterior);
-
-            // 3. Cálculo da média
             BigDecimal mediaCalculada = BigDecimal.ZERO;
             if (mesAnterior > 0) {
                 mediaCalculada = somaMesAnterior.divide(new BigDecimal(mesAnterior), 2, RoundingMode.HALF_UP);
@@ -207,15 +210,8 @@ public class CalculoBaseService {
 
             // 4. Usar a maior média entre mês anterior e média do ano
             BigDecimal mediaFinal = mediaCalculada.max(mediaAnoAteMes);
-
-            // 5. Cálculo do valor base
             BigDecimal valorBase = mediaFinal.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
-
-            // 6. Cálculo do valor com adicional 50% (equivalente ao valorMedia50HoraExtra)
-            BigDecimal valorComAdicional = valorBase
-                    .multiply(new BigDecimal("1.5")) // +50%
-                    .multiply(new BigDecimal("0.5")) // 50% da parcela do 13º
-                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal valorComAdicional = valorBase.multiply(new BigDecimal("1.5")).multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", valorBase);
             resultado.put("vencimentos", valorComAdicional);
@@ -229,7 +225,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularMediaHE70PrimeiraParcela13(String matricula, BigDecimal salarioPorHora) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -246,23 +241,14 @@ public class CalculoBaseService {
 
             // 1. Buscar soma das HE 70% do mês anterior
             BigDecimal somaMesAnterior = folhaMensalEventosCalculadaRepository.findSomaHorasExtrasPorMesEAno(matricula, 99, anoAtual, mesAnterior);
-
-            // 2. Buscar média das HE 70% do ano até o momento
             BigDecimal mediaAnoAteMes = folhaMensalEventosCalculadaRepository.findMediaHorasExtrasAteMes(matricula, 99, anoAtual, mesAnterior);
-
-            // 3. Cálculo da média
             BigDecimal mediaCalculada = BigDecimal.ZERO;
             if (mesAnterior > 0) {
                 mediaCalculada = somaMesAnterior.divide(new BigDecimal(mesAnterior), 2, RoundingMode.HALF_UP);
             }
 
-            // 4. Usar a maior média entre mês anterior e média do ano
             BigDecimal mediaFinal = mediaCalculada.max(mediaAnoAteMes);
-
-            // 5. Cálculo do valor base
             BigDecimal valorBase = mediaFinal.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
-
-            // 6. Cálculo do valor com adicional 70%
             BigDecimal valorComAdicional = valorBase.multiply(new BigDecimal("1.7")).multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", valorBase);
@@ -277,7 +263,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularMediaHE100PrimeiraParcela13(String matricula, BigDecimal salarioPorHora) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -292,25 +277,15 @@ public class CalculoBaseService {
                 anoAtual = anoAtual - 1;
             }
 
-            // 1. Buscar soma das HE 100% do mês anterior
             BigDecimal somaMesAnterior = folhaMensalEventosCalculadaRepository.findSomaHorasExtrasPorMesEAno(matricula, 100, anoAtual, mesAnterior);
-
-            // 2. Buscar média das HE 100% do ano até o momento
             BigDecimal mediaAnoAteMes = folhaMensalEventosCalculadaRepository.findMediaHorasExtrasAteMes(matricula, 100, anoAtual, mesAnterior);
-
-            // 3. Cálculo da média
             BigDecimal mediaCalculada = BigDecimal.ZERO;
             if (mesAnterior > 0) {
                 mediaCalculada = somaMesAnterior.divide(new BigDecimal(mesAnterior), 2, RoundingMode.HALF_UP);
             }
 
-            // 4. Usar a maior média entre mês anterior e média do ano
             BigDecimal mediaFinal = mediaCalculada.max(mediaAnoAteMes);
-
-            // 5. Cálculo do valor base
             BigDecimal valorBase = mediaFinal.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
-
-            // 6. Cálculo do valor com adicional 100%
             BigDecimal valorComAdicional = valorBase.multiply(new BigDecimal("2.0")).multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", valorBase);
@@ -441,14 +416,10 @@ public class CalculoBaseService {
             BigDecimal remuneracaoTotal = salarioBase.add(adicionalInsalubridade);
 
             // 3. Calcular 13º proporcional
-            BigDecimal decimoTerceiroProporcional = remuneracaoTotal
-                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal(mesesTrabalhados));
+            BigDecimal decimoTerceiroProporcional = remuneracaoTotal.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados));
 
             // 4. Primeira parcela = 50% do valor proporcional (SEM descontos)
-            BigDecimal primeiraParcela = decimoTerceiroProporcional
-                    .multiply(new BigDecimal("0.5"))
-                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal primeiraParcela = decimoTerceiroProporcional.multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
             resultado.put("vencimentos", primeiraParcela);
@@ -614,9 +585,7 @@ public class CalculoBaseService {
                 mediaDSRNoturno = somaDSRNoturnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP);
             } else {
                 // Trabalhou período parcial: (soma/11) × (meses/12)
-                mediaDSRNoturno = somaDSRNoturnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP)
-                        .multiply(new BigDecimal(mesesTrabalhados))
-                        .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+                mediaDSRNoturno = somaDSRNoturnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             }
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
@@ -626,7 +595,6 @@ public class CalculoBaseService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular Média de DSR Noturno para 2ª Parcela do 13º: " + e.getMessage());
         }
-
         return resultado;
     }
 
@@ -650,7 +618,6 @@ public class CalculoBaseService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular Insalubridade para 2ª Parcela do 13º: " + e.getMessage());
         }
-
         return resultado;
     }
 
@@ -698,7 +665,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularDecimoTerceiroComMediaComissoes(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -718,12 +684,10 @@ public class CalculoBaseService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular 13º com média de comissões: " + e.getMessage());
         }
-
         return resultado;
     }
 
     public Map<String, BigDecimal> calcularComplementoMediaHE5013(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao,BigDecimal horasPorMes) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -735,8 +699,7 @@ public class CalculoBaseService {
             BigDecimal valorHoraExtra50 = valorHoraNormal.multiply(new BigDecimal("1.5")); // +50%
             BigDecimal valorMediaHE50 = mediaHorasExtras50.multiply(valorHoraExtra50).setScale(2, RoundingMode.HALF_UP);
             int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
-            BigDecimal complemento13 = valorMediaHE50.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal complemento13 = valorMediaHE50.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
             resultado.put("vencimentos", complemento13);
@@ -750,7 +713,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularComplementoMediaHE7013(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao,BigDecimal horasPorMes) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -762,8 +724,7 @@ public class CalculoBaseService {
             BigDecimal valorHoraExtra70 = valorHoraNormal.multiply(new BigDecimal("1.7")); // +70%
             BigDecimal valorMediaHE70 = mediaHorasExtras70.multiply(valorHoraExtra70).setScale(2, RoundingMode.HALF_UP);
             int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
-            BigDecimal complemento13 = valorMediaHE70.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal complemento13 = valorMediaHE70.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
             resultado.put("vencimentos", complemento13);
@@ -777,7 +738,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularComplementoMediaHE10013(String matricula, BigDecimal salarioBase, LocalDate dataAdmissao,BigDecimal horasPorMes) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -789,8 +749,7 @@ public class CalculoBaseService {
             BigDecimal valorHoraExtra100 = valorHoraNormal.multiply(new BigDecimal("2.0")); // +100%
             BigDecimal valorMediaHE100 = mediaHorasExtras100.multiply(valorHoraExtra100).setScale(2, RoundingMode.HALF_UP);
             int mesesTrabalhados = calculosAuxiliaresFolha.calcularMesesTrabalhados13o(dataAdmissao, hoje);
-            BigDecimal complemento13 = valorMediaHE100.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal complemento13 = valorMediaHE100.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).setScale(2, RoundingMode.HALF_UP);
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
             resultado.put("vencimentos", complemento13);
@@ -799,12 +758,10 @@ public class CalculoBaseService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular complemento média HE 100% do 13º: " + e.getMessage());
         }
-
         return resultado;
     }
 
     public Map<String, BigDecimal> calcularComplementoDSRDiurno13(String matricula, LocalDate dataAdmissao) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -819,11 +776,9 @@ public class CalculoBaseService {
                 mediaDSRDiurno = somaDSRDiurnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP);
             } else {
                 // Trabalhou período parcial: (soma/11) × (meses/12)
-                mediaDSRDiurno = somaDSRDiurnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP)
-                        .multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+                mediaDSRDiurno = somaDSRDiurnoAno.divide(new BigDecimal("11"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados)).divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             }
             BigDecimal complemento13 = mediaDSRDiurno;
-
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
             resultado.put("vencimentos", complemento13);
             resultado.put("descontos", BigDecimal.ZERO);
@@ -831,7 +786,6 @@ public class CalculoBaseService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular complemento DSR Diurno do 13º: " + e.getMessage());
         }
-
         return resultado;
     }
 
@@ -868,7 +822,6 @@ public class CalculoBaseService {
     }
 
     public Map<String, BigDecimal> calcularMediaAdicionalNoturno13(String matricula, LocalDate dataAdmissao) {
-
         Map<String, BigDecimal> resultado = new HashMap<>();
 
         try {
@@ -886,7 +839,6 @@ public class CalculoBaseService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao calcular média adicional noturno do 13º: " + e.getMessage());
         }
-
         return resultado;
     }
 
@@ -930,8 +882,7 @@ public class CalculoBaseService {
             if (numeroDependentes != null && numeroDependentes > 0) {
                 Optional<TabelaImpostoRenda> tabelaIrrfOpt = tabelaImpostoRendaRepository.findTopByOrderById();
                 if (tabelaIrrfOpt.isPresent()) {
-                    BigDecimal deducaoDependentes = tabelaIrrfOpt.get().getDeducaoPorDependente()
-                            .multiply(BigDecimal.valueOf(numeroDependentes));
+                    BigDecimal deducaoDependentes = tabelaIrrfOpt.get().getDeducaoPorDependente().multiply(BigDecimal.valueOf(numeroDependentes));
                     baseIRRF = baseIRRF.subtract(deducaoDependentes);
                 }
             }

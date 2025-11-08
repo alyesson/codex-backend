@@ -27,8 +27,7 @@ public class CalcularSaldoSalarioService {
             BigDecimal saldoSalario;
 
             if ("Mensal".equals(tipoSalario)) {
-                saldoSalario = salarioBase.divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP)
-                        .multiply(new BigDecimal(diasTrabalhados)).setScale(2, RoundingMode.HALF_UP);
+                saldoSalario = salarioBase.divide(new BigDecimal("30"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(diasTrabalhados)).setScale(2, RoundingMode.HALF_UP);
             } else {
                 // Para horistas
                 BigDecimal horasPorDia = new BigDecimal("8"); // Padrão 8h/dia

@@ -33,10 +33,8 @@ public class CalcularMediaAdicionalNoturno13Service {
             FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
             LocalDate dataAdmissao = folha.getDataAdmissao();
 
-            // ✅ Chamar métudo do CalculoBaseService
             Map<String, BigDecimal> resultadoAdicionalNoturno = calculoBaseService.calcularMediaAdicionalNoturno13(numeroMatricula, dataAdmissao);
 
-            // ✅ Atualiza o resultado principal
             resultado.putAll(resultadoAdicionalNoturno);
 
             logger.info("Média adicional noturno 13º calculado para {}: R$ {}", numeroMatricula, resultado.get("vencimentos"));

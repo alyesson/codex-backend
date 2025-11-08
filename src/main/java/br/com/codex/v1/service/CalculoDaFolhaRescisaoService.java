@@ -3,6 +3,10 @@ package br.com.codex.v1.service;
 import br.com.codex.v1.domain.repository.FolhaRescisaoRepository;
 import br.com.codex.v1.domain.rh.FolhaRescisao;
 import br.com.codex.v1.service.exceptions.ObjectNotFoundException;
+import br.com.codex.v1.service.rh.decimoterceiro.CalcularDecimoTerceiroComMediaComissoesService;
+import br.com.codex.v1.service.rh.decimoterceiro.CalcularInsalubridadePrimeiraParcela13Service;
+import br.com.codex.v1.service.rh.decimoterceiro.CalcularMediaAdicionalNoturno13Service;
+import br.com.codex.v1.service.rh.decimoterceiro.CalcularPericulosidadePrimeiraParcela13Service;
 import br.com.codex.v1.service.rh.rescisao.*;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -50,6 +54,24 @@ public class CalculoDaFolhaRescisaoService {
 
     @Autowired
     private CalcularImpostoRendaSobrePlrRescisaoService calcularImpostoRendaSobrePlrRescisaoService;
+
+    @Autowired
+    private CalcularInsalubridadePrimeiraParcela13Service calcularInsalubridadePrimeiraParcela13Service;
+
+    @Autowired
+    private CalcularPericulosidadePrimeiraParcela13Service calcularPericulosidadePrimeiraParcela13Service;
+
+    @Autowired
+    private CalcularMediaHE13ProporcionalService calcularMediaHE13ProporcionalService;
+
+    @Autowired
+    private CalcularMediaAdicionalNoturno13Service calcularMediaAdicionalNoturno13Service;
+
+    @Autowired
+    private CalcularDecimoTerceiroProporcionalService calcularDecimoTerceiroProporcionalService;
+
+    @Autowired
+    private CalcularDecimoTerceiroComMediaComissoesService calcularDecimoTerceiroComMediaComissoesService;
 
     @Autowired
     private CalcularFeriasProporcionaisComAdicionalNoturnoRescisaoService calcularFeriasProporcionaisComAdicionalNoturnoRescisaoService;
@@ -118,7 +140,7 @@ public class CalculoDaFolhaRescisaoService {
 
                 case 310 ->{
                     calcularFeriasRescisaoService.setNumeroMatricula(numeroMatricula);
-                    return calcularFeriasRescisaoService.calcularFeriasProporcionaisComPericulosidade(salarioBase, dataAdmissao, dataDemissao, faltasMes, tipoSalario);
+                    return calcularFeriasRescisaoService.calcularPericulosidadeFeriasProporcionais(salarioBase, dataAdmissao, dataDemissao, faltasMes, tipoSalario);
                 }
 
                 case 311 ->{
@@ -149,6 +171,44 @@ public class CalculoDaFolhaRescisaoService {
 
                 case 325 -> { // 13º Proporcional
                     return calcularDecimoTerceiroRescisaoService.calcularDecimoTerceiroProporcional(salarioBase, dataAdmissao, dataDemissao, faltasMes);
+                }
+
+                case 326 -> { // Insalubridade 13° na rescisão
+                    calcularInsalubridadePrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
+                    return calcularInsalubridadePrimeiraParcela13Service.calcularInsalubridadePrimeiraParcela13();
+                }
+
+                case 327 ->{
+                    calcularPericulosidadePrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
+                    return  calcularPericulosidadePrimeiraParcela13Service.calcularPericulosidadePrimeiraParcela13();
+                }
+
+                case 328 ->{
+                    calcularMediaHE13ProporcionalService.setNumeroMatricula(numeroMatricula);
+                    return calcularMediaHE13ProporcionalService.calcularMediaHE13Proporcional();
+                }
+
+                case 329 ->{
+                    calcularMediaAdicionalNoturno13Service.setNumeroMatricula(numeroMatricula);
+                    return calcularMediaAdicionalNoturno13Service.calcularMediaAdicionalNoturno13();
+                }
+
+                case 330 ->{
+                    calcularDecimoTerceiroComMediaComissoesService.setNumeroMatricula(numeroMatricula);
+                    return calcularDecimoTerceiroComMediaComissoesService.calcularDecimoTerceiroComMediaComissoes();
+                }
+
+                case 331 ->{ //Multa Artigo 476-A 5° Clt
+                    resultado.put("referencia", BigDecimal.ONE);
+                    resultado.put("vencimentos", salarioBase); // ou o cálculo específico da multa
+                    resultado.put("descontos", BigDecimal.ZERO);
+                    return resultado;
+                }
+
+                case 333 ->{
+                    calcularDecimoTerceiroProporcionalService.setNumeroMatricula(numeroMatricula);
+                    return calcularDecimoTerceiroProporcionalService.calcularDecimoTerceiroProporcional();
+
                 }
 
                 default -> {
