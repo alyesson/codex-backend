@@ -59,8 +59,7 @@ public class CalcularHorasNormaisNoturnasService {
                 }
 
                 // Converter para horas decimais
-                double horasDecimais = horasNoturnas.toHours() +
-                        horasNoturnas.toMinutesPart() / 60.0;
+                double horasDecimais = horasNoturnas.toHours() + horasNoturnas.toMinutesPart() / 60.0;
 
                 // Aplicar fator de redução (52,5 minutos por hora noturna)
                 horasNoturnasPorDia = BigDecimal.valueOf(horasDecimais * 1.142857).setScale(2, RoundingMode.HALF_UP);

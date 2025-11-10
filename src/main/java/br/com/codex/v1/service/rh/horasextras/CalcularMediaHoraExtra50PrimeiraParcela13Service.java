@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalcularMediaHE50SegundaParcela13Service {
-    private static final Logger logger = LoggerFactory.getLogger(CalcularMediaHE50SegundaParcela13Service.class);
+public class CalcularMediaHoraExtra50PrimeiraParcela13Service {
+    private static final Logger logger = LoggerFactory.getLogger(CalcularMediaHoraExtra50PrimeiraParcela13Service.class);
 
     @Autowired
     private CalculoBaseService calculoBaseService;
@@ -22,7 +22,7 @@ public class CalcularMediaHE50SegundaParcela13Service {
     @Setter
     String numeroMatricula;
 
-    public Map<String, BigDecimal> calcularMediaHE50SegundaParcela13() {
+    public Map<String, BigDecimal> calcularMediaHE50PrimeiraParcela13() {
         Map<String, BigDecimal> resultado = new HashMap<>();
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);
@@ -30,20 +30,19 @@ public class CalcularMediaHE50SegundaParcela13Service {
 
         try {
             FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-            BigDecimal horasTrabalhadasPorMes = folha.getHorasMes();
-            BigDecimal salarioBase = folha.getSalarioBase();
+            BigDecimal salarioPorHora = folha.getSalarioHora();
 
             // ✅ Chamar métudo do CalculoBaseService
-            Map<String, BigDecimal> resultadoMediaHE50 = calculoBaseService.calcularMediaHE50SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+            Map<String, BigDecimal> resultadoHE50 = calculoBaseService.calcularMediaHE50PrimeiraParcela13(numeroMatricula, salarioPorHora);
 
             // ✅ Atualiza o resultado principal
-            resultado.putAll(resultadoMediaHE50);
+            resultado.putAll(resultadoHE50);
 
-            logger.info("Média HE 50% 2ª parcela 13º calculada para {}: R$ {}",  numeroMatricula, resultado.get("vencimentos"));
+            logger.info("Média HE 50% 1ª parcela 13º calculada para {}: R$ {}", numeroMatricula, resultado.get("vencimentos"));
 
         } catch (Exception e) {
-            logger.error("Erro ao calcular média HE 50% 2ª parcela 13º para {}: {}", numeroMatricula, e.getMessage());
-            throw new RuntimeException("Erro ao calcular Média de Horas Extras 50% para 2ª Parcela do 13°: " + e.getMessage());
+            logger.error("Erro ao calcular média HE 50% 1ª parcela 13º para {}: {}", numeroMatricula, e.getMessage());
+            throw new RuntimeException("Erro ao calcular Média de Horas Extras 50% Sobre 1° Parcela do 13°: " + e.getMessage());
         }
 
         return resultado;

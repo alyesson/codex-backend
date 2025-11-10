@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalcularMediaHE100SegundaParcela13Service {
-    private static final Logger logger = LoggerFactory.getLogger(CalcularMediaHE100SegundaParcela13Service.class);
+public class CalcularMediaHoraExtra50SegundaParcela13Service {
+    private static final Logger logger = LoggerFactory.getLogger(CalcularMediaHoraExtra50SegundaParcela13Service.class);
 
     @Autowired
     private CalculoBaseService calculoBaseService;
@@ -22,7 +22,7 @@ public class CalcularMediaHE100SegundaParcela13Service {
     @Setter
     String numeroMatricula;
 
-    public Map<String, BigDecimal> calcularMediaHE100SegundaParcela13() {
+    public Map<String, BigDecimal> calcularMediaHE50SegundaParcela13() {
         Map<String, BigDecimal> resultado = new HashMap<>();
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);
@@ -34,16 +34,16 @@ public class CalcularMediaHE100SegundaParcela13Service {
             BigDecimal salarioBase = folha.getSalarioBase();
 
             // ✅ Chamar métudo do CalculoBaseService
-            Map<String, BigDecimal> resultadoMediaHE100 = calculoBaseService.calcularMediaHE100SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
+            Map<String, BigDecimal> resultadoMediaHE50 = calculoBaseService.calcularMediaHE50SegundaParcela13(numeroMatricula, salarioBase, horasTrabalhadasPorMes);
 
             // ✅ Atualiza o resultado principal
-            resultado.putAll(resultadoMediaHE100);
+            resultado.putAll(resultadoMediaHE50);
 
-            logger.info("Média HE 100% 2ª parcela 13º calculada para {}: R$ {}", numeroMatricula, resultado.get("vencimentos"));
+            logger.info("Média HE 50% 2ª parcela 13º calculada para {}: R$ {}",  numeroMatricula, resultado.get("vencimentos"));
 
         } catch (Exception e) {
-            logger.error("Erro ao calcular média HE 100% 2ª parcela 13º para {}: {}", numeroMatricula, e.getMessage());
-            throw new RuntimeException("Erro ao calcular Média de Horas Extras 100% para 2ª Parcela do 13°: " + e.getMessage());
+            logger.error("Erro ao calcular média HE 50% 2ª parcela 13º para {}: {}", numeroMatricula, e.getMessage());
+            throw new RuntimeException("Erro ao calcular Média de Horas Extras 50% para 2ª Parcela do 13°: " + e.getMessage());
         }
 
         return resultado;

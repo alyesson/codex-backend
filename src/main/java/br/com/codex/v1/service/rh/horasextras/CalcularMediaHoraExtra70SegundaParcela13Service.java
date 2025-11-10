@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalcularMediaHE70SegundaParcela13Service {
-    private static final Logger logger = LoggerFactory.getLogger(CalcularMediaHE70SegundaParcela13Service.class);
+public class CalcularMediaHoraExtra70SegundaParcela13Service {
+    private static final Logger logger = LoggerFactory.getLogger(CalcularMediaHoraExtra70SegundaParcela13Service.class);
 
     @Autowired
     private CalculoBaseService calculoBaseService;

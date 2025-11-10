@@ -87,11 +87,11 @@ public class CalculoDaFolhaProventosService {
     @Autowired
     protected CalcularPrimeiraParcela13Service calcularPrimeiraParcela13Service;
     @Autowired
-    protected CalcularMediaHE50PrimeiraParcela13Service calcularMediaHE50PrimeiraParcela13Service;
+    protected CalcularMediaHoraExtra50PrimeiraParcela13Service calcularMediaHoraExtra50PrimeiraParcela13Service;
     @Autowired
-    protected CalcularMediaHE70PrimeiraParcela13Service calcularMediaHE70PrimeiraParcela13Service;
+    protected CalcularMediaHoraExtra70PrimeiraParcela13Service calcularMediaHoraExtra70PrimeiraParcela13Service;
     @Autowired
-    protected CalcularMediaHE100PrimeiraParcela13Service calcularMediaHE100PrimeiraParcela13Service;
+    protected CalcularMediaHoraExtra100PrimeiraParcela13Service calcularMediaHoraExtra100PrimeiraParcela13Service;
     @Autowired
     protected CalcularDecimoTerceiroCheioAdiantadoService calcularDecimoTerceiroCheioAdiantadoService;
     @Autowired
@@ -103,11 +103,11 @@ public class CalculoDaFolhaProventosService {
     @Autowired
     protected CalcularPericulosidadePrimeiraParcela13Service calcularPericulosidadePrimeiraParcela13Service;
     @Autowired
-    protected CalcularMediaHE50SegundaParcela13Service calcularMediaHE50SegundaParcela13Service;
+    protected CalcularMediaHoraExtra50SegundaParcela13Service calcularMediaHoraExtra50SegundaParcela13Service;
     @Autowired
-    protected CalcularMediaHE70SegundaParcela13Service calcularMediaHE70SegundaParcela13Service;
+    protected CalcularMediaHoraExtra70SegundaParcela13Service calcularMediaHoraExtra70SegundaParcela13Service;
     @Autowired
-    protected CalcularMediaHE100SegundaParcela13Service calcularMediaHE100SegundaParcela13Service;
+    protected CalcularMediaHoraExtra100SegundaParcela13Service calcularMediaHoraExtra100SegundaParcela13Service;
     @Autowired
     protected CalcularMediaDsrDiurnoSegundaParcela13Service calcularMediaDsrDiurnoSegundaParcela13Service;
     @Autowired
@@ -337,18 +337,18 @@ public class CalculoDaFolhaProventosService {
             }
 
             case 168 -> {
-                calcularMediaHE50PrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
-                return  calcularMediaHE50PrimeiraParcela13Service.calcularMediaHE50PrimeiraParcela13();
+                calcularMediaHoraExtra50PrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
+                return  calcularMediaHoraExtra50PrimeiraParcela13Service.calcularMediaHE50PrimeiraParcela13();
             }
 
             case 169 -> {
-                calcularMediaHE70PrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
-                return  calcularMediaHE70PrimeiraParcela13Service.calcularMediaHE70PrimeiraParcela13();
+                calcularMediaHoraExtra70PrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
+                return  calcularMediaHoraExtra70PrimeiraParcela13Service.calcularMediaHE70PrimeiraParcela13();
             }
 
             case 170 -> {
-                calcularMediaHE100PrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
-                return  calcularMediaHE100PrimeiraParcela13Service.calcularMediaHE100PrimeiraParcela13();
+                calcularMediaHoraExtra100PrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
+                return  calcularMediaHoraExtra100PrimeiraParcela13Service.calcularMediaHE100PrimeiraParcela13();
             }
 
             case 171 ->{
@@ -382,18 +382,18 @@ public class CalculoDaFolhaProventosService {
             }
 
             case 183 -> {
-                calcularMediaHE50SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
-                return  calcularMediaHE50SegundaParcela13Service.calcularMediaHE50SegundaParcela13();
+                calcularMediaHoraExtra50SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
+                return  calcularMediaHoraExtra50SegundaParcela13Service.calcularMediaHE50SegundaParcela13();
             }
 
             case 184 -> {
-                calcularMediaHE70SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
-                return  calcularMediaHE70SegundaParcela13Service.calcularMediaHE70SegundaParcela13();
+                calcularMediaHoraExtra70SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
+                return  calcularMediaHoraExtra70SegundaParcela13Service.calcularMediaHE70SegundaParcela13();
             }
 
             case 185 -> {
-                calcularMediaHE100SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
-                return  calcularMediaHE100SegundaParcela13Service.calcularMediaHE100SegundaParcela13();
+                calcularMediaHoraExtra100SegundaParcela13Service.setNumeroMatricula(numeroMatricula);
+                return  calcularMediaHoraExtra100SegundaParcela13Service.calcularMediaHE100SegundaParcela13();
             }
 
             case 186 ->{

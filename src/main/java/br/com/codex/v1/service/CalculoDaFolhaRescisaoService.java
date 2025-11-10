@@ -7,6 +7,8 @@ import br.com.codex.v1.service.rh.decimoterceiro.CalcularDecimoTerceiroComMediaC
 import br.com.codex.v1.service.rh.decimoterceiro.CalcularInsalubridadePrimeiraParcela13Service;
 import br.com.codex.v1.service.rh.decimoterceiro.CalcularMediaAdicionalNoturno13Service;
 import br.com.codex.v1.service.rh.decimoterceiro.CalcularPericulosidadePrimeiraParcela13Service;
+import br.com.codex.v1.service.rh.ferias.CalcularFeriasProporcionaisComFaltasRescisaoService;
+import br.com.codex.v1.service.rh.ferias.CalcularFeriasProporcionaisService;
 import br.com.codex.v1.service.rh.rescisao.*;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -65,10 +67,22 @@ public class CalculoDaFolhaRescisaoService {
     private CalcularMediaHE13ProporcionalService calcularMediaHE13ProporcionalService;
 
     @Autowired
+    private CalcularFaltasAtrasosRescisaoService calcularFaltasAtrasosRescisaoService;
+
+    @Autowired
+    private CalcularFeriasProporcionaisService calcularFeriasProporcionaisService;
+
+    @Autowired
     private CalcularMediaAdicionalNoturno13Service calcularMediaAdicionalNoturno13Service;
 
     @Autowired
     private CalcularDecimoTerceiroProporcionalService calcularDecimoTerceiroProporcionalService;
+
+    @Autowired
+    private CalcularFeriasProporcionaisComFaltasRescisaoService calcularFeriasProporcionaisComFaltasRescisaoService;
+
+    @Autowired
+    private CalcularMediaAdicionalNoturnoRescisaoService calcularMediaAdicionalNoturnoRescisaoService;
 
     @Autowired
     private CalcularDecimoTerceiroComMediaComissoesService calcularDecimoTerceiroComMediaComissoesService;
@@ -178,22 +192,22 @@ public class CalculoDaFolhaRescisaoService {
                     return calcularInsalubridadePrimeiraParcela13Service.calcularInsalubridadePrimeiraParcela13();
                 }
 
-                case 327 ->{
+                case 327 ->{ //Periculosidade 13° salário proporcional rescisão
                     calcularPericulosidadePrimeiraParcela13Service.setNumeroMatricula(numeroMatricula);
                     return  calcularPericulosidadePrimeiraParcela13Service.calcularPericulosidadePrimeiraParcela13();
                 }
 
-                case 328 ->{
+                case 328 ->{ //Média horas extras 13° salário proporcional rescisão
                     calcularMediaHE13ProporcionalService.setNumeroMatricula(numeroMatricula);
                     return calcularMediaHE13ProporcionalService.calcularMediaHE13Proporcional();
                 }
 
-                case 329 ->{
+                case 329 ->{ //Adicional noturno 13° salário rescisão
                     calcularMediaAdicionalNoturno13Service.setNumeroMatricula(numeroMatricula);
                     return calcularMediaAdicionalNoturno13Service.calcularMediaAdicionalNoturno13();
                 }
 
-                case 330 ->{
+                case 330 ->{ //Comissões 13° salário proporcional rescisão
                     calcularDecimoTerceiroComMediaComissoesService.setNumeroMatricula(numeroMatricula);
                     return calcularDecimoTerceiroComMediaComissoesService.calcularDecimoTerceiroComMediaComissoes();
                 }
@@ -205,10 +219,29 @@ public class CalculoDaFolhaRescisaoService {
                     return resultado;
                 }
 
-                case 333 ->{
+                case 332 ->{//Média adicional noturno na rescisão
+                    calcularMediaAdicionalNoturnoRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return calcularMediaAdicionalNoturnoRescisaoService.calcularMediaAdicionalNoturnoRescisao();
+                }
+
+                case 333 ->{ //décimo terceiro proporcional na rescisão
                     calcularDecimoTerceiroProporcionalService.setNumeroMatricula(numeroMatricula);
                     return calcularDecimoTerceiroProporcionalService.calcularDecimoTerceiroProporcional();
+                }
 
+                case 334 ->{// Faltas calculadas nas férias
+                    calcularFeriasProporcionaisComFaltasRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return calcularFeriasProporcionaisComFaltasRescisaoService.calcularFeriasProporcionaisComFaltas();
+                }
+
+                case 335 ->{ //Faltas e atrasos na rescisão
+                    calcularFaltasAtrasosRescisaoService.setNumeroMatricula(numeroMatricula);
+                    return  calcularFaltasAtrasosRescisaoService.calcularFaltasAtrasosRescisao();
+                }
+
+                case 351 ->{
+                    calcularFeriasProporcionaisService.setNumeroMatricula(numeroMatricula);
+                    return calcularFeriasProporcionaisService.calcularFeriasProporcionais();
                 }
 
                 default -> {
