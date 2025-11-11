@@ -27,27 +27,6 @@ public class DataSourceConfig {
     @Value("${spring.datasource.password}")
     private String password;
 
-
-   /* @Bean -----> Funcionava aqui antes
-    @Primary
-    public DataSource dataSource() {
-        DataSource defaultDataSource = DataSourceBuilder.create()
-                .url(defaultDbUrl)
-                .username(username)
-                .password(password)
-                .driverClassName("com.mysql.cj.jdbc.Driver")
-                .build();
-
-        targetDataSources.put("default", defaultDataSource);
-
-        DynamicDataSource routingDataSource = new DynamicDataSource();
-        routingDataSource.setTargetDataSources(targetDataSources);
-        routingDataSource.setDefaultTargetDataSource(defaultDataSource);
-        routingDataSource.afterPropertiesSet();
-
-        return routingDataSource;
-    }*/
-
     @PostConstruct
     public void init() {
         this.defaultDataSource = createDataSource(defaultDbUrl);
