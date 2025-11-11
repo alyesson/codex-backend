@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Service
 public class CalcularMultaFgtsService {
-
     private static final Logger logger = LoggerFactory.getLogger(CalcularMultaFgtsService.class);
 
     @Setter
@@ -36,7 +35,7 @@ public class CalcularMultaFgtsService {
             BigDecimal totalFGTSDepositado = fgtsMensal.multiply(new BigDecimal(mesesTrabalhados));
 
             // Multa de 40% para demissão sem justa causa
-            if ("SEM_JUSTA_CAUSA".equals(tipoDemissao)) {
+            if ("Sem Justa Causa".equals(tipoDemissao)) {
                 BigDecimal multaFGTS = totalFGTSDepositado.multiply(new BigDecimal("0.40")).setScale(2, RoundingMode.HALF_UP);
 
                 resultado.put("referencia", new BigDecimal("40")); // 40%
@@ -46,13 +45,11 @@ public class CalcularMultaFgtsService {
             } else {
                 logger.info("Sem multa FGTS para demissão com justa causa - matrícula {}", numeroMatricula);
             }
-
         } catch (Exception e) {
             logger.error("Erro ao calcular multa FGTS para {}: {}",
                     numeroMatricula, e.getMessage());
             throw new RuntimeException("Erro ao calcular multa FGTS: " + e.getMessage());
         }
-
         return resultado;
     }
 }

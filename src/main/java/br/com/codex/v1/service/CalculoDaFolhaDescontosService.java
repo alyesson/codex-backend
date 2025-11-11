@@ -252,7 +252,7 @@ public class CalculoDaFolhaDescontosService {
                 return calcularDescontoValeTransporteService.calcularDescontoValeTransporte();
             }
 
-            case 242 -> {
+            case 242, 256 -> {
                 calcularConvenioAssistenciaOdontologicaService.setNumeroMatricula(numeroMatricula);
                 return calcularConvenioAssistenciaOdontologicaService.calcularConvenioAssistenciaOdontologica();
             }
@@ -301,10 +301,6 @@ public class CalculoDaFolhaDescontosService {
               return resultado;
             }
 
-            case 256 ->{
-                calcularConvenioAssistenciaOdontologicaService.setNumeroMatricula(numeroMatricula);
-                return calcularConvenioAssistenciaOdontologicaService.calcularConvenioAssistenciaOdontologica();
-            }
         }
     } catch (Exception e) {
         logger.error("Erro ao calcular desconto para evento {}: {}", codigoEvento, e.getMessage());
