@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -74,6 +75,8 @@ public class FolhaRescisaoDto implements Serializable {
     private BigDecimal totalVencimentos;
     private BigDecimal totalDescontos;
     private BigDecimal valorLiquido;
+    @NotNull(message = "O valor do FGTS não pode ficar em branco")
+    private BigDecimal valorFgts;
     private List<FolhaRescisaoEventosDto> eventos;
 
     public FolhaRescisaoDto() {
@@ -126,5 +129,6 @@ public class FolhaRescisaoDto implements Serializable {
         this.totalVencimentos = obj.getTotalVencimentos();
         this.totalDescontos = obj.getTotalDescontos();
         this.valorLiquido = obj.getValorLiquido();
+        this.valorFgts = obj.getValorFgts();
     }
 }

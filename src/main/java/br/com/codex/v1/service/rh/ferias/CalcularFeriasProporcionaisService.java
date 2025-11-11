@@ -50,13 +50,11 @@ public class CalcularFeriasProporcionaisService {
             int mesesTrabalhados = calcularMesesTrabalhados(dataAdmissao, dataFinalCalculo);
 
             // ✅ 4. Calcular férias proporcionais
-            BigDecimal feriasProporcionais = salarioBase
-                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
+            BigDecimal feriasProporcionais = salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(mesesTrabalhados));
 
             // ✅ 5. Calcular terço constitucional
-            BigDecimal tercoConstitucional = feriasProporcionais
-                    .divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
+            BigDecimal tercoConstitucional = feriasProporcionais.divide(new BigDecimal("3"), 2, RoundingMode.HALF_UP);
 
             // ✅ 6. Calcular total
             BigDecimal totalFerias = feriasProporcionais.add(tercoConstitucional);
@@ -83,12 +81,12 @@ public class CalcularFeriasProporcionaisService {
         // ✅ Opção 1: Se já tem campo específico
         if (rescisao.getTipoDeAvisoPrevio() != null && !rescisao.getTipoDeAvisoPrevio().isEmpty()) {
             String tipo = rescisao.getTipoDeAvisoPrevio().toUpperCase();
-            if (tipo.contains("Indenizado") || tipo.contains("INDENIZAÇÃO")) {
+            if (tipo.contains("Indenizado") || tipo.contains("Indenização")) {
                 return "Indenizado";
-            } else if (tipo.contains("Trabalhado") || tipo.contains("TRABALHO")) {
+            } else if (tipo.contains("Trabalhado") || tipo.contains("Trabalho")) {
                 return "Trabalhado";
-            } else if (tipo.contains("NENHUM") || tipo.contains("SEM")) {
-                return "NENHUM";
+            } else if (tipo.contains("Nenhum") || tipo.contains("Sem") || tipo.contains("sem")) {
+                return "Nenhum";
             }
         }
 
@@ -105,7 +103,7 @@ public class CalcularFeriasProporcionaisService {
         }
 
         // ✅ Padrão: Sem aviso prévio
-        return "NENHUM";
+        return "Nenhum";
     }
 
     /**
@@ -164,7 +162,7 @@ public class CalcularFeriasProporcionaisService {
                     return dataDemissao.plusDays(diasAvisoTrabalhado);
                 }
 
-            case "NENHUM":
+            case "Nenhum":
             default:
                 // ✅ SEM AVISO: usa apenas a data de demissão
                 return dataDemissao;

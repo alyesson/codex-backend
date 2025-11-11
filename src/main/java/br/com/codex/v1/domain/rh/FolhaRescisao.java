@@ -80,6 +80,9 @@ public class FolhaRescisao implements Serializable {
     @Column(precision = 10, scale = 2)
     private BigDecimal valorLiquido;
 
+    @Column(precision = 10, scale = 2)
+    private BigDecimal valorFgts;
+
 
 
     @JsonIgnore
@@ -101,7 +104,7 @@ public class FolhaRescisao implements Serializable {
                          String tipoDeAvisoPrevio, String codigoAfastamento, LocalDate dataFimAvisoPrevio,
                          String categoriaTrabalhador, String codigoSindical, String entidadeSindical, BigDecimal participacaoLucros, BigDecimal salarioHora,
                          Integer faltasNoMes, Integer diasTrabalhadosNoMes, BigDecimal totalVencimentos,
-                         BigDecimal totalDescontos, BigDecimal valorLiquido) {
+                         BigDecimal totalDescontos, BigDecimal valorLiquido, BigDecimal valorFgts) {
         this.id = id;
         this.mesFolha = mesFolha;
         this.dataProcessamento = dataProcessamento;
@@ -147,6 +150,7 @@ public class FolhaRescisao implements Serializable {
         this.totalVencimentos = totalVencimentos;
         this.totalDescontos = totalDescontos;
         this.valorLiquido = valorLiquido;
+        this.valorFgts = valorFgts;
     }
 
     public FolhaRescisao(FolhaRescisaoDto obj) {
@@ -195,6 +199,7 @@ public class FolhaRescisao implements Serializable {
         this.totalVencimentos = obj.getTotalVencimentos();
         this.totalDescontos = obj.getTotalDescontos();
         this.valorLiquido = obj.getValorLiquido();
+        this.valorFgts = obj.getValorFgts();
     }
 
     @Override

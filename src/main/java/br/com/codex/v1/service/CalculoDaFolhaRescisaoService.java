@@ -73,10 +73,16 @@ public class CalculoDaFolhaRescisaoService {
     private CalcularFeriasProporcionaisService calcularFeriasProporcionaisService;
 
     @Autowired
+    private CalcularFgtsDepositadoService calcularFgtsDepositadoService;
+
+    @Autowired
     private CalcularMediaAdicionalNoturno13Service calcularMediaAdicionalNoturno13Service;
 
     @Autowired
     private CalcularDecimoTerceiroProporcionalService calcularDecimoTerceiroProporcionalService;
+
+    @Autowired
+    private CalcularDecimoTerceiroComAvisoService calcularDecimoTerceiroComAvisoService;
 
     @Autowired
     private CalcularFeriasProporcionaisComFaltasRescisaoService calcularFeriasProporcionaisComFaltasRescisaoService;
@@ -131,7 +137,7 @@ public class CalculoDaFolhaRescisaoService {
                 }
 
                 case 305 -> { // Multa do FGTS (40%)
-                    return calcularMultaFGTSService.calcularMultaFGTS(salarioBase, dataAdmissao, dataDemissao, tipoDemissao);
+                    return calcularMultaFGTSService.calcularMultaFGTS(tipoDemissao);
                 }
 
                 case 306 -> { // Férias Proporcionais
@@ -239,9 +245,24 @@ public class CalculoDaFolhaRescisaoService {
                     return  calcularFaltasAtrasosRescisaoService.calcularFaltasAtrasosRescisao();
                 }
 
-                case 351 ->{
+                case 350 ->{ // 1/12 avos 13 sem aviso prévio
+                    calcularDecimoTerceiroProporcionalService.setNumeroMatricula(numeroMatricula);
+                    return calcularDecimoTerceiroProporcionalService.calcularDecimoTerceiroProporcional();
+                }
+
+                case 351, 353 ->{ //351 calcula 1/12 avos férias sem aviso prévio indenizado e 353 calcula com aviso prévio indenizado
                     calcularFeriasProporcionaisService.setNumeroMatricula(numeroMatricula);
                     return calcularFeriasProporcionaisService.calcularFeriasProporcionais();
+                }
+
+                case 352 ->{ // 1/12 avos 13 com aviso prévio
+                    calcularDecimoTerceiroComAvisoService.setNumeroMatricula(numeroMatricula);
+                    return calcularDecimoTerceiroComAvisoService.calcularDecimoTerceiroComAviso();
+                }
+
+                case 402 ->{ //FGTS normal depositado
+                    calcularFgtsDepositadoService.setNumeroMatricula(numeroMatricula);
+                    return calcularFgtsDepositadoService.calcularFgtsDepositado();
                 }
 
                 default -> {

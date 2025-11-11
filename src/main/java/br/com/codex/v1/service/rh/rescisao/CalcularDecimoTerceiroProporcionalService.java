@@ -43,14 +43,11 @@ public class CalcularDecimoTerceiroProporcionalService {
             int mesesTrabalhados = calcularMesesTrabalhadosAno(dataAdmissao, dataDemissao);
 
             // ✅ Calcular 13º proporcional: (Salário ÷ 12) × meses trabalhados
-            BigDecimal decimoTerceiroProporcional = salarioBase
-                    .divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal(mesesTrabalhados));
+            BigDecimal decimoTerceiroProporcional = salarioBase.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(mesesTrabalhados));
 
             resultado.put("referencia", new BigDecimal(mesesTrabalhados));
             resultado.put("vencimentos", decimoTerceiroProporcional);
             resultado.put("descontos", BigDecimal.ZERO);
-            resultado.put("salarioBase", salarioBase);
 
             logger.info("13º proporcional calculado para {}: {} meses, Salário: R$ {}, Valor: R$ {}",
                     numeroMatricula, mesesTrabalhados, salarioBase, decimoTerceiroProporcional);
@@ -59,7 +56,6 @@ public class CalcularDecimoTerceiroProporcionalService {
             logger.error("Erro ao calcular 13º proporcional para {}: {}", numeroMatricula, e.getMessage());
             throw new RuntimeException("Erro ao calcular 13º Salário Proporcional: " + e.getMessage());
         }
-
         return resultado;
     }
 
@@ -111,7 +107,6 @@ public class CalcularDecimoTerceiroProporcionalService {
             int diasTrabalhadosMesDemissao = calcularDiasTrabalhadosMes(dataDemissao.withDayOfMonth(1), dataDemissao);
             return diasTrabalhadosMesDemissao >= 15;
         }
-
         return false;
     }
 
@@ -130,14 +125,13 @@ public class CalcularDecimoTerceiroProporcionalService {
             }
             data = data.plusDays(1);
         }
-
         return diasTrabalhados;
     }
 
     /**
      * Métudo simplificado alternativo (mais comum)
      */
-    private int calcularMesesTrabalhadosSimplificado(LocalDate dataAdmissao, LocalDate dataDemissao) {
+    /*private int calcularMesesTrabalhadosSimplificado(LocalDate dataAdmissao, LocalDate dataDemissao) {
         int anoDemissao = dataDemissao.getYear();
 
         // Se admitido em ano anterior, conta todos os meses até a demissão
@@ -167,7 +161,6 @@ public class CalcularDecimoTerceiroProporcionalService {
                 return Math.max(0, meses);
             }
         }
-
         return 0; // Admitido no futuro
-    }
+    }*/
 }
