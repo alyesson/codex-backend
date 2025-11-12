@@ -2,18 +2,18 @@ package br.com.codex.v1.service.rh.horarios;
 
 import br.com.codex.v1.domain.rh.FolhaMensal;
 import br.com.codex.v1.service.rh.CalculoBaseService;
-import br.com.codex.v1.utilitario.Calendario;
+import br.com.codex.v1.service.rh.CalculosAuxiliaresFolha;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class CalcularHorasRepousoRemuneradoNoturnoService {
@@ -21,155 +21,177 @@ public class CalcularHorasRepousoRemuneradoNoturnoService {
     @Autowired
     private CalculoBaseService calculoBaseService;
 
-    Calendario calendario = new Calendario();
-    Set<LocalDate> feriados = new HashSet<>();
+    @Autowired
+    private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
 
     @Setter
     String numeroMatricula;
 
-    public Map<String, BigDecimal>calcularHorasRepousoRemuneradoNoturno(){
+    public Map<String, BigDecimal> calcularHorasRepousoRemuneradoNoturno() {
         Map<String, BigDecimal> resultado = new HashMap<>();
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);
         resultado.put("descontos", BigDecimal.ZERO);
 
-        FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
-        String tipoJornada = folha.getJornada();
-        BigDecimal salarioPorHora =  folha.getSalarioHora();
+        try {
+            FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+            String tipoDeJornada = folha.getJornada();
 
-        if (tipoJornada.equals("12 x 36")) {
-
-            LocalTime horaIniRepRemNot = LocalTime.parse("22:00");
-            LocalTime horaFimRepRemNot = folha.getHoraSaida();
-            LocalTime hora13RepRemNot = LocalTime.parse("13:00");
-            LocalTime hora20RepRemNot = LocalTime.parse("20:00");
-
-            int valorHoraSaidaNotRepRemNot = horaFimRepRemNot.getHour();
-
-            if (horaFimRepRemNot.isBefore(hora13RepRemNot)) {
-
-                Duration das22AteOFimRepRemNot = Duration.between(hora20RepRemNot, horaIniRepRemNot); //Fórmula 22:00 - 20:00 + x, onde x será o valor horário de saída
-                LocalTime diferencadas22AteOFimRepRemNot = LocalTime.ofNanoOfDay(das22AteOFimRepRemNot.toNanos()); // Aqui tenho a hora noturna de um dia
-
-                int horasNotDsr = diferencadas22AteOFimRepRemNot.getHour() + valorHoraSaidaNotRepRemNot; //Aqui pego o valor e somo com as horas de saída
-                int minutosNotDsr = diferencadas22AteOFimRepRemNot.getMinute() / 60; // Aqui pego o valor dos minutos e transformo em centesimal
-
-                String hourNotDsr = String.valueOf(horasNotDsr) + "." + String.valueOf(minutosNotDsr);
-                BigDecimal valorHoraDepoisDas22RepRemNot = new BigDecimal(hourNotDsr).multiply(new BigDecimal("1.142857")).setScale(2, RoundingMode.HALF_UP); // Aqui é encontrado a quantidade da horas noturnas
-
-                BigDecimal valorReferenciaDsrHoraNoturna = valorHoraDepoisDas22RepRemNot.multiply(new BigDecimal("15")).setScale(2, RoundingMode.HALF_UP); // Aqui é calculado os dias não úteis vezes o número de horas noturnas no mês.
-                BigDecimal dsrHoraNoturnaRepousoRemuneradoNoturno = valorReferenciaDsrHoraNoturna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); //Aqui é calculado o valor das horas noturnas no mês vezes o valor do salário/hora.
-                resultado.put("referencia", valorReferenciaDsrHoraNoturna);
-                resultado.put("vencimentos", dsrHoraNoturnaRepousoRemuneradoNoturno);
-                resultado.put("descontos", BigDecimal.ZERO);
-            } else {
-
-                Duration das22AteOFimRepRemNot = Duration.between(horaIniRepRemNot, horaFimRepRemNot);
-                LocalTime diferencadas22AteOFimRepRemNot = LocalTime.ofNanoOfDay(das22AteOFimRepRemNot.toNanos());// Aqui tenho a Diferença de horas Noturnas
-
-                int horasNotDsr = diferencadas22AteOFimRepRemNot.getHour(); // Aqui pego o valor das horas
-                int minutosNotDsr = diferencadas22AteOFimRepRemNot.getMinute() / 60; // Aqui pego o valor dos minutos e transformo em centesimal
-
-                String hourNotDsr2 = String.valueOf(horasNotDsr) + "." + String.valueOf(minutosNotDsr);
-                BigDecimal valorHoraDepoisDas22RepRemNot = new BigDecimal(hourNotDsr2).multiply(new BigDecimal("1.142857")).setScale(2, RoundingMode.HALF_UP); // Aqui é encontrado a quantidade da horas noturnas
-
-                //------Este trecho faz a contagem de dias úteis no mês
-                int year = LocalDate.now().getYear();
-                int month = LocalDate.now().getMonthValue();
-                int workingDaysNotRepRemNot = 0;
-
-                YearMonth anoMes = YearMonth.of(year, month);
-                feriados.addAll(calendario.getFeriadosFixos(year));
-                feriados.addAll(calendario.getFeriadosMoveis(year));
-
-                for (int dia = 1; dia <= anoMes.lengthOfMonth(); dia++) {
-                    LocalDate data = anoMes.atDay(dia);
-
-                    if (data.getDayOfWeek() == DayOfWeek.SUNDAY || feriados.contains(data)) {
-                        workingDaysNotRepRemNot++;
-                    }
-                }
-                BigDecimal valorReferenciaDsrHoraNoturna = valorHoraDepoisDas22RepRemNot.multiply(new BigDecimal(workingDaysNotRepRemNot)).setScale(2, RoundingMode.HALF_UP); // Aqui é calculado os dias não úteis vezes o número de horas noturnas no mês.
-                BigDecimal dsrHoraNoturnaRepousoRemuneradoNoturno = valorReferenciaDsrHoraNoturna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); //Aqui é calculado o valor das horas noturnas no mês vezes o valor do salário/hora.
-                resultado.put("referencia", valorReferenciaDsrHoraNoturna);
-                resultado.put("vencimentos", dsrHoraNoturnaRepousoRemuneradoNoturno);
-                resultado.put("descontos", BigDecimal.ZERO);
+            if("12 x 36".equalsIgnoreCase(tipoDeJornada) || "12x36".equalsIgnoreCase(tipoDeJornada)){
+                return calcularDSRNoturno12x36();
+            }else {
+                return calcularDSRNoturnoNormal();
             }
-        } else {
-            LocalTime horaIniNotRepRemNot = LocalTime.parse("22:00");
-            LocalTime horaFimNotRepRemNot = folha.getHoraSaida();
-            LocalTime hora13NotRepRemNot = LocalTime.parse("13:00");
-            LocalTime hora20NotRepRemNot = LocalTime.parse("20:00");
 
-            int valorHoraSaidaNotRepRemNot = horaFimNotRepRemNot.getHour();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular DSR Noturno: " + e.getMessage());
+        }
+    }
 
-            if (horaFimNotRepRemNot.isBefore(hora13NotRepRemNot)) {
+    private Map<String, BigDecimal> calcularDSRNoturnoNormal() {
+        Map<String, BigDecimal> resultado = new HashMap<>();
 
-                Duration das22AteOFimRepRemNot = Duration.between(hora20NotRepRemNot, horaIniNotRepRemNot); //Fórmula 22:00 - 20:00 + x, onde x será o valor horário de saída
-                LocalTime diferencadas22AteOFimRepRemNot = LocalTime.ofNanoOfDay(das22AteOFimRepRemNot.toNanos()); // Aqui tenho a hora noturna de um dia
+        FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+        BigDecimal salarioPorHora = folha.getSalarioHora();
+        LocalTime horaIni = folha.getHoraEntrada();
+        LocalTime horaFim = folha.getHoraSaida();
 
-                int horasNotDsrRepRemNot = diferencadas22AteOFimRepRemNot.getHour() + valorHoraSaidaNotRepRemNot; //Aqui pego o valor e somo com as horas de saída
-                int minutosNotDsrRepRemNot = diferencadas22AteOFimRepRemNot.getMinute() / 60; // Aqui pego o valor dos minutos e transformo em centesimal
+        // ✅ 1. CALCULAR HORAS NOTURNAS POR DIA (COM REDUÇÃO)
+        BigDecimal horasNoturnasPorDia = calcularHorasNoturnasPorDia(horaIni, horaFim);
 
-                String hourNotDsrRepRemNot = String.valueOf(horasNotDsrRepRemNot) + "." + String.valueOf(minutosNotDsrRepRemNot);
-                BigDecimal valorHoraDepoisDas22RepRemNot = new BigDecimal(hourNotDsrRepRemNot).multiply(new BigDecimal("1.142857")).setScale(2, RoundingMode.HALF_UP); // Aqui é encontrado a quantidade da horas noturnas
+        // ✅ 2. CALCULAR DIAS DE REPOUSO NO MÊS
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        int diasRepouso = calculosAuxiliaresFolha.calcularDiasRepousoNoMes(year, month);
 
-                //---------Este trecho faz a contagem de dias úteis no mês
-                int year = LocalDate.now().getYear();
-                int month = LocalDate.now().getMonthValue();
-                int workingDaysNotRepRemNot = 0;
+        // ✅ 3. CÁLCULO FINAL DO DSR NOTURNO
+        BigDecimal totalHorasDSRNoturno = horasNoturnasPorDia.multiply(new BigDecimal(diasRepouso)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal valorDSRNoturno = totalHorasDSRNoturno.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
 
-                YearMonth anoMes = YearMonth.of(year, month);
-                feriados.addAll(calendario.getFeriadosFixos(year));
-                feriados.addAll(calendario.getFeriadosMoveis(year));
+        resultado.put("referencia", totalHorasDSRNoturno);
+        resultado.put("vencimentos", valorDSRNoturno);
+        resultado.put("descontos", BigDecimal.ZERO);
 
-                for (int dia = 1; dia <= anoMes.lengthOfMonth(); dia++) {
-                    LocalDate data = anoMes.atDay(dia);
+        return resultado;
+    }
 
-                    if (data.getDayOfWeek() == DayOfWeek.SUNDAY || feriados.contains(data)) {
-                        workingDaysNotRepRemNot++;
-                    }
-                }
-                BigDecimal valorReferenciaDsrHoraNoturna = valorHoraDepoisDas22RepRemNot.multiply(new BigDecimal(workingDaysNotRepRemNot)).setScale(2, RoundingMode.HALF_UP); // Aqui é calculado os dias não úteis vezes o número de horas noturnas no mês.
-                BigDecimal dsrHoraNoturnaRepousoRemuneradoNoturno = valorReferenciaDsrHoraNoturna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); //Aqui é calculado o valor das horas noturnas no mês vezes o valor do salário/hora.
-                resultado.put("referencia", valorReferenciaDsrHoraNoturna);
-                resultado.put("vencimentos", dsrHoraNoturnaRepousoRemuneradoNoturno);
-                resultado.put("descontos", BigDecimal.ZERO);
-            } else {
+    /**
+     * ✅ CALCULA HORAS NOTURNAS POR DIA COM REDUÇÃO (52,5min = 1h)
+     */
+    private BigDecimal calcularHorasNoturnasPorDia(LocalTime horaIni, LocalTime horaFim) {
+        LocalTime hora22 = LocalTime.of(22, 0);
+        LocalTime hora05 = LocalTime.of(5, 0);
 
-                Duration das22AteOFimRepRemNot = Duration.between(horaIniNotRepRemNot, horaFimNotRepRemNot);
-                LocalTime diferencadas22AteOFimRepRemNot = LocalTime.ofNanoOfDay(das22AteOFimRepRemNot.toNanos());// Aqui tenho a Diferença de horas Noturnas;
+        long minutosNoturnos = 0;
 
-                int horasNotDsrRepRemNot = diferencadas22AteOFimRepRemNot.getHour(); // Aqui pego o valor das horas
-                int minutosNotDsrRepRemNot = diferencadas22AteOFimRepRemNot.getMinute() / 60; // Aqui pego o valor dos minutos e transformo em centesimal
+        // ✅ CASO 1: Jornada normal (não cruza meia-noite)
+        if (!horaFim.isBefore(horaIni)) {
+            minutosNoturnos = calcularMinutosNoturnosJornadaNormal(horaIni, horaFim, hora22, hora05);
+        }
+        // ✅ CASO 2: Jornada que cruza meia-noite
+        else {
+            minutosNoturnos = calcularMinutosNoturnosJornadaMadrugada(horaIni, horaFim, hora22, hora05);
+        }
 
-                String hourNotDsrRepRemNot = String.valueOf(horasNotDsrRepRemNot) + "." + String.valueOf(minutosNotDsrRepRemNot);
-                BigDecimal valorHoraDepoisDas22RepRemNot = new BigDecimal(hourNotDsrRepRemNot).multiply(new BigDecimal("1.142857")).setScale(2, RoundingMode.HALF_UP); // Aqui é encontrado a quantidade da horas noturnas
+        // ✅ APLICAR REDUÇÃO HORÁRIA (52,5 minutos = 1 hora noturna)
+        return converterMinutosParaHorasNoturnas(minutosNoturnos);
+    }
 
-                //-------Este trecho faz a contagem de dias úteis no mês
-                int year = LocalDate.now().getYear();
-                int month = LocalDate.now().getMonthValue();
-                int workingDaysNotRepRemNot = 0;
+    /**
+     * ✅ CALCULA MINUTOS NOTURNOS - JORNADA NORMAL
+     */
+    private long calcularMinutosNoturnosJornadaNormal(LocalTime horaIni, LocalTime horaFim, LocalTime hora22, LocalTime hora05) {
+        long minutosNoturnos = 0;
 
-                YearMonth anoMes = YearMonth.of(year, month);
-                feriados.addAll(calendario.getFeriadosFixos(year));
-                feriados.addAll(calendario.getFeriadosMoveis(year));
+        // Verifica se trabalhou no período noturno (22h-05h)
+        boolean trabalhouNoturno = (horaIni.isBefore(hora05) || horaIni.isAfter(hora22) ||
+                horaIni.equals(hora22)) && (horaFim.isBefore(hora05) || horaFim.isAfter(hora22));
 
-                for (int dia = 1; dia <= anoMes.lengthOfMonth(); dia++) {
-                    LocalDate data = anoMes.atDay(dia);
+        if (trabalhouNoturno) {
+            // Início do período noturno
+            LocalTime inicioNoturno = horaIni.isBefore(hora05) ? LocalTime.MIDNIGHT : (horaIni.isAfter(hora22) ? horaIni : hora22);
 
-                    if (data.getDayOfWeek() == DayOfWeek.SUNDAY || feriados.contains(data)) {
-                        workingDaysNotRepRemNot++;
-                    }
-                }
-                BigDecimal valorReferenciaDsrHoraNoturna = valorHoraDepoisDas22RepRemNot.multiply(new BigDecimal(workingDaysNotRepRemNot)).setScale(2, RoundingMode.HALF_UP); // Aqui é calculado os dias não úteis vezes o número de horas noturnas no mês.
-                BigDecimal dsrHoraNoturnaRepousoRemuneradoNoturno = valorReferenciaDsrHoraNoturna.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP); //Aqui é calculado o valor das horas noturnas no mês vezes o valor do salário/hora.
-                resultado.put("referencia", valorReferenciaDsrHoraNoturna);
-                resultado.put("vencimentos", dsrHoraNoturnaRepousoRemuneradoNoturno);
-                resultado.put("descontos", BigDecimal.ZERO);
+            // Fim do período noturno
+            LocalTime fimNoturno = horaFim.isAfter(hora05) ? hora05 : (horaFim.isAfter(hora22) ? horaFim : horaFim);
+
+            if (fimNoturno.isAfter(inicioNoturno)) {
+                minutosNoturnos = Duration.between(inicioNoturno, fimNoturno).toMinutes();
             }
         }
 
-        return resultado;
+        return minutosNoturnos;
+    }
+
+    /**
+     * ✅ CALCULA MINUTOS NOTURNOS - JORNADA MADRUGADA
+     */
+    private long calcularMinutosNoturnosJornadaMadrugada(LocalTime horaIni, LocalTime horaFim, LocalTime hora22, LocalTime hora05) {
+        long minutosNoturnos = 0;
+
+        // Período noturno antes da meia-noite (22h-23:59)
+        if (horaIni.isBefore(hora05) || horaIni.isAfter(hora22) || horaIni.equals(hora22)) {
+            LocalTime inicioNoturno = horaIni.isAfter(hora22) ? horaIni : hora22;
+            minutosNoturnos += Duration.between(inicioNoturno, LocalTime.MAX).toMinutes();
+            // Adiciona 1 minuto para incluir o último minuto do dia
+            minutosNoturnos += 1;
+        }
+
+        // Período noturno após meia-noite (00h-05h)
+        if (horaFim.isBefore(hora05)) {
+            LocalTime fimNoturno = horaFim;
+            minutosNoturnos += Duration.between(LocalTime.MIDNIGHT, fimNoturno).toMinutes();
+        }
+
+        return minutosNoturnos;
+    }
+
+    /**
+     * ✅ CONVERTE MINUTOS TRABALHADOS PARA HORAS NOTURNAS (com redução)
+     */
+    private BigDecimal converterMinutosParaHorasNoturnas(long minutosTrabalhados) {
+        if (minutosTrabalhados <= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        // ✅ FÓRMULA CORRETA: Minutos Trabalhados ÷ 52,5
+        double horasNoturnas = minutosTrabalhados / 52.5;
+        return BigDecimal.valueOf(horasNoturnas).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * ✅ MÉTUDO ESPECÍFICO PARA JORNADA 12x36
+     */
+    public Map<String, BigDecimal> calcularDSRNoturno12x36() {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
+        try {
+            FolhaMensal folha = calculoBaseService.findByMatriculaColaborador(numeroMatricula);
+            BigDecimal salarioPorHora = folha.getSalarioHora();
+            LocalTime horaIni = folha.getHoraEntrada();
+            LocalTime horaFim = folha.getHoraSaida();
+
+            // ✅ Na jornada 12x36, considera 12 horas de trabalho por dia
+            // Das quais calculamos quantas são noturnas
+            BigDecimal horasNoturnasPorDia = calcularHorasNoturnasPorDia(horaIni, horaFim);
+
+            // ✅ Na jornada 12x36, geralmente tem cerca de 15 dias de trabalho no mês
+            // Logo, tem cerca de 15 dias de repouso
+            int diasRepouso = 15;
+
+            BigDecimal totalHorasDSRNoturno = horasNoturnasPorDia.multiply(new BigDecimal(diasRepouso))
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            BigDecimal valorDSRNoturno = totalHorasDSRNoturno.multiply(salarioPorHora)
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            resultado.put("referencia", totalHorasDSRNoturno);
+            resultado.put("vencimentos", valorDSRNoturno);
+            resultado.put("descontos", BigDecimal.ZERO);
+
+            return resultado;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular DSR Noturno 12x36: " + e.getMessage());
+        }
     }
 }

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalcularHorasNormaisNoturnasService {
+public class CalcularReducaoHorarioNoturnoService {
 
     @Autowired
     private CalculosAuxiliaresFolha calculosAuxiliaresFolha;
@@ -27,7 +27,7 @@ public class CalcularHorasNormaisNoturnasService {
     @Setter
     String numeroMatricula;
 
-    public Map<String, BigDecimal> calcularHorasNormaisNoturnas() {
+    public Map<String, BigDecimal> calcularReducaoHorarioNoturno() {
         Map<String, BigDecimal> resultado = new HashMap<>();
         resultado.put("referencia", BigDecimal.ZERO);
         resultado.put("vencimentos", BigDecimal.ZERO);
@@ -39,47 +39,66 @@ public class CalcularHorasNormaisNoturnasService {
             LocalTime horaIni = folha.getHoraEntrada();
             LocalTime horaFim = folha.getHoraSaida();
 
-            // ✅ 1. CALCULAR HORAS NOTURNAS POR DIA (COM REDUÇÃO)
-            BigDecimal horasNoturnasPorDia = calcularHorasNoturnasComReducao(horaIni, horaFim);
+            // ✅ 1. CALCULAR A REDUÇÃO HORÁRIA (DIFERENÇA ENTRE HORAS TRABALHADAS E HORAS PAGAS)
+            Map<String, BigDecimal> reducao = calcularReducaoHoraria(horaIni, horaFim);
+
+            BigDecimal horasTrabalhadas = reducao.get("horasTrabalhadas");
+            BigDecimal horasPagas = reducao.get("horasPagas");
+            BigDecimal diferencaReducao = reducao.get("diferenca");
 
             // ✅ 2. CALCULAR DIAS ÚTEIS NO MÊS
             int year = LocalDate.now().getYear();
             int month = LocalDate.now().getMonthValue();
             int diasUteis = calculosAuxiliaresFolha.calcularDiasUteisNoMes(year, month);
 
-            // ✅ 3. CALCULAR HORAS NOTURNAS TRABALHADAS (dias úteis)
-            BigDecimal totalHorasNoturnasTrabalhadas = horasNoturnasPorDia
-                    .multiply(new BigDecimal(diasUteis))
-                    .setScale(2, RoundingMode.HALF_UP);
+            // ✅ 3. CÁLCULO FINAL DA REDUÇÃO MENSAL
+            BigDecimal reducaoMensal = diferencaReducao.multiply(new BigDecimal(diasUteis)).setScale(2, RoundingMode.HALF_UP);
 
-            // ✅ 4. CALCULAR HORAS NOTURNAS NO DSR
-            BigDecimal horasNoturnasDSR = calcularHorasNoturnasDSR(horasNoturnasPorDia, year, month);
+            // ✅ 4. VALOR MONETÁRIO DA REDUÇÃO
+            BigDecimal valorReducao = reducaoMensal.multiply(salarioPorHora).setScale(2, RoundingMode.HALF_UP);
 
-            // ✅ 5. TOTAL GERAL DE HORAS NOTURNAS
-            BigDecimal totalHorasNoturnas = totalHorasNoturnasTrabalhadas.add(horasNoturnasDSR);
-
-            // ✅ 6. VALOR DAS HORAS NOTURNAS (SEM ADICIONAL - APENAS VALOR BASE)
-            BigDecimal valorTotal = totalHorasNoturnas.multiply(salarioPorHora)
-                    .setScale(2, RoundingMode.HALF_UP);
-
-            resultado.put("referencia", totalHorasNoturnas);
-            resultado.put("vencimentos", valorTotal);
-            resultado.put("descontos", BigDecimal.ZERO);
-
-            return resultado;
+            resultado.put("referencia", reducaoMensal);        // Horas de redução no mês
+            resultado.put("vencimentos", BigDecimal.ZERO);
+            resultado.put("descontos", valorReducao);          // Valor da redução (desconto)
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular horas normais noturnas: " + e.getMessage());
+            throw new RuntimeException("Erro ao calcular redução horário noturno: " + e.getMessage());
         }
+        return resultado;
     }
 
     /**
-     * ✅ CALCULA HORAS NOTURNAS COM REDUÇÃO (52,5min = 1h)
+     * ✅ CALCULA A REDUÇÃO HORÁRIA NOTURNA (DIFERENÇA ENTRE HORAS TRABALHADAS E HORAS PAGAS)
      */
-    private BigDecimal calcularHorasNoturnasComReducao(LocalTime horaIni, LocalTime horaFim) {
+    private Map<String, BigDecimal> calcularReducaoHoraria(LocalTime horaIni, LocalTime horaFim) {
+        Map<String, BigDecimal> resultado = new HashMap<>();
+
         LocalTime hora22 = LocalTime.of(22, 0);
         LocalTime hora05 = LocalTime.of(5, 0);
 
+        // ✅ 1. CALCULAR MINUTOS NOTURNOS TRABALHADOS
+        long minutosNoturnosTrabalhados = calcularMinutosNoturnosTrabalhados(horaIni, horaFim, hora22, hora05);
+
+        // ✅ 2. CALCULAR HORAS TRABALHADAS (sem redução)
+        BigDecimal horasTrabalhadas = BigDecimal.valueOf(minutosNoturnosTrabalhados).divide(BigDecimal.valueOf(60), 4, RoundingMode.HALF_UP); // Minutos → Horas normais
+
+        // ✅ 3. CALCULAR HORAS PAGAS (com redução - 52,5min = 1h)
+        BigDecimal horasPagas = BigDecimal.valueOf(minutosNoturnosTrabalhados).divide(BigDecimal.valueOf(52.5), 4, RoundingMode.HALF_UP); // Minutos → Horas noturnas
+
+        // ✅ 4. CALCULAR DIFERENÇA (REDUÇÃO)
+        BigDecimal diferenca = horasPagas.subtract(horasTrabalhadas);
+
+        resultado.put("horasTrabalhadas", horasTrabalhadas.setScale(2, RoundingMode.HALF_UP));
+        resultado.put("horasPagas", horasPagas.setScale(2, RoundingMode.HALF_UP));
+        resultado.put("diferenca", diferenca.setScale(2, RoundingMode.HALF_UP));
+
+        return resultado;
+    }
+
+    /**
+     * ✅ CALCULA MINUTOS NOTURNOS TRABALHADOS
+     */
+    private long calcularMinutosNoturnosTrabalhados(LocalTime horaIni, LocalTime horaFim, LocalTime hora22, LocalTime hora05) {
         long minutosNoturnos = 0;
 
         // ✅ CASO 1: Jornada normal (não cruza meia-noite)
@@ -91,8 +110,7 @@ public class CalcularHorasNormaisNoturnasService {
             minutosNoturnos = calcularMinutosNoturnosJornadaMadrugada(horaIni, horaFim, hora22, hora05);
         }
 
-        // ✅ APLICAR REDUÇÃO HORÁRIA (52,5 minutos = 1 hora noturna)
-        return converterMinutosParaHorasNoturnas(minutosNoturnos);
+        return minutosNoturnos;
     }
 
     /**
@@ -104,15 +122,12 @@ public class CalcularHorasNormaisNoturnasService {
 
         // Verifica se trabalhou no período noturno
         boolean trabalhouNoturno = (horaIni.isBefore(hora05) || horaIni.isAfter(hora22) ||
-                horaIni.equals(hora22)) &&
-                (horaFim.isBefore(hora05) || horaFim.isAfter(hora22));
+                horaIni.equals(hora22)) && (horaFim.isBefore(hora05) || horaFim.isAfter(hora22));
 
         if (trabalhouNoturno) {
-            LocalTime inicioNoturno = horaIni.isBefore(hora05) ? LocalTime.MIDNIGHT :
-                    (horaIni.isAfter(hora22) ? horaIni : hora22);
+            LocalTime inicioNoturno = horaIni.isBefore(hora05) ? LocalTime.MIDNIGHT : (horaIni.isAfter(hora22) ? horaIni : hora22);
 
-            LocalTime fimNoturno = horaFim.isAfter(hora05) ? hora05 :
-                    (horaFim.isAfter(hora22) ? horaFim : horaFim);
+            LocalTime fimNoturno = horaFim.isAfter(hora05) ? hora05 : (horaFim.isAfter(hora22) ? horaFim : horaFim);
 
             if (fimNoturno.isAfter(inicioNoturno)) {
                 minutosNoturnos = Duration.between(inicioNoturno, fimNoturno).toMinutes();
@@ -133,6 +148,8 @@ public class CalcularHorasNormaisNoturnasService {
         if (horaIni.isBefore(hora05) || horaIni.isAfter(hora22) || horaIni.equals(hora22)) {
             LocalTime inicioNoturno = horaIni.isAfter(hora22) ? horaIni : hora22;
             minutosNoturnos += Duration.between(inicioNoturno, LocalTime.MAX).toMinutes();
+            // Adiciona 1 minuto para incluir o último minuto do dia
+            minutosNoturnos += 1;
         }
 
         // Período noturno após meia-noite (00h-05h)
@@ -142,28 +159,5 @@ public class CalcularHorasNormaisNoturnasService {
         }
 
         return minutosNoturnos;
-    }
-
-    /**
-     * ✅ CALCULA HORAS NOTURNAS NO DSR
-     */
-    private BigDecimal calcularHorasNoturnasDSR(BigDecimal horasNoturnasPorDia, int year, int month) {
-        int diasRepouso = calculosAuxiliaresFolha.calcularDiasRepousoNoMes(year, month);
-
-        return horasNoturnasPorDia.multiply(new BigDecimal(diasRepouso))
-                .setScale(2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * ✅ CONVERTE MINUTOS TRABALHADOS PARA HORAS NOTURNAS (com redução)
-     */
-    private BigDecimal converterMinutosParaHorasNoturnas(long minutosTrabalhados) {
-        if (minutosTrabalhados <= 0) {
-            return BigDecimal.ZERO;
-        }
-
-        // ✅ FÓRMULA EXATA: Minutos Trabalhados ÷ 52,5
-        double horasNoturnas = minutosTrabalhados / 52.5;
-        return BigDecimal.valueOf(horasNoturnas).setScale(2, RoundingMode.HALF_UP);
     }
 }

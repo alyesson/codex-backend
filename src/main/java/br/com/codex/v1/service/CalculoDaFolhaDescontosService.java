@@ -8,6 +8,7 @@ import br.com.codex.v1.service.rh.decimoterceiro.CalcularIrrfDecimoTerceiroServi
 import br.com.codex.v1.service.rh.descontos.CalcularConvenioAssistenciaOdontologicaService;
 import br.com.codex.v1.service.rh.descontos.CalcularDescontoInssService;
 import br.com.codex.v1.service.rh.descontos.CalcularDescontoValeTransporteService;
+import br.com.codex.v1.service.rh.especiais.CalculoDiferencaSalarialService;
 import br.com.codex.v1.service.rh.impostos.CalcularDescontoImpostoRendaService;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -47,6 +48,9 @@ public class CalculoDaFolhaDescontosService {
 
     @Autowired
     private CalcularDescontoInssService calcularDescontoInssService;
+
+    @Autowired
+    private CalculoDiferencaSalarialService calculoDiferencaSalarialService;
 
     @Setter
     String numeroMatricula;
@@ -299,6 +303,11 @@ public class CalculoDaFolhaDescontosService {
               resultado.put("descontos", planoMedico);
 
               return resultado;
+            }
+
+            case 260 ->{
+                calculoDiferencaSalarialService.setNumeroMatricula(numeroMatricula);
+                return calculoDiferencaSalarialService.calcularDiferencaSalarial(260);
             }
 
         }

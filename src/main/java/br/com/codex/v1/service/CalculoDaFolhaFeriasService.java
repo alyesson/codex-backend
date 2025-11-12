@@ -102,11 +102,11 @@ public class CalculoDaFolhaFeriasService {
                     }
 
                     case 149 -> {
-                        calcularFeriasService.calcularMediaHorasExtras(resultado, 100, salarioPorHora);
+                        calcularFeriasService.calcularMediaHorasExtras(resultado, 99, salarioPorHora);
                     }
 
                     case 150 -> {
-                        calcularFeriasService.calcularMediaHorasExtras(resultado, 99, salarioPorHora);
+                        calcularFeriasService.calcularMediaHorasExtras(resultado, 100, salarioPorHora);
                     }
 
                     case 151 -> {

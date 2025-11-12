@@ -162,6 +162,10 @@ public class CalculoDaFolhaProventosService {
     protected CalcularAuxilioNatalidadeService calcularAuxilioNatalidadeService;
     @Autowired
     protected CalcularPremioFrequenciaService calcularPremioFrequenciaService;
+    @Autowired
+    protected CalculoDiferencaSalarialService calculoDiferencaSalarialService;
+    @Autowired
+    protected CalcularReducaoHorarioNoturnoService calcularReducaoHorarioNoturnoService;
 
     public Map<String, BigDecimal> escolheEventos(Integer codigoEvento) {
         Map<String, BigDecimal> resultado = new HashMap<>();
@@ -196,8 +200,13 @@ public class CalculoDaFolhaProventosService {
             }
 
                case 12 -> {
-                   calcularHorasNormaisNoturnasService.setNumeroMatricula(numeroMatricula);
-                return  calcularHorasNormaisNoturnasService.calcularHorasNormaisNoturnas();
+                    calcularHorasNormaisNoturnasService.setNumeroMatricula(numeroMatricula);
+                    return  calcularHorasNormaisNoturnasService.calcularHorasNormaisNoturnas();
+            }
+
+               case 13 -> {
+                   calcularReducaoHorarioNoturnoService.setNumeroMatricula(numeroMatricula);
+                return  calcularReducaoHorarioNoturnoService.calcularReducaoHorarioNoturno();
             }
 
                case 14 -> {
@@ -233,6 +242,11 @@ public class CalculoDaFolhaProventosService {
               case 28 -> {
                   calcularDsrSobreHoraExtraDiurna100PorcentoService.setNumeroMatricula(numeroMatricula);
                 return  calcularDsrSobreHoraExtraDiurna100PorcentoService.calcularDsrSobreHoraExtraDiurna100Porcento();
+            }
+
+              case 45 ->{
+                  calculoDiferencaSalarialService.setNumeroMatricula(numeroMatricula);
+                  return calculoDiferencaSalarialService.calcularDiferencaSalarial(45);
             }
 
               case 46 -> {
