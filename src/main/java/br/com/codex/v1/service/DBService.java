@@ -69,7 +69,7 @@ public class DBService {
 
                     new Usuario(null, "Sistema", "13784744141", Date.valueOf("2024-01-07"), "Neutro", "19999999999",
                             "Rua Indefinida 05", "Indefinido", "Hortolândia", "SP",
-                            "13185-421", "Sistema@sistema.com.br",
+                            "13185-421", "sistema@sistema.com.br",
                             encoder.encode("Sistema@2026!"), "Sistema", "00001"));
 
                     usuariosPadrao.get(0).addPerfil(Perfil.ADMINISTRADOR);
