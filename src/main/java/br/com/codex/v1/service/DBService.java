@@ -65,7 +65,7 @@ public class DBService {
 
                     new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                     "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
-                    encoder.encode("Admin@2025!"), "Sistema", "00000"),
+                    encoder.encode("Admin@2026!"), "Sistema", "00000"),
 
                     new Usuario(null, "Sistema", "13784744141", Date.valueOf("2024-01-07"), "Neutro", "19999999999",
                             "Rua Indefinida 05", "Indefinido", "Hortolândia", "SP",
