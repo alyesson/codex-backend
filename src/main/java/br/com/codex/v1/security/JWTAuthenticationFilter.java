@@ -48,7 +48,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             // Monta a URL completa
             String baseUrl = defaultDbUrl.substring(0, defaultDbUrl.lastIndexOf("/") + 1);
-            String jdbcUrl = baseUrl + creds.getJdbcUrl() + "?createDatabaseIfNotExist=true&serverTimezone=UTC";
+            String jdbcUrl = baseUrl + creds.getJdbcUrl();
 
             System.out.println("URL completa: " + jdbcUrl); // Log para depuração
             String dbName = extractDatabaseName(creds.getJdbcUrl()); // Extrai apenas do nome do banco
@@ -79,9 +79,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private DataSource createDataSource(String jdbcUrl) {
         return DataSourceBuilder.create()
                 .url(jdbcUrl) // Usa a URL completa aqui
-                .username("dbuser")
-                .password("A45mk#@2024!qzXA-2")
-                .driverClassName("com.mysql.cj.jdbc.Driver")
+                .username("postgres")
+                .password("QE5kcC43NDgw-2#9_12Jnma=1@#KT")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 

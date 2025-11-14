@@ -38,7 +38,7 @@ public class Atendimentos implements Serializable {
     protected String horaInicio;
     protected String horaFim;
     protected String resolucao;
-    @Lob
+    @Column(columnDefinition = "BYTEA")
     protected byte[] imagem;
     protected String nomeTecnico;
     protected Situacao situacao;

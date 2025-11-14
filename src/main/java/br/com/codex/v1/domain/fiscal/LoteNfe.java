@@ -32,7 +32,6 @@ public class LoteNfe implements Serializable {
     private String ultimoNumero;
     private String tipoDocumento;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String xmlResposta;
 

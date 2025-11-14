@@ -22,7 +22,7 @@ public class InformacaoesComplementaresDto implements Serializable {
     @Column(length = 10)
     private String codigo;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     public void setDescricao(String descricao) {

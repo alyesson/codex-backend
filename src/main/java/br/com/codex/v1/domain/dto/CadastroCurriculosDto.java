@@ -21,7 +21,7 @@ public class CadastroCurriculosDto implements Serializable {
     protected String cidade;
     protected String situacao;
     protected LocalDate dataCadastro;
-    @Lob
+    @Column(columnDefinition = "BYTEA")
     protected byte[] arquivo;
 
     public CadastroCurriculosDto() {

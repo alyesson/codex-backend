@@ -52,7 +52,7 @@ public class EmissorBoleto implements Serializable {
     protected String convenio;
     @Column(length = 12)
     protected LocalDate dataVencimento;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     protected String demonstrativo;
     @Column(length = 5)
     protected String digitoAgencia;
@@ -69,7 +69,7 @@ public class EmissorBoleto implements Serializable {
     protected String especieDocumento;
     @Column(length = 25)
     protected String especieMoeda;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     protected String instrucao;
     @Column(length = 100)
     protected String logradouroCedente;

@@ -20,7 +20,6 @@ public class TabelaCfopDto implements Serializable {
 
     private Long id;
     private Integer codigo;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String descricao;
     @NotBlank(message = "Movimentação do cfop não pode estar vazio")

@@ -51,7 +51,7 @@ public class DBService {
     public void criaOutrasBases(DataSource dataSource) {
         Map<String, Object> props = new HashMap<>();
         props.put("hibernate.hbm2ddl.auto", "update");  // cria ou atualiza tabelas
-        props.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         props.put("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");// Use a naming strategy do Spring Boot que gera nomes snake_case:
         props.put("javax.persistence.nonJtaDataSource", dataSource);// Datasource não transacional
         PersistenceUnitInfoAdapter info = new PersistenceUnitInfoAdapter("dynamicUnit", dataSource);
@@ -64,7 +64,7 @@ public class DBService {
             List<Usuario> usuariosPadrao = Arrays.asList(
 
                     new Usuario(null, "Administrador", "80374841063", Date.valueOf("2024-01-07"), "Neutro", "19974061119",
-                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "Suporte@codexsolucoes.com.br",
+                    "Rua Indefinida 07", "Indefinido", "Hortolândia", "SP", "13185-421", "suporte@codexsolucoes.com.br",
                     encoder.encode("Admin@2025!"), "Sistema", "00000"),
 
                     new Usuario(null, "Sistema", "13784744141", Date.valueOf("2024-01-07"), "Neutro", "19999999999",
@@ -121,7 +121,7 @@ public class DBService {
                 new Usuario(null, "Administrador", "80374841063",
                         Date.valueOf("2024-01-07"), "Neutro", "19974061119",
                         "Rua Indefinida", "Indefinido", "Hortolândia", "SP",
-                        "13185-421", "Suporte@codexsolucoes.com.br",
+                        "13185-421", "suporte@codexsolucoes.com.br",
                         encoder.encode("Admin@2026!"), "Sistema", "00000"),
 
                 new Usuario(null, "Sistema", "13784744141",

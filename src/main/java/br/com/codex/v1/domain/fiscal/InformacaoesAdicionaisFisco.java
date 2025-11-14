@@ -23,7 +23,7 @@ public class InformacaoesAdicionaisFisco implements Serializable {
     @Column(length = 10)
     private String codigo;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     public InformacaoesAdicionaisFisco() {

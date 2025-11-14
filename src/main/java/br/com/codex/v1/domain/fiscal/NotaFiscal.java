@@ -210,10 +210,10 @@ public class NotaFiscal implements Serializable {
     private String pesoBruto;
     private Integer quantidadeVolumes;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String informacaoAdicionalFisco;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String informacaoAdicionalContribuinte;
 
     @Column(length = 46)
@@ -228,7 +228,7 @@ public class NotaFiscal implements Serializable {
     @Column(length = 45)
     private String dataHoraProtocolo;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String motivoProtocolo;
 
     /* ------------ RELACIONAMENTO ------------ */

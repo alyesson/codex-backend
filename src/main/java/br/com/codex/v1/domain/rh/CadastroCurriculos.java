@@ -24,7 +24,7 @@ public class CadastroCurriculos implements Serializable {
     protected String cidade;
     protected String situacao;
     protected LocalDate dataCadastro = LocalDate.now();;
-    @Lob
+    @Column(columnDefinition = "BYTEA")
     protected byte[] arquivo;
 
     public CadastroCurriculos() {

@@ -63,7 +63,7 @@ public class AtivoImobilizado implements Serializable {
     private BigDecimal creditoIcms;
     @Column(length = 12)
     private BigDecimal creditoIcmsUpf;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String observacao;
     @Column(length = 15)
     private LocalDate dataBaixa;

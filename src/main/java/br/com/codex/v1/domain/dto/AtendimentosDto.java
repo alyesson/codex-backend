@@ -25,8 +25,7 @@ public class AtendimentosDto implements Serializable {
     protected String departamento;
     protected String titulo;
     @NotNull(message = "A descrição do problema não pode star em branco")
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     protected String problema;
     protected String categoria;
     protected String tipo;
@@ -36,8 +35,7 @@ public class AtendimentosDto implements Serializable {
     protected String diasAtuacao;
     protected String horaInicio;
     protected String horaFim;
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     protected String resolucao;
     private byte[] imagem;
     protected String nomeTecnico;

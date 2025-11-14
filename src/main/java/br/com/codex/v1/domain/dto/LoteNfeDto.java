@@ -26,7 +26,7 @@ public class LoteNfeDto implements Serializable {
     private String protocolo;
     private String ultimoNumero;
     private String tipoDocumento;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String xmlResposta;
 
     public LoteNfeDto() {

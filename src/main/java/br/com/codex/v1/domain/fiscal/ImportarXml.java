@@ -23,7 +23,7 @@ public class ImportarXml implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String xml;
 
     @Column(length = 8)
@@ -159,10 +159,10 @@ public class ImportarXml implements Serializable {
     private BigDecimal valorDescontoFatura;
     private BigDecimal valorLiquidoFatura;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String informacaoAdicionalFisco;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String informacaoAdicionalContribuinte;
 
     @Column(length = 46)
@@ -177,7 +177,7 @@ public class ImportarXml implements Serializable {
     @Column(length = 45)
     private String dataHoraProtocolo;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String motivoProtocolo;
 
     @Column(length = 15)

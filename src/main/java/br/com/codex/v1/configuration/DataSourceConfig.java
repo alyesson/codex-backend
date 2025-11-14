@@ -59,7 +59,7 @@ public class DataSourceConfig {
                 .url(url)
                 .username(username)
                 .password(password)
-                .driverClassName("com.mysql.cj.jdbc.Driver")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 }

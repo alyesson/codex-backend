@@ -52,13 +52,13 @@ public class Produto implements Serializable {
     @Column(length = 15)
     protected String codigoNcm;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     protected String descricaoNcm;
 
     @Column(length = 15)
     protected String codigoCest;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     protected String descricaoCest;
 
     @Column(length = 25)

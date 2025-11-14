@@ -29,7 +29,7 @@ public class ControlePortaria implements Serializable {
     protected LocalDate dataEntrada;
     protected String observacao;
     protected String autorEntrada;
-    @Lob
+    @Column(columnDefinition = "BYTEA")
     protected byte[] imagem;
 
     public ControlePortaria() {

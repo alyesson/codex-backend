@@ -14,7 +14,6 @@ import java.sql.*;
 @Configuration
 @Profile("producao")
 public class ProducaoConfig implements DatabaseConfig {
-
     private static final Logger logger = LoggerFactory.getLogger(ProducaoConfig.class);
 
     @Autowired
@@ -34,22 +33,33 @@ public class ProducaoConfig implements DatabaseConfig {
 
     @Override
     public boolean criaBaseDadosClienteFilial(String nomeBase) {
-        String dbName = nomeBase;
+        String dbName = nomeBase.toLowerCase(); // PostgreSQL geralmente usa lowercase
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
 
         try {
+            // Conecta ao database padrão (geralmente 'postgres')
             String baseUrl = dbUrl.substring(0, dbUrl.lastIndexOf("/") + 1);
-            String jdbcUrl = baseUrl + dbName + "?createDatabaseIfNotExist=true&serverTimezone=UTC";
+            String jdbcUrl = baseUrl + dbName;
 
             connection = DriverManager.getConnection(baseUrl, dbUsername, dbPassword);
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("SHOW DATABASES LIKE '" + dbName + "'");
+            // Verifica se o database já existe - Sintaxe PostgreSQL
+            resultSet = statement.executeQuery(
+                    "SELECT 1 FROM pg_database WHERE datname = '" + dbName + "'"
+            );
+
             if (!resultSet.next()) {
                 logger.info("Criando banco de dados: {}", dbName);
-                statement.executeUpdate("CREATE DATABASE " + dbName + " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+
+                // Cria o database - Sintaxe PostgreSQL
+                // O PostgreSQL usa UTF-8 por padrão, então não precisa especificar
+                statement.executeUpdate("CREATE DATABASE " + dbName);
+
+                // Opcional: se quiser especificar encoding e template
+                // statement.executeUpdate("CREATE DATABASE " + dbName + " ENCODING 'UTF8' TEMPLATE template0");
 
                 // Cria o DataSource para a nova base
                 DriverManagerDataSource dataSource = new DriverManagerDataSource();

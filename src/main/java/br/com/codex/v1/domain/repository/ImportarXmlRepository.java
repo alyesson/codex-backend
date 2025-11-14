@@ -19,7 +19,7 @@ public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> 
 
     boolean existsByChave(String chave);
 
-    @Query("SELECT n FROM ImportarXml n WHERE YEAR(n.dataImportacao) =:anoAtual")
+    @Query("SELECT n FROM ImportarXml n WHERE FUNCTION('YEAR', n.emissao) = :anoAtual")
     List<ImportarXml> findAllByYear(@Param("anoAtual") Integer anoAtual);
 
     @Query("SELECT a FROM ImportarXml a WHERE a.dataImportacao BETWEEN :dataInicial AND :dataFinal")
@@ -33,6 +33,7 @@ public interface ImportarXmlRepository extends JpaRepository<ImportarXml, Long> 
     @Query("SELECT i.xml FROM ImportarXml i WHERE i.emissao BETWEEN :dataInicial AND :dataFinal")
     List<String> findAllEntradaNotasPeriodo(@Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 
+    // ✅ CORRIGIDO para PostgreSQL:
     @Query(value = "SELECT DISTINCT i.cfop FROM importar_xml_itens i WHERE EXISTS (SELECT 1 FROM importar_xml n WHERE i.numero_nota_fiscal = n.numero " +
             "AND n.emissao BETWEEN :dataInicio AND :dataFim)", nativeQuery = true)
     Set<Integer> findDistinctCfopEntradaByPeriodo(@Param("dataInicio") LocalDate inicio, @Param("dataFim") LocalDate fim);

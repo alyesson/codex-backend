@@ -35,7 +35,7 @@ public class Afastamento implements Serializable {
     private String eventoEsocial;
     private String origemRetificacao;
     private String numeroProcesso;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String observacao;
 
     public Afastamento() {

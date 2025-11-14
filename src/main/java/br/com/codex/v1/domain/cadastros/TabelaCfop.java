@@ -24,7 +24,6 @@ public class TabelaCfop implements Serializable {
     private Long id;
     @Column(length = 9)
     private Integer codigo;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String descricao;
     @Column(length = 20)

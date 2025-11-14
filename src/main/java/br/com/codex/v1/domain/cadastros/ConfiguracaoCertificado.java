@@ -25,8 +25,7 @@ public class ConfiguracaoCertificado implements Serializable {
     @Column(nullable = false)
     private String nome;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "BYTEA", nullable = false)
     private byte[] arquivo; // .PFX ou .P12 criptografado
 
     @Column(nullable = false)

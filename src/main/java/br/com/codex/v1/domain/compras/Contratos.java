@@ -38,7 +38,7 @@ public class Contratos implements Serializable {
     protected String renegociado;
     protected String dataRenegociacao;
     protected String observacao;
-    @Lob
+    @Column(columnDefinition = "BYTEA")
     protected byte[] arquivo;
 
     public Contratos() {

@@ -6,7 +6,7 @@
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/src/main/resources/application-producao.properties</remarks>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>corg.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://vps55189.publiccloud.com.br:3306/codex?createDatabaseIfNotExist=true&amp;serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
@@ -21,7 +21,7 @@
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/src/main/resources/application-desenvolvimento.properties</remarks>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://vps55189.publiccloud.com.br:3306/codex-dev?createDatabaseIfNotExist=true&amp;serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />

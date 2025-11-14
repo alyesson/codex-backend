@@ -24,7 +24,7 @@ public class XmlNotaFiscal implements Serializable {
     @Column(nullable = false)
     protected String chaveAcesso;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     protected String xmlContent;
 
     @Column(nullable = false)
